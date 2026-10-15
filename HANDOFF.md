@@ -11,6 +11,10 @@ Last updated: 2026-10-15
   dependencies, observability) plus workflow and governance gates.
 - **App**: a SwiftUI shell around bundled HTML/JS checkers screens in a `WKWebView`. No test
   target, no CI.
+- **Functional requirements**: `FRD.md` at the repo root, v1.0, approved 2026-10-15. It specifies
+  how players interact with the target product (vs computer at three levels and two players on one
+  device, American rules, undo, auto-save, win/loss record, themes, VoiceOver). Requirements have
+  IDs such as `FR-MOVE-03`; section 19 lists what is out of scope.
 
 ## Lessons learned
 
@@ -33,6 +37,10 @@ Last updated: 2026-10-15
 
 ## Next steps
 
+Every `/speckit-specify` for a user-facing feature MUST take its scope from `FRD.md` and list the
+requirement IDs it covers, so coverage of the FRD can be traced. A change in product behavior is
+made in `FRD.md` first.
+
 1. Confirm the constitution values inferred from the codebase: the app description, iPad support,
    and the 400 ms cold-launch budget.
 2. Run `/speckit-specify` for a **project foundation** feature: unit and UI test targets, CI that
@@ -43,3 +51,7 @@ Last updated: 2026-10-15
 4. Amend `.specify/templates/tasks-template.md` so tests are mandatory.
 5. Clean up template leftovers: the unused `checkers/checkers/Item.swift` and the stray
    `checkers/checkers/Assets.xcassets/CheckersApp.swift`.
+6. Split the FRD into Spec Kit features, each specified from its FRD sections: rules engine and
+   two-player game (sections 5–10), computer opponent (11), saving and statistics (12–13), then
+   settings, themes, sound and the rules screen (14–16). Accessibility (17) and platform/privacy
+   (18) apply to every feature.
