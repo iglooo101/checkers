@@ -1,0 +1,20 @@
+# macOS
+.DS_Store
+
+# Xcode per-user state and build output
+xcuserdata/
+DerivedData/
+build/
+*.xcscmblueprint
+*.xccheckout
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Claude Code machine-local settings
+.claude/settings.local.json
+
+# Python bytecode
+__pycache__/
+*.pyc
