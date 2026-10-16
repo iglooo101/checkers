@@ -1,6 +1,16 @@
 # Handoff
 
-Last updated: 2026-10-15
+Last updated: 2026-10-16
+
+## Working rules (set by the user, 2026-10-16)
+
+- **Keep the board up to date.** Every backlog item's status on the
+  [project board](https://github.com/users/iglooo101/projects/1/views/1) must match reality as
+  work is processed.
+- **Spec Kit for every slice.** Each epic is one Spec Kit slice: specify → clarify → plan →
+  tasks (+ analyze) → implement. No implementation outside that flow.
+- **Keep `EXECUTION_PLAN.md` current.** Update it with every board change, and review and revise
+  the whole file at every close-out (task, feature, epic, slice, session).
 
 ## Current state
 
@@ -17,6 +27,10 @@ Last updated: 2026-10-15
   how players interact with the target product (vs computer at three levels and two players on one
   device, American rules, undo, auto-save, win/loss record, themes, VoiceOver). Requirements have
   IDs such as `FR-MOVE-03`; section 19 lists what is out of scope.
+- **Backlog**: 8 epics, 41 features, 138 tasks as issues #1–#187 in `iglooo101/checkers`, labeled
+  `epic` / `feature` / `task`, nested with sub-issues, assigned to milestones M1–M5, and all on
+  the project board (Status, Level, Epic, Priority, Size). Progress and the full list are in
+  `EXECUTION_PLAN.md`. Nothing is started yet.
 
 ## Lessons learned
 
@@ -53,24 +67,35 @@ Last updated: 2026-10-15
   pinned down in FRD sections 10 and 12.
 - **Work happens on a branch**: commits go on a feature branch, not straight to `main`.
 
+## Lessons learned (backlog session, 2026-10-16)
+
+- **Backlog decisions**: native rewrite (rules engine and AI in a Swift package, screens in
+  SwiftUI, HTML screens deleted at the end); one Spec Kit slice per epic, each opened by an
+  `Fx.0 Specification` feature; accessibility has its own epic plus an accessibility pass task in
+  every UI feature.
+- **Board fields**: "Type" is a reserved field name on GitHub project boards, so the level field
+  is called **Level**. `gh project field-create --single-select-options` splits on commas, so
+  option names with commas must be set through the GraphQL `updateProjectV2Field` mutation.
+- **`gh` scopes**: the token now has `project`. `gh auth refresh` cannot run through the `!`
+  prefix (not interactive); run `gh auth refresh -h github.com -s <scope> -c` in the background
+  and give the user the one-time code from its output.
+- **Moving an item on the board**: `gh project item-list 1 --owner iglooo101 --format json` gives
+  item IDs, `gh project field-list 1 --owner iglooo101` gives field and option IDs, and
+  `gh project item-edit --project-id <id> --id <item> --field-id <Status> --single-select-option-id <option>`
+  sets the status. Closing an issue moves it to Done through the board's built-in workflow.
+- **The GitHub MCP connector failed to authenticate** in this session; the `gh` CLI covers
+  everything needed.
+
 ## Next steps
 
-Every `/speckit-specify` for a user-facing feature MUST take its scope from `FRD.md` and list the
-requirement IDs it covers, so coverage of the FRD can be traced. A change in product behavior is
-made in `FRD.md` first.
+`EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
+`/speckit-specify` takes its scope from `FRD.md` (or the constitution, for E1) and lists the
+requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
 
 1. Merge `docs/frd` into `main` (fast-forward) or push it and open a PR, as the user prefers.
-2. Confirm the constitution values inferred from the codebase: the app description, iPad support,
-   and the 400 ms cold-launch budget.
-3. Run `/speckit-specify` for a **project foundation** feature: unit and UI test targets, CI that
-   blocks on failing tests, warnings and SwiftLint errors, `SWIFT_VERSION = 6` with complete strict
-   concurrency, SwiftLint and swift-format, and `PrivacyInfo.xcprivacy`.
-4. Decide the future of the HTML/web view UI (migrate to SwiftUI or justify it) and record the
-   decision in that plan's Constitution Check.
-5. Amend `.specify/templates/tasks-template.md` so tests are mandatory.
-6. Clean up template leftovers: the unused `checkers/checkers/Item.swift` and the stray
-   `checkers/checkers/Assets.xcassets/CheckersApp.swift`.
-7. Split the FRD into Spec Kit features, each specified from its FRD sections: rules engine and
-   two-player game (sections 5–10), computer opponent (11), saving and statistics (12–13), then
-   settings, themes, sound and the rules screen (14–16). Accessibility (17) and platform/privacy
-   (18) apply to every feature.
+2. Start E1 (#1) with its specification feature F1.0 (#2): #3 Specify → #4 Clarify → #5 Plan →
+   #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item on the board and in
+   `EXECUTION_PLAN.md` as it starts and finishes.
+3. The earlier loose next steps are now board tasks: confirm constitution values (#27), the
+   tasks-template amendment (#26), template leftover cleanup (#24), and the HTML removal (#67,
+   after the native board ships).
