@@ -36,7 +36,7 @@ Last updated: 2026-10-16
   `iglooo101/checkers`, labeled
   `epic` / `feature` / `task`, nested with sub-issues, assigned to milestones M1–M5, and all on
   the project board (Status, Level, Epic, Priority, Size). Progress and the full list are in
-  `EXECUTION_PLAN.md`. E1 is in progress: #27 is done; #26 is next.
+  `EXECUTION_PLAN.md`. E1 is in progress: #27 and #26 are done; #3 is next.
 
 ## Lessons learned
 
@@ -45,8 +45,10 @@ Last updated: 2026-10-16
 - **The existing app does not yet comply with the constitution**: UI is HTML in a web view
   (Principle I), `SWIFT_VERSION = 5.0` (Principle IV), no tests or CI (Principle III). Expect the
   first plan's Constitution Check to flag all of these.
-- **`tasks-template.md` marks tests "OPTIONAL"**, which conflicts with Principle III. The
-  constitution prevails until the template is amended.
+- **Template customizations go in `.specify/templates/overrides/`**, which Spec Kit resolves
+  before the core `.specify/templates/` files, so an upgrade cannot silently revert them. The
+  tasks template override (#26) makes tests mandatory and test-first; if Spec Kit's core
+  `tasks-template.md` changes, merge those changes into the override by hand.
 - **The app target defaults to `MainActor` isolation** (`SWIFT_DEFAULT_ACTOR_ISOLATION`), so heavy
   work such as game AI must be explicitly moved off the main actor.
 - **No Claude/AI attribution** in commits, PRs, code or docs. This is an absolute rule, enforced
@@ -107,7 +109,7 @@ Last updated: 2026-10-16
 requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
 
 1. Start E1 (#1) with its specification feature F1.0 (#2), in this order: #27 Confirm the
-   constitution values (done) → #26 Make tests mandatory in `tasks-template.md` → #3 Specify → #4 Clarify
+   constitution values (done) → #26 Make tests mandatory in `tasks-template.md` (done) → #3 Specify → #4 Clarify
    → #5 Plan → #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item to In
    Progress before starting it and to Done when complete, on the board and in
    `EXECUTION_PLAN.md`.
