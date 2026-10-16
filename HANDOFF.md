@@ -38,7 +38,8 @@ Last updated: 2026-10-16
   the project board (Status, Level, Epic, Priority, Size). Progress and the full list are in
   `EXECUTION_PLAN.md`. E1 is in progress: #27, #26 and #3 are done; #4 is next.
 - **Active Spec Kit slice**: `specs/001-project-foundation/` (E1) on branch
-  `001-project-foundation`; `.specify/feature.json` points Spec Kit commands at it. `main` is
+  `001-project-foundation`; the local, git-ignored `.specify/feature.json` points Spec Kit
+  commands at it (recreate it with `{"feature_directory": "specs/001-project-foundation"}` if missing). `main` is
   fast-forwarded to the branch at each close-out so `EXECUTION_PLAN.md` on `main` stays current.
 
 ## Lessons learned
