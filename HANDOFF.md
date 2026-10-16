@@ -21,19 +21,22 @@ Last updated: 2026-10-16
   in `checkers/` (see `checkers/CLAUDE.md`).
 - **Branches**: `main` holds everything (the FRD, execution plan and handoff work landed from
   `docs/frd` through PR #188 by fast-forward). Start new work on a fresh feature branch.
-- **Constitution**: `.specify/memory/constitution.md`, v1.0.0, ratified 2026-10-15. Nine
+- **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15,
+  amended 2026-10-16: iPhone only, portrait; values confirmed in #27). Nine
   principles (SwiftUI, Swift 6 strict concurrency, test-first, accessibility, privacy, performance,
   dependencies, observability) plus workflow and governance gates.
 - **App**: a SwiftUI shell around bundled HTML/JS checkers screens in a `WKWebView`. No test
   target, no CI.
-- **Functional requirements**: `FRD.md` at the repo root, v1.0, approved 2026-10-15. It specifies
+- **Functional requirements**: `FRD.md` at the repo root, v1.1 (approved 2026-10-15; v1.1 on
+  2026-10-16 makes the first release iPhone only, portrait). It specifies
   how players interact with the target product (vs computer at three levels and two players on one
   device, American rules, undo, auto-save, win/loss record, themes, VoiceOver). Requirements have
   IDs such as `FR-MOVE-03`; section 19 lists what is out of scope.
-- **Backlog**: 8 epics, 41 features, 138 tasks as issues #1–#187 in `iglooo101/checkers`, labeled
+- **Backlog**: 8 epics, 41 features, 140 tasks as issues #1–#190 (#188 is a PR) in
+  `iglooo101/checkers`, labeled
   `epic` / `feature` / `task`, nested with sub-issues, assigned to milestones M1–M5, and all on
   the project board (Status, Level, Epic, Priority, Size). Progress and the full list are in
-  `EXECUTION_PLAN.md`. Nothing is started yet.
+  `EXECUTION_PLAN.md`. E1 is in progress: #27 is done; #26 is next.
 
 ## Lessons learned
 
@@ -104,7 +107,7 @@ Last updated: 2026-10-16
 requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
 
 1. Start E1 (#1) with its specification feature F1.0 (#2), in this order: #27 Confirm the
-   constitution values → #26 Make tests mandatory in `tasks-template.md` → #3 Specify → #4 Clarify
+   constitution values (done) → #26 Make tests mandatory in `tasks-template.md` → #3 Specify → #4 Clarify
    → #5 Plan → #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item to In
    Progress before starting it and to Done when complete, on the board and in
    `EXECUTION_PLAN.md`.

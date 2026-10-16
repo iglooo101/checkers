@@ -180,9 +180,10 @@ data.
 
 ## Platform & Technology Constraints
 
-- **App**: A native checkers game for iPhone and iPad players.
-- **Platform**: iPhone first; iPad supported, so layouts MUST adapt to iPad size classes. The
-  minimum deployment target is iOS 26.2.
+- **App**: A native, fully offline American checkers game for iPhone: play the computer at three
+  difficulty levels, or two players on one device.
+- **Platform**: iPhone only, in portrait orientation. iPad is not supported in the first release.
+  The minimum deployment target is iOS 26.2.
 - **Toolchain**: The latest stable Xcode, Swift 6 language mode (`SWIFT_VERSION = 6`) and complete
   strict concurrency checking.
 - **Distribution**: App Store, through TestFlight. Every App Store build MUST first be distributed
@@ -217,4 +218,4 @@ data.
    the merge.
 4. Dates use ISO format (YYYY-MM-DD). "Last Amended" MUST be updated with every amendment.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-15 | **Last Amended**: 2026-10-15
+**Version**: 1.1.0 | **Ratified**: 2026-10-15 | **Last Amended**: 2026-10-16

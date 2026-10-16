@@ -1,11 +1,14 @@
 # Functional Requirements Document: Checkers
 
-Version 1.0 · 2026-10-15
+Version 1.1 · 2026-10-16
+
+Changes in 1.1: the first release is iPhone only (FR-PLAT-01 reworded, FR-PLAT-02 removed,
+iPad added to section 19).
 
 ## 1. Purpose and scope
 
-This document specifies how a player interacts with the Checkers app for iPhone and iPad: what
-they see, what they can do, and how the app responds. It describes the target product, not the
+This document specifies how a player interacts with the Checkers app for iPhone: what they
+see, what they can do, and how the app responds. It describes the target product, not the
 current prototype. Implementation decisions (architecture, AI algorithm, storage format) belong in
 feature plans and must satisfy the project constitution (`.specify/memory/constitution.md`).
 
@@ -17,7 +20,7 @@ requirement has an ID (for example `FR-MOVE-03`) so specs, plans and tests can r
 - A single player plays American checkers against the computer at one of three difficulty levels,
   or two players take turns on one device.
 - The app is fully offline. It has no accounts, no online play and no analytics.
-- The first release ships in English on iPhone (portrait) and iPad (portrait and landscape).
+- The first release ships in English on iPhone, in portrait only.
 
 ## 3. Glossary
 
@@ -247,8 +250,9 @@ Home
 
 ## 18. Devices, language and privacy
 
-- **FR-PLAT-01** On iPhone the app MUST run in portrait only.
-- **FR-PLAT-02** On iPad the app MUST support portrait and landscape and size the board to fit.
+- **FR-PLAT-01** The app MUST run on iPhone only, in portrait orientation, and size the board to
+  fit every supported iPhone screen.
+- **FR-PLAT-02** *Removed in v1.1: iPad is out of scope for the first release (see section 19).*
 - **FR-PLAT-03** The first release MUST ship in English. All user-facing text MUST be localizable.
 - **FR-PRIV-01** All data (saved game, record, settings) MUST stay on the device. The app MUST NOT
   make network requests, require an account or collect analytics.
@@ -266,4 +270,4 @@ These are excluded from this release by decision:
 - Piece counts, a move list or notation, game history and replays
 - Hints that suggest moves, and an interactive tutorial
 - Player names, multiple saved games and resetting statistics
-- Languages other than English, and iPhone landscape
+- Languages other than English, iPad, and iPhone landscape

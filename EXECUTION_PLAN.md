@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-16 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.0, constitution v1.0.0
+Last updated: 2026-10-16 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.1, constitution v1.1.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -32,7 +32,7 @@ Epics are listed in execution order.
 
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 0/6 | 0/21 | Todo |
+| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 0/6 | 1/21 | In Progress |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 0/21 | Todo |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
@@ -40,19 +40,19 @@ Epics are listed in execution order.
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/14 | Todo |
-| | **Total** | | | | **0/41** | **0/140** | |
+| | **Total** | | | | **0/41** | **1/140** | |
 
 ## In progress
 
-Nothing yet.
+- #1 E1: Project foundation
+- #2 F1.0: Specification (Spec Kit)
 
 ## Next up
 
 E1 Project foundation, in this order (blocked-by links on the board enforce it):
 
-1. #27 Confirm inferred constitution values (a short Q&A with the user).
-2. #26 Amend `tasks-template.md` so tests are mandatory (must precede #6).
-3. #3 Specify → #4 Clarify → #5 Plan → #6 Tasks + analyze → #7 Reconcile the board.
+1. #26 Amend `tasks-template.md` so tests are mandatory (must precede #6).
+2. #3 Specify → #4 Clarify → #5 Plan → #6 Tasks + analyze → #7 Reconcile the board.
 
 ## Order and dependencies
 
@@ -85,7 +85,6 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 
 ## Risks and open items
 
-- Constitution values inferred from the codebase still need confirming (#27).
 - Board tasks are a first cut from the FRD; each slice's `tasks.md` will add, split or close
   tasks during reconciliation.
 - FR-AI-02 (noticeable strength gaps) is partly subjective; the E4 plan needs a measurable
@@ -98,11 +97,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 In execution order. Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done.
 Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
-### E1 Project foundation (#1) · M1 Foundation · P0 · 0/21 tasks
+### E1 Project foundation (#1) · M1 Foundation · P0 · 1/21 tasks
 
 **F1.0 Specification (Spec Kit)** (#2) · Constitution I–IX
 
-- [ ] #27 Confirm inferred constitution values (app description, iPad support, 400 ms launch budget) · S
+- [x] #27 Confirm inferred constitution values (app description, iPad support, 400 ms launch budget) · S
 - [ ] #26 Amend tasks-template.md so tests are mandatory · S
 - [ ] #3 E1 Specify: write spec.md with /speckit-specify · S
 - [ ] #4 E1 Clarify: resolve open questions with /speckit-clarify · S
@@ -131,7 +130,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #19 Add PrivacyInfo.xcprivacy · S
 - [ ] #20 Add OSLog Logger with bundle-ID subsystem and per-feature categories · S
 - [ ] #21 Add String Catalog (Localizable.xcstrings) and treat its warnings as errors · S
-- [ ] #22 Configure orientations: iPhone portrait only, iPad all orientations · S
+- [ ] #22 Configure iPhone only (device family 1), portrait only · S
 
 **F1.5 Project structure and cleanup** (#23) · Constitution II
 
@@ -190,9 +189,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #62 E3 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #63 E3 Reconcile this epic's board tasks with tasks.md · S
 
-**F3.3 Board view** (#74) · FR-GAME-01, FR-GAME-02, FR-GAME-03, FR-GAME-04, FR-GAME-05, FR-GAME-07, FR-SND-04, FR-PLAT-02
+**F3.3 Board view** (#74) · FR-GAME-01, FR-GAME-02, FR-GAME-03, FR-GAME-04, FR-GAME-05, FR-GAME-07, FR-SND-04
 
-- [ ] #75 SwiftUI board: 8×8 grid, men and kings, sized to fit (iPad portrait and landscape) · M
+- [ ] #75 SwiftUI board: 8×8 grid, men and kings, sized to fit every supported iPhone · M
 - [ ] #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation · S
 - [ ] #77 Turn indicator, including "capture required" · S
 - [ ] #78 Accessibility pass: Game screen layout at accessibility5 and Dark Mode · S
@@ -359,10 +358,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #175 E8 Reconcile this epic's board tasks with tasks.md · S
 
-**F8.1 Platform and privacy verification** (#176) · FR-PLAT-01, FR-PLAT-02, FR-PLAT-03, FR-PRIV-01, FR-PRIV-02
+**F8.1 Platform and privacy verification** (#176) · FR-PLAT-01, FR-PLAT-03, FR-PRIV-01, FR-PRIV-02
 
 - [ ] #177 Verify no network requests, no permission prompts, no account or analytics · S
-- [ ] #178 Verify iPhone portrait-only and iPad rotation on devices · S
+- [ ] #178 Verify iPhone portrait-only on devices · S
 - [ ] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
 
 **F8.2 Performance** (#180) · Constitution VII
@@ -390,3 +389,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   moves; E3 features reordered; E7 moved before E4 (milestone M2, priority P0); 62 blocked-by
   links added on the board, including every implementation feature on its Fx.0. Backlog
   is now 8 epics, 41 features, 140 tasks.
+- 2026-10-16: #27 done. Constitution 1.1.0 and `FRD.md` 1.1: iPhone only, portrait; the app
+  description matches the FRD; the 400 ms launch budget is confirmed. #22, #75 and #178 were
+  retitled and FR-PLAT-02 removed from #74–#78 and #176–#179.
