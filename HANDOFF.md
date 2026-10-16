@@ -11,13 +11,16 @@ Last updated: 2026-10-16
   tasks (+ analyze) → implement. No implementation outside that flow.
 - **Keep `EXECUTION_PLAN.md` current.** Update it with every board change, and review and revise
   the whole file at every close-out (task, feature, epic, slice, session).
+- **No unnecessary pull requests.** This is a solo repo: work on a feature branch, fast-forward
+  `main` locally (`git merge --ff-only`) and push.
+- **No CI for documentation.** Markdown-only changes must not run build or tests (#10, #12).
 
 ## Current state
 
 - **Repo**: `github.com/iglooo101/checkers`. The repo root is this folder; the Xcode project lives
   in `checkers/` (see `checkers/CLAUDE.md`).
-- **Unmerged branch**: `docs/frd` holds the FRD and these handoff updates, local only (not pushed,
-  not merged into `main`). Merge or open a PR before starting new work.
+- **Unmerged branch**: `docs/frd` holds the FRD, the execution plan and these handoff updates. It
+  is pushed, with PR #188 open; merge it into `main` before starting new work.
 - **Constitution**: `.specify/memory/constitution.md`, v1.0.0, ratified 2026-10-15. Nine
   principles (SwiftUI, Swift 6 strict concurrency, test-first, accessibility, privacy, performance,
   dependencies, observability) plus workflow and governance gates.
@@ -65,7 +68,8 @@ Last updated: 2026-10-16
   automatic draws (threefold repetition, 40 moves per side without progress) were added. Similar
   edge cases (undo mid-chain, undo while the AI thinks, resume during the AI's turn) are now
   pinned down in FRD sections 10 and 12.
-- **Work happens on a branch**: commits go on a feature branch, not straight to `main`.
+- **Work happens on a branch**: commits go on a feature branch, not straight to `main`, and land
+  by a local fast-forward merge (no PR unless needed).
 
 ## Lessons learned (backlog session, 2026-10-16)
 
@@ -92,7 +96,7 @@ Last updated: 2026-10-16
 `/speckit-specify` takes its scope from `FRD.md` (or the constitution, for E1) and lists the
 requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
 
-1. Merge `docs/frd` into `main` (fast-forward) or push it and open a PR, as the user prefers.
+1. Merge `docs/frd` into `main` (fast-forward); this also marks PR #188 as merged.
 2. Start E1 (#1) with its specification feature F1.0 (#2): #3 Specify → #4 Clarify → #5 Plan →
    #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item on the board and in
    `EXECUTION_PLAN.md` as it starts and finishes.

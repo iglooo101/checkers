@@ -11,6 +11,8 @@ GitHub project board; when they disagree, fix both in the same change.
   finishing it (Done), and adding, splitting or closing issues.
 - **Every close-out reviews and revises the whole file**: closing a task, feature or epic,
   finishing a Spec Kit slice, and ending a session (with `HANDOFF.md`).
+- **Git**: solo repo. Work on a feature branch, fast-forward `main` locally and push; no pull
+  requests unless needed. CI does not run for documentation-only changes.
 - **Each epic is one Spec Kit slice.** Its `Fx.0 Specification` feature runs specify → clarify →
   plan → tasks/analyze, then the board tasks are reconciled with `tasks.md`. Implementation
   features start only after `Fx.0` is closed, and are built with `/speckit-implement`.
@@ -43,7 +45,8 @@ Nothing yet.
 
 ## Next up
 
-1. Merge `docs/frd` into `main` (housekeeping; not on the board).
+1. Merge `docs/frd` into `main` with a fast-forward (housekeeping; not on the board). PR #188
+   is open for it and is marked merged once `main` contains its commits.
 2. #3 E1 Specify: run `/speckit-specify` for the project foundation slice, then
    #4 Clarify, #5 Plan, #6 Tasks + analyze, #7 Reconcile.
 
@@ -65,7 +68,9 @@ E5, E6 and E7 can run in any order once their dependencies are done.
 ## Risks and open items
 
 - Constitution values inferred from the codebase still need confirming (#27).
-- `docs/frd` (FRD and handoff updates) is not merged into `main`.
+- `docs/frd` (FRD, this plan and handoff updates) is not merged into `main` yet (PR #188).
+- CI must skip Markdown-only changes while still reporting its required check, or docs-only
+  pushes to `main` get blocked (#10, #12).
 - Board tasks are a first cut from the FRD; each slice's `tasks.md` will add, split or close
   tasks during reconciliation.
 - FR-AI-02 (noticeable strength gaps) is partly subjective; the E4 plan needs a measurable
@@ -90,7 +95,7 @@ Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done. Sizes: S
 - [ ] #9 Add unit test target (Swift Testing) and UI test target (XCUITest) · M
 - [ ] #10 Add GitHub Actions CI: build and test on an iOS simulator · M
 - [ ] #11 Fail CI on compiler warnings and SwiftLint errors · S
-- [ ] #12 Protect `main`: require green CI before merge · S
+- [ ] #12 Protect `main`: require green CI before code lands · S
 
 **F1.2 Swift 6 and strict concurrency** (#13) · Constitution IV
 
@@ -356,3 +361,6 @@ Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done. Sizes: S
 
 - 2026-10-16: Backlog created from `FRD.md` v1.0: 8 epics, 41 features, 138 tasks (#1–#187),
   nested as sub-issues and added to the board with Level, Epic, Priority and Size fields.
+- 2026-10-16: #10 and #12 revised: no CI for documentation-only changes, and no pull requests
+  (fast-forward merges keep CI results valid on `main`). Constitution-based issues now point to
+  the constitution instead of the FRD.
