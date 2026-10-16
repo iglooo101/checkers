@@ -73,8 +73,9 @@ Delete the scratch branch afterwards.
 
 ## 6. Privacy, logging, localization and platform (US5: FR-014 to FR-018)
 
-- **Privacy**: Product › Archive, then generate the privacy report in the Organizer. Expected: no
-  tracking, no tracking domains, no collected data types.
+- **Privacy**: `plutil -lint checkers/checkers/PrivacyInfo.xcprivacy` succeeds, and the US5
+  privacy manifest test passes (no tracking, no tracking domains, no collected data types). The
+  privacy report from a signed release archive is checked in E8 (#177).
 - **Localization**: remove the `Screen` entry from `Localizable.xcstrings` and run
   `scripts/check-string-catalog.sh` after a build. Expected: it fails and names the missing key.
   Revert.

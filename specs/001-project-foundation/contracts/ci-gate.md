@@ -5,14 +5,15 @@ Requirements: FR-005 to FR-009, FR-020; clarifications Q1, Q2, Q4, Q5.
 
 ## Trigger
 
-- Every `push` to any branch, and manual dispatch.
+- Every `push` to any branch except `main`, and manual dispatch. Commits reach `main` by
+  fast-forward after passing on their branch, so `main` itself does not re-run CI.
 - No pull request trigger: this repository lands work by fast-forwarding `main`.
 
 ## Required check
 
 - Name: **`CI gate`**. It is the only check `main` requires, and no other workflow may use a job
   with this name (duplicate names make required checks ambiguous).
-- It always reports a result for every push, including documentation-only pushes.
+- It reports a result for every push it runs on, including documentation-only pushes.
 
 ## Classification of a push
 
@@ -44,10 +45,14 @@ Each fails `CI gate` and names its cause in the log:
 3. String catalog check: the committed `Localizable.xcstrings` equals the result of syncing it
    with the strings the build extracted.
 
-## Report-only step (code pushes)
+## Launch timing step (code pushes)
 
 - Launch test (`Performance` test plan). Its measured cold-launch duration and the recorded local
-  baseline are written to the job summary. A slow or failed launch test never fails `CI gate`.
+  baseline are written to the job summary.
+- Timing is report-only: CI runners have no recorded baseline, so a slow result never fails
+  `CI gate`.
+- A launch test that errors (for example, the app fails to launch) fails `CI gate`
+  (Constitution III.5).
 
 ## Artifacts
 

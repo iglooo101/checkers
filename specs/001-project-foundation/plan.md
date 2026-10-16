@@ -77,6 +77,11 @@ and source files
 - `ENABLE_USER_SCRIPT_SANDBOXING = NO` on the app target, so the format-check Run Script phase can
   read source files (R3). The script only reads sources and writes nothing.
 - CI pins Xcode 26.3 to match the development Mac; both are upgraded together (R10).
+- CI does not run on pushes to `main`: commits arrive there by fast-forward, already checked
+  (R10).
+- Constitution IV.3 note: a missing bundled screen file is logged (T049) but still shows a blank
+  screen. This predates the slice, can only happen with a broken build, and the web view is
+  replaced in E3, which brings proper error states.
 
 ### Post-design re-check
 
@@ -99,7 +104,8 @@ specs/001-project-foundation/
 │   ├── ci-gate.md       # CI triggers, required check, outcomes, budgets
 │   └── lint-rules.md    # Lint and format rules, severities, allow-list policy
 ├── checklists/
-│   └── requirements.md  # Spec quality checklist
+│   ├── requirements.md  # Spec quality checklist
+│   └── validation.md    # Quickstart results (T058)
 └── tasks.md             # Phase 2 output (/speckit-tasks)
 ```
 
@@ -111,10 +117,20 @@ specs/001-project-foundation/
     └── ci.yml                         # jobs: changes, build-and-test, CI gate
 .swift-format                          # shared layout rules
 scripts/
+├── lib.sh                             # shared settings and swiftlint_bin
 ├── test.sh                            # one-command local test run (same steps as CI)
 ├── format.sh                          # format on demand
 ├── check-format.sh                    # swift-format lint; --strict in CI
-└── check-string-catalog.sh            # catalog drift check
+├── check-string-catalog.sh            # catalog drift check
+├── report-launch.sh                   # launch duration for the CI job summary
+├── protect-main.sh                    # branch protection for main
+├── ci/
+│   ├── classify-changes.sh            # docs-only or code
+│   └── gate.sh                        # CI gate decision
+└── tests/
+    ├── run.sh                         # runs every test-*.sh
+    ├── test-*.sh                      # US2, US3, US5 script tests
+    └── lint-fixtures/                 # sample files for the lint rule tests
 checkers/
 ├── .swiftlint.yml                     # rules for the Xcode targets
 ├── checkers.xcodeproj/
@@ -122,7 +138,7 @@ checkers/
 │   └── xcshareddata/
 │       └── xcschemes/checkers.xcscheme
 ├── checkers.xctestplan                # blocking: unit, UI, engine tests
-├── Performance.xctestplan             # report-only: launch test
+├── Performance.xctestplan             # launch test: timing reported, errors block
 ├── checkers/                          # app target (synchronized group)
 │   ├── CheckersApp.swift
 │   ├── ContentView.swift              # titles become localized resources
@@ -134,6 +150,7 @@ checkers/
 ├── checkersUITests/                   # XCUITest smoke + LaunchPerformanceTests (+ nested .swiftlint.yml)
 └── CheckersEngine/
     ├── Package.swift
+    ├── Package.resolved               # committed (Constitution VIII.1)
     ├── .swiftlint.yml                 # inherits checkers/.swiftlint.yml, adds engine_no_ui_imports
     ├── Sources/CheckersEngine/Side.swift
     └── Tests/CheckersEngineTests/SideTests.swift

@@ -13,7 +13,7 @@
 ### Session 2026-10-16
 
 - Q: Should the repository owner be able to push to `main` without a passing CI check? → A: No bypass; `main` rejects every commit without a passing check, including the owner's, and nothing lands while CI is down.
-- Q: Should the launch-time test be able to fail CI and block `main`? → A: No; CI runs it on every code push and reports the result against the baseline without failing the check. The hard 400 ms check is on a real iPhone in #181 (E8).
+- Q: Should the launch-time test be able to fail CI and block `main`? → A: No; CI runs it on every code push and reports the result against the baseline without failing the check. The hard 400 ms check is on a real iPhone in #181 (E8). (Applies to timing only: a launch test that errors still fails CI, as Constitution III.5 requires; see FR-020.)
 - Q: What should a local build do when code is not formatted to the project style? → A: Report unformatted files as warnings and change nothing; CI fails on them; one command formats on demand.
 - Q: Which changes count as documentation and skip the build and tests in CI? → A: Markdown files only: a push skips them only when every changed file ends in `.md`; anything else, including Spec Kit scripts and `.gitignore`, runs the full check.
 - Q: Should lint warnings, and not only lint errors, fail CI? → A: Only lint errors fail CI; lint warnings are reported but can land.
@@ -27,8 +27,8 @@ satisfies.
 ### User Story 1 - Run automated tests locally (Priority: P1)
 
 The developer runs the app's unit tests and UI tests from the project's single scheme with one
-command and gets a clear pass or fail. A failing test fails the run, and main-thread violations
-are caught during test runs. (#9; Constitution III, VII)
+command and gets a clear pass or fail. A failing test fails the run, and Main Thread Checker is
+enabled for test runs. (#9; Constitution III, VII)
 
 **Why this priority**: Constitution III makes test-first development non-negotiable, and every
 later slice starts by writing a failing test. Nothing else in the backlog can follow the
@@ -43,15 +43,16 @@ tests. Add a deliberately failing assertion: the same command reports failure an
    unit test and one UI test run and the run passes.
 2. **Given** a unit test that fails, **When** the developer runs the test command, **Then** the run
    fails and reports the failing test by name.
-3. **Given** code that touches UI from a background thread under test, **When** the tests run,
-   **Then** the main-thread violation is reported.
+3. **Given** the test configuration, **When** it is inspected, **Then** Main Thread Checker is
+   enabled for test runs. (Swift 6 strict concurrency rejects most off-main UI calls at compile
+   time, so a runtime probe is not practical.)
 
 ---
 
 ### User Story 2 - CI guards `main` (Priority: P1)
 
-Every push that changes code or project files is built and tested automatically on an iPhone
-simulator. The run fails on any failing test, compiler warning, lint error or formatting
+Every push that changes code or project files to a branch other than `main` is built and tested
+automatically on an iPhone simulator; commits reach `main` already checked. The run fails on any failing test, compiler warning, lint error or formatting
 violation. Commits reach `main` only after their check has passed, and work still lands by a
 local fast-forward merge with no pull request. Documentation-only changes skip the build and
 tests but still pass the required check. (#10, #11, #12, #17; Constitution III, IV)
@@ -66,7 +67,8 @@ rejected.
 
 **Acceptance Scenarios**:
 
-1. **Given** a push to any branch that changes code or project files, **When** CI runs, **Then**
+1. **Given** a push to any branch other than `main` that changes code or project files, **When**
+   CI runs, **Then**
    it builds the app and runs every test suite, and reports pass or fail on that commit.
 2. **Given** a commit with a failing test, a compiler warning, a lint error or unformatted code,
    **When** CI runs, **Then** the check fails and the log names the cause.
@@ -143,14 +145,14 @@ Constitution V, VI, IX)
 **Why this priority**: Each item is small, but retrofitting localization and privacy declarations
 later is costly (Constitution V and VI). It ranks below the gates because it does not block E2.
 
-**Independent Test**: Generate the privacy report from an archive: it shows no tracking and no
-collected data. Launch on an iPad simulator: the app is unavailable or runs as an iPhone app.
+**Independent Test**: Read the bundled privacy manifest: it declares no tracking and no collected
+data. Launch on an iPad simulator: the app is unavailable or runs as an iPhone app.
 Rotate an iPhone simulator: the app stays in portrait. Remove a used key from the string
 catalog: the build fails.
 
 **Acceptance Scenarios**:
 
-1. **Given** a release archive, **When** the privacy report is generated, **Then** it shows no
+1. **Given** the built app, **When** its bundled privacy manifest is read, **Then** it declares no
    tracking, no tracking domains and no collected data, and lists only the required-reason APIs
    the app actually uses.
 2. **Given** any feature, **When** it needs to log, **Then** it uses the shared logger with the
@@ -194,8 +196,9 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
 - **Mixed push**: a push that changes Markdown and code runs the full build and tests.
 - **Non-Markdown support files**: a push that changes only Spec Kit scripts, templates,
   `.gitignore` or other non-Markdown files runs the full build and tests.
-- **Docs-only push to `main`**: the required check reports success without building, so the
-  push is accepted.
+- **Docs-only change**: pushed on a branch, the required check reports success without
+  building, and fast-forwarding `main` to it is accepted. A commit pushed straight to `main`
+  without a branch run has no check and is rejected, docs-only or not.
 - **First push of the CI setup itself**: the commit that adds CI must pass its own check before
   `main` protection is switched on, so protection never blocks its own introduction.
 - **Existing web-view screens under Swift 6**: the four current screens must keep loading and
@@ -216,7 +219,7 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
 
 - **FR-001**: The project MUST have a unit test suite using Swift Testing and a UI test suite
   using XCUITest, both runnable from the `checkers` scheme with one command.
-- **FR-002**: Test runs MUST detect main-thread violations (Main Thread Checker enabled).
+- **FR-002**: Test runs MUST have Main Thread Checker enabled.
 - **FR-003**: A failing test MUST fail the run and be reported by name.
 - **FR-004**: A UI-free engine module (`CheckersEngine`) MUST exist with its own Swift Testing
   suite that runs without the app; the app target MUST depend on it, and the module MUST NOT
@@ -224,14 +227,15 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
 
 **Continuous integration and `main` protection (#10, #11, #12, #17)**
 
-- **FR-005**: Every push to any branch that changes anything other than Markdown files MUST
+- **FR-005**: Every push to a branch other than `main` that changes anything other than Markdown
+  files MUST
   trigger a build of the app and a run of every test suite (unit, UI, engine) on an iPhone
   simulator.
 - **FR-006**: A push that changes only Markdown (`.md`) files MUST NOT build or run tests, and
   MUST still report the required check as passed.
-- **FR-007**: The CI check MUST fail on any failing test (other than the report-only launch test
-  in FR-020), any compiler warning, any lint error, or any formatting violation, and its log MUST
-  name the cause.
+- **FR-007**: The CI check MUST fail on any failing test, any compiler warning, any lint error
+  (FR-011), or any formatting violation, and its log MUST name the cause. Launch timing is
+  report-only (FR-020).
 - **FR-008**: `main` MUST reject any pushed commit whose required check has not passed. The rule
   MUST NOT require pull requests and MUST apply to the repository owner.
 - **FR-009**: Fast-forwarding `main` to a branch commit that already passed its check MUST be
@@ -273,8 +277,9 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
   MUST be removed, with no remaining references or unused imports they required.
 - **FR-020**: An automated launch performance test MUST measure cold launch to first frame and
   record a baseline that later runs compare against (Constitution VII). CI MUST run it on every
-  code push and report the result against the baseline, but a slow result MUST NOT fail the
-  check.
+  code push and report the result against the baseline. A slow result MUST NOT fail the check;
+  a launch test that errors (for example, the app fails to launch) MUST fail it (Constitution
+  III.5).
 
 **Preservation**
 
@@ -320,16 +325,18 @@ slices must keep them true.
   20 minutes.
 - **SC-007**: The four existing screens load and the Play screen accepts a move, exactly as before
   the slice (manual smoke check on an iPhone simulator).
-- **SC-008**: The privacy report of a release archive lists 0 collected data types and no
-  tracking.
+- **SC-008**: The app's bundled privacy manifest declares 0 collected data types and no tracking
+  (automated test). The privacy report from a signed release archive is checked in E8 (#177),
+  once signing is set up.
 - **SC-009**: A launch-time baseline is recorded, and a later run reports its duration against it.
 
 ## Assumptions
 
 - The repository is public on GitHub, so hosted macOS CI runners and branch protection rules are
   available at no cost, and the hosted runners provide an Xcode that supports the iOS 26.2 SDK.
-- CI runs on pushes to every branch, because work is pushed on feature branches before `main`
-  is fast-forwarded; no pull request triggers are needed.
+- CI runs on pushes to every branch except `main`, because work is pushed on feature branches
+  before `main` is fast-forwarded and those commits are already checked; no pull request triggers
+  are needed.
 - "Documentation-only" means every changed file ends in `.md` (including files under `specs/`);
   any other change runs the full check (confirmed in Clarifications).
 - `main` protection applies to the owner with no bypass and no emergency exception, as the

@@ -123,7 +123,8 @@ and what else was considered. Facts marked *measured* were checked on the develo
 - **Decision**: A local Swift package at `checkers/CheckersEngine/` (next to the Xcode project)
   with `swift-tools-version: 6.2`, library product `CheckersEngine`, target `CheckersEngine` and
   test target `CheckersEngineTests`. Platforms: iOS 26.2 (the app's minimum) and macOS 15 so the
-  package tests run on the development Mac with `swift test`. The app target links the product.
+  package tests run on the development Mac with `swift test`. The app target links the product. The package's own `Package.resolved` (created by
+  `swift test`) is committed alongside the project's (Constitution VIII.1).
   The first public symbol is `Side` (`light`, `dark`, with `opponent`), a type epic E2 needs.
 - **Rationale**: Tools version 6.2 gives Swift 6 language mode by default. Package code is
   nonisolated by default, which suits game logic that must run off the main actor (Constitution
@@ -136,15 +137,16 @@ and what else was considered. Facts marked *measured* were checked on the develo
 
 ## R10. CI workflow and the docs-only rule
 
-- **Decision**: One GitHub Actions workflow, `.github/workflows/ci.yml`, triggered on `push` to any
-  branch and on manual dispatch, with three jobs:
+- **Decision**: One GitHub Actions workflow, `.github/workflows/ci.yml`, triggered on `push` to
+  every branch except `main` (`branches-ignore: [main]`) and on manual dispatch, with three jobs:
   1. `changes` (Ubuntu): diffs the pushed range (`github.event.before`..`github.sha`, or the merge
      base with `origin/main` for a new branch) and sets `code=true` unless every changed file ends
      in `.md`.
   2. `build-and-test` (`macos-26`, Xcode 26.3 pinned through `DEVELOPER_DIR`, iPhone 17 on iOS
      26.2): runs only when `code=true`; checks formatting, builds and runs the blocking test plan
-     with warnings as errors, checks the string catalog, then runs the launch test as a
-     non-blocking step and publishes its duration in the job summary.
+     with warnings as errors, checks the string catalog, then runs the launch test and
+     publishes its duration in the job summary. The launch step blocks only if the test errors;
+     its timing cannot fail because CI runners have no recorded baseline (R12).
   3. `CI gate` (Ubuntu, `if: always()`): the only required check. It passes when `changes`
      succeeded and `build-and-test` either succeeded or was skipped because the push was
      docs-only; otherwise it fails.
@@ -154,6 +156,9 @@ and what else was considered. Facts marked *measured* were checked on the develo
   rule visible and avoids depending on skip semantics. Only first-party actions are used
   (`actions/checkout`, `actions/upload-artifact`). Pinning Xcode 26.3 matches the development Mac
   so CI does not surface warnings the developer cannot reproduce; both are upgraded together.
+- **Why not `main`**: commits reach `main` by fast-forward after passing on their branch, so a
+  second run on `main` would only cost minutes and could turn an accepted commit red if it
+  flaked.
 - **Alternatives considered**: `paths-ignore` at workflow level (rejected: blocks docs-only pushes
   on `main`); third-party path-filter actions (rejected: unnecessary dependency); running on pull
   requests (not used in this repo).
@@ -179,12 +184,15 @@ and what else was considered. Facts marked *measured* were checked on the develo
 - **Decision**: `LaunchPerformanceTests` in `checkersUITests` measures cold launch with
   `XCTApplicationLaunchMetric`. The baseline for the development Mac's iPhone 17 simulator is
   stored in the shared project data so later local runs compare against it. CI runs the
-  Performance test plan with `continue-on-error`, extracts the measured duration from the result
-  bundle, and writes it with the recorded baseline to the job summary (clarification Q2).
+  Performance test plan as a normal step, extracts the measured duration from the result bundle,
+  and writes it with the recorded baseline to the job summary (clarification Q2). Because CI
+  runners have no recorded baseline, the measurement cannot fail on timing; the step fails only
+  if the test errors, which Constitution III.5 requires to block.
 - **Rationale**: Xcode baselines are per machine and device, so a CI runner has no baseline of its
   own; reporting the number beside the recorded one gives the regression signal without random
   failures. The hard 400 ms check on hardware is #181 in epic E8.
-- **Alternatives considered**: A blocking launch test (rejected in Q2).
+- **Alternatives considered**: A launch test that fails on timing (rejected in Q2);
+  `continue-on-error` (rejected: it would also hide a test that errors, violating III.5).
 
 ## R13. Privacy manifest contents
 
