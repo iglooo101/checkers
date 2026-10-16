@@ -4,9 +4,9 @@ Last updated: 2026-10-16
 
 ## Working rules (set by the user, 2026-10-16)
 
-- **Keep the board up to date.** Every backlog item's status on the
-  [project board](https://github.com/users/iglooo101/projects/1/views/1) must match reality as
-  work is processed.
+- **Keep the board up to date.** Before starting work on any item, move it to **In Progress** on
+  the [project board](https://github.com/users/iglooo101/projects/1/views/1); once it is
+  complete, move it to **Done** and close the issue.
 - **Spec Kit for every slice.** Each epic is one Spec Kit slice: specify → clarify → plan →
   tasks (+ analyze) → implement. No implementation outside that flow.
 - **Keep `EXECUTION_PLAN.md` current.** Update it with every board change, and review and revise
@@ -87,7 +87,13 @@ Last updated: 2026-10-16
 - **Moving an item on the board**: `gh project item-list 1 --owner iglooo101 --format json` gives
   item IDs, `gh project field-list 1 --owner iglooo101` gives field and option IDs, and
   `gh project item-edit --project-id <id> --id <item> --field-id <Status> --single-select-option-id <option>`
-  sets the status. Closing an issue moves it to Done through the board's built-in workflow.
+  sets the status. Set Done explicitly as well as closing the issue.
+- **Board ordering and links**: sub-issue order is set with
+  `PATCH repos/iglooo101/checkers/issues/<parent>/sub_issues/priority` (`sub_issue_id`,
+  `after_id`), and blocked-by links with
+  `POST repos/iglooo101/checkers/issues/<n>/dependencies/blocked_by` (`issue_id` is the numeric
+  issue ID, not the number). Every implementation feature is blocked by its epic's `Fx.0`.
+- **The board auto-adds pull requests**: merged PR #188 appeared on it in Done.
 - **The GitHub MCP connector failed to authenticate** in this session; the `gh` CLI covers
   everything needed.
 
@@ -97,9 +103,10 @@ Last updated: 2026-10-16
 `/speckit-specify` takes its scope from `FRD.md` (or the constitution, for E1) and lists the
 requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
 
-1. Start E1 (#1) with its specification feature F1.0 (#2): #3 Specify → #4 Clarify → #5 Plan →
-   #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item on the board and in
-   `EXECUTION_PLAN.md` as it starts and finishes.
-2. The earlier loose next steps are now board tasks: confirm constitution values (#27), the
-   tasks-template amendment (#26), template leftover cleanup (#24), and the HTML removal (#67,
-   after the native board ships).
+1. Start E1 (#1) with its specification feature F1.0 (#2), in this order: #27 Confirm the
+   constitution values → #26 Make tests mandatory in `tasks-template.md` → #3 Specify → #4 Clarify
+   → #5 Plan → #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item to In
+   Progress before starting it and to Done when complete, on the board and in
+   `EXECUTION_PLAN.md`.
+2. Epic order is E1 → E2 → E3 → E7 → E4 → E5 → E6 → E8 (E7 moved before E4 on 2026-10-16; see
+   `EXECUTION_PLAN.md` for the reasons and the task-level sequencing notes).
