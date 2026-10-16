@@ -32,9 +32,9 @@ description: "Task list for the project foundation slice (epic E1)"
 
 **Purpose**: Record the starting behavior and create the shared scheme and script settings.
 
-- [ ] T001 Smoke-check the current app before any change: run it on the iPhone 17 simulator, confirm the Classic, Modern, Playful and Play screens load and Play accepts a move, and note the result in the T061 checklist (FR-021 reference).
-- [ ] T002 Create the shared scheme `checkers/checkers.xcodeproj/xcshareddata/xcschemes/checkers.xcscheme` for the `checkers` app target (build, run, test, profile, analyze, archive actions), so CI and scripts can use it.
-- [ ] T003 [P] Create `scripts/lib.sh` with the shared settings sourced by every script: project path, scheme `checkers`, destination (overridable by `DESTINATION`), `-skipPackagePluginValidation`, derived data path `.build/DerivedData` (overridable by `DERIVED_DATA`), and `set -euo pipefail`.
+- [X] T001 Smoke-check the current app before any change: run it on the iPhone 17 simulator, confirm the Classic, Modern, Playful and Play screens load and Play accepts a move, and note the result in the T061 checklist (FR-021 reference).
+- [X] T002 Create the shared scheme `checkers/checkers.xcodeproj/xcshareddata/xcschemes/checkers.xcscheme` for the `checkers` app target (build, run, test, profile, analyze, archive actions), so CI and scripts can use it.
+- [X] T003 [P] Create `scripts/lib.sh` with the shared settings sourced by every script: project path, scheme `checkers`, destination (overridable by `DESTINATION`), `-skipPackagePluginValidation`, derived data path `.build/DerivedData` (overridable by `DERIVED_DATA`), and `set -euo pipefail`.
 
 ---
 
@@ -44,10 +44,10 @@ description: "Task list for the project foundation slice (epic E1)"
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T004 Add unit test target `checkersTests` to `checkers/checkers.xcodeproj/project.pbxproj`: Swift Testing, host application `checkers`, file-system synchronized group `checkers/checkersTests/`, `SWIFT_VERSION = 6.0`, `SWIFT_STRICT_CONCURRENCY = complete`, `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, deployment target 26.2, `TARGETED_DEVICE_FAMILY = 1`. Add one placeholder test file `checkers/checkersTests/PlaceholderTests.swift` so the target compiles (removed in T010).
-- [ ] T005 Add UI test target `checkersUITests` to `checkers/checkers.xcodeproj/project.pbxproj`: XCUITest, target application `checkers`, synchronized group `checkers/checkersUITests/`, same Swift settings as T004. Add a placeholder `checkers/checkersUITests/PlaceholderUITests.swift` (removed in T011).
-- [ ] T006 Create the blocking test plan `checkers/checkers.xctestplan` containing `checkersTests` and `checkersUITests`, with Main Thread Checker enabled, and make it the default test plan of `checkers.xcscheme`.
-- [ ] T007 Create `scripts/test.sh`: sources `scripts/lib.sh`, runs `xcodebuild test -testPlan checkers` on the destination, passes extra build settings from `$@` (CI adds warnings-as-errors), writes the result bundle to `.build/TestResults/checkers.xcresult`, and exits non-zero on any failure. Add `.build/` handling: confirm it is already in `.gitignore`.
+- [X] T004 Add unit test target `checkersTests` to `checkers/checkers.xcodeproj/project.pbxproj`: Swift Testing, host application `checkers`, file-system synchronized group `checkers/checkersTests/`, `SWIFT_VERSION = 6.0`, `SWIFT_STRICT_CONCURRENCY = complete`, `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`, deployment target 26.2, `TARGETED_DEVICE_FAMILY = 1`. Add one placeholder test file `checkers/checkersTests/PlaceholderTests.swift` so the target compiles (removed in T010).
+- [X] T005 Add UI test target `checkersUITests` to `checkers/checkers.xcodeproj/project.pbxproj`: XCUITest, target application `checkers`, synchronized group `checkers/checkersUITests/`, same Swift settings as T004 except default actor isolation, which stays nonisolated because `XCTestCase` initializers are nonisolated; UI test methods are marked `@MainActor`. Add a placeholder `checkers/checkersUITests/PlaceholderUITests.swift` (removed in T011).
+- [X] T006 Create the blocking test plan `checkers/checkers.xctestplan` containing `checkersTests` and `checkersUITests`, with Main Thread Checker enabled, and make it the default test plan of `checkers.xcscheme`.
+- [X] T007 Create `scripts/test.sh`: sources `scripts/lib.sh`, runs `xcodebuild test -testPlan checkers` on the destination, passes extra build settings from `$@` (CI adds warnings-as-errors), writes the result bundle to `.build/TestResults/checkers.xcresult`, and exits non-zero on any failure. Add `.build/` handling: confirm it is already in `.gitignore`.
 
 **Checkpoint**: `scripts/test.sh` runs both placeholder tests and passes.
 
@@ -258,7 +258,7 @@ Task: "T046 test-string-catalog-check.sh"
 
 ## Board Mapping
 
-Reconciled with the board in #7. Each board task maps to these tasks:
+Reconciled with the board in #7 (2026-10-16). Each board task maps to these tasks, and each board issue lists its task IDs:
 
 | Board task | Tasks |
 |---|---|
@@ -276,7 +276,7 @@ Reconciled with the board in #7. Each board task maps to these tasks:
 | #24 Template leftovers | T054 |
 | #25 Engine module | T036–T041 |
 | #28 Launch baseline | T053, T055–T057 |
-| (setup and polish) | T001, T003, T058–T061 (T061 also checks FR-015) |
+| #191 Validate the slice and update docs | T001, T003, T058–T061 (T061 also checks FR-015) |
 
 ## Notes
 
