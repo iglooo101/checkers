@@ -46,7 +46,7 @@ Epics are listed in execution order.
 
 - #1 E1: Project foundation
 - #2 F1.0: Specification (Spec Kit)
-- #5 E1 Plan: write plan.md with /speckit-plan, including the Constitution Check
+- #6 E1 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze
 
 ## Next up
 
@@ -109,8 +109,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #26 Amend tasks-template.md so tests are mandatory · S
 - [x] #3 E1 Specify: write spec.md with /speckit-specify · S
 - [x] #4 E1 Clarify: resolve open questions with /speckit-clarify · S
-- [~] #5 E1 Plan: write plan.md with /speckit-plan, including the Constitution Check · M · after #27
-- [ ] #6 E1 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S · after #26
+- [x] #5 E1 Plan: write plan.md with /speckit-plan, including the Constitution Check · M · after #27
+- [~] #6 E1 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S · after #26
 - [ ] #7 E1 Reconcile this epic's board tasks with tasks.md · S
 
 **F1.1 Test and CI infrastructure** (#8) · Constitution III
