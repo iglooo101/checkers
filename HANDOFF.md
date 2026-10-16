@@ -19,8 +19,8 @@ Last updated: 2026-10-16
 
 - **Repo**: `github.com/iglooo101/checkers`. The repo root is this folder; the Xcode project lives
   in `checkers/` (see `checkers/CLAUDE.md`).
-- **Unmerged branch**: `docs/frd` holds the FRD, the execution plan and these handoff updates. It
-  is pushed, with PR #188 open; merge it into `main` before starting new work.
+- **Branches**: `main` holds everything (the FRD, execution plan and handoff work landed from
+  `docs/frd` through PR #188 by fast-forward). Start new work on a fresh feature branch.
 - **Constitution**: `.specify/memory/constitution.md`, v1.0.0, ratified 2026-10-15. Nine
   principles (SwiftUI, Swift 6 strict concurrency, test-first, accessibility, privacy, performance,
   dependencies, observability) plus workflow and governance gates.
@@ -96,10 +96,9 @@ Last updated: 2026-10-16
 `/speckit-specify` takes its scope from `FRD.md` (or the constitution, for E1) and lists the
 requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
 
-1. Merge `docs/frd` into `main` (fast-forward); this also marks PR #188 as merged.
-2. Start E1 (#1) with its specification feature F1.0 (#2): #3 Specify → #4 Clarify → #5 Plan →
+1. Start E1 (#1) with its specification feature F1.0 (#2): #3 Specify → #4 Clarify → #5 Plan →
    #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item on the board and in
    `EXECUTION_PLAN.md` as it starts and finishes.
-3. The earlier loose next steps are now board tasks: confirm constitution values (#27), the
+2. The earlier loose next steps are now board tasks: confirm constitution values (#27), the
    tasks-template amendment (#26), template leftover cleanup (#24), and the HTML removal (#67,
    after the native board ships).

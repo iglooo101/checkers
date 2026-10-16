@@ -45,9 +45,7 @@ Nothing yet.
 
 ## Next up
 
-1. Merge `docs/frd` into `main` with a fast-forward (housekeeping; not on the board). PR #188
-   is open for it and is marked merged once `main` contains its commits.
-2. #3 E1 Specify: run `/speckit-specify` for the project foundation slice, then
+1. #3 E1 Specify: run `/speckit-specify` for the project foundation slice, then
    #4 Clarify, #5 Plan, #6 Tasks + analyze, #7 Reconcile.
 
 ## Order and dependencies
@@ -68,7 +66,6 @@ E5, E6 and E7 can run in any order once their dependencies are done.
 ## Risks and open items
 
 - Constitution values inferred from the codebase still need confirming (#27).
-- `docs/frd` (FRD, this plan and handoff updates) is not merged into `main` yet (PR #188).
 - CI must skip Markdown-only changes while still reporting its required check, or docs-only
   pushes to `main` get blocked (#10, #12).
 - Board tasks are a first cut from the FRD; each slice's `tasks.md` will add, split or close
@@ -364,3 +361,4 @@ Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done. Sizes: S
 - 2026-10-16: #10 and #12 revised: no CI for documentation-only changes, and no pull requests
   (fast-forward merges keep CI results valid on `main`). Constitution-based issues now point to
   the constitution instead of the FRD.
+- 2026-10-16: `docs/frd` fast-forwarded into `main` (PR #188 merged).
