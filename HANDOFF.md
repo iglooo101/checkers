@@ -36,7 +36,7 @@ Last updated: 2026-10-16
   `iglooo101/checkers`, labeled
   `epic` / `feature` / `task`, nested with sub-issues, assigned to milestones M1–M5, and all on
   the project board (Status, Level, Epic, Priority, Size). Progress and the full list are in
-  `EXECUTION_PLAN.md`. E1 is in progress: #27, #26 and #3 are done; #4 is next.
+  `EXECUTION_PLAN.md`. E1 is in progress: #27, #26, #3 and #4 are done; #5 is next.
 - **Active Spec Kit slice**: `specs/001-project-foundation/` (E1) on branch
   `001-project-foundation`; the local, git-ignored `.specify/feature.json` points Spec Kit
   commands at it (recreate it with `{"feature_directory": "specs/001-project-foundation"}` if missing). `main` is
@@ -113,7 +113,7 @@ Last updated: 2026-10-16
 requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
 
 1. Start E1 (#1) with its specification feature F1.0 (#2), in this order: #27 Confirm the
-   constitution values (done) → #26 Make tests mandatory in `tasks-template.md` (done) → #3 Specify (done) → #4 Clarify
+   constitution values (done) → #26 Make tests mandatory in `tasks-template.md` (done) → #3 Specify (done) → #4 Clarify (done)
    → #5 Plan → #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`. Move each item to In
    Progress before starting it and to Done when complete, on the board and in
    `EXECUTION_PLAN.md`.

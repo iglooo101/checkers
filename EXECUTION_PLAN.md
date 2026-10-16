@@ -32,7 +32,7 @@ Epics are listed in execution order.
 
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 0/6 | 3/21 | In Progress |
+| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 0/6 | 4/21 | In Progress |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 0/21 | Todo |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
@@ -40,7 +40,7 @@ Epics are listed in execution order.
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/14 | Todo |
-| | **Total** | | | | **0/41** | **3/140** | |
+| | **Total** | | | | **0/41** | **4/140** | |
 
 ## In progress
 
@@ -53,10 +53,9 @@ E1 Project foundation, in this order (blocked-by links on the board enforce it):
 
 Slice: `specs/001-project-foundation/` on branch `001-project-foundation`.
 
-1. #4 Clarify: run `/speckit-clarify` on the spec; confirm the defaults in its Assumptions
-   (no owner bypass on `main`, docs-only means `.md` files, CI on every branch, simulator
-   launch baseline only).
-2. #5 Plan → #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`.
+1. #5 Plan: run `/speckit-plan` to write `plan.md` with the Constitution Check, including how
+   SwiftLint and swift-format are installed without Homebrew.
+2. #6 Tasks + analyze → #7 Reconcile the board with `tasks.md`.
 
 ## Order and dependencies
 
@@ -101,14 +100,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 In execution order. Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done.
 Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
-### E1 Project foundation (#1) · M1 Foundation · P0 · 3/21 tasks
+### E1 Project foundation (#1) · M1 Foundation · P0 · 4/21 tasks
 
 **F1.0 Specification (Spec Kit)** (#2) · Constitution I–IX
 
 - [x] #27 Confirm inferred constitution values (app description, iPad support, 400 ms launch budget) · S
 - [x] #26 Amend tasks-template.md so tests are mandatory · S
 - [x] #3 E1 Specify: write spec.md with /speckit-specify · S
-- [ ] #4 E1 Clarify: resolve open questions with /speckit-clarify · S
+- [x] #4 E1 Clarify: resolve open questions with /speckit-clarify · S
 - [ ] #5 E1 Plan: write plan.md with /speckit-plan, including the Constitution Check · M · after #27
 - [ ] #6 E1 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S · after #26
 - [ ] #7 E1 Reconcile this epic's board tasks with tasks.md · S
@@ -401,3 +400,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   unblocked.
 - 2026-10-16: #3 done. `specs/001-project-foundation/spec.md`: 6 user stories, 21 functional
   requirements traced to #9–#28, 9 success criteria; quality checklist passed.
+- 2026-10-16: #4 done. Five clarifications: no owner bypass on `main`; launch test reports
+  in CI but never fails it; local builds only warn on formatting; docs-only means `.md` files
+  only; only lint errors fail CI.

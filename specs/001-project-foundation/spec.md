@@ -8,6 +8,16 @@
 
 **Input**: User description: "Project foundation (epic E1, GitHub issue #1): bring the existing checkers iOS project into compliance with constitution v1.1.0 before any feature work starts. The users of this slice are the solo developer and CI, so user stories are developer-facing. Scope: test and CI infrastructure (#8), Swift 6 and strict concurrency (#13), lint and format (#15), privacy, logging and localization baseline (#18), project structure and cleanup (#23). Out of scope: any game feature or visible UI change, the contents of the rules engine (E2), and App Store delivery (E8)."
 
+## Clarifications
+
+### Session 2026-10-16
+
+- Q: Should the repository owner be able to push to `main` without a passing CI check? → A: No bypass; `main` rejects every commit without a passing check, including the owner's, and nothing lands while CI is down.
+- Q: Should the launch-time test be able to fail CI and block `main`? → A: No; CI runs it on every code push and reports the result against the baseline without failing the check. The hard 400 ms check is on a real iPhone in #181 (E8).
+- Q: What should a local build do when code is not formatted to the project style? → A: Report unformatted files as warnings and change nothing; CI fails on them; one command formats on demand.
+- Q: Which changes count as documentation and skip the build and tests in CI? → A: Markdown files only: a push skips them only when every changed file ends in `.md`; anything else, including Spec Kit scripts and `.gitignore`, runs the full check.
+- Q: Should lint warnings, and not only lint errors, fail CI? → A: Only lint errors fail CI; lint warnings are reported but can land.
+
 ## User Scenarios & Testing *(mandatory)*
 
 The people served by this slice are the developer (the only contributor) and the automated
@@ -94,7 +104,8 @@ is clean with zero warnings.
    not on the allow-list, **When** lint runs, **Then** an error is reported; the same construct in
    an allow-listed file (or `print(` in test code) is accepted.
 4. **Given** code that does not match the shared format, **When** the format check runs locally or
-   in CI, **Then** it reports the file and the check fails in CI.
+   in CI, **Then** it reports the file: locally as a warning with no file changed, and in CI as a
+   failed check.
 
 ---
 
@@ -181,6 +192,8 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
 ### Edge Cases
 
 - **Mixed push**: a push that changes Markdown and code runs the full build and tests.
+- **Non-Markdown support files**: a push that changes only Spec Kit scripts, templates,
+  `.gitignore` or other non-Markdown files runs the full build and tests.
 - **Docs-only push to `main`**: the required check reports success without building, so the
   push is accepted.
 - **First push of the CI setup itself**: the commit that adds CI must pass its own check before
@@ -216,8 +229,9 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
   simulator.
 - **FR-006**: A push that changes only Markdown (`.md`) files MUST NOT build or run tests, and
   MUST still report the required check as passed.
-- **FR-007**: The CI check MUST fail on any failing test, any compiler warning, any lint error, or
-  any formatting violation, and its log MUST name the cause.
+- **FR-007**: The CI check MUST fail on any failing test (other than the report-only launch test
+  in FR-020), any compiler warning, any lint error, or any formatting violation, and its log MUST
+  name the cause.
 - **FR-008**: `main` MUST reject any pushed commit whose required check has not passed. The rule
   MUST NOT require pull requests and MUST apply to the repository owner.
 - **FR-009**: Fast-forwarding `main` to a branch commit that already passed its check MUST be
@@ -226,12 +240,15 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
 **Language mode and static checks (#14, #16, #17)**
 
 - **FR-010**: The app and the engine module MUST build in Swift 6 language mode with complete
-  strict concurrency checking and zero warnings, both locally and in CI.
+  strict concurrency checking and zero compiler warnings, both locally and in CI.
 - **FR-011**: Lint MUST run on every local build and in CI. Force unwraps, force casts, `try!` and
-  implicitly unwrapped optionals outside test code MUST be errors.
+  implicitly unwrapped optionals outside test code MUST be errors. Lint errors MUST fail CI; lint
+  warnings MUST be reported in the CI log but MUST NOT fail the check.
 - **FR-012**: Lint MUST report an error for `ObservableObject`, `import Combine`, `DispatchQueue`
   or `print(` outside an allow-list that names specific files; `print(` is allowed in test code.
 - **FR-013**: One shared formatting configuration MUST be checked on every local build and in CI.
+  A local build MUST report unformatted files as warnings without changing any file; CI MUST
+  fail on them. One command MUST format the code on demand.
 
 **Privacy, logging, localization and platform (#19, #20, #21, #22)**
 
@@ -252,7 +269,9 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
 - **FR-019**: `checkers/checkers/Item.swift` and `checkers/checkers/Assets.xcassets/CheckersApp.swift`
   MUST be removed, with no remaining references or unused imports they required.
 - **FR-020**: An automated launch performance test MUST measure cold launch to first frame and
-  record a baseline that later runs compare against (Constitution VII).
+  record a baseline that later runs compare against (Constitution VII). CI MUST run it on every
+  code push and report the result against the baseline, but a slow result MUST NOT fail the
+  check.
 
 **Preservation**
 
@@ -309,9 +328,9 @@ slices must keep them true.
 - CI runs on pushes to every branch, because work is pushed on feature branches before `main`
   is fast-forwarded; no pull request triggers are needed.
 - "Documentation-only" means every changed file ends in `.md` (including files under `specs/`);
-  any other change runs the full check.
-- `main` protection applies to the owner with no bypass, as the constitution's merge gate
-  requires; the plan may record a documented emergency procedure if needed.
+  any other change runs the full check (confirmed in Clarifications).
+- `main` protection applies to the owner with no bypass and no emergency exception, as the
+  constitution's merge gate requires (confirmed in Clarifications).
 - SwiftLint and swift-format are pre-approved by the constitution (VIII.2). The development Mac has
   no Homebrew, so the plan must obtain them in a way that works without it.
 - The 400 ms budget applies to a release build on a recent iPhone; proving it on hardware is task
