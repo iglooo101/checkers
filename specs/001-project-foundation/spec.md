@@ -151,8 +151,8 @@ catalog: the build fails.
 **Acceptance Scenarios**:
 
 1. **Given** a release archive, **When** the privacy report is generated, **Then** it shows no
-   tracking, no tracking domains and no collected data, and declares the user-defaults
-   required-reason API with an approved reason.
+   tracking, no tracking domains and no collected data, and lists only the required-reason APIs
+   the app actually uses.
 2. **Given** any feature, **When** it needs to log, **Then** it uses the shared logger with the
    app's bundle identifier as subsystem and its own category, and dynamic values are redacted by
    default.
@@ -246,15 +246,18 @@ import: nothing is found and the app builds. Run the launch test: it reports a l
   warnings MUST be reported in the CI log but MUST NOT fail the check.
 - **FR-012**: Lint MUST report an error for `ObservableObject`, `import Combine`, `DispatchQueue`
   or `print(` outside an allow-list that names specific files; `print(` is allowed in test code.
+  The other constructs Constitution I.2 and I.3 ban (`@Published`, `OperationQueue`, `Thread`)
+  are errors too.
 - **FR-013**: One shared formatting configuration MUST be checked on every local build and in CI.
   A local build MUST report unformatted files as warnings without changing any file; CI MUST
   fail on them. One command MUST format the code on demand.
 
 **Privacy, logging, localization and platform (#19, #20, #21, #22)**
 
-- **FR-014**: The app MUST include a privacy manifest declaring no tracking, no tracking domains
-  and no collected data, and declaring the user-defaults required-reason API with an approved
-  reason (FR-PRIV-01, Constitution VI).
+- **FR-014**: The app MUST include an accurate privacy manifest declaring no tracking, no tracking
+  domains and no collected data (FR-PRIV-01, Constitution VI). It declares only the
+  required-reason APIs the app uses; the user-defaults API is added in the change that first uses
+  it (#71 or #140), as Constitution VI.3 requires.
 - **FR-015**: This slice MUST NOT add network requests, accounts, analytics or system permission
   requests (FR-PRIV-01, FR-PRIV-02).
 - **FR-016**: A shared logger MUST use the app's bundle identifier as subsystem and one category
