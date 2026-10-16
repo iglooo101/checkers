@@ -48,9 +48,10 @@ Last updated: 2026-10-16
   work such as game AI must be explicitly moved off the main actor.
 - **No Claude/AI attribution** in commits, PRs, code or docs. This is an absolute rule, enforced
   in `~/.claude/settings.json` and `~/.claude/CLAUDE.md`.
-- **Commits are authored as `sharelarge <sharelarge@gmail.com>`** (global git identity), while the
-  GitHub account is `iglooo101`. They are not linked on GitHub unless that email is added to the
-  account.
+- **iglooo101 is the only identity** on this Mac and in this repo. Commits are authored as
+  `iglooo101 <12980807+iglooo101@users.noreply.github.com>` (global git config; GitHub's no-reply
+  address, so they link to the account). The whole history was rewritten to this identity on
+  2026-10-16.
 - **`gh` was installed manually** in `~/.local/bin` (no Homebrew on this Mac); it does not
   auto-update.
 
