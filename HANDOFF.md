@@ -25,8 +25,8 @@ Last updated: 2026-10-16
 - **Branches**: `main` is protected: a commit lands only if the `CI gate` check passed for that
   exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
-  branches). `001-project-foundation` is fully merged; `002-rules-engine` is the active branch and
-  `main` is level with it (`e064471`).
+  branches). `001-project-foundation` was merged and deleted; `002-rules-engine` is the active
+  branch and `main` is level with it.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
