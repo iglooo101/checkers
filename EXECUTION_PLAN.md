@@ -32,7 +32,7 @@ Epics are listed in execution order.
 
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 1/6 | 8/22 | In Progress |
+| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 3/6 | 13/22 | In Progress |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 0/21 | Todo |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
@@ -40,13 +40,21 @@ Epics are listed in execution order.
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **1/41** | **8/142** | |
+| | **Total** | | | | **3/41** | **13/142** | |
 
 ## In progress
 
 - #1 E1: Project foundation
 - #8 F1.1: Test and CI infrastructure
+- #10 Add GitHub Actions CI: build and test on an iOS simulator
+- #18 F1.4: Privacy, logging and localization baseline
+- #19 Add PrivacyInfo.xcprivacy
+- #20 Add OSLog Logger with bundle-ID subsystem and per-feature categories
+- #21 Add String Catalog (Localizable.xcstrings) and treat its warnings as errors
+- #22 Configure iPhone only (device family 1), portrait only
 - #23 F1.5: Project structure and cleanup
+- #24 Delete template leftovers (Item.swift, stray Assets.xcassets/CheckersApp.swift)
+- #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric)
 - #191 Validate the E1 slice and update project docs
 
 ## Next up
@@ -60,11 +68,11 @@ board tracks the issues below.
 | Story | Board tasks | Status |
 |---|---|---|
 | US1 Run tests locally | #9 | Done |
-| US2 CI guards `main` | #10, #11, #12 | Todo |
-| US3 Compiler and lint rules | #14, #16, #17 | Todo |
-| US4 Engine module | #25 | Todo |
-| US5 Privacy, logging, localization, platform | #19, #20, #21, #22 | Todo |
-| US6 Cleanup and launch baseline | #24, #28 | Todo |
+| US2 CI guards `main` | #10, #11, #12 | In Progress |
+| US3 Compiler and lint rules | #14, #16, #17 | Done |
+| US4 Engine module | #25 | Done |
+| US5 Privacy, logging, localization, platform | #19, #20, #21, #22 | In Progress |
+| US6 Cleanup and launch baseline | #24, #28 | In Progress |
 | Validation and docs | #191 | In Progress |
 
 ## Order and dependencies
@@ -110,7 +118,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 In execution order. Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done.
 Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
-### E1 Project foundation (#1) · M1 Foundation · P0 · 8/22 tasks
+### E1 Project foundation (#1) · M1 Foundation · P0 · 13/22 tasks
 
 **F1.0 Specification (Spec Kit)** (#2) · Constitution I–IX
 
@@ -125,31 +133,31 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F1.1 Test and CI infrastructure** (#8) · Constitution III
 
 - [x] #9 Add unit test target (Swift Testing) and UI test target (XCUITest) · M
-- [ ] #10 Add GitHub Actions CI: build and test on an iOS simulator · M · after #9
-- [ ] #11 Fail CI on compiler warnings and SwiftLint errors · S · after #10, #14, #16
+- [~] #10 Add GitHub Actions CI: build and test on an iOS simulator · M · after #9
+- [x] #11 Fail CI on compiler warnings and SwiftLint errors · S · after #10, #14, #16
 - [ ] #12 Protect `main`: require green CI before code lands · S · after #10, #11
 
 **F1.2 Swift 6 and strict concurrency** (#13) · Constitution IV
 
-- [ ] #14 Switch to Swift 6 language mode with complete strict concurrency · S
+- [x] #14 Switch to Swift 6 language mode with complete strict concurrency · S
 
 **F1.3 Lint and format** (#15) · Constitution I, IV, IX
 
-- [ ] #16 Add SwiftLint with constitution rules · M
-- [ ] #17 Add swift-format configuration and run it in build and CI · S
+- [x] #16 Add SwiftLint with constitution rules · M
+- [x] #17 Add swift-format configuration and run it in build and CI · S
 
 **F1.4 Privacy, logging and localization baseline** (#18) · FR-PRIV-01, FR-PRIV-02, FR-PLAT-03
 
-- [ ] #19 Add PrivacyInfo.xcprivacy · S
-- [ ] #20 Add OSLog Logger with bundle-ID subsystem and per-feature categories · S
-- [ ] #21 Add String Catalog (Localizable.xcstrings) and treat its warnings as errors · S
-- [ ] #22 Configure iPhone only (device family 1), portrait only · S
+- [~] #19 Add PrivacyInfo.xcprivacy · S
+- [~] #20 Add OSLog Logger with bundle-ID subsystem and per-feature categories · S
+- [~] #21 Add String Catalog (Localizable.xcstrings) and treat its warnings as errors · S
+- [~] #22 Configure iPhone only (device family 1), portrait only · S
 
 **F1.5 Project structure and cleanup** (#23) · Constitution II
 
-- [ ] #24 Delete template leftovers (Item.swift, stray Assets.xcassets/CheckersApp.swift) · S
-- [ ] #25 Create local Swift package `CheckersEngine` with its own test target · M
-- [ ] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
+- [~] #24 Delete template leftovers (Item.swift, stray Assets.xcassets/CheckersApp.swift) · S
+- [x] #25 Create local Swift package `CheckersEngine` with its own test target · M
+- [~] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
 - [~] #191 Validate the E1 slice and update project docs · S
 
 ### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 0/21 tasks
@@ -426,3 +434,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   #192 (MetricKit, E8) added. F1.0 (#2) closed. Implementation started.
 - 2026-10-16: #9 done (US1): test targets, shared scheme, test plan, `scripts/test.sh`; US1
   acceptance tests pass, including a real move on the Play screen.
+- 2026-10-16: US2–US6 implemented on `001-project-foundation`. CI workflow with the `CI gate`
+  check; Swift 6; SwiftLint and swift-format; CheckersEngine; privacy manifest, logger, string
+  catalog, iPhone-only portrait; leftovers removed; launch baselines. CI probes confirmed
+  failing tests, warnings, lint errors and formatting turn the gate red. #11, #14, #16, #17,
+  #25 and features F1.2, F1.3 done. GitHub access now uses the token in `../secrets/`.

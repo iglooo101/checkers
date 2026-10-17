@@ -92,7 +92,7 @@ description: "Task list for the project foundation slice (epic E1)"
 - [X] T017 [US2] Implement `scripts/ci/gate.sh` per the outcomes table: exit 0 only for `success docs skipped` or `success code success`; print the reason otherwise. T014 passes.
 - [X] T018 [US2] Create `.github/workflows/ci.yml` per `contracts/ci-gate.md`: trigger `push` on all branches except `main` (`branches-ignore: [main]`) and `workflow_dispatch`; job `changes` on `ubuntu-latest` (checkout with `fetch-depth: 0`; range `github.event.before..github.sha`, or `$(git merge-base origin/main HEAD)..HEAD` when `before` is all zeros; output `code=true|false` from `classify-changes.sh`); job `build-and-test` on `macos-26`, `needs: changes`, `if: needs.changes.outputs.code == 'true'`, `DEVELOPER_DIR=/Applications/Xcode_26.3.app/Contents/Developer`, `DESTINATION='platform=iOS Simulator,name=iPhone 17,OS=26.2'`, steps: checkout, `scripts/tests/run.sh`, `scripts/test.sh SWIFT_TREAT_WARNINGS_AS_ERRORS=YES GCC_TREAT_WARNINGS_AS_ERRORS=YES`, upload `.build/TestResults` with `actions/upload-artifact` (`if: always()`); job named `CI gate` on `ubuntu-latest`, `needs: [changes, build-and-test]`, `if: always()`, running `scripts/ci/gate.sh` with the two jobs' results. Use only first-party actions.
 - [ ] T019 [US2] Push the branch and confirm `CI gate` is green with build and tests run. Then push a commit that changes only a `.md` file and confirm `CI gate` passes within 2 minutes with `build-and-test` skipped (SC-002).
-- [ ] T020 [US2] Probe: push a commit with a failing unit test, confirm `CI gate` fails and the log names the test, then revert and confirm green (SC-001, part 1).
+- [X] T020 [US2] Probe: push a commit with a failing unit test, confirm `CI gate` fails and the log names the test, then revert and confirm green (SC-001, part 1).
 - [ ] T021 [US2] Create `scripts/protect-main.sh` that applies branch protection with `gh api -X PUT repos/iglooo101/checkers/branches/main/protection`: required status checks `strict: false`, `contexts: ["CI gate"]`; `enforce_admins: true`; `required_pull_request_reviews: null`; `restrictions: null`; `allow_force_pushes: false`; `allow_deletions: false`. Run it once `main` holds a green `CI gate` commit.
 - [ ] T022 [US2] Verify protection (quickstart §5, SC-003, SC-004): a push to `main` of a commit without a passing check is rejected for the owner; fast-forwarding `main` to a branch commit with a green `CI gate` and pushing is accepted with no pull request.
 
@@ -123,7 +123,7 @@ description: "Task list for the project foundation slice (epic E1)"
 - [X] T032 [US3] Run `scripts/format.sh` on the existing sources, then `scripts/test.sh`: all tests pass and the app behaves as before.
 - [X] T033 [US3] Add a Run Script build phase "Check formatting" to the `checkers` target in `checkers/checkers.xcodeproj/project.pbxproj` running `"$SRCROOT/../scripts/check-format.sh"` (non-strict) with "Based on dependency analysis" turned off (`alwaysOutOfDate = 1`, so Xcode does not warn that it runs on every build), and set `ENABLE_USER_SCRIPT_SANDBOXING = NO` on that target (plan: Other recorded decisions). An unformatted line now shows as a build warning and no file changes (quickstart §4).
 - [X] T034 [US3] Add `scripts/check-format.sh --strict` as a step before the build in `.github/workflows/ci.yml`.
-- [ ] T035 [US3] CI probes (SC-001, parts 2–4): push a commit with a compiler warning, one with a force unwrap, and one with an unformatted line; confirm each fails `CI gate` with the cause named; revert each and confirm green. Confirm a lint warning (non-error rule) is reported but does not fail.
+- [X] T035 [US3] CI probes (SC-001, parts 2–4): push a commit with a compiler warning, one with a force unwrap, and one with an unformatted line; confirm each fails `CI gate` with the cause named; revert each and confirm green. Confirm a lint warning (non-error rule) is reported but does not fail.
 
 **Checkpoint**: US3 complete; safety rules are enforced everywhere.
 
@@ -202,8 +202,8 @@ description: "Task list for the project foundation slice (epic E1)"
 ## Phase 9: Polish & Cross-Cutting Concerns
 
 - [ ] T058 Run every scenario in `specs/001-project-foundation/quickstart.md` and record each result in `specs/001-project-foundation/checklists/validation.md`.
-- [ ] T059 [P] Update `checkers/CLAUDE.md` (project guide) for the new layout: test command, scripts, engine package, test plans, removed leftovers, Swift 6 settings.
-- [ ] T060 [P] Update `HANDOFF.md` lessons learned: plugin trust and `-skipPackagePluginValidation`, the protected-`main` workflow, the catalog drift check, Xcode 26.3 pin.
+- [X] T059 [P] Update `checkers/CLAUDE.md` (project guide) for the new layout: test command, scripts, engine package, test plans, removed leftovers, Swift 6 settings.
+- [X] T060 [P] Update `HANDOFF.md` lessons learned: plugin trust and `-skipPackagePluginValidation`, the protected-`main` workflow, the catalog drift check, Xcode 26.3 pin.
 - [ ] T061 Final verification: `main` builds with 0 compiler warnings and 0 lint errors (SC-005); the last code CI run took under 20 minutes (SC-006); the T001 smoke check gives the same result (SC-007); and the slice added no network, account, analytics or permission code (FR-015): `git diff main~N -- checkers/ | grep -E 'URLSession|import Network|NSURLConnection|UsageDescription'` over the slice's commits finds nothing.
 
 ---

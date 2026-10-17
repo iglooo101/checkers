@@ -1,29 +1,63 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for working with the code in this repository.
 
 ## Project
 
-An iOS (SwiftUI, deployment target iOS 26.2) checkers app. Almost all of the game and visuals live in bundled HTML/CSS/JS files; the Swift side is a thin shell that displays them in a `WKWebView`. Single target/scheme `checkers`, no test target, no third-party dependencies. The git repository root is the parent directory (remote: `github.com/iglooo101/checkers`).
+An iPhone-only (portrait) SwiftUI checkers app, deployment target iOS 26.2, Swift 6 language mode
+with complete strict concurrency. The game and visuals still live in bundled HTML/CSS/JS screens
+shown in a `WKWebView`; epic E3 replaces them with native SwiftUI. Rules and AI logic go in the
+local package `CheckersEngine`. The git repository root is the parent directory (remote:
+`github.com/iglooo101/checkers`); product requirements are in `../FRD.md`, the constitution in
+`../.specify/memory/constitution.md`, and progress in `../EXECUTION_PLAN.md`.
 
-## Build & run
+## Build, test and format
+
+Run these from the repository root:
 
 ```sh
-# Build for the simulator (run from this directory)
-xcodebuild -project checkers.xcodeproj -scheme checkers -destination 'generic/platform=iOS Simulator' build
+scripts/test.sh                         # blocking test plan: unit, UI and engine tests on iPhone 17
+TEST_PLAN=Performance scripts/test.sh   # cold-launch timing only
+scripts/report-launch.sh .build/TestResults/Performance.xcresult   # compare with launch-baselines.json
+(cd checkers/CheckersEngine && swift test)   # engine tests on the Mac, without the app
+scripts/format.sh                       # format all Swift sources in place
+scripts/check-format.sh --strict        # what CI runs; without --strict it only warns
+scripts/tests/run.sh                    # script tests (CI rules, lint rules, format, catalog check)
 ```
 
-To iterate on a screen without rebuilding the app, open the HTML file directly in a browser (e.g. `open checkers/Play.html`) — each page is self-contained and also works outside the web view.
+Command-line builds need `-skipPackagePluginValidation` (already in `scripts/lib.sh`); in Xcode,
+trust the SwiftLint plugin once when asked. Derived data goes to `.build/DerivedData`.
 
 ## Architecture
 
-- `checkers/ContentView.swift` — a segmented `Picker` over a hardcoded `screens` list of `(title, file)` pairs, and a `WebView` (`UIViewRepresentable`) that loads `<file>.html` from the main bundle via `loadFileURL(_:allowingReadAccessTo:)` with read access to the bundle directory (so pages can reference sibling resources such as `move.wav`). `.id(selected)` forces a fresh `WKWebView` on every tab switch, so page state (e.g. an in-progress game) is not preserved across tabs.
-- The Xcode project uses **file-system synchronized groups** (`objectVersion = 77`): any file dropped into `checkers/` is automatically part of the target — no `project.pbxproj` edits needed to add HTML/Swift/audio files. To add a new screen, add the `.html` file and an entry to `screens` in `ContentView.swift`.
-- HTML screens:
-  - `Classic.html`, `Modern.html`, `Playful.html` — static, non-interactive board mockups in different visual styles, authored at a fixed 640×640 and scaled to the viewport by a `fitBoard()` script using CSS `zoom`.
-  - `Play.html` — the playable game. Vanilla JS, two-player hot-seat (Light `'w'` moves first, upward; Dark `'b'`). Board is an 8×8 array of `{color, king}` or `null`. `legalMoves()` generates all moves for a color, with `captureChains()` recursively enumerating multi-jump captures; captures are mandatory (if any exist, only captures are returned). A move is `{path: [[r,c],...], caps: [[r,c],...]}`. Kinging happens on reaching the far row and ends the move. A player with no legal moves loses. Board sizing is responsive via the `--cell` CSS variable. Plays `move.wav` on each move.
+- `checkers/ContentView.swift`: a segmented `Picker` over `Screen.all` (title as a
+  `LocalizedStringResource`, file name of the bundled HTML) and a `WebView`
+  (`UIViewRepresentable`) that loads `<file>.html` with read access to the bundle directory.
+  `.id(selected)` forces a fresh `WKWebView` on every tab switch.
+- `checkers/Support/Logging.swift`: `Log` with one `Logger` per feature category under the bundle
+  identifier. Never use `print`.
+- `checkers/Localizable.xcstrings`: every user-facing string. Building in Xcode updates it; CI fails
+  if it drifts (`scripts/check-string-catalog.sh`).
+- `checkers/PrivacyInfo.xcprivacy`: no tracking and no collected data. Add a required-reason API
+  entry in the same change that starts using one (for example `UserDefaults`, reason `CA92.1`).
+- `CheckersEngine/`: UI-free Swift package (Swift 6, iOS 26.2 and macOS 15 for host tests); lint
+  fails on UI imports in it.
+- Targets: app `checkers`, `checkersTests` (Swift Testing, MainActor default isolation),
+  `checkersUITests` (XCUITest, nonisolated default; mark tests `@MainActor`). Acceptance tests
+  name their story ID (`US1`…). Test plans: `checkers.xctestplan` (blocking) and
+  `Performance.xctestplan` (launch timing).
+- The project uses **file-system synchronized groups** (`objectVersion = 77`): files dropped into a
+  target's folder join that target without `project.pbxproj` edits.
+- HTML screens: `Classic.html`, `Modern.html`, `Playful.html` are static board mockups scaled by
+  `fitBoard()`; `Play.html` is the two-player prototype (Light `'w'` moves first). To iterate on a
+  screen, open the HTML file in a browser.
 
-## Leftovers to be aware of
+## Rules enforced on every build and in CI
 
-- `checkers/Item.swift` is the unused SwiftData `@Model` from the Xcode template; nothing references it.
-- `checkers/Assets.xcassets/CheckersApp.swift` is a stray duplicate of `checkers/CheckersApp.swift` inside the asset catalog. Edit the one at `checkers/CheckersApp.swift`.
+- SwiftLint 0.65.1 through the `SwiftLintPlugins` package plugin, configured in `.swiftlint.yml`
+  (errors: force unwrap family, `ObservableObject`/`@Published`, Combine, `DispatchQueue`/
+  `OperationQueue`/`Thread`, `print`). Test folders relax the force-unwrap family and `print`.
+- swift-format (bundled with Xcode) with `../.swift-format`: warnings locally, errors in CI.
+- CI (`../.github/workflows/ci.yml`): pushes to any branch except `main`; Markdown-only pushes
+  skip build and tests; the `CI gate` job is the required check. Land work on `main` by
+  fast-forward after the branch is green; no pull requests.

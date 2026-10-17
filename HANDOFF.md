@@ -107,6 +107,31 @@ Last updated: 2026-10-16
 - **The GitHub MCP connector failed to authenticate** in this session; the `gh` CLI covers
   everything needed.
 
+## Lessons learned (E1 implementation, 2026-10-16)
+
+- **GitHub access uses the token in `../secrets/github.txt`** (outside the repo), passed only as
+  `GH_TOKEN`; never print or commit it. It has `repo`, `workflow`, `project`, `read:org`. Pushing a
+  file under `.github/workflows/` needs the `workflow` scope.
+- **UI test targets keep nonisolated default isolation.** `XCTestCase` initializers are
+  nonisolated, so a MainActor default breaks compilation; mark UI test methods `@MainActor`.
+- **Package test targets in a test plan need a project navigator reference to the package**
+  (a folder file reference next to the `XCLocalSwiftPackageReference`). Without it `xcodebuild`
+  silently skips them; check with `xcrun xcresulttool get test-results tests`.
+- **Command-line builds never update `Localizable.xcstrings`**; only Xcode does. CI syncs a copy
+  with `xcrun xcstringstool sync` and fails on any difference. When building only from the command
+  line, sync the catalog the same way and commit it.
+- **The SwiftLint plugin uses the topmost `.swiftlint.yml` in the project folder**
+  (`checkers/.swiftlint.yml`); nested configs in test folders relax rules; the engine package has
+  its own config with `parent_config`. Command-line builds need `-skipPackagePluginValidation`.
+- **CI probes go on throwaway `probe/*` branches** (one deliberate defect each) so they run in
+  parallel without cancelling the slice branch's run; delete them afterwards.
+- **Launch baselines are per machine** in `checkers/launch-baselines.json` (Intel Mac and arm64
+  runner differ); Xcode's own baselines are tied to one machine and could not be created from the
+  command line.
+- **Script pitfalls**: macOS ships bash 3.2, so expand possibly empty arrays as
+  `${arr[@]+"${arr[@]}"}`; with `pipefail`, `cmd | grep -q` can report the producer's failure, so
+  capture output first and grep the variable.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
