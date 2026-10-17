@@ -8,6 +8,14 @@
 
 **Input**: User description: "Rules engine (epic E2, GitHub issue #29): the complete American checkers rules from FRD.md v1.1 sections 8 (Rules), 9 (Ending a game) and 10 (Undo), plus FR-SETUP-06 and the capture-chain behavior in section 7.3, as tested, UI-free logic in the existing CheckersEngine package. Users are the players, through the screens later epics build on it: E3 (board, two-player play, undo and resign), E4 (computer opponent), E5 (saving and results). Out of scope: any UI, the computer opponent and its undo pairing (FR-UNDO-03, FR-UNDO-04), saving and statistics."
 
+## Clarifications
+
+### Session 2026-10-16
+
+- Q: If one turn ends the game in two ways at once, which result counts? → A: A win by no legal moves beats any draw; if both draw rules trigger together, the draw is by repetition.
+- Q: Should the engine report what each step did? → A: Yes. Every applied step returns a step result: side and piece, from and to squares, the captured square if any, whether a man was crowned, whether the turn continues, and the outcome if the game ended. Screens use it for sounds, announcements and showing the computer's jumps.
+- Q: How should positions be counted for threefold repetition? → A: Only at the start of a turn, never mid-chain; the opening position is the first occurrence; a position is the same pieces of the same kind on the same squares with the same side to move; undoing a turn removes its occurrence.
+
 ## User Scenarios & Testing *(mandatory)*
 
 The players never see this engine directly; they experience it through the game screens built in
@@ -100,6 +108,9 @@ crowns mid-chain and check the turn ends.
    king, **When** it makes that jump, **Then** it becomes a king and the turn ends.
 5. **Given** a Dark man reaching row 1 by a simple move, **When** the move is made, **Then** it
    becomes a king and Light is to move.
+6. **Given** any applied step, **When** its result is read, **Then** it names the from and to
+   squares, the captured square for a jump, whether the man was crowned and whether the turn
+   continues, matching what changed on the board.
 
 ---
 
@@ -227,6 +238,10 @@ end.
 - **FR-012**: A man ending a step on the far row (row 8 for Light, row 1 for Dark) MUST be crowned
   king at once, and crowning MUST end the turn, even in the middle of a chain (FR-RULE-07,
   FR-CHAIN-03).
+- **FR-027**: Applying a step MUST report what happened: the side and piece that moved, the from
+  and to squares, the captured square if any, whether a man was crowned, whether the turn continues
+  with the same piece, and the outcome if the game ended. Screens rely on it for distinct sounds
+  (FR-SND-01), announcements (FR-A11Y-03) and showing the computer's jumps one by one (FR-AI-05).
 
 **Game state and endings (#47: #48, #49, #50, #51, #52)**
 
@@ -242,7 +257,8 @@ end.
   reason "resignation" (FR-END-02). Which side resigns is decided by the screen (E3, E4).
 - **FR-016**: The game MUST end in a draw, reason "repetition", when the same position (same pieces
   of the same kind on the same squares) with the same side to move occurs at the start of a turn
-  for the third time (FR-END-03).
+  for the third time (FR-END-03). The opening position counts as an occurrence, positions in the
+  middle of a capture chain are never counted, and undoing a turn removes its occurrence.
 - **FR-017**: The game MUST end in a draw, reason "no progress", after 80 consecutive completed
   turns (40 per side) with no capture and no man moved; any capture or man move, including a man's
   crowning move, resets the count (FR-END-04).
@@ -285,6 +301,7 @@ end.
 | #43 Mandatory capture | FR-007, FR-008 | FR-RULE-05 |
 | #45 Jump-by-jump chains | FR-009, FR-010, FR-011 | FR-RULE-06, FR-CHAIN-01–03 |
 | #46 Crowning ends the turn | FR-012 | FR-RULE-07 |
+| #45, #46 Step results | FR-027 | FR-SND-01, FR-A11Y-03, FR-AI-05 (later epics) |
 | #48 Game state | FR-013, FR-020, FR-026 | — |
 | #49 No legal moves | FR-014, FR-019 | FR-END-01 |
 | #50 Threefold repetition | FR-016, FR-019 | FR-END-03 |
@@ -304,6 +321,8 @@ recording results in E5.
 - **Piece**: a side (Light or Dark) and a kind (man or king).
 - **Position**: which piece, if any, stands on each dark square.
 - **Step**: one legal action: a simple move (from, to) or a single jump (from, over, to).
+- **Step result**: what an applied step did: side and piece, from and to, captured square,
+  crowned or not, turn continues or ends, and the outcome if the game ended.
 - **Turn**: the steps one side makes before the other side moves: one simple move, or one or more
   jumps by the same piece.
 - **Game state**: position, side to move, chain in progress, draw counters, repetition record,
@@ -335,10 +354,8 @@ recording results in E5.
   row 8), as the FRD decides; a1 is a dark square, matching the standard board.
 - **Turns and moves**: a "move" in the FRD's draw rules means a completed turn; a full capture chain
   is one turn. The 40-move rule counts completed turns of both sides together (80 in total).
-- **Repetition** compares positions at the start of turns only, including the starting position,
-  and undo removes undone positions from the record (story 5, scenario 5).
-- **Precedence** of simultaneous endings (FR-019) is a reasonable default the FRD does not state;
-  `/speckit-clarify` (#32) should confirm it.
+- **Repetition** counting is confirmed in Clarifications and now part of FR-016.
+- **Precedence** of simultaneous endings (FR-019) is not in the FRD; confirmed in Clarifications.
 - **Resignation** is accepted for either side at any time while the game is in progress; the screens
   decide who may resign (FRD: the human against the computer, the side to move in a two-player
   game).
