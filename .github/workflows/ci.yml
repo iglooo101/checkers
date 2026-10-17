@@ -70,6 +70,9 @@ jobs:
       - name: Script tests
         run: scripts/tests/run.sh
 
+      - name: Check formatting (strict)
+        run: scripts/check-format.sh --strict
+
       - name: Build and test (warnings are errors)
         run: scripts/test.sh SWIFT_TREAT_WARNINGS_AS_ERRORS=YES GCC_TREAT_WARNINGS_AS_ERRORS=YES
 

@@ -1,0 +1,8 @@
+# Test code may force-unwrap and print: Constitution IV.1 applies outside test targets.
+# Every other rule from checkers/.swiftlint.yml still applies.
+disabled_rules:
+  - force_unwrapping
+  - force_cast
+  - force_try
+  - implicitly_unwrapped_optional
+  - no_print

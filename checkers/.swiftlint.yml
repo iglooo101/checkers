@@ -1,0 +1,66 @@
+# SwiftLint rules for the app, its test targets and (through its parent_config) CheckersEngine.
+# Contract: specs/001-project-foundation/contracts/lint-rules.md
+# Errors fail the build and CI; warnings are reported only.
+
+# Layout belongs to swift-format (.swift-format at the repository root), so these overlapping
+# rules stay off and the two tools never disagree.
+disabled_rules:
+  - trailing_comma
+  - opening_brace
+  - closing_brace
+  - comma
+  - colon
+  - line_length
+  - trailing_whitespace
+  - vertical_whitespace
+  - statement_position
+  - leading_whitespace
+  - return_arrow_whitespace
+  - vertical_parameter_alignment
+  - trailing_newline
+
+opt_in_rules:
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+
+# Constitution IV.1: no force unwraps, force casts, try! or implicitly unwrapped optionals
+# outside test targets. Test targets relax these in their own nested configuration.
+force_unwrapping:
+  severity: error
+force_cast: error
+force_try: error
+implicitly_unwrapped_optional:
+  severity: error
+
+# Allow-list policy: an exception names specific files in a rule's `excluded` list and is recorded
+# with its reason in the plan's "Lint allow-list" table. The allow-list is empty.
+custom_rules:
+  no_observable_object:
+    name: "No ObservableObject or @Published"
+    regex: '\bObservableObject\b|@Published\b'
+    message: "Use the Observation framework (@Observable) instead (Constitution I.2)."
+    severity: error
+  no_combine:
+    name: "No Combine"
+    regex: '^\s*import\s+Combine\b'
+    message: "Combine needs a plan justification (Constitution I.2)."
+    severity: error
+  no_legacy_concurrency:
+    name: "No legacy concurrency"
+    regex: '\b(DispatchQueue|OperationQueue|Thread)\b'
+    match_kinds:
+      - identifier
+      - typeidentifier
+    message: "Use Swift Concurrency instead of DispatchQueue, OperationQueue or Thread (Constitution I.3)."
+    severity: error
+  no_print:
+    name: "No print"
+    regex: '\b(print|debugPrint|NSLog)\s*\('
+    message: "Log with the shared Logger (Log) instead (Constitution IX.1)."
+    severity: error
+  engine_no_ui_imports:
+    name: "Engine stays UI-free"
+    included: ".*CheckersEngine/Sources/.*"
+    regex: '^\s*import\s+(SwiftUI|UIKit|WebKit|Combine)\b'
+    message: "CheckersEngine must not depend on UI frameworks (Constitution II)."
+    severity: error

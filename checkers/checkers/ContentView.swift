@@ -29,7 +29,7 @@ struct Screen: Identifiable {
         Screen(title: "Classic", file: "Classic"),
         Screen(title: "Modern", file: "Modern"),
         Screen(title: "Playful", file: "Playful"),
-        Screen(title: "Play", file: "Play")
+        Screen(title: "Play", file: "Play"),
     ]
 }
 

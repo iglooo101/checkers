@@ -99,6 +99,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B63288CA307AC4A4001AE686 /* Build configuration list for PBXNativeTarget "checkers" */;
 			buildPhases = (
+				F0A7000A307AC4A2001AE686 /* Check formatting */,
 				B63288B9307AC4A2001AE686 /* Sources */,
 				B63288BA307AC4A2001AE686 /* Frameworks */,
 				B63288BB307AC4A2001AE686 /* Resources */,
@@ -106,6 +107,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				51170102307AC4A2001AE686 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				B63288BF307AC4A2001AE686 /* checkers */,
@@ -128,6 +130,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				51170104307AC4A2001AE686 /* PBXTargetDependency */,
 				7E570007307AC4A2001AE686 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -151,6 +154,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				51170106307AC4A2001AE686 /* PBXTargetDependency */,
 				7E570012307AC4A2001AE686 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
@@ -195,6 +199,9 @@
 			);
 			mainGroup = B63288B4307AC4A2001AE686;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B63288BE307AC4A2001AE686 /* Products */;
 			projectDirPath = "";
@@ -231,6 +238,28 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		F0A7000A307AC4A2001AE686 /* Check formatting */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Check formatting";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"$SRCROOT/../scripts/check-format.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		B63288B9307AC4A2001AE686 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -265,6 +294,18 @@
 			isa = PBXTargetDependency;
 			target = B63288BC307AC4A2001AE686 /* checkers */;
 			targetProxy = 7E570011307AC4A2001AE686 /* PBXContainerItemProxy */;
+		};
+		51170102307AC4A2001AE686 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 51170101307AC4A2001AE686 /* SwiftLintBuildToolPlugin */;
+		};
+		51170104307AC4A2001AE686 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 51170103307AC4A2001AE686 /* SwiftLintBuildToolPlugin */;
+		};
+		51170106307AC4A2001AE686 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 51170105307AC4A2001AE686 /* SwiftLintBuildToolPlugin */;
 		};
 /* End PBXTargetDependency section */
 
@@ -399,6 +440,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RH237UKVE;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -417,7 +459,8 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -431,6 +474,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5RH237UKVE;
 				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -449,7 +493,8 @@
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -586,6 +631,34 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+/* Begin XCRemoteSwiftPackageReference section */
+		51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SimplyDanny/SwiftLintPlugins";
+			requirement = {
+				kind = exactVersion;
+				version = 0.65.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		51170101307AC4A2001AE686 /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		51170103307AC4A2001AE686 /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+		51170105307AC4A2001AE686 /* SwiftLintBuildToolPlugin */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
+			productName = "plugin:SwiftLintBuildToolPlugin";
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B63288B5307AC4A2001AE686 /* Project object */;
 }

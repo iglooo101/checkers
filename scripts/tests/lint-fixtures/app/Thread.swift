@@ -1,0 +1,1 @@
+let isMain = Thread.isMainThread

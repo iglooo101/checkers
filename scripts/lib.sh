@@ -19,3 +19,16 @@ XCODEBUILD_FLAGS=(
   -derivedDataPath "$DERIVED_DATA"
   -skipPackagePluginValidation
 )
+
+# Prints the path of the SwiftLint executable from the SwiftLintPlugins package (the version
+# pinned in Package.resolved), resolving packages first if needed.
+swiftlint_bin() {
+  local artifacts="$DERIVED_DATA/SourcePackages/artifacts/swiftlintplugins/SwiftLintBinary"
+  if [[ ! -d "$artifacts" ]]; then
+    xcodebuild -resolvePackageDependencies "${XCODEBUILD_FLAGS[@]}" >/dev/null
+  fi
+  local binary
+  binary="$(find "$artifacts" -path '*macos*' -name swiftlint -type f -perm -u+x | head -1)"
+  [[ -n "$binary" ]] || return 1
+  echo "$binary"
+}
