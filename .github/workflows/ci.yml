@@ -1,0 +1,97 @@
+# CI for the checkers app. Contract: specs/001-project-foundation/contracts/ci-gate.md
+# "CI gate" is the only check `main` requires. `main` itself never runs CI: commits reach it by
+# fast-forward after passing on their branch.
+
+name: CI
+
+on:
+  push:
+    branches-ignore: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    name: changes
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.classify.outputs.code }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Classify the push (docs-only or code)
+        id: classify
+        env:
+          EVENT: ${{ github.event_name }}
+          BEFORE: ${{ github.event.before }}
+        run: |
+          if [[ "$EVENT" == workflow_dispatch ]]; then
+            echo "Manual run: building everything."
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [[ -z "$BEFORE" || "$BEFORE" =~ ^0+$ ]] || ! git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            base="$(git merge-base origin/main HEAD)"
+          else
+            base="$BEFORE"
+          fi
+          files="$(git diff --name-only "$base" HEAD)"
+          echo "Changed files since $base:"
+          echo "${files:-(none)}"
+          if [[ "$(printf '%s\n' "$files" | scripts/ci/classify-changes.sh)" == code ]]; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "code=false" >> "$GITHUB_OUTPUT"
+          fi
+
+  build-and-test:
+    name: build-and-test
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: macos-26
+    timeout-minutes: 30
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+      DESTINATION: platform=iOS Simulator,name=iPhone 17,OS=26.2
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Show toolchain
+        run: xcodebuild -version
+
+      - name: Script tests
+        run: scripts/tests/run.sh
+
+      - name: Build and test (warnings are errors)
+        run: scripts/test.sh SWIFT_TREAT_WARNINGS_AS_ERRORS=YES GCC_TREAT_WARNINGS_AS_ERRORS=YES
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results
+          path: .build/TestResults
+          if-no-files-found: ignore
+
+  gate:
+    name: CI gate
+    needs: [changes, build-and-test]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Decide
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          CODE: ${{ needs.changes.outputs.code || 'false' }}
+          BUILD: ${{ needs.build-and-test.result }}
+        run: scripts/ci/gate.sh "$CHANGES" "$CODE" "$BUILD"

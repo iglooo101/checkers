@@ -32,32 +32,40 @@ Epics are listed in execution order.
 
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 0/6 | 6/21 | In Progress |
+| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 1/6 | 8/22 | In Progress |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 0/21 | Todo |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/14 | Todo |
-| | **Total** | | | | **0/41** | **6/140** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
+| | **Total** | | | | **1/41** | **8/142** | |
 
 ## In progress
 
 - #1 E1: Project foundation
-- #2 F1.0: Specification (Spec Kit)
-- #7 E1 Reconcile this epic's board tasks with tasks.md
+- #8 F1.1: Test and CI infrastructure
+- #23 F1.5: Project structure and cleanup
+- #191 Validate the E1 slice and update project docs
 
 ## Next up
 
 E1 Project foundation, in this order (blocked-by links on the board enforce it):
 
-Slice: `specs/001-project-foundation/` on branch `001-project-foundation`.
+Slice: `specs/001-project-foundation/` on branch `001-project-foundation`, implemented with
+`/speckit-implement` story by story. `tasks.md` checkboxes track the 61 Spec Kit tasks; the
+board tracks the issues below.
 
-1. #7 Reconcile the board with `tasks.md` (61 tasks; see its Board Mapping table), and add the
-   MetricKit diagnostics task raised in plan R15 (proposed for E8).
-2. Then implement E1 with `/speckit-implement`, story by story (US1 → US6), moving each board
-   task to In Progress and Done as its `tasks.md` tasks start and finish.
+| Story | Board tasks | Status |
+|---|---|---|
+| US1 Run tests locally | #9 | Done |
+| US2 CI guards `main` | #10, #11, #12 | Todo |
+| US3 Compiler and lint rules | #14, #16, #17 | Todo |
+| US4 Engine module | #25 | Todo |
+| US5 Privacy, logging, localization, platform | #19, #20, #21, #22 | Todo |
+| US6 Cleanup and launch baseline | #24, #28 | Todo |
+| Validation and docs | #191 | In Progress |
 
 ## Order and dependencies
 
@@ -102,7 +110,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 In execution order. Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done.
 Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
-### E1 Project foundation (#1) · M1 Foundation · P0 · 6/21 tasks
+### E1 Project foundation (#1) · M1 Foundation · P0 · 8/22 tasks
 
 **F1.0 Specification (Spec Kit)** (#2) · Constitution I–IX
 
@@ -112,11 +120,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #4 E1 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #5 E1 Plan: write plan.md with /speckit-plan, including the Constitution Check · M · after #27
 - [x] #6 E1 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S · after #26
-- [~] #7 E1 Reconcile this epic's board tasks with tasks.md · S
+- [x] #7 E1 Reconcile this epic's board tasks with tasks.md · S
 
 **F1.1 Test and CI infrastructure** (#8) · Constitution III
 
-- [ ] #9 Add unit test target (Swift Testing) and UI test target (XCUITest) · M
+- [x] #9 Add unit test target (Swift Testing) and UI test target (XCUITest) · M
 - [ ] #10 Add GitHub Actions CI: build and test on an iOS simulator · M · after #9
 - [ ] #11 Fail CI on compiler warnings and SwiftLint errors · S · after #10, #14, #16
 - [ ] #12 Protect `main`: require green CI before code lands · S · after #10, #11
@@ -142,6 +150,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #24 Delete template leftovers (Item.swift, stray Assets.xcassets/CheckersApp.swift) · S
 - [ ] #25 Create local Swift package `CheckersEngine` with its own test target · M
 - [ ] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
+- [~] #191 Validate the E1 slice and update project docs · S
 
 ### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 0/21 tasks
 
@@ -353,7 +362,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #151 Rules reachable from Home and the game menu · S
 - [ ] #152 Accessibility pass: Rules · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 0/14 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 0/15 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -368,6 +377,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #177 Verify no network requests, no permission prompts, no account or analytics · S
 - [ ] #178 Verify iPhone portrait-only on devices · S
 - [ ] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
+- [ ] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
 
 **F8.2 Performance** (#180) · Constitution VII
 
@@ -393,7 +403,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   added to E5 (both need the saved game); #190 added to E4 for VoiceOver of the computer's
   moves; E3 features reordered; E7 moved before E4 (milestone M2, priority P0); 62 blocked-by
   links added on the board, including every implementation feature on its Fx.0. Backlog
-  is now 8 epics, 41 features, 140 tasks.
+  is now 8 epics, 41 features, 142 tasks.
 - 2026-10-16: #27 done. Constitution 1.1.0 and `FRD.md` 1.1: iPhone only, portrait; the app
   description matches the FRD; the 400 ms launch budget is confirmed. #22, #75 and #178 were
   retitled and FR-PLAT-02 removed from #74–#78 and #176–#179.
@@ -412,3 +422,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-16: #6 done. `tasks.md`: 61 tasks, test-first. `/speckit-analyze` found 12 issues
   (2 critical); all fixed, including CI no longer running on `main` and launch-test errors
   blocking CI. Archive privacy report moved to #177.
+- 2026-10-16: #7 done: board reconciled with `tasks.md`; #191 (slice validation and docs) and
+  #192 (MetricKit, E8) added. F1.0 (#2) closed. Implementation started.
+- 2026-10-16: #9 done (US1): test targets, shared scheme, test plan, `scripts/test.sh`; US1
+  acceptance tests pass, including a real move on the Play screen.
