@@ -76,6 +76,9 @@ jobs:
       - name: Build and test (warnings are errors)
         run: scripts/test.sh SWIFT_TREAT_WARNINGS_AS_ERRORS=YES GCC_TREAT_WARNINGS_AS_ERRORS=YES
 
+      - name: Check the string catalog
+        run: scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7

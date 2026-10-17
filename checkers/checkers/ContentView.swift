@@ -1,3 +1,4 @@
+import OSLog
 import SwiftUI
 import WebKit
 
@@ -12,6 +13,7 @@ struct WebView: UIViewRepresentable {
 
     func updateUIView(_ webView: WKWebView, context: Context) {
         guard let url = Bundle.main.url(forResource: htmlFileName, withExtension: "html") else {
+            Log.app.error("Missing bundled screen \(htmlFileName).html")
             return
         }
         webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
@@ -20,7 +22,7 @@ struct WebView: UIViewRepresentable {
 
 /// A bundled HTML screen and the title shown for it in the screen picker.
 struct Screen: Identifiable {
-    let title: String
+    let title: LocalizedStringResource
     let file: String
 
     var id: String { file }
