@@ -137,15 +137,15 @@ description: "Task list for the project foundation slice (epic E1)"
 
 ### Tests for User Story 4 (MANDATORY - write first) ⚠️
 
-- [ ] T036 [P] [US4] Create `checkers/CheckersEngine/Package.swift` (`swift-tools-version: 6.2`; platforms `.iOS("26.2")`, `.macOS(.v15)`; library product `CheckersEngine`; targets `CheckersEngine` and test target `CheckersEngineTests`; dependency SwiftLintPlugins exact 0.65.1 with `SwiftLintBuildToolPlugin` on both targets) and `checkers/CheckersEngine/Tests/CheckersEngineTests/SideTests.swift` with `@Test("US4: each side's opponent is the other side")` (`Side.light.opponent == .dark`, `Side.dark.opponent == .light`). `swift test` fails until T039.
-- [ ] T037 [P] [US4] Write `checkers/checkersTests/EngineLinkTests.swift` with `@Test("US4: the app links CheckersEngine")` that imports `CheckersEngine` and expects `Side.allCases.count == 2`. It fails to compile until T040.
-- [ ] T038 [P] [US4] Add fixture `scripts/tests/lint-fixtures/CheckersEngine/Sources/UIImport.swift` (`import SwiftUI`) and a case in `scripts/tests/test-lint-rules.sh` expecting `engine_no_ui_imports` at error; observe it fail until T041.
+- [X] T036 [P] [US4] Create `checkers/CheckersEngine/Package.swift` (`swift-tools-version: 6.2`; platforms `.iOS("26.2")`, `.macOS(.v15)`; library product `CheckersEngine`; targets `CheckersEngine` and test target `CheckersEngineTests`; dependency SwiftLintPlugins exact 0.65.1 with `SwiftLintBuildToolPlugin` on both targets) and `checkers/CheckersEngine/Tests/CheckersEngineTests/SideTests.swift` with `@Test("US4: each side's opponent is the other side")` (`Side.light.opponent == .dark`, `Side.dark.opponent == .light`). `swift test` fails until T039.
+- [X] T037 [P] [US4] Write `checkers/checkersTests/EngineLinkTests.swift` with `@Test("US4: the app links CheckersEngine")` that imports `CheckersEngine` and expects `Side.allCases.count == 2`. It fails to compile until T040.
+- [X] T038 [P] [US4] Add fixture `scripts/tests/lint-fixtures/CheckersEngine/Sources/UIImport.swift` (`import SwiftUI`) and a case in `scripts/tests/test-lint-rules.sh` expecting `engine_no_ui_imports` at error; observe it fail until T041.
 
 ### Implementation for User Story 4
 
-- [ ] T039 [US4] Implement `checkers/CheckersEngine/Sources/CheckersEngine/Side.swift`: `public enum Side: Sendable, CaseIterable { case light, dark }` with `public var opponent: Side`. `swift test` passes (T036). Commit `checkers/CheckersEngine/Package.resolved` (Constitution VIII.1).
-- [ ] T040 [US4] Add the local package `CheckersEngine` to `checkers/checkers.xcodeproj/project.pbxproj` (local package reference, product dependency on the `checkers` target) and add `CheckersEngineTests` to `checkers/checkers.xctestplan`. T037 passes and `scripts/test.sh` runs the engine tests.
-- [ ] T041 [US4] Create `checkers/CheckersEngine/.swiftlint.yml` with `parent_config: ../.swiftlint.yml` so the package's plugin uses the shared rules; confirm the T038 case and a real build both report `engine_no_ui_imports` for a temporary `import SwiftUI` in `Side.swift`, then revert.
+- [X] T039 [US4] Implement `checkers/CheckersEngine/Sources/CheckersEngine/Side.swift`: `public enum Side: Sendable, CaseIterable { case light, dark }` with `public var opponent: Side`. `swift test` passes (T036). Commit `checkers/CheckersEngine/Package.resolved` (Constitution VIII.1).
+- [X] T040 [US4] Add the local package `CheckersEngine` to `checkers/checkers.xcodeproj/project.pbxproj` (local package reference, product dependency on the `checkers` target) and add `CheckersEngineTests` to `checkers/checkers.xctestplan`. T037 passes and `scripts/test.sh` runs the engine tests.
+- [X] T041 [US4] Create `checkers/CheckersEngine/.swiftlint.yml` with `parent_config: ../.swiftlint.yml` so the package's plugin uses the shared rules; confirm the T038 case and a real build both report `engine_no_ui_imports` for a temporary `import SwiftUI` in `Side.swift`, then revert.
 
 **Checkpoint**: US4 complete; E2 can start test-first in `CheckersEngine`.
 

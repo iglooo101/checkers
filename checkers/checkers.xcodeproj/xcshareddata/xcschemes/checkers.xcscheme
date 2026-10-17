@@ -21,6 +21,20 @@
                ReferencedContainer = "container:checkers.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CheckersEngineTests"
+               BuildableName = "CheckersEngineTests"
+               BlueprintName = "CheckersEngineTests"
+               ReferencedContainer = "container:CheckersEngine">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction

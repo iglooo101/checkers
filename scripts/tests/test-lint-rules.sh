@@ -41,6 +41,7 @@ expect_error app/DispatchQueue.swift no_legacy_concurrency
 expect_error app/OperationQueue.swift no_legacy_concurrency
 expect_error app/Thread.swift no_legacy_concurrency
 expect_error app/Print.swift no_print
+expect_error CheckersEngine/Sources/UIImport.swift engine_no_ui_imports
 
 if grep -q ' Error$' <<<"$(findings --config "$APP_CONFIG" "$FIXTURES/app/Clean.swift")"; then
   echo "  FAIL: Clean.swift should have no errors"

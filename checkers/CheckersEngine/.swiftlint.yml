@@ -1,0 +1,2 @@
+# CheckersEngine uses the shared rules, including engine_no_ui_imports.
+parent_config: ../.swiftlint.yml

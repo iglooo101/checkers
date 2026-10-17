@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E9E10003307AC4A2001AE686 /* CheckersEngine in Frameworks */ = {isa = PBXBuildFile; productRef = E9E10002307AC4A2001AE686 /* CheckersEngine */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		7E570006307AC4A2001AE686 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		B63288BD307AC4A2001AE686 /* checkers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = checkers.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E570001307AC4A2001AE686 /* checkersTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = checkersTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E57000C307AC4A2001AE686 /* checkersUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = checkersUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9E10004307AC4A2001AE686 /* CheckersEngine */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CheckersEngine; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9E10003307AC4A2001AE686 /* CheckersEngine in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,6 +81,7 @@
 		B63288B4307AC4A2001AE686 = {
 			isa = PBXGroup;
 			children = (
+				E9E10004307AC4A2001AE686 /* CheckersEngine */,
 				B63288BF307AC4A2001AE686 /* checkers */,
 				7E570002307AC4A2001AE686 /* checkersTests */,
 				7E57000D307AC4A2001AE686 /* checkersUITests */,
@@ -114,6 +121,7 @@
 			);
 			name = checkers;
 			packageProductDependencies = (
+				E9E10002307AC4A2001AE686 /* CheckersEngine */,
 			);
 			productName = checkers;
 			productReference = B63288BD307AC4A2001AE686 /* checkers.app */;
@@ -200,6 +208,7 @@
 			mainGroup = B63288B4307AC4A2001AE686;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				E9E10001307AC4A2001AE686 /* XCLocalSwiftPackageReference "CheckersEngine" */,
 				51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -631,6 +640,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+/* Begin XCLocalSwiftPackageReference section */
+		E9E10001307AC4A2001AE686 /* XCLocalSwiftPackageReference "CheckersEngine" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = CheckersEngine;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -643,6 +659,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E9E10002307AC4A2001AE686 /* CheckersEngine */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CheckersEngine;
+		};
 		51170101307AC4A2001AE686 /* SwiftLintBuildToolPlugin */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 51170100307AC4A2001AE686 /* XCRemoteSwiftPackageReference "SwiftLintPlugins" */;
