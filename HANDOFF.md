@@ -36,8 +36,9 @@ Last updated: 2026-10-16
   **E1 Project foundation is done** (22/22 board tasks). Progress and the full list are in
   `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
-  `checklists/validation.md`). The next slice is E2; `.specify/feature.json` is local and
-  git-ignored, and `/speckit-specify` rewrites it for the new slice.
+  `checklists/validation.md`). The active slice is E2's `specs/002-rules-engine/` on branch
+  `002-rules-engine` (#31 Specify done). `.specify/feature.json` is local and git-ignored; recreate
+  it with `{"feature_directory": "specs/002-rules-engine"}` if missing.
 
 ## Lessons learned
 
@@ -136,7 +137,7 @@ in product behavior is made in `FRD.md` first. Move each board item to In Progre
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E2 Rules engine (#29)** on a new branch `002-rules-engine`: F2.0 specification first —
-   #31 Specify (scope: FRD sections 8, 9, 10) → #32 Clarify → #33 Plan → #34 Tasks + analyze →
+   #31 Specify (scope: FRD sections 8, 9, 10; done) → #32 Clarify → #33 Plan → #34 Tasks + analyze →
    #35 Reconcile the board. Then implement test-first in `checkers/CheckersEngine`.
 2. Epic order after that: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
 3. Follow-ups noted during E1: #71 or #140 adds the UserDefaults entry to the privacy manifest

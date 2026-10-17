@@ -33,26 +33,27 @@ Epics are listed in execution order.
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
-| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 0/21 | Todo |
+| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 1/21 | In Progress |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **6/41** | **22/142** | |
+| | **Total** | | | | **6/41** | **23/142** | |
 
 ## In progress
 
-Nothing in progress.
+- #29 E2: Rules engine
+- #30 F2.0: Specification (Spec Kit)
 
 ## Next up
 
 E1 Project foundation is done (slice `specs/001-project-foundation/`, landed on `main`).
 Next is E2 Rules engine, one Spec Kit slice taking its scope from FRD sections 8, 9 and 10,
-on a new branch `002-rules-engine`:
+on branch `002-rules-engine` (slice `specs/002-rules-engine/`):
 
-1. #31 Specify → #32 Clarify → #33 Plan → #34 Tasks + analyze → #35 Reconcile the board.
+1. #32 Clarify (confirm the spec's defaults) → #33 Plan → #34 Tasks + analyze → #35 Reconcile.
 2. Then implement E2 test-first in `checkers/CheckersEngine` with `/speckit-implement`.
 
 ## Order and dependencies
@@ -139,11 +140,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
 - [x] #191 Validate the E1 slice and update project docs · S
 
-### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 0/21 tasks
+### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 1/21 tasks
 
 **F2.0 Specification (Spec Kit)** (#30) · FRD §8, §9, §10
 
-- [ ] #31 E2 Specify: write spec.md with /speckit-specify · S
+- [x] #31 E2 Specify: write spec.md with /speckit-specify · S
 - [ ] #32 E2 Clarify: resolve open questions with /speckit-clarify · S
 - [ ] #33 E2 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #34 E2 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
@@ -421,3 +422,5 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-16: E1 done. All 61 slice tasks complete and validated (`checklists/validation.md`);
   `main` is protected by the `CI gate` check (an unchecked push was rejected, a checked
   fast-forward accepted). Closed #10, #12, #18–#24, #28, #191, features F1.1–F1.5 and E1.
+- 2026-10-16: E2 started. #31 done: `specs/002-rules-engine/spec.md`, 5 stories, 26 functional
+  requirements traced to #37–#56, checklist 16/16.
