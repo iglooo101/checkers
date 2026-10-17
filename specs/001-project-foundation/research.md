@@ -182,8 +182,12 @@ and what else was considered. Facts marked *measured* were checked on the develo
 ## R12. Launch-time baseline
 
 - **Decision**: `LaunchPerformanceTests` in `checkersUITests` measures cold launch with
-  `XCTApplicationLaunchMetric`. The baseline for the development Mac's iPhone 17 simulator is
-  stored in the shared project data so later local runs compare against it. CI runs the
+  `XCTApplicationLaunchMetric`. Baselines are stored per machine in `checkers/launch-baselines.json`
+  (for example `local-x86_64 iPhone 17`), recorded with `scripts/report-launch.sh --record`;
+  `report-launch.sh` compares each run with its own machine's entry and flags a result more than
+  20% slower. (Changed during implementation: Xcode's shared baselines are keyed to one exact
+  machine and could not be created from the command line, and the Intel development Mac and the
+  arm64 runner need separate baselines anyway.) CI runs the
   Performance test plan as a normal step, extracts the measured duration from the result bundle,
   and writes it with the recorded baseline to the job summary (clarification Q2). Because CI
   runners have no recorded baseline, the measurement cannot fail on timing; the step fails only

@@ -20,7 +20,10 @@
         "containerPath" : "container:checkers.xcodeproj",
         "identifier" : "7E570013307AC4A2001AE686",
         "name" : "checkersUITests"
-      }
+      },
+      "skippedTests" : [
+        "LaunchPerformanceTests"
+      ]
     },
     {
       "target" : {

@@ -8,7 +8,7 @@ slices build on. Each one has a single owner location and a check that keeps it 
 | Shared scheme | `checkers/checkers.xcodeproj/xcshareddata/xcschemes/checkers.xcscheme` | Build, run and test actions for the app; references both test plans | CI uses it for every code push |
 | Blocking test plan | `checkers/checkers.xctestplan` | `checkersTests`, `checkersUITests` (minus the launch test), `CheckersEngineTests`; Main Thread Checker on | `CI gate` |
 | Performance test plan | `checkers/Performance.xctestplan` | `LaunchPerformanceTests` only | CI step that reports timing and fails only if the test errors |
-| Launch baseline | shared baseline data in the Xcode project for the local iPhone 17 simulator | Expected cold-launch duration | Local launch test runs |
+| Launch baselines | `checkers/launch-baselines.json`, one entry per machine and simulator | Expected cold-launch duration | `scripts/report-launch.sh` (flags more than 20% slower) |
 | Engine package | `checkers/CheckersEngine/Package.swift` and its committed `Package.resolved` | Library `CheckersEngine`, test target `CheckersEngineTests`, platforms iOS 26.2 and macOS 15, Swift 6 mode | `swift test` and the blocking test plan |
 | Lint configuration | `.swiftlint.yml` files (see `contracts/lint-rules.md`) | Rule set, severities, custom rules | Build tool plugin on every build |
 | Format configuration | `.swift-format` (repository root) | Layout rules | Build phase (warn), CI (fail) |

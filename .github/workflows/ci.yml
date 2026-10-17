@@ -79,6 +79,14 @@ jobs:
       - name: Check the string catalog
         run: scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData
 
+      # Timing only reports (clarification Q2); a launch test that errors still fails (III.5).
+      - name: Launch timing
+        run: TEST_PLAN=Performance scripts/test.sh
+
+      - name: Report launch timing
+        if: always()
+        run: scripts/report-launch.sh .build/TestResults/Performance.xcresult >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7

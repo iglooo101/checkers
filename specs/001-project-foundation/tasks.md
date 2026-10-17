@@ -186,14 +186,14 @@ description: "Task list for the project foundation slice (epic E1)"
 
 ### Tests for User Story 6 (MANDATORY - write first) ⚠️
 
-- [ ] T053 [P] [US6] Write `checkers/checkersUITests/LaunchPerformanceTests.swift` with `testUS6_coldLaunchDuration`, measuring `XCUIApplication().launch()` with `XCTApplicationLaunchMetric()`.
+- [X] T053 [P] [US6] Write `checkers/checkersUITests/LaunchPerformanceTests.swift` with `testUS6_coldLaunchDuration`, measuring `XCUIApplication().launch()` with `XCTApplicationLaunchMetric()`.
 
 ### Implementation for User Story 6
 
-- [ ] T054 [US6] Delete `checkers/checkers/Item.swift` and `checkers/checkers/Assets.xcassets/CheckersApp.swift`; confirm nothing references them (`git grep -n "Item\b\|SwiftData"` finds nothing) and the app builds.
-- [ ] T055 [US6] Create `checkers/Performance.xctestplan` containing only `LaunchPerformanceTests`, add it to `checkers.xcscheme`, and skip `LaunchPerformanceTests` in `checkers/checkers.xctestplan`.
-- [ ] T056 [US6] Run the Performance plan locally on the iPhone 17 simulator, set the baseline in Xcode, and commit the baseline under `checkers/checkers.xcodeproj/xcshareddata/xcbaselines/`.
-- [ ] T057 [US6] Create `scripts/report-launch.sh <xcresult>`: extracts the launch duration with `xcrun xcresulttool` and prints a Markdown line with the measured value and the recorded baseline. Add a CI step running the Performance plan as a normal (blocking) step, without `continue-on-error`: CI runners have no recorded baseline, so timing only reports and cannot fail, while a launch test that errors fails `CI gate` (Constitution III.5). A following step with `if: always()` appends the report to `$GITHUB_STEP_SUMMARY`.
+- [X] T054 [US6] Delete `checkers/checkers/Item.swift` and `checkers/checkers/Assets.xcassets/CheckersApp.swift`; confirm nothing references them (`git grep -n "Item\b\|SwiftData"` finds nothing) and the app builds.
+- [X] T055 [US6] Create `checkers/Performance.xctestplan` containing only `LaunchPerformanceTests`, add it to `checkers.xcscheme`, and skip `LaunchPerformanceTests` in `checkers/checkers.xctestplan`.
+- [X] T056 [US6] Run the Performance plan locally on the iPhone 17 simulator (`TEST_PLAN=Performance scripts/test.sh`) and record the baseline with `scripts/report-launch.sh <xcresult> --record` in `checkers/launch-baselines.json`, one entry per machine. (Changed during implementation: Xcode's own baselines are keyed to one exact machine and cannot be created reliably from the command line; see research R12.)
+- [X] T057 [US6] Create `scripts/report-launch.sh <xcresult>`: extracts the launch duration with `xcrun xcresulttool` and prints a Markdown line with the measured value and the recorded baseline. Add a CI step running the Performance plan as a normal (blocking) step, without `continue-on-error`: CI runners have no recorded baseline, so timing only reports and cannot fail, while a launch test that errors fails `CI gate` (Constitution III.5). A following step with `if: always()` appends the report to `$GITHUB_STEP_SUMMARY`.
 
 **Checkpoint**: All six stories complete.
 

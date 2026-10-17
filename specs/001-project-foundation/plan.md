@@ -139,6 +139,7 @@ checkers/
 │       └── xcschemes/checkers.xcscheme
 ├── checkers.xctestplan                # blocking: unit, UI, engine tests
 ├── Performance.xctestplan             # launch test: timing reported, errors block
+├── launch-baselines.json              # cold-launch baseline per machine
 ├── checkers/                          # app target (synchronized group)
 │   ├── CheckersApp.swift
 │   ├── ContentView.swift              # titles become localized resources

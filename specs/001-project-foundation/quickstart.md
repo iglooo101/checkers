@@ -92,8 +92,9 @@ git ls-files | grep -E 'Item\.swift|Assets\.xcassets/CheckersApp\.swift'
 
 Expected: no output.
 
-Run the `Performance` test plan from Xcode (Product › Test Plan › Performance, then Test).
-Expected: a cold-launch duration is reported against the recorded baseline. In CI, the same
+Run `TEST_PLAN=Performance scripts/test.sh`, then
+`scripts/report-launch.sh .build/TestResults/Performance.xcresult`. Expected: a cold-launch
+duration is reported against this machine's baseline in `checkers/launch-baselines.json`. In CI, the same
 number appears in the job summary, and a slow result does not fail `CI gate`.
 
 ## 8. Existing screens unchanged (FR-021, SC-007)
