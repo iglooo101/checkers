@@ -18,30 +18,26 @@ Last updated: 2026-10-16
 ## Current state
 
 - **Repo**: `github.com/iglooo101/checkers`. The repo root is this folder; the Xcode project lives
-  in `checkers/` (see `checkers/CLAUDE.md`).
-- **Branches**: `main` holds everything (the FRD, execution plan and handoff work landed from
-  `docs/frd` through PR #188 by fast-forward). Start new work on a fresh feature branch.
-- **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15,
-  amended 2026-10-16: iPhone only, portrait; values confirmed in #27). Nine
-  principles (SwiftUI, Swift 6 strict concurrency, test-first, accessibility, privacy, performance,
-  dependencies, observability) plus workflow and governance gates.
-- **App**: a SwiftUI shell around bundled HTML/JS checkers screens in a `WKWebView`. No test
-  target, no CI.
-- **Functional requirements**: `FRD.md` at the repo root, v1.1 (approved 2026-10-15; v1.1 on
-  2026-10-16 makes the first release iPhone only, portrait). It specifies
-  how players interact with the target product (vs computer at three levels and two players on one
-  device, American rules, undo, auto-save, win/loss record, themes, VoiceOver). Requirements have
-  IDs such as `FR-MOVE-03`; section 19 lists what is out of scope.
-- **Backlog**: 8 epics, 41 features, 140 tasks as issues #1–#190 (#188 is a PR) in
-  `iglooo101/checkers`, labeled
-  `epic` / `feature` / `task`, nested with sub-issues, assigned to milestones M1–M5, and all on
-  the project board (Status, Level, Epic, Priority, Size). Progress and the full list are in
-  `EXECUTION_PLAN.md`. E1 is in progress: F1.0 tasks #27, #26, #3, #4, #5 and #6 are done; #7 is next, then
-  implementation from `specs/001-project-foundation/tasks.md`.
-- **Active Spec Kit slice**: `specs/001-project-foundation/` (E1) on branch
-  `001-project-foundation`; the local, git-ignored `.specify/feature.json` points Spec Kit
-  commands at it (recreate it with `{"feature_directory": "specs/001-project-foundation"}` if missing). `main` is
-  fast-forwarded to the branch at each close-out so `EXECUTION_PLAN.md` on `main` stays current.
+  in `checkers/` (see `checkers/CLAUDE.md` for commands and layout).
+- **Branches**: `main` is protected: a commit lands only if the `CI gate` check passed for that
+  exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
+  CI, then fast-forward `main` (`git push origin <sha>:main` works without switching branches).
+  `001-project-foundation` is fully merged.
+- **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
+  2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
+- **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
+  `FR-MOVE-03`; section 19 lists what is out of scope.
+- **App**: still the SwiftUI shell around the bundled HTML/JS screens (replaced in E3), now with
+  Swift 6, unit/UI/engine test targets, the `CheckersEngine` package (only `Side` so far), a
+  privacy manifest, a shared logger, a string catalog and iPhone-only portrait settings.
+- **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
+  build (about 20 s); code pushes take 5–13 minutes.
+- **Backlog**: 8 epics, 41 features, 142 tasks (#1–#192; #188 is a PR) on the project board.
+  **E1 Project foundation is done** (22/22 board tasks). Progress and the full list are in
+  `EXECUTION_PLAN.md`.
+- **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
+  `checklists/validation.md`). The next slice is E2; `.specify/feature.json` is local and
+  git-ignored, and `/speckit-specify` rewrites it for the new slice.
 
 ## Lessons learned
 
@@ -135,13 +131,13 @@ Last updated: 2026-10-16
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
-`/speckit-specify` takes its scope from `FRD.md` (or the constitution, for E1) and lists the
-requirement IDs it covers. A change in product behavior is made in `FRD.md` first.
+`/speckit-specify` takes its scope from `FRD.md` and lists the requirement IDs it covers. A change
+in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
+it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. Start E1 (#1) with its specification feature F1.0 (#2), in this order: #27 Confirm the
-   constitution values (done) → #26 Make tests mandatory in `tasks-template.md` (done) → #3 Specify (done) → #4 Clarify (done)
-   → #5 Plan (done) → #6 Tasks + analyze (done) → #7 Reconcile the board with `tasks.md`. Move each item to In
-   Progress before starting it and to Done when complete, on the board and in
-   `EXECUTION_PLAN.md`.
-2. Epic order is E1 → E2 → E3 → E7 → E4 → E5 → E6 → E8 (E7 moved before E4 on 2026-10-16; see
-   `EXECUTION_PLAN.md` for the reasons and the task-level sequencing notes).
+1. **E2 Rules engine (#29)** on a new branch `002-rules-engine`: F2.0 specification first —
+   #31 Specify (scope: FRD sections 8, 9, 10) → #32 Clarify → #33 Plan → #34 Tasks + analyze →
+   #35 Reconcile the board. Then implement test-first in `checkers/CheckersEngine`.
+2. Epic order after that: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
+3. Follow-ups noted during E1: #71 or #140 adds the UserDefaults entry to the privacy manifest
+   when first used; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in E8.

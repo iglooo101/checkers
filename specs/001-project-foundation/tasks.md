@@ -94,7 +94,7 @@ description: "Task list for the project foundation slice (epic E1)"
 - [X] T019 [US2] Push the branch and confirm `CI gate` is green with build and tests run. Then push a commit that changes only a `.md` file and confirm `CI gate` passes within 2 minutes with `build-and-test` skipped (SC-002).
 - [X] T020 [US2] Probe: push a commit with a failing unit test, confirm `CI gate` fails and the log names the test, then revert and confirm green (SC-001, part 1).
 - [X] T021 [US2] Create `scripts/protect-main.sh` that applies branch protection with `gh api -X PUT repos/iglooo101/checkers/branches/main/protection`: required status checks `strict: false`, `contexts: ["CI gate"]`; `enforce_admins: true`; `required_pull_request_reviews: null`; `restrictions: null`; `allow_force_pushes: false`; `allow_deletions: false`. Run it once `main` holds a green `CI gate` commit.
-- [ ] T022 [US2] Verify protection (quickstart §5, SC-003, SC-004): a push to `main` of a commit without a passing check is rejected for the owner; fast-forwarding `main` to a branch commit with a green `CI gate` and pushing is accepted with no pull request.
+- [X] T022 [US2] Verify protection (quickstart §5, SC-003, SC-004): a push to `main` of a commit without a passing check is rejected for the owner; fast-forwarding `main` to a branch commit with a green `CI gate` and pushing is accepted with no pull request.
 
 **Checkpoint**: US2 complete; `main` is gated.
 
@@ -201,10 +201,10 @@ description: "Task list for the project foundation slice (epic E1)"
 
 ## Phase 9: Polish & Cross-Cutting Concerns
 
-- [ ] T058 Run every scenario in `specs/001-project-foundation/quickstart.md` and record each result in `specs/001-project-foundation/checklists/validation.md`.
+- [X] T058 Run every scenario in `specs/001-project-foundation/quickstart.md` and record each result in `specs/001-project-foundation/checklists/validation.md`.
 - [X] T059 [P] Update `checkers/CLAUDE.md` (project guide) for the new layout: test command, scripts, engine package, test plans, removed leftovers, Swift 6 settings.
 - [X] T060 [P] Update `HANDOFF.md` lessons learned: plugin trust and `-skipPackagePluginValidation`, the protected-`main` workflow, the catalog drift check, Xcode 26.3 pin.
-- [ ] T061 Final verification: `main` builds with 0 compiler warnings and 0 lint errors (SC-005); the last code CI run took under 20 minutes (SC-006); the T001 smoke check gives the same result (SC-007); and the slice added no network, account, analytics or permission code (FR-015): `git diff main~N -- checkers/ | grep -E 'URLSession|import Network|NSURLConnection|UsageDescription'` over the slice's commits finds nothing.
+- [X] T061 Final verification: `main` builds with 0 compiler warnings and 0 lint errors (SC-005); the last code CI run took under 20 minutes (SC-006); the T001 smoke check gives the same result (SC-007); and the slice added no network, account, analytics or permission code (FR-015): `git diff main~N -- checkers/ | grep -E 'URLSession|import Network|NSURLConnection|UsageDescription'` over the slice's commits finds nothing.
 
 ---
 

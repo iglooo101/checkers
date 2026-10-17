@@ -32,7 +32,7 @@ Epics are listed in execution order.
 
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
-| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 3/6 | 13/22 | In Progress |
+| 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 0/21 | Todo |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
@@ -40,40 +40,20 @@ Epics are listed in execution order.
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **3/41** | **13/142** | |
+| | **Total** | | | | **6/41** | **22/142** | |
 
 ## In progress
 
-- #1 E1: Project foundation
-- #8 F1.1: Test and CI infrastructure
-- #10 Add GitHub Actions CI: build and test on an iOS simulator
-- #18 F1.4: Privacy, logging and localization baseline
-- #19 Add PrivacyInfo.xcprivacy
-- #20 Add OSLog Logger with bundle-ID subsystem and per-feature categories
-- #21 Add String Catalog (Localizable.xcstrings) and treat its warnings as errors
-- #22 Configure iPhone only (device family 1), portrait only
-- #23 F1.5: Project structure and cleanup
-- #24 Delete template leftovers (Item.swift, stray Assets.xcassets/CheckersApp.swift)
-- #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric)
-- #191 Validate the E1 slice and update project docs
+Nothing in progress.
 
 ## Next up
 
-E1 Project foundation, in this order (blocked-by links on the board enforce it):
+E1 Project foundation is done (slice `specs/001-project-foundation/`, landed on `main`).
+Next is E2 Rules engine, one Spec Kit slice taking its scope from FRD sections 8, 9 and 10,
+on a new branch `002-rules-engine`:
 
-Slice: `specs/001-project-foundation/` on branch `001-project-foundation`, implemented with
-`/speckit-implement` story by story. `tasks.md` checkboxes track the 61 Spec Kit tasks; the
-board tracks the issues below.
-
-| Story | Board tasks | Status |
-|---|---|---|
-| US1 Run tests locally | #9 | Done |
-| US2 CI guards `main` | #10, #11, #12 | In Progress |
-| US3 Compiler and lint rules | #14, #16, #17 | Done |
-| US4 Engine module | #25 | Done |
-| US5 Privacy, logging, localization, platform | #19, #20, #21, #22 | In Progress |
-| US6 Cleanup and launch baseline | #24, #28 | In Progress |
-| Validation and docs | #191 | In Progress |
+1. #31 Specify → #32 Clarify → #33 Plan → #34 Tasks + analyze → #35 Reconcile the board.
+2. Then implement E2 test-first in `checkers/CheckersEngine` with `/speckit-implement`.
 
 ## Order and dependencies
 
@@ -92,9 +72,6 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 
 ### Sequencing notes
 
-- **E1 order**: #27, #26, #3–#7 (Spec Kit), then #24 cleanup → #9 test targets → #25 engine
-  package → #14 Swift 6 → #16, #17 lint and format → #10 CI → #11 strict CI → #12 protect `main`
-  → #19–#22 privacy, logging, localization, orientations → #28 launch baseline.
 - **E3 order**: board view → move input → move aids → undo → game end → app shell and menu →
   game setup. #67 (remove the HTML screens) comes last.
 - **Saved game**: Continue on Home (#189) and "Abandon current game?" (#72) moved from E3 to
@@ -110,15 +87,17 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   tasks during reconciliation.
 - FR-AI-02 (noticeable strength gaps) is partly subjective; the E4 plan needs a measurable
   test plus a playtest.
-- CI must skip Markdown-only changes while still reporting its required check, or docs-only
-  pushes to `main` get blocked (#10, #12).
+- Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
+  Debug build) is 3.6 s and only guards against regressions.
+- Command-line builds do not update `Localizable.xcstrings`; when working without Xcode, sync
+  it with `xcstringstool` (see HANDOFF.md) or CI fails.
 
 ## Backlog
 
 In execution order. Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done.
 Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
-### E1 Project foundation (#1) · M1 Foundation · P0 · 13/22 tasks
+### E1 Project foundation (#1) · M1 Foundation · P0 · 22/22 tasks
 
 **F1.0 Specification (Spec Kit)** (#2) · Constitution I–IX
 
@@ -133,9 +112,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F1.1 Test and CI infrastructure** (#8) · Constitution III
 
 - [x] #9 Add unit test target (Swift Testing) and UI test target (XCUITest) · M
-- [~] #10 Add GitHub Actions CI: build and test on an iOS simulator · M · after #9
+- [x] #10 Add GitHub Actions CI: build and test on an iOS simulator · M · after #9
 - [x] #11 Fail CI on compiler warnings and SwiftLint errors · S · after #10, #14, #16
-- [ ] #12 Protect `main`: require green CI before code lands · S · after #10, #11
+- [x] #12 Protect `main`: require green CI before code lands · S · after #10, #11
 
 **F1.2 Swift 6 and strict concurrency** (#13) · Constitution IV
 
@@ -148,17 +127,17 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F1.4 Privacy, logging and localization baseline** (#18) · FR-PRIV-01, FR-PRIV-02, FR-PLAT-03
 
-- [~] #19 Add PrivacyInfo.xcprivacy · S
-- [~] #20 Add OSLog Logger with bundle-ID subsystem and per-feature categories · S
-- [~] #21 Add String Catalog (Localizable.xcstrings) and treat its warnings as errors · S
-- [~] #22 Configure iPhone only (device family 1), portrait only · S
+- [x] #19 Add PrivacyInfo.xcprivacy · S
+- [x] #20 Add OSLog Logger with bundle-ID subsystem and per-feature categories · S
+- [x] #21 Add String Catalog (Localizable.xcstrings) and treat its warnings as errors · S
+- [x] #22 Configure iPhone only (device family 1), portrait only · S
 
 **F1.5 Project structure and cleanup** (#23) · Constitution II
 
-- [~] #24 Delete template leftovers (Item.swift, stray Assets.xcassets/CheckersApp.swift) · S
+- [x] #24 Delete template leftovers (Item.swift, stray Assets.xcassets/CheckersApp.swift) · S
 - [x] #25 Create local Swift package `CheckersEngine` with its own test target · M
-- [~] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
-- [~] #191 Validate the E1 slice and update project docs · S
+- [x] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
+- [x] #191 Validate the E1 slice and update project docs · S
 
 ### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 0/21 tasks
 
@@ -439,3 +418,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   catalog, iPhone-only portrait; leftovers removed; launch baselines. CI probes confirmed
   failing tests, warnings, lint errors and formatting turn the gate red. #11, #14, #16, #17,
   #25 and features F1.2, F1.3 done. GitHub access now uses the token in `../secrets/`.
+- 2026-10-16: E1 done. All 61 slice tasks complete and validated (`checklists/validation.md`);
+  `main` is protected by the `CI gate` check (an unchecked push was rejected, a checked
+  fast-forward accepted). Closed #10, #12, #18–#24, #28, #191, features F1.1–F1.5 and E1.
