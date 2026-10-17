@@ -11,9 +11,12 @@ Last updated: 2026-10-16
   tasks (+ analyze) → implement. No implementation outside that flow.
 - **Keep `EXECUTION_PLAN.md` current.** Update it with every board change, and review and revise
   the whole file at every close-out (task, feature, epic, slice, session).
-- **No unnecessary pull requests.** This is a solo repo: work on a feature branch, fast-forward
-  `main` locally (`git merge --ff-only`) and push.
+- **No unnecessary pull requests.** This is a solo repo: work on a feature branch, push it, wait
+  for `CI gate` to pass, then fast-forward `main` (`git push origin <sha>:refs/heads/main`).
 - **No CI for documentation.** Markdown-only changes must not run build or tests (#10, #12).
+- **GitHub access uses the token in `../secrets/github.txt`**, passed only as `GH_TOKEN`; never
+  print or commit it.
+- **iglooo101 is the only identity** for commits and GitHub; never add Claude/AI attribution.
 
 ## Current state
 
@@ -21,8 +24,9 @@ Last updated: 2026-10-16
   in `checkers/` (see `checkers/CLAUDE.md` for commands and layout).
 - **Branches**: `main` is protected: a commit lands only if the `CI gate` check passed for that
   exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
-  CI, then fast-forward `main` (`git push origin <sha>:main` works without switching branches).
-  `001-project-foundation` is fully merged.
+  CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
+  branches). `001-project-foundation` is fully merged; `002-rules-engine` is the active branch and
+  `main` is level with it (`e064471`).
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
@@ -33,12 +37,14 @@ Last updated: 2026-10-16
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 5–13 minutes.
 - **Backlog**: 8 epics, 41 features, 142 tasks (#1–#192; #188 is a PR) on the project board.
-  **E1 Project foundation is done** (22/22 board tasks). Progress and the full list are in
-  `EXECUTION_PLAN.md`.
+  **E1 Project foundation is done** (22/22 board tasks). **E2 Rules engine is in progress**: E2
+  (#29) and its specification feature F2.0 (#30) are In Progress; #31 Specify and #32 Clarify are
+  done. Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`). The active slice is E2's `specs/002-rules-engine/` on branch
-  `002-rules-engine` (#31 Specify done). `.specify/feature.json` is local and git-ignored; recreate
-  it with `{"feature_directory": "specs/002-rules-engine"}` if missing.
+  `002-rules-engine`: `spec.md` (5 stories, 27 functional requirements) and three clarifications
+  are done; `plan.md` is next. `.specify/feature.json` is local and git-ignored; recreate it with
+  `{"feature_directory": "specs/002-rules-engine"}` if missing.
 
 ## Lessons learned
 
@@ -129,6 +135,28 @@ Last updated: 2026-10-16
   `${arr[@]+"${arr[@]}"}`; with `pipefail`, `cmd | grep -q` can report the producer's failure, so
   capture output first and grep the variable.
 
+## Lessons learned (E2 specification and session close-out, 2026-10-16)
+
+- **The board and plan helpers were session-only.** Moving board items (`board_move.py`) and
+  regenerating `EXECUTION_PLAN.md` from the live board (`gen_plan_live.py`) used scripts in the
+  session scratchpad, which do not survive the session. Next session, either recreate them from
+  the recipes above (item IDs from `gh project item-list`, status via `gh project item-edit` or the
+  GraphQL `updateProjectV2ItemFieldValue` mutation) or ask the user whether to commit them under
+  `scripts/`, so keeping the board and plan current stays cheap.
+- **Closing order on the board**: close a task when its work is verified in CI, a feature when all
+  its tasks are closed, and an epic when all its features are; move each to Done as it closes.
+- **Close-outs land fast**: Markdown-only commits pass `CI gate` in about 20 seconds, so every
+  close-out can go branch → CI → `git push origin <sha>:refs/heads/main` in one step.
+- **Clarify works best as a few picker questions**, each with a one-line "why it matters" and a
+  recommended option; three questions settled E2. Questions that only affect implementation are
+  left to the plan.
+- **The auto-mode safety check blocks destructive git** (history rewrites, `reflog expire`,
+  `gc --prune`). When the user asks for one, give them the exact command to run with `!` and
+  verify the result afterwards.
+- **Spec decisions that later epics depend on**: every applied step returns a step result
+  (FR-027, used by E3 sounds, E7 announcements, E4 jump-by-jump display); a win by no legal moves
+  beats a same-turn draw; repetition counts turn starts and undo uncounts.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -136,9 +164,16 @@ Last updated: 2026-10-16
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E2 Rules engine (#29)** on a new branch `002-rules-engine`: F2.0 specification first —
-   #31 Specify (scope: FRD sections 8, 9, 10; done) → #32 Clarify (done) → #33 Plan → #34 Tasks + analyze →
-   #35 Reconcile the board. Then implement test-first in `checkers/CheckersEngine`.
-2. Epic order after that: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
-3. Follow-ups noted during E1: #71 or #140 adds the UserDefaults entry to the privacy manifest
-   when first used; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in E8.
+1. **Restore the board and plan helpers** (see the lesson above) before the first board update.
+2. **E2 Rules engine (#29)**, branch `002-rules-engine`, slice `specs/002-rules-engine/`:
+   - **#33 Plan** (`/speckit-plan`): design the engine's value types (square, piece, position,
+     step, step result, game state, outcome) inside `checkers/CheckersEngine`; how positions are
+     compared for repetition; how undo history is kept; and find a citable source for the published
+     American checkers move counts used by SC-002 (expected 7, 49, 302, 1469, 7361, 36768 for
+     depths 1–6; verify before relying on them). Keep everything usable off the main actor.
+   - **#34 Tasks + analyze**, then **#35 Reconcile** the board with `tasks.md`.
+   - Then `/speckit-implement`, test-first, story by story (US1 → US5), and close out E2 as E1 was.
+3. Epic order after E2: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
+4. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;
+   #192 (MetricKit) and #181 (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3)
+   in step with the development Mac.

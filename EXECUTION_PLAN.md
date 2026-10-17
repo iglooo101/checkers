@@ -92,6 +92,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   Debug build) is 3.6 s and only guards against regressions.
 - Command-line builds do not update `Localizable.xcstrings`; when working without Xcode, sync
   it with `xcstringstool` (see HANDOFF.md) or CI fails.
+- CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
+  and the development Mac are updated together.
+- E2's SC-002 relies on published American checkers move counts; the E2 plan (#33) must verify
+  them against a citable source before tests depend on them.
+- The helpers that move board items and regenerate this file were session-only; the next
+  session must restore them (HANDOFF.md) to keep the board and this file in step cheaply.
 
 ## Backlog
 
@@ -426,3 +432,5 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   requirements traced to #37–#56, checklist 16/16.
 - 2026-10-16: #32 done. Three clarifications: a win beats a draw on the same turn; every step
   returns a step result (new FR-027); repetition counts turn starts and undo uncounts.
+- 2026-10-16: Session close-out. E1 done; E2 specified and clarified (#31, #32); next is #33
+  Plan. HANDOFF.md updated with working rules, current state, lessons and next steps.
