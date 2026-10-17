@@ -8,8 +8,10 @@ GitHub project board; when they disagree, fix both in the same change.
 ## How this file is maintained
 
 - **Before starting any item, move it to In Progress on the board; once it is complete, move it
-  to Done** (and close the issue). Update this file in the same step, including when issues are
-  added, split or closed.
+  to Done** (and close the issue): `scripts/project/board_move.py <status> <issue>...`. Update this
+  file in the same step: `scripts/project/update_plan.py` regenerates the progress table, the
+  in-progress list and the backlog (the parts between `GENERATED` markers); everything else here
+  is written by hand.
 - **Every close-out reviews and revises the whole file**: closing a task, feature or epic,
   finishing a Spec Kit slice, and ending a session (with `HANDOFF.md`).
 - **Each epic is one Spec Kit slice.** Its `Fx.0 Specification` feature runs specify → clarify →
@@ -30,6 +32,7 @@ GitHub project board; when they disagree, fix both in the same change.
 
 Epics are listed in execution order.
 
+<!-- BEGIN GENERATED: progress -->
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
@@ -41,11 +44,14 @@ Epics are listed in execution order.
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
 | | **Total** | | | | **6/41** | **24/142** | |
+<!-- END GENERATED: progress -->
 
 ## In progress
 
+<!-- BEGIN GENERATED: in-progress -->
 - #29 E2: Rules engine
 - #30 F2.0: Specification (Spec Kit)
+<!-- END GENERATED: in-progress -->
 
 ## Next up
 
@@ -96,14 +102,13 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   and the development Mac are updated together.
 - E2's SC-002 relies on published American checkers move counts; the E2 plan (#33) must verify
   them against a citable source before tests depend on them.
-- The helpers that move board items and regenerate this file were session-only; the next
-  session must restore them (HANDOFF.md) to keep the board and this file in step cheaply.
 
 ## Backlog
 
 In execution order. Checkboxes mirror the board: `[ ]` Todo, `[~]` In Progress, `[x]` Done.
 Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
+<!-- BEGIN GENERATED: backlog -->
 ### E1 Project foundation (#1) · M1 Foundation · P0 · 22/22 tasks
 
 **F1.0 Specification (Spec Kit)** (#2) · Constitution I–IX
@@ -384,6 +389,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
 - [ ] #186 TestFlight build and beta round · S
 - [ ] #187 Submit for App Store review · S
+<!-- END GENERATED: backlog -->
 
 ## Change log
 
@@ -434,3 +440,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   returns a step result (new FR-027); repetition counts turn starts and undo uncounts.
 - 2026-10-16: Session close-out. E1 done; E2 specified and clarified (#31, #32); next is #33
   Plan. HANDOFF.md updated with working rules, current state, lessons and next steps.
+- 2026-10-16: Merged branch `001-project-foundation` deleted. Board and plan helpers committed
+  under `scripts/project/` (`board_move.py`, `update_plan.py`); this file's progress table,
+  in-progress list and backlog are now generated between `GENERATED` markers, the rest is
+  hand-written. Session closed out; next is #33 Plan.

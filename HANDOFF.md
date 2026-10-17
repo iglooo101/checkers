@@ -6,11 +6,14 @@ Last updated: 2026-10-16
 
 - **Keep the board up to date.** Before starting work on any item, move it to **In Progress** on
   the [project board](https://github.com/users/iglooo101/projects/1/views/1); once it is
-  complete, move it to **Done** and close the issue.
+  complete, move it to **Done** and close the issue. Use
+  `scripts/project/board_move.py <Todo|"In Progress"|Done> <issue>...`.
 - **Spec Kit for every slice.** Each epic is one Spec Kit slice: specify → clarify → plan →
   tasks (+ analyze) → implement. No implementation outside that flow.
 - **Keep `EXECUTION_PLAN.md` current.** Update it with every board change, and review and revise
   the whole file at every close-out (task, feature, epic, slice, session).
+  `scripts/project/update_plan.py` regenerates its progress table, in-progress list and backlog
+  from the board (`--check` reports drift); next up, risks and the change log are hand-written.
 - **No unnecessary pull requests.** This is a solo repo: work on a feature branch, push it, wait
   for `CI gate` to pass, then fast-forward `main` (`git push origin <sha>:refs/heads/main`).
 - **No CI for documentation.** Markdown-only changes must not run build or tests (#10, #12).
@@ -137,12 +140,12 @@ Last updated: 2026-10-16
 
 ## Lessons learned (E2 specification and session close-out, 2026-10-16)
 
-- **The board and plan helpers were session-only.** Moving board items (`board_move.py`) and
-  regenerating `EXECUTION_PLAN.md` from the live board (`gen_plan_live.py`) used scripts in the
-  session scratchpad, which do not survive the session. Next session, either recreate them from
-  the recipes above (item IDs from `gh project item-list`, status via `gh project item-edit` or the
-  GraphQL `updateProjectV2ItemFieldValue` mutation) or ask the user whether to commit them under
-  `scripts/`, so keeping the board and plan current stays cheap.
+- **The board and plan helpers now live in `scripts/project/`** (committed at the user's request
+  after the scratchpad copies proved session-only): `board_move.py` moves items and confirms the
+  new status; `update_plan.py` rewrites only the `GENERATED` sections of `EXECUTION_PLAN.md`, so
+  hand-written parts survive; `gh_client.py` reads the token from `GH_TOKEN` or
+  `../secrets/github.txt`. GitHub's GraphQL API exposes `subIssues` and `blockedBy`, so a full
+  plan refresh takes about 10 seconds instead of minutes of REST calls.
 - **Closing order on the board**: close a task when its work is verified in CI, a feature when all
   its tasks are closed, and an epic when all its features are; move each to Done as it closes.
 - **Close-outs land fast**: Markdown-only commits pass `CI gate` in about 20 seconds, so every
@@ -164,8 +167,7 @@ Last updated: 2026-10-16
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Restore the board and plan helpers** (see the lesson above) before the first board update.
-2. **E2 Rules engine (#29)**, branch `002-rules-engine`, slice `specs/002-rules-engine/`:
+1. **E2 Rules engine (#29)**, branch `002-rules-engine`, slice `specs/002-rules-engine/`:
    - **#33 Plan** (`/speckit-plan`): design the engine's value types (square, piece, position,
      step, step result, game state, outcome) inside `checkers/CheckersEngine`; how positions are
      compared for repetition; how undo history is kept; and find a citable source for the published
@@ -173,7 +175,7 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      depths 1–6; verify before relying on them). Keep everything usable off the main actor.
    - **#34 Tasks + analyze**, then **#35 Reconcile** the board with `tasks.md`.
    - Then `/speckit-implement`, test-first, story by story (US1 → US5), and close out E2 as E1 was.
-3. Epic order after E2: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
-4. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;
+2. Epic order after E2: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
+3. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;
    #192 (MetricKit) and #181 (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3)
    in step with the development Mac.
