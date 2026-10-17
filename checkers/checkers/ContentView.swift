@@ -18,27 +18,35 @@ struct WebView: UIViewRepresentable {
     }
 }
 
-struct ContentView: View {
-    private let screens: [(title: String, file: String)] = [
-        ("Classic", "Classic"),
-        ("Modern", "Modern"),
-        ("Playful", "Playful"),
-        ("Play", "Play")
-    ]
+/// A bundled HTML screen and the title shown for it in the screen picker.
+struct Screen: Identifiable {
+    let title: String
+    let file: String
 
+    var id: String { file }
+
+    static let all = [
+        Screen(title: "Classic", file: "Classic"),
+        Screen(title: "Modern", file: "Modern"),
+        Screen(title: "Playful", file: "Playful"),
+        Screen(title: "Play", file: "Play")
+    ]
+}
+
+struct ContentView: View {
     @State private var selected = 0
 
     var body: some View {
         VStack(spacing: 0) {
             Picker("Screen", selection: $selected) {
-                ForEach(screens.indices, id: \.self) { index in
-                    Text(screens[index].title).tag(index)
+                ForEach(Screen.all.indices, id: \.self) { index in
+                    Text(Screen.all[index].title).tag(index)
                 }
             }
             .pickerStyle(.segmented)
             .padding()
 
-            WebView(htmlFileName: screens[selected].file)
+            WebView(htmlFileName: Screen.all[selected].file)
                 .id(selected)
         }
     }

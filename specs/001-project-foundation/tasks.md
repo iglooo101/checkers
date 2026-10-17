@@ -61,14 +61,14 @@ description: "Task list for the project foundation slice (epic E1)"
 
 ### Tests for User Story 1 (MANDATORY - write first) ⚠️
 
-- [ ] T008 [P] [US1] Write `checkers/checkersTests/ScreenCatalogTests.swift` with `@Test("US1: every screen has a bundled HTML file")` iterating `Screen.all` and expecting `Bundle.main.url(forResource: screen.file, withExtension: "html") != nil`, and `@Test("US1: the four screens are listed in order")` expecting files `["Classic", "Modern", "Playful", "Play"]`. It fails to compile until T010.
-- [ ] T009 [P] [US1] Write `checkers/checkersUITests/AppSmokeUITests.swift` with `testUS1_launchShowsFourScreens`: launch the app and assert the segmented control exposes buttons Classic, Modern, Playful and Play (also guards FR-021).
+- [X] T008 [P] [US1] Write `checkers/checkersTests/ScreenCatalogTests.swift` with `@Test("US1: every screen has a bundled HTML file")` iterating `Screen.all` and expecting `Bundle.main.url(forResource: screen.file, withExtension: "html") != nil`, and `@Test("US1: the four screens are listed in order")` expecting files `["Classic", "Modern", "Playful", "Play"]`. It fails to compile until T010.
+- [X] T009 [P] [US1] Write `checkers/checkersUITests/AppSmokeUITests.swift` with `testUS1_launchShowsFourScreens`: launch the app and assert the segmented control exposes buttons Classic, Modern, Playful and Play (also guards FR-021).
 
 ### Implementation for User Story 1
 
-- [ ] T010 [US1] In `checkers/checkers/ContentView.swift`, replace the private tuple list with an internal `struct Screen: Identifiable` (`title`, `file`) and `static let all` holding the four screens in order; `ContentView` iterates `Screen.all`. No visible change. Delete `checkers/checkersTests/PlaceholderTests.swift`. T008 passes.
-- [ ] T011 [US1] Delete `checkers/checkersUITests/PlaceholderUITests.swift`; run `scripts/test.sh` and confirm T008 and T009 pass.
-- [ ] T012 [US1] Verify failure reporting (quickstart §1): add `#expect(Bool(false))` to `ScreenCatalogTests`, confirm `scripts/test.sh` fails and names the test, then revert. Confirm Main Thread Checker is enabled in `checkers/checkers.xctestplan`.
+- [X] T010 [US1] In `checkers/checkers/ContentView.swift`, replace the private tuple list with an internal `struct Screen: Identifiable` (`title`, `file`) and `static let all` holding the four screens in order; `ContentView` iterates `Screen.all`. No visible change. Delete `checkers/checkersTests/PlaceholderTests.swift`. T008 passes.
+- [X] T011 [US1] Delete `checkers/checkersUITests/PlaceholderUITests.swift`; run `scripts/test.sh` and confirm T008 and T009 pass.
+- [X] T012 [US1] Verify failure reporting (quickstart §1): add `#expect(Bool(false))` to `ScreenCatalogTests`, confirm `scripts/test.sh` fails and names the test, then revert. Confirm Main Thread Checker is enabled in `checkers/checkers.xctestplan`.
 
 **Checkpoint**: US1 complete; local tests are trustworthy.
 
