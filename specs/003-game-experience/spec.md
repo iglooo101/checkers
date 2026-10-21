@@ -283,9 +283,10 @@ unchanged; check no web content remains in the app.
   (FR-SETUP-01).
 - **FR-008**: With Computer chosen, setup MUST offer a difficulty (Easy, Medium, Hard) and a side
   (Light, Dark, Random); with Two players it MUST NOT (FR-SETUP-02).
-- **FR-009**: Setup MUST preselect the opponent, difficulty and side of the previous game, and
-  these choices MUST survive relaunching the app (FR-SETUP-03). First-use defaults are in
-  Assumptions.
+- **FR-009**: Setup MUST preselect the opponent, difficulty and side chosen last, and these
+  choices MUST survive relaunching the app (FR-SETUP-03). Until E4 the choices are remembered as
+  soon as they are made, because a game against the computer cannot start yet (Clarifications);
+  E4 revisits this. First-use defaults are in Assumptions.
 - **FR-010**: Every game MUST start from the standard American checkers position with Light to
   move (FR-SETUP-06).
 - **FR-011**: Starting a game against the computer MUST NOT be possible until the computer

@@ -187,9 +187,11 @@ what else was considered. Facts marked *measured* were checked on the developmen
     orientations), `AppRouter` (start, leave with and without confirmation, return from Rules and
     Settings, Play again), `GameSetup` and the stores (defaults, round trip, undecodable value).
     Suites and display names carry the story ID and FRD IDs, as in E2. Positions for chains,
-    crowning and endings are built with the engine's internal initializer through
-    `@testable import CheckersEngine`; if Xcode does not build the package with testability in the
-    app's test configuration, the tests reach the same positions with scripted move sequences.
+    crowning and endings are built with the engine's custom-position initializers,
+    `Position.init(_:)` and `GameState.init(position:sideToMove:)`, which this slice makes public
+    (T002): previews live in the app target and can use only the engine's public API, so
+    `@testable import` would not serve them. Draws are reached by replaying E2's scripted king
+    shuffles and tours through the session.
   - **UI tests** (XCUITest, `checkers/checkersUITests/`): one flow per story where the UI matters:
     launch to Home and a tapped move (US1), the "capture required" indicator after
     `c3–d4, f6–e5` (US2), a drag and an invalid drop (US3), resign with confirm and cancel and the

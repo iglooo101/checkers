@@ -56,7 +56,7 @@ screen; no test-only code paths in the app
 | V. UX & Accessibility | Pass | System components and SF Symbols (crown); asset colors with dark variants (V.1). Dynamic Type to `accessibility5`, Dark Mode, VoiceOver labels on every control and square (V.2, R11). No asynchronous data, so no loading states (V.3). Whole-sentence strings in the String Catalog, no concatenation (V.4, R9). Previews for every view (workflow 4). |
 | VI. Privacy & Security | Pass | Only the setup choices are stored, on device. The privacy manifest gains the user-defaults required-reason API (`CA92.1`) in the same change (VI.3, R7). No network, no permissions. |
 | VII. Performance | Pass | No background work: engine calls on a tap are tiny (R14). No animation (SC-004). Launch measured with the existing launch test (SC-005). |
-| VIII. Simplicity & Dependencies | Pass | No new dependencies. Placeholders and the disabled computer start are the minimum the clarifications require; no computer opponent stand-in (VIII.3). |
+| VIII. Simplicity & Dependencies | Pass | No new dependencies. Placeholders and the disabled computer start are the minimum the clarifications require; no computer opponent stand-in (VIII.3). The two engine initializers made public are needed now, by previews (R12). |
 | IX. Observability | Pass | `Log` gains `game` and `setup` categories; logged values keep default private redaction. |
 | Workflow gates | Pass | spec → clarify → plan → tasks → implement; `main` protected by `CI gate`. |
 
@@ -82,8 +82,10 @@ screen; no test-only code paths in the app
   Light (Clarifications).
 - **String catalog**: `scripts/sync-string-catalog.sh` updates the catalog after command-line
   builds (R9); the old picker strings are removed with the web screens.
-- **Testability of positions**: app unit tests build constructed positions through
-  `@testable import CheckersEngine`, with scripted move sequences as the fallback (R12).
+- **Engine API change**: `Position.init(_:)` and `GameState.init(position:sideToMove:)` become
+  public (T002), because previews in the app target need constructed positions (a king, a
+  capture, a chain) and can use only public API (R12). Behavior is unchanged; the engine contract
+  records it.
 
 ### Post-design re-check
 
@@ -135,7 +137,9 @@ checkers/checkers/                         # app target (synchronized group)
 │   │   ├── BoardView.swift                # 8×8 squares, tap and drag
 │   │   ├── PieceView.swift                # man, king (crown), selection and hint rings
 │   │   └── ResultPanel.swift
-│   └── Placeholders/PlaceholderView.swift # title and one line; used for three screens
+│   └── Placeholders/
+│       ├── PlaceholderView.swift          # title and one line; used for three screens
+│       └── PlaceholderText.swift          # the three one-line messages
 ├── Support/
 │   ├── Logging.swift                      # + game and setup categories
 │   └── Palette.swift                      # asset-catalog colors of the Classic board
@@ -143,16 +147,22 @@ checkers/checkers/                         # app target (synchronized group)
 ├── Localizable.xcstrings                  # new strings; picker strings removed
 └── PrivacyInfo.xcprivacy                  # + user defaults, CA92.1
 checkers/checkersTests/
-├── US1TwoPlayerMoveTests.swift … US7NavigationTests.swift   # session, router and setup rules by story
+├── Support/GamePositions.swift            # positions through the engine's public initializers
+├── GamePositionsTests.swift
+├── US1TwoPlayerMoveTests.swift, US2CaptureChainTests.swift, US3HintsDragTests.swift,
+│   US4GameEndTests.swift, US5GameUndoTests.swift, US6SetupTests.swift (incl. the stores),
+│   US7NavigationTests.swift               # session, router and setup rules by story
 ├── BoardLayoutTests.swift
-├── SetupStoreTests.swift
+├── PaletteTests.swift                     # every board color resolves (FR-GAME-07)
 ├── NoWebContentTests.swift                # replaces ScreenCatalogTests (FR-006)
 ├── PrivacyManifestTests.swift             # updated: exactly the user-defaults entry
 ├── LocalizationTests.swift                # updated: the new strings
 └── EngineLinkTests.swift, LoggingTests.swift, PlatformSettingsTests.swift   # existing
 checkers/checkersUITests/
 ├── Support/AppScreens.swift               # identifiers and helpers (tap square by name)
-├── US1TwoPlayerMoveUITests.swift … US7NavigationUITests.swift
+├── US1TwoPlayerMoveUITests.swift, US2CaptureUITests.swift, US3DragUITests.swift,
+│   US4GameEndUITests.swift, US5UndoUITests.swift, US6SetupUITests.swift,
+│   US7NavigationUITests.swift
 └── LaunchPerformanceTests.swift           # existing
 scripts/sync-string-catalog.sh             # update the catalog after command-line builds
 ```
@@ -174,7 +184,8 @@ No violations to justify. E1's entry (web content, Principle I.1) is resolved by
 
 - **E4 (#107, #109)**: add the computer's turn to `GameSession` (input locked, thinking indicator,
   computer moves first as Light), enable Start for Computer, switch the first-use defaults to the
-  FRD's, and remove the setup note.
+  FRD's, and remove the setup note. Decide whether setup keeps saving choices on change or saves
+  them when a game starts, as FR-SETUP-03's "used in the previous game" reads (R7).
 - **E5 (#122–#127, #189, #72)**: replace the leave confirmation with saving and Continue; add
   "Abandon current game?".
 - **E6 (#141, #145, #150)**: replace the Settings and Rules placeholders; themes extend `Palette`

@@ -37,20 +37,19 @@ Epics are listed in execution order.
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
-| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 3/28 | In Progress |
+| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 1/8 | 5/29 | In Progress |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **12/41** | **49/145** | |
+| | **Total** | | | | **13/41** | **51/146** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #57 E3: Game experience
-- #58 F3.0: Specification (Spec Kit)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -59,13 +58,19 @@ E1 Project foundation and E2 Rules engine are done (slices `specs/001-project-fo
 `specs/002-rules-engine/`, landed on `main`). The engine in `checkers/CheckersEngine` covers FRD
 sections 8–10 with 63 tests; its public API is `specs/002-rules-engine/contracts/engine-api.md`.
 
-Next is E3 Game experience (#57), one Spec Kit slice taking its scope from FRD sections 4–7, 9
-and 10:
+E3 Game experience (#57) is in progress on branch `003-game-experience` (slice
+`specs/003-game-experience/`). F3.0 Specification is done (#59–#63): `tasks.md` has 60 test-first
+tasks, and the board is reconciled with it (#196 added).
 
-1. F3.0 Specification (#58): #59 Specify (`/speckit-specify`, which creates branch and slice
-   `003-…`), #60 Clarify, #61 Plan, #62 Tasks + analyze, #63 Reconcile.
-2. Then implement E3 test-first in the order of the sequencing notes below, building the game
-   screen on the engine's `GameState`.
+1. `/speckit-implement`, story by story, moving each story's board tasks to In Progress first
+   (mapping at the end of `tasks.md`):
+   - Setup and foundation (T001–T006): #196 (catalog script, public engine initializers, helpers,
+     colors, log categories).
+   - US1 (T007–T019): #65, #70, #75, #76, #77, #80, #81. US2 (T020–T024): #83, #87.
+   - US3 (T025–T029): #78, #82, #85, #86. US4 (T030–T035): #89, #90, #91, #92.
+   - US5 (T036–T039): #94. US6 (T040–T046): #71, #73. US7 (T047–T055): #66, #67, #68.
+   - Polish (T056–T060): #196.
+2. Push after each story and wait for `CI gate` before pushing again; close E3 as E2 was.
 
 ## Order and dependencies
 
@@ -202,15 +207,15 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
 - [x] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
-### E3 Game experience (#57) · M2 Playable two-player game · P0 · 3/28 tasks
+### E3 Game experience (#57) · M2 Playable two-player game · P0 · 5/29 tasks
 
 **F3.0 Specification (Spec Kit)** (#58) · FRD §4–7, §9, §10
 
 - [x] #59 E3 Specify: write spec.md with /speckit-specify · S
 - [x] #60 E3 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #61 E3 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [ ] #62 E3 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
-- [ ] #63 E3 Reconcile this epic's board tasks with tasks.md · S
+- [x] #62 E3 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [x] #63 E3 Reconcile this epic's board tasks with tasks.md · S
 
 **F3.3 Board view** (#74) · FR-GAME-01, FR-GAME-02, FR-GAME-03, FR-GAME-04, FR-GAME-05, FR-GAME-07, FR-SND-04
 
@@ -249,6 +254,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #66 Game screen menu: Undo, Resign, Rules, Settings, Home · M · after #75
 - [ ] #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews) · S
 - [ ] #67 Remove the HTML screens, move.wav reference and WKWebView code · S · after #66, #81
+- [ ] #196 Validate the E3 slice and update project docs · S · after #67
 
 **F3.2 Game setup** (#69) · FR-SETUP-01, FR-SETUP-02, FR-SETUP-03, FR-SETUP-05
 
@@ -486,3 +492,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-21: #61 done. `specs/003-game-experience/plan.md` with research R1–R14, data model,
   contracts (`game-session.md`, `screens.md`) and quickstart; Constitution Check passes and
   resolves E1's web-content exception. Next is #62 Tasks + analyze.
+- 2026-10-21: #62 done. `specs/003-game-experience/tasks.md`: 60 tasks, test-first, by story.
+  `/speckit-analyze` found 6 issues (1 high: previews can use only the engine's public API, so
+  T002 makes `Position.init(_:)` and `GameState.init(position:sideToMove:)` public); fixed with
+  FR-009's wording and a selected-state UI check; three low findings accepted.
+- 2026-10-21: #63 done: board reconciled; #65–#94 list their task IDs; added #196 (slice
+  validation and docs, F3.1). F3.0 (#58) closed. Backlog is now 146 tasks. Next is
+  implementation, starting with T001.

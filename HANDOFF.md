@@ -42,13 +42,17 @@ Last updated: 2026-10-21
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 5–13 minutes.
 - **Backlog**: 8 epics, 41 features, 145 tasks (#1–#195; #188 is a PR) on the project board.
-  **E1 Project foundation and E2 Rules engine are done** (46/145 tasks, 12/41 features). Next is
-  **E3 Game experience** (#57). Progress and the full list are in `EXECUTION_PLAN.md`.
+  **E1 Project foundation and E2 Rules engine are done**. **E3 Game experience** (#57) is in
+  progress: its specification feature F3.0 is done (#59–#63); implementation is next. Progress
+  and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`). The active slice is E2's `specs/002-rules-engine/` on branch
-  `002-rules-engine`: spec, plan, 37 tasks and validation (`checklists/validation.md`) are all
-  done. The next slice is E3's, created by `/speckit-specify`; `.specify/feature.json` is local
-  and git-ignored, and `/speckit-specify` points it at the new slice.
+  `002-rules-engine`: spec, plan, 37 tasks and validation are all done. The active slice is
+  E3's `specs/003-game-experience/` on branch `003-game-experience`: spec (7 stories, 42
+  requirements, 3 clarifications), plan (research R1–R14, data model, contracts
+  `game-session.md` and `screens.md`, quickstart) and 60 analyzed tasks are done.
+  `.specify/feature.json` is local and git-ignored; recreate it with
+  `{"feature_directory": "specs/003-game-experience"}` if missing.
 
 ## Lessons learned
 
@@ -201,11 +205,11 @@ Last updated: 2026-10-21
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E3 Game experience (#57)**: start with #59 Specify (`/speckit-specify`, scope from FRD
-   sections 4–7, 9 and 10), then #60 Clarify, #61 Plan, #62 Tasks + analyze, #63 Reconcile. The
-   game screen drives the engine's `GameState`; `StepResult` gives E3 what each step did (sounds,
-   jump-by-jump display), and `isCaptureRequired`, `movablePieces`, `targets(from:)` and
-   `chainSquare` drive the move aids.
+1. **E3 Game experience (#57)**, branch `003-game-experience`: **next is `/speckit-implement`**,
+   story by story (setup and foundation, US1 → US7, polish). Move each story's board tasks to In
+   Progress first (mapping at the end of `tasks.md`); push after each story and wait for CI.
+   Spec Kit's `create_new_feature.py` creates no git branch; create slice branches with
+   `git checkout -b`.
 2. Epic order after E3: E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`). E4's search should
    profile the engine first (see the speed risk in `EXECUTION_PLAN.md`).
 3. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;

@@ -30,6 +30,7 @@ public struct Square: Sendable, Hashable {
 
 public struct Position: Sendable, Hashable {
     public static let start: Position
+    public init(_ pieces: [Square: Piece])   // made public in E3 for app previews and tests
     public func piece(at square: Square) -> Piece?
 }
 
@@ -67,6 +68,7 @@ public enum RuleError: Error, Sendable, Equatable {
 
 public struct GameState: Sendable, Equatable {
     public init()                                       // standard start, Light to move
+    public init(position: Position, sideToMove: Side)   // any start; lost at once if no legal step (made public in E3)
     public var position: Position { get }
     public var sideToMove: Side { get }
     public var chainSquare: Square? { get }
