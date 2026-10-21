@@ -1,6 +1,7 @@
-/// A game of American checkers: the position, whose turn it is, any capture chain in progress
-/// and the outcome (FR-013). It is a value, so a copy is independent of the original and the
-/// same steps on equal states give equal results (FR-026).
+/// A game of American checkers: the position, whose turn it is, any capture chain in progress,
+/// the draw counters, the turn history and the outcome. Nothing that affects play lives outside
+/// it (FR-013). It is a value, so a copy is independent of the original and the same steps on
+/// equal states give equal results (FR-026).
 public struct GameState: Sendable, Equatable {
     public private(set) var position: Position
     public private(set) var sideToMove: Side
@@ -8,17 +9,27 @@ public struct GameState: Sendable, Equatable {
     public private(set) var chainSquare: Square?
     public private(set) var outcome: Outcome
 
+    /// Completed turns since the last capture or man move (FR-017).
+    var noProgressCount = 0
+    /// One record per turn started, in order: the undo history and the repetition record
+    /// (research R5).
+    private(set) var history: [TurnRecord] = []
+
     /// A new game: the standard starting position with Light to move (FR-003).
     public init() {
         self.init(position: .start, sideToMove: .light)
     }
 
-    /// A game that starts from any position with the given side to move.
+    /// A game that starts from any position with the given side to move. If that side has no
+    /// legal step, the game is already lost (FR-014).
     init(position: Position, sideToMove: Side) {
         self.position = position
         self.sideToMove = sideToMove
         chainSquare = nil
         outcome = .inProgress
+        if position.steps(for: sideToMove).isEmpty {
+            outcome = .win(winner: sideToMove.opponent, reason: .noMovesLeft)
+        }
     }
 
     /// Every legal single step for the side to move: during a chain only the chain piece's jumps
@@ -50,6 +61,12 @@ public struct GameState: Sendable, Equatable {
         legalSteps.first?.isJump ?? false
     }
 
+    /// How many times the current position with the current side to move has occurred at the
+    /// start of a turn, including now (FR-016).
+    var repetitionCount: Int {
+        1 + history.count { $0.position == position && $0.sideToMove == sideToMove }
+    }
+
     /// Applies one step for the side to move and reports what it did. A rejected step throws
     /// and changes nothing (FR-020; contract: apply).
     @discardableResult
@@ -62,6 +79,11 @@ public struct GameState: Sendable, Equatable {
         if legal.first?.isJump == true, !step.isJump { throw .captureRequired }
         guard legal.contains(step) else { throw .illegalStep }
 
+        if chainSquare == nil {
+            history.append(
+                TurnRecord(
+                    position: position, sideToMove: sideToMove, noProgressCount: noProgressCount))
+        }
         position.remove(at: step.from)
         if let captured = step.captured {
             position.remove(at: captured)
@@ -74,11 +96,44 @@ public struct GameState: Sendable, Equatable {
         if turnContinues {
             chainSquare = step.to
         } else {
-            chainSquare = nil
-            sideToMove = sideToMove.opponent
+            // Every step of a chain is a jump, so a turn captured if its last step did.
+            let progress = step.isJump || piece.kind == .man
+            endTurn(progress: progress)
         }
         return StepResult(
             side: piece.side, piece: piece, from: step.from, to: step.to, captured: step.captured,
             crowned: crowned, turnContinues: turnContinues, outcome: outcome)
     }
+
+    /// Ends the game with a win for the other side. Either side may resign at any time while the
+    /// game is in progress, including during a chain (FR-015).
+    public mutating func resign(_ side: Side) throws(RuleError) {
+        guard outcome == .inProgress else { throw .gameOver }
+        outcome = .win(winner: side.opponent, reason: .resignation)
+        chainSquare = nil
+    }
+
+    /// Passes the turn and decides whether the game has ended, in the precedence of FR-019: a win
+    /// by no moves left, then a draw by repetition, then a draw by no progress (research R6).
+    private mutating func endTurn(progress: Bool) {
+        noProgressCount = progress ? 0 : noProgressCount + 1
+        let mover = sideToMove
+        chainSquare = nil
+        sideToMove = mover.opponent
+        if position.steps(for: sideToMove).isEmpty {
+            outcome = .win(winner: mover, reason: .noMovesLeft)
+        } else if repetitionCount >= 3 {
+            outcome = .draw(reason: .repetition)
+        } else if noProgressCount >= 80 {
+            outcome = .draw(reason: .noProgress)
+        }
+    }
+}
+
+/// The state at the start of a turn: what undo restores and what the repetition rule compares
+/// (research R5).
+struct TurnRecord: Sendable, Equatable {
+    let position: Position
+    let sideToMove: Side
+    let noProgressCount: Int
 }

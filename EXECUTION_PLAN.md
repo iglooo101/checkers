@@ -63,6 +63,10 @@ Epics are listed in execution order.
 - #46 Crowning on the far row ends the turn, including mid-chain
 - #47 F2.4: Game state and endings
 - #48 Game state: board, side to move, pending chain, outcome
+- #49 Loss when the side to move has no legal move (or no pieces)
+- #50 Draw by threefold repetition (same position, same side to move)
+- #51 Draw by no progress: 40 moves per side without capture or man move
+- #52 Resignation outcome
 - #193 Reference move counts and speed check (SC-002, SC-004)
 - #195 Validate the E2 slice and update project docs
 <!-- END GENERATED: in-progress -->
@@ -207,10 +211,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F2.4 Game state and endings** (#47) · FR-END-01, FR-END-02, FR-END-03, FR-END-04, FR-END-05
 
 - [~] #48 Game state: board, side to move, pending chain, outcome · M
-- [ ] #49 Loss when the side to move has no legal move (or no pieces) · S
-- [ ] #50 Draw by threefold repetition (same position, same side to move) · M
-- [ ] #51 Draw by no progress: 40 moves per side without capture or man move · S
-- [ ] #52 Resignation outcome · S
+- [~] #49 Loss when the side to move has no legal move (or no pieces) · S
+- [~] #50 Draw by threefold repetition (same position, same side to move) · M
+- [~] #51 Draw by no progress: 40 moves per side without capture or man move · S
+- [~] #52 Resignation outcome · S
 
 **F2.5 Undo history** (#53) · FR-UNDO-01, FR-UNDO-02, FR-UNDO-05, FR-UNDO-06, FR-UNDO-07
 
