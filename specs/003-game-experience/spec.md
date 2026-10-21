@@ -8,6 +8,14 @@
 
 **Input**: User description: "Game experience (epic E3, GitHub issue #57): the native SwiftUI app shell, game setup, game screen with board and two-player play on top of the CheckersEngine rules engine from E2, from FRD.md v1.1 sections 4 (screens and navigation), 5 (starting a game), 6 (the game screen), 7 (making moves: tap and drag input, move aids, capture chains), 9 (ending a game: resignation, result panel, play again) and 10 (undo in a two-player game), plus FR-SND-04 (no move animation) and the accessibility pass for each new screen (Dynamic Type, Dark Mode, VoiceOver labels, previews). It replaces the bundled HTML screens and the WKWebView. Board tasks: F3.1 app shell and navigation (#64: #65, #66, #67, #68), F3.2 game setup (#69: #70, #71, #73), F3.3 board view (#74: #75–#78), F3.4 move input (#79: #80–#83), F3.5 move aids and chain interaction (#84: #85–#87), F3.6 game end and result (#88: #89–#92), F3.7 undo in the game (#93: #94). Out of scope, delivered by later epics: the computer opponent's moves and undo against the computer (E4), saving and Continue and "Abandon current game?" and statistics (E5), the Settings, Rules and theme screens, sounds and the hints toggle (E6), the full VoiceOver board and announcements (E7). Users are the players."
 
+## Clarifications
+
+### Session 2026-10-21
+
+- Q: The computer opponent's moves arrive with E4. What should Game setup do in this slice when the player picks Computer? → A: Computer is choosable with its difficulty and side, and remembered, but a game against the computer cannot be started until E4; setup says so. The first-use opponent is Two players until E4.
+- Q: Saving arrives with E5. What should happen in this slice when a player leaves a game in progress for Home? → A: Choosing Home during an unfinished game asks "Leave this game? It can't be resumed yet."; confirming discards the game and shows Home, cancelling keeps playing. E5 replaces this with saving and Continue.
+- Q: Home must offer Statistics, Rules and Settings, but their screens arrive with E5 and E6. What should those entries show in this slice? → A: Placeholder screens: each shows its title and one line saying what it will contain, and returns where it was opened from (Home or the game menu). E5 and E6 replace them.
+
 ## User Scenarios & Testing *(mandatory)*
 
 The players meet this feature as the app itself: a Home screen, a setup screen and a game screen
@@ -216,8 +224,12 @@ unchanged; check no web content remains in the app.
 2. **Given** a game in progress, **When** the player opens Rules or Settings from the menu and
    returns, **Then** the same position and side to move are shown, and a chain in progress is
    still locked to its piece.
-3. **Given** the game screen, **When** the player chooses Home, **Then** Home is shown.
-4. **Given** Home, **When** the player opens Statistics, Rules or Settings, **Then** a screen with
+3. **Given** a game in progress, **When** the player chooses Home, **Then** the app asks "Leave
+   this game? It can't be resumed yet."; **When** confirmed, **Then** Home is shown and the game
+   is gone; **When** cancelled, **Then** the game continues unchanged.
+4. **Given** a finished game, **When** the player chooses Home, **Then** Home is shown without
+   asking.
+5. **Given** Home, **When** the player opens Statistics, Rules or Settings, **Then** a screen with
    that title is shown and the player can return to Home.
 
 ### Edge Cases
@@ -236,6 +248,8 @@ unchanged; check no web content remains in the app.
   panel appears over the board.
 - **Resign confirmation during a chain**: allowed; the position stays as it is when confirmed.
 - **Opening the menu during a chain**: Undo is available and takes back the partial turn.
+- **Leave confirmation during a chain**: cancelling returns to the same chain, still locked to its
+  piece.
 - **Small screens and large text**: the board stays square and fully visible; the indicator and
   menu wrap or scale rather than truncate.
 - **Interrupted app** (phone call, app switch): the game in progress is unchanged when the player
@@ -250,12 +264,16 @@ unchanged; check no web content remains in the app.
 - **FR-001**: The app MUST open on Home (FR-NAV-01).
 - **FR-002**: Home MUST offer New game, Statistics, Rules and Settings (FR-NAV-02). Continue is not
   part of this feature (E5).
-- **FR-003**: Statistics, Rules and Settings MUST each open a screen with that title from which the
-  player can return; their content is delivered by E5 and E6 (see Assumptions).
+- **FR-003**: Statistics, Rules and Settings MUST each open a placeholder screen showing its title
+  and one line saying what it will contain, from which the player returns to where it was opened
+  (Home or the game menu); E5 and E6 replace them with the real screens.
 - **FR-004**: The game screen MUST offer a menu with Undo, Resign, Rules, Settings and Home
   (FR-GAME-06), and MUST let the player return Home at any time (FR-NAV-03).
 - **FR-005**: Returning from Rules or Settings opened from the game menu MUST show the same game:
   position, side to move and any chain in progress (FR-NAV-04).
+- **FR-042**: Until saving exists (E5), choosing Home during an unfinished game MUST first ask the
+  player to confirm leaving, stating that the game cannot be resumed; confirming discards the game
+  and shows Home, cancelling returns to the game unchanged. Leaving a finished game MUST NOT ask.
 - **FR-006**: The app MUST contain no web content: the bundled HTML screens, their sound file
   reference and the web view are removed, and every screen is native (Constitution I.1).
 
@@ -362,7 +380,7 @@ unchanged; check no web content remains in the app.
 | Board task | Requirements | FRD |
 |---|---|---|
 | #65 Home screen | FR-001, FR-002, FR-003 | FR-NAV-01, FR-NAV-02 |
-| #66 Game screen menu | FR-004, FR-005 | FR-GAME-06, FR-NAV-03, FR-NAV-04 |
+| #66 Game screen menu | FR-004, FR-005, FR-042 | FR-GAME-06, FR-NAV-03, FR-NAV-04 |
 | #67 Remove the HTML screens | FR-006 | Constitution I.1 |
 | #68 Accessibility: Home and navigation | FR-039, FR-041 | FR-A11Y-04, FR-PLAT-03 |
 | #70 Setup screen | FR-007, FR-008, FR-010, FR-011 | FR-SETUP-01, FR-SETUP-02, FR-SETUP-06 |
@@ -423,18 +441,20 @@ FR-SND-01 to 03 and FR-HELP-* (E6); FR-A11Y-01 to 03 and 05 in full, and the acc
 
 ## Assumptions
 
-- **Computer games before E4**: setup shows and remembers the Computer choice with its difficulty
-  and side, but a game against the computer cannot be started until E4 adds the opponent's moves;
-  setup explains this. The computer-game rules this feature owns (player at the bottom, only the
-  player resigns, Play again draws Random again) are tested without the user interface. To confirm
-  in Clarify.
-- **First-use setup defaults**: the FRD's defaults (Computer, Easy, Light) apply once E4 exists;
-  until then the first-use opponent is Two players so a first game can start. To confirm in
-  Clarify.
-- **Statistics, Rules and Settings screens**: in this feature they show only their title and a
-  short line saying what they will contain; E5 and E6 replace them. To confirm in Clarify.
-- **Leaving a game**: without saving (E5), a game left for Home is not kept: the next New game
-  starts fresh, and there is no Continue and no "Abandon current game?" yet. To confirm in Clarify.
+- **Computer games before E4** (confirmed in Clarifications): setup shows and remembers the
+  Computer choice with its difficulty and side, but a game against the computer cannot be started
+  until E4 adds the opponent's moves; setup explains this. The computer-game rules this feature
+  owns (player at the bottom, only the player resigns, Play again draws Random again) are tested
+  without the user interface.
+- **First-use setup defaults** (confirmed in Clarifications): the FRD's defaults (Computer, Easy,
+  Light) apply once E4 exists; until then the first-use opponent is Two players, with Easy and
+  Light preselected for when Computer is chosen, so a first game can start.
+- **Statistics, Rules and Settings screens** (confirmed in Clarifications): in this feature they
+  are placeholders showing their title and one line saying what they will contain (FR-003); E5
+  and E6 replace them.
+- **Leaving a game** (confirmed in Clarifications): without saving (E5), a game left for Home is
+  not kept, so leaving an unfinished game asks for confirmation first (FR-042); there is no
+  Continue and no "Abandon current game?" yet. E5 replaces the confirmation with saving.
 - **Theme and hints**: the board uses the Classic theme and hints are always on until Settings
   (E6) adds both choices.
 - **Sounds**: none in this feature; E6 adds them. FR-SND-04 (no animation) applies now.
