@@ -4,11 +4,20 @@ import Foundation
 /// The game screen's sentences, each a whole sentence in the String Catalog so it translates as a
 /// unit (Constitution V.4; contracts/screens.md).
 enum GameText {
-    /// The turn indicator (FR-014).
-    static func turn(_ side: Side) -> LocalizedStringResource {
-        switch side {
-        case .light: "Light to move"
-        case .dark: "Dark to move"
+    /// The turn indicator, saying when a capture is required (FR-014).
+    static func turn(_ side: Side, captureRequired: Bool = false) -> LocalizedStringResource {
+        switch (side, captureRequired) {
+        case (.light, false): "Light to move"
+        case (.dark, false): "Dark to move"
+        case (.light, true): "Light to move · capture required"
+        case (.dark, true): "Dark to move · capture required"
+        }
+    }
+
+    /// A notice shown under the turn indicator (FR-023).
+    static func notice(_ notice: Notice) -> LocalizedStringResource {
+        switch notice {
+        case .captureRequired: "A capture is required."
         }
     }
 

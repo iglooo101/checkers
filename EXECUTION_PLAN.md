@@ -61,6 +61,9 @@ Epics are listed in execution order.
 - #79 F3.4: Move input
 - #80 Game model (@Observable): selection rules, tested without UI
 - #81 Tap a piece, then tap a target
+- #83 Tell the player a capture is required when they tap a piece that cannot capture
+- #84 F3.5: Move aids and chain interaction
+- #87 Chain lock: only the jumping piece and its next jumps are available
 - #196 Validate the E3 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -241,13 +244,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #80 Game model (@Observable): selection rules, tested without UI · M
 - [~] #81 Tap a piece, then tap a target · S
 - [ ] #82 Drag a piece onto a target; invalid drops return the piece · M
-- [ ] #83 Tell the player a capture is required when they tap a piece that cannot capture · S
+- [~] #83 Tell the player a capture is required when they tap a piece that cannot capture · S
 
 **F3.5 Move aids and chain interaction** (#84) · FR-AID-01, FR-AID-02, FR-AID-03, FR-AID-04, FR-CHAIN-02
 
 - [ ] #85 Highlight movable pieces and legal targets when hints are on · S
 - [ ] #86 Selected piece always visibly marked · S
-- [ ] #87 Chain lock: only the jumping piece and its next jumps are available · S
+- [~] #87 Chain lock: only the jumping piece and its next jumps are available · S
 
 **F3.7 Undo in the game** (#93) · FR-UNDO-01, FR-UNDO-02, FR-UNDO-06
 

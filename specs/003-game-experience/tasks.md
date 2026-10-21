@@ -103,20 +103,20 @@ description: "Task list for the game experience slice (epic E3)"
 
 ### Tests for User Story 2 (MANDATORY - write first) ⚠️
 
-- [ ] T020 [P] [US2] Write `Unit/US2CaptureChainTests.swift` (`struct US2CaptureChainTests`), building positions with `GamePositions`:
+- [X] T020 [P] [US2] Write `Unit/US2CaptureChainTests.swift` (`struct US2CaptureChainTests`), building positions with `GamePositions`:
   - `US2 FR-GAME-02`: with Light men c3 and a1 and Dark men d4 and h8, Light to move, `turnText` is "Light to move · capture required"; the Dark version reads "Dark to move · capture required".
   - `US2 FR-MOVE-05`: in that position, tapping a1 shows `captureRequired`, selects nothing; with c3 selected, tapping a1 keeps c3 selected; the next tap (any square) clears the notice; applying a step clears it.
   - `US2 FR-CHAIN-01 FR-CHAIN-02`: Light men a3 and g1, Dark men b4, d6, h8: tap a3, tap c5: b4 is empty, `selection == c5`, `targets == [e7]`; tapping g1, b6 or an empty square changes nothing (rows 2–3).
   - `US2 FR-CHAIN-03`: then tap e7: d6 empty, selection cleared, `turnText` "Dark to move".
   - `US2 FR-RULE-07 FR-CHAIN-03`: Light man b6, Dark men c7 and e7: tap b6, tap d8: d8 holds a Light king, selection cleared, Dark to move.
   Fails until T022–T023.
-- [ ] T021 [P] [US2] Write `UI/US2CaptureUITests.swift`: `testUS2_captureRequired`: `startTwoPlayerGame()`; play `c3`→`d4`, `f6`→`e5` by taps; `game.turn` reads "Light to move · capture required"; tap `square.e3`: `game.notice` reads "A capture is required."; tap `square.d4` then `square.f6`: `square.e5` is labelled "e5, empty", `square.f6` "f6, Light man", and `game.turn` reads "Dark to move". Fails until T024.
+- [X] T021 [P] [US2] Write `UI/US2CaptureUITests.swift`: `testUS2_captureRequired`: `startTwoPlayerGame()`; play `c3`→`d4`, `f6`→`e5` by taps; `game.turn` reads "Light to move · capture required"; tap `square.e3`: `game.notice` reads "A capture is required."; tap `square.d4` then `square.f6`: `square.e5` is labelled "e5, empty", `square.f6` "f6, Light man", and `game.turn` reads "Dark to move". Fails until T024.
 
 ### Implementation for User Story 2
 
-- [ ] T022 [P] [US2] Extend `App/Features/Game/GameText.swift`: `turn(_:captureRequired:)` with the two "· capture required" sentences, and `notice(_ notice: Notice) -> LocalizedStringResource` ("A capture is required."). Add `enum Notice { case captureRequired }` to `App/Features/Game/GameSession.swift`.
-- [ ] T023 [US2] Extend `App/Features/Game/GameSession.swift`: stored `notice`; rows 2, 3 and 7 of the taps table; clear the notice at the start of every tap and when a step is applied; `turnText` uses `state.isCaptureRequired`. T020 passes.
-- [ ] T024 [US2] Extend `App/Features/Game/GameView.swift`: show `game.notice` below the indicator while `session.notice` is set (wrapping, not truncated); previews with a capture-required position and the notice. Sync and commit the catalog. US1 and US2 tests pass.
+- [X] T022 [P] [US2] Extend `App/Features/Game/GameText.swift`: `turn(_:captureRequired:)` with the two "· capture required" sentences, and `notice(_ notice: Notice) -> LocalizedStringResource` ("A capture is required."). Add `enum Notice { case captureRequired }` to `App/Features/Game/GameSession.swift`.
+- [X] T023 [US2] Extend `App/Features/Game/GameSession.swift`: stored `notice`; rows 2, 3 and 7 of the taps table; clear the notice at the start of every tap and when a step is applied; `turnText` uses `state.isCaptureRequired`. T020 passes.
+- [X] T024 [US2] Extend `App/Features/Game/GameView.swift`: show `game.notice` below the indicator while `session.notice` is set (wrapping, not truncated); previews with a capture-required position and the notice. Sync and commit the catalog. US1 and US2 tests pass.
 
 **Checkpoint**: US2 complete: every rule of a turn is playable and visible on the board.
 
