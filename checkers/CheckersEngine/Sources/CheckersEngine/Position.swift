@@ -25,8 +25,8 @@ public struct Position: Sendable, Hashable {
     /// An empty board.
     init() {}
 
-    /// A board holding exactly these pieces.
-    init(_ pieces: [Square: Piece]) {
+    /// A board holding exactly these pieces, for games that start from a custom position.
+    public init(_ pieces: [Square: Piece]) {
         for (square, piece) in pieces {
             place(piece, at: square)
         }

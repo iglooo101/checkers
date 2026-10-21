@@ -22,7 +22,7 @@ public struct GameState: Sendable, Equatable {
 
     /// A game that starts from any position with the given side to move. If that side has no
     /// legal step, the game is already lost (FR-014).
-    init(position: Position, sideToMove: Side) {
+    public init(position: Position, sideToMove: Side) {
         self.position = position
         self.sideToMove = sideToMove
         chainSquare = nil

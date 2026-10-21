@@ -50,6 +50,8 @@ Epics are listed in execution order.
 
 <!-- BEGIN GENERATED: in-progress -->
 - #57 E3: Game experience
+- #64 F3.1: App shell and navigation
+- #196 Validate the E3 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -254,7 +256,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #66 Game screen menu: Undo, Resign, Rules, Settings, Home · M · after #75
 - [ ] #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews) · S
 - [ ] #67 Remove the HTML screens, move.wav reference and WKWebView code · S · after #66, #81
-- [ ] #196 Validate the E3 slice and update project docs · S · after #67
+- [~] #196 Validate the E3 slice and update project docs · S · after #67
 
 **F3.2 Game setup** (#69) · FR-SETUP-01, FR-SETUP-02, FR-SETUP-03, FR-SETUP-05
 
