@@ -130,12 +130,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   it with `xcstringstool` (see HANDOFF.md) or CI fails.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
   and the development Mac are updated together.
-- E2's reference counts (SC-002, depths 1–7) never move a king and only show a wrong
-  crowning-mid-chain rule from depth 9, so the US2 and US3 acceptance tests and the random games
-  (SC-003) must cover those rules (`specs/002-rules-engine/research.md`, R1).
-- E2's test time in CI is unmeasured: the depth-7 reference count and 1,000 random games run as
-  a Debug build on the simulator. T034 records the time; the target is under 60 s on the
-  development Mac (research R12).
+- The engine's move generation is only moderately fast in Debug builds: the 6-turn reference
+  count takes 5 s against SC-004's 10 s budget on the Intel Mac, and the whole engine suite
+  about 24 s. E4's search (#104) will need faster generation; profile first (Constitution VII.4,
+  `specs/002-rules-engine/checklists/validation.md`).
 
 ## Backlog
 

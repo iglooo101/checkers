@@ -178,6 +178,23 @@ Last updated: 2026-10-21
   `gh issue close --comment` runs, which then posts nothing. Post the summary with
   `gh issue comment` (or before the move) and check that it landed.
 
+## Lessons learned (E2 implementation, 2026-10-21)
+
+- **`swift test` does not run SwiftLint.** The SwiftLint plugin's prebuild command never runs
+  under `swift build`/`swift test`; only the Xcode build lints the engine (`scripts/test.sh`, CI).
+  For fast feedback, run the binary directly from `checkers/CheckersEngine`:
+  `BUILD_WORKSPACE_DIRECTORY="$PWD" .build/artifacts/swiftlintplugins/SwiftLintBinary/SwiftLintBinary.artifactbundle/macos/swiftlint lint --quiet --force-exclude --no-cache $(find Sources Tests -name '*.swift')`.
+- **A push cancels the branch's running CI.** The cancelled commit's `CI gate` reports failure.
+  Push again only after a run finishes, or rely on the last commit's run before fast-forwarding.
+- **`identifier_name` accepts `to`** (`Step(from:to:)`), set in `checkers/.swiftlint.yml`; other
+  short names (`a1`, `at`) still warn, so tests use longer names.
+- **Engine speed in Debug builds**: the 7-turn reference count takes about 20 s and the 6-turn
+  count 5 s (SC-004 budget 10 s). Each turn end generates the opponent's moves and scans the
+  history. E4's search will need faster generation; profile first (Constitution VII.4).
+- **Swift Testing details**: `#expect(throws: RuleError.x) { try state.apply(step) }` works with
+  typed throws and a mutating closure; failure messages do not show the value of a `try`
+  expression, so assign it first when the value matters.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
