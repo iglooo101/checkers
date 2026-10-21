@@ -61,6 +61,12 @@ public struct GameState: Sendable, Equatable {
         legalSteps.first?.isJump ?? false
     }
 
+    /// Whether `undo()` would take back a turn: the game is in progress and a turn has been
+    /// started (FR-022, FR-024).
+    public var canUndo: Bool {
+        outcome == .inProgress && !history.isEmpty
+    }
+
     /// How many times the current position with the current side to move has occurred at the
     /// start of a turn, including now (FR-016).
     var repetitionCount: Int {
@@ -110,6 +116,18 @@ public struct GameState: Sendable, Equatable {
     public mutating func resign(_ side: Side) throws(RuleError) {
         guard outcome == .inProgress else { throw .gameOver }
         outcome = .win(winner: side.opponent, reason: .resignation)
+        chainSquare = nil
+    }
+
+    /// Takes back the last turn, whichever side made it, restoring the state from before it,
+    /// including the draw counters; during a chain it discards the partial turn. The undone turn
+    /// no longer counts for repetition (FR-021 to FR-024; contract: undo).
+    public mutating func undo() throws(RuleError) {
+        guard outcome == .inProgress else { throw .gameOver }
+        guard let record = history.popLast() else { throw .nothingToUndo }
+        position = record.position
+        sideToMove = record.sideToMove
+        noProgressCount = record.noProgressCount
         chainSquare = nil
     }
 

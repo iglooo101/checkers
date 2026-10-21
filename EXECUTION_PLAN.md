@@ -67,7 +67,12 @@ Epics are listed in execution order.
 - #50 Draw by threefold repetition (same position, same side to move)
 - #51 Draw by no progress: 40 moves per side without capture or man move
 - #52 Resignation outcome
+- #53 F2.5: Undo history
+- #54 Turn history that restores full state, including draw counters
+- #55 Undo mid-chain restores the position from before the chain
+- #56 Undo is unavailable after the game has ended
 - #193 Reference move counts and speed check (SC-002, SC-004)
+- #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003)
 - #195 Validate the E2 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -218,10 +223,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F2.5 Undo history** (#53) · FR-UNDO-01, FR-UNDO-02, FR-UNDO-05, FR-UNDO-06, FR-UNDO-07
 
-- [ ] #54 Turn history that restores full state, including draw counters · M
-- [ ] #55 Undo mid-chain restores the position from before the chain · S
-- [ ] #56 Undo is unavailable after the game has ended · S
-- [ ] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
+- [~] #54 Turn history that restores full state, including draw counters · M
+- [~] #55 Undo mid-chain restores the position from before the chain · S
+- [~] #56 Undo is unavailable after the game has ended · S
+- [~] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
 - [~] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
 ### E3 Game experience (#57) · M2 Playable two-player game · P0 · 0/28 tasks
