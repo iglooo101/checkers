@@ -51,6 +51,16 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #57 E3: Game experience
 - #64 F3.1: App shell and navigation
+- #65 Home screen with New game, Statistics, Rules and Settings
+- #69 F3.2: Game setup
+- #70 Setup screen: opponent, difficulty and side (Light, Dark, Random)
+- #74 F3.3: Board view
+- #75 SwiftUI board: 8×8 grid, men and kings, sized to fit every supported iPhone
+- #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation
+- #77 Turn indicator, including "capture required"
+- #79 F3.4: Move input
+- #80 Game model (@Observable): selection rules, tested without UI
+- #81 Tap a piece, then tap a target
 - #196 Validate the E3 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -221,15 +231,15 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F3.3 Board view** (#74) · FR-GAME-01, FR-GAME-02, FR-GAME-03, FR-GAME-04, FR-GAME-05, FR-GAME-07, FR-SND-04
 
-- [ ] #75 SwiftUI board: 8×8 grid, men and kings, sized to fit every supported iPhone · M
-- [ ] #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation · S
-- [ ] #77 Turn indicator, including "capture required" · S
+- [~] #75 SwiftUI board: 8×8 grid, men and kings, sized to fit every supported iPhone · M
+- [~] #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation · S
+- [~] #77 Turn indicator, including "capture required" · S
 - [ ] #78 Accessibility pass: Game screen layout at accessibility5 and Dark Mode · S
 
 **F3.4 Move input** (#79) · FR-MOVE-01, FR-MOVE-02, FR-MOVE-03, FR-MOVE-04, FR-MOVE-05
 
-- [ ] #80 Game model (@Observable): selection rules, tested without UI · M
-- [ ] #81 Tap a piece, then tap a target · S
+- [~] #80 Game model (@Observable): selection rules, tested without UI · M
+- [~] #81 Tap a piece, then tap a target · S
 - [ ] #82 Drag a piece onto a target; invalid drops return the piece · M
 - [ ] #83 Tell the player a capture is required when they tap a piece that cannot capture · S
 
@@ -252,7 +262,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F3.1 App shell and navigation** (#64) · FR-NAV-01, FR-NAV-02, FR-NAV-03, FR-NAV-04, FR-GAME-06
 
-- [ ] #65 Home screen with New game, Statistics, Rules and Settings · M
+- [~] #65 Home screen with New game, Statistics, Rules and Settings · M
 - [ ] #66 Game screen menu: Undo, Resign, Rules, Settings, Home · M · after #75
 - [ ] #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews) · S
 - [ ] #67 Remove the HTML screens, move.wav reference and WKWebView code · S · after #66, #81
@@ -260,7 +270,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F3.2 Game setup** (#69) · FR-SETUP-01, FR-SETUP-02, FR-SETUP-03, FR-SETUP-05
 
-- [ ] #70 Setup screen: opponent, difficulty and side (Light, Dark, Random) · M
+- [~] #70 Setup screen: opponent, difficulty and side (Light, Dark, Random) · M
 - [ ] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
 - [ ] #73 Accessibility pass: Game setup · S
 

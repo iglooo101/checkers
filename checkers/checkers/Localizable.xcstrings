@@ -1,10 +1,43 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@, Dark king" : {
+
+    },
+    "%@, Dark man" : {
+
+    },
+    "%@, Light king" : {
+
+    },
+    "%@, Light man" : {
+
+    },
+    "%@, empty" : {
+
+    },
+    "Checkers" : {
+
+    },
     "Classic" : {
 
     },
+    "Computer" : {
+
+    },
+    "Dark to move" : {
+
+    },
+    "Light to move" : {
+
+    },
     "Modern" : {
+
+    },
+    "New game" : {
+
+    },
+    "Opponent" : {
 
     },
     "Play" : {
@@ -13,7 +46,22 @@
     "Playful" : {
 
     },
+    "Rules" : {
+
+    },
     "Screen" : {
+
+    },
+    "Settings" : {
+
+    },
+    "Start" : {
+
+    },
+    "Statistics" : {
+
+    },
+    "Two players" : {
 
     }
   },
