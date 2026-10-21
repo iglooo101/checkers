@@ -33,6 +33,19 @@ final class AppRouter {
         path.append(.game)
     }
 
+    /// Starts a new game with the finished game's setup (FR-034).
+    func playAgain() {
+        guard let session else { return }
+        self.session = GameSession(setup: session.setup, playerSide: session.playerSide)
+    }
+
+    /// Returns Home. A finished game, or no game, is left at once.
+    func requestHome() {
+        guard session?.isOver ?? true else { return }
+        path.removeAll()
+        session = nil
+    }
+
     /// Opens a screen on top of the current one.
     func open(_ route: Route) {
         path.append(route)

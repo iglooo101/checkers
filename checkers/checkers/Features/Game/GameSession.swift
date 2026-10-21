@@ -48,6 +48,22 @@ final class GameSession {
         return Set(state.targets(from: selection))
     }
 
+    /// Whether the game has ended.
+    var isOver: Bool {
+        state.outcome != .inProgress
+    }
+
+    /// The result panel's sentence, once the game is over (FR-033).
+    var resultText: LocalizedStringResource? {
+        GameText.result(state.outcome)
+    }
+
+    /// The side that resigns: the side to move in a two-player game, the player against the
+    /// computer (FR-032).
+    var resigningSide: Side {
+        playerSide ?? state.sideToMove
+    }
+
     /// The turn indicator's sentence (FR-014).
     var turnText: LocalizedStringResource {
         GameText.turn(state.sideToMove, captureRequired: state.isCaptureRequired)
@@ -75,6 +91,18 @@ final class GameSession {
         } else {
             selection = nil
         }
+    }
+
+    /// Resigns for `resigningSide`; nothing happens once the game is over (FR-032).
+    func resign() {
+        guard !isOver else { return }
+        do {
+            try state.resign(resigningSide)
+        } catch {
+            Log.game.error("Resign rejected: \(String(describing: error))")
+        }
+        selection = nil
+        notice = nil
     }
 
     /// Starts dragging the piece on a square, if it may move; otherwise answers as a tap would and

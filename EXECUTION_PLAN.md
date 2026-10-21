@@ -37,13 +37,13 @@ Epics are listed in execution order.
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
-| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 1/8 | 12/29 | In Progress |
+| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 3/8 | 16/29 | In Progress |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **13/41** | **58/146** | |
+| | **Total** | | | | **15/41** | **62/146** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -55,12 +55,11 @@ Epics are listed in execution order.
 - #70 Setup screen: opponent, difficulty and side (Light, Dark, Random)
 - #74 F3.3: Board view
 - #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation
-- #78 Accessibility pass: Game screen layout at accessibility5 and Dark Mode
-- #79 F3.4: Move input
-- #82 Drag a piece onto a target; invalid drops return the piece
-- #84 F3.5: Move aids and chain interaction
-- #85 Highlight movable pieces and legal targets when hints are on
-- #86 Selected piece always visibly marked
+- #88 F3.6: Game end and result
+- #89 Resign with confirmation (human vs computer; side to move in two-player)
+- #90 Result panel over the final position with outcome and reason, Play again and Home
+- #91 Play again keeps opponent, difficulty and side; Random re-rolls the side
+- #92 Accessibility pass: result panel and confirmations
 - #196 Validate the E3 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -219,7 +218,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
 - [x] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
-### E3 Game experience (#57) · M2 Playable two-player game · P0 · 12/29 tasks
+### E3 Game experience (#57) · M2 Playable two-player game · P0 · 16/29 tasks
 
 **F3.0 Specification (Spec Kit)** (#58) · FRD §4–7, §9, §10
 
@@ -234,19 +233,19 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #75 SwiftUI board: 8×8 grid, men and kings, sized to fit every supported iPhone · M
 - [~] #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation · S
 - [x] #77 Turn indicator, including "capture required" · S
-- [~] #78 Accessibility pass: Game screen layout at accessibility5 and Dark Mode · S
+- [x] #78 Accessibility pass: Game screen layout at accessibility5 and Dark Mode · S
 
 **F3.4 Move input** (#79) · FR-MOVE-01, FR-MOVE-02, FR-MOVE-03, FR-MOVE-04, FR-MOVE-05
 
 - [x] #80 Game model (@Observable): selection rules, tested without UI · M
 - [x] #81 Tap a piece, then tap a target · S
-- [~] #82 Drag a piece onto a target; invalid drops return the piece · M
+- [x] #82 Drag a piece onto a target; invalid drops return the piece · M
 - [x] #83 Tell the player a capture is required when they tap a piece that cannot capture · S
 
 **F3.5 Move aids and chain interaction** (#84) · FR-AID-01, FR-AID-02, FR-AID-03, FR-AID-04, FR-CHAIN-02
 
-- [~] #85 Highlight movable pieces and legal targets when hints are on · S
-- [~] #86 Selected piece always visibly marked · S
+- [x] #85 Highlight movable pieces and legal targets when hints are on · S
+- [x] #86 Selected piece always visibly marked · S
 - [x] #87 Chain lock: only the jumping piece and its next jumps are available · S
 
 **F3.7 Undo in the game** (#93) · FR-UNDO-01, FR-UNDO-02, FR-UNDO-06
@@ -255,10 +254,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F3.6 Game end and result** (#88) · FR-END-02, FR-END-06, FR-END-07, FR-END-08
 
-- [ ] #89 Resign with confirmation (human vs computer; side to move in two-player) · S
-- [ ] #90 Result panel over the final position with outcome and reason, Play again and Home · M
-- [ ] #91 Play again keeps opponent, difficulty and side; Random re-rolls the side · S
-- [ ] #92 Accessibility pass: result panel and confirmations · S
+- [~] #89 Resign with confirmation (human vs computer; side to move in two-player) · S
+- [~] #90 Result panel over the final position with outcome and reason, Play again and Home · M
+- [~] #91 Play again keeps opponent, difficulty and side; Random re-rolls the side · S
+- [~] #92 Accessibility pass: result panel and confirmations · S
 
 **F3.1 App shell and navigation** (#64) · FR-NAV-01, FR-NAV-02, FR-NAV-03, FR-NAV-04, FR-GAME-06
 

@@ -158,8 +158,9 @@ what else was considered. Facts marked *measured* were checked on the developmen
 
 ## R10. Dialogs and the result panel
 
-- **Decision**: Resign and leave use system confirmation dialogs with a destructive confirm button
-  and Cancel (FR-032, FR-042). The result panel is an overlay on the board with a material
+- **Decision**: Resign and leave use system alerts with a destructive confirm button and Cancel
+  (FR-032, FR-042). Measured in implementation: on iOS 26 a confirmation dialog opened from a
+  toolbar item appears as a popover without a Cancel button, so alerts are used instead. The result panel is an overlay on the board with a material
   background, so the final position stays visible (FR-033), holding the result sentence and the
   Play again and Home buttons; its content scrolls if the text size requires it. After the end, the
   game menu offers only Rules, Settings and Home (FR-037: Undo and Resign are not offered).

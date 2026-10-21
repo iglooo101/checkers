@@ -36,8 +36,8 @@ localized. Behavior behind the controls is in [game-session.md](game-session.md)
 | Menu button | Game menu | `game.menu` |
 | Menu items (in progress) | Undo (disabled when unavailable), Resign, Rules, Settings, Home | `game.menu.undo`, `game.menu.resign`, `game.menu.rules`, `game.menu.settings`, `game.menu.home` |
 | Menu items (over) | Rules, Settings, Home | as above |
-| Resign dialog | Resign as Light? / Resign as Dark? · Resign (destructive) · Cancel | `game.resign.confirm`, `game.resign.cancel` |
-| Leave dialog | Leave this game? · It can't be resumed yet. · Leave (destructive) · Cancel | `game.leave.confirm`, `game.leave.cancel` |
+| Resign alert | Resign as Light? / Resign as Dark? · Resign (destructive) · Cancel | `game.resign.confirm`, `game.resign.cancel` |
+| Leave alert | Leave this game? · It can't be resumed yet. · Leave (destructive) · Cancel | `game.leave.confirm`, `game.leave.cancel` |
 | Result panel | One of the six `resultText` sentences · Play again · Home | `result.panel`, `result.text`, `result.playAgain`, `result.home` |
 
 Light squares are drawn but are not accessibility elements and accept no input.

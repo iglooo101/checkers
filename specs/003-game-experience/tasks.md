@@ -156,21 +156,21 @@ description: "Task list for the game experience slice (epic E3)"
 
 ### Tests for User Story 4 (MANDATORY - write first) ⚠️
 
-- [ ] T030 [P] [US4] Write `Unit/US4GameEndTests.swift` (`struct US4GameEndTests`):
+- [X] T030 [P] [US4] Write `Unit/US4GameEndTests.swift` (`struct US4GameEndTests`):
   - `US4 FR-END-02`: in a two-player game `resigningSide` is the side to move; `resign()` on Light's turn gives `resultText` "Light resigned" and `isOver`; on Dark's turn "Dark resigned".
   - `US4 FR-END-01 FR-END-06`: capturing the last Dark piece (Light man c3, Dark man d4: tap c3, tap e5) gives "Light wins: no moves left"; the Dark version reads "Dark wins: no moves left".
   - `US4 FR-END-03 FR-END-04 FR-END-06`: the engine's king shuffle (`h2` and `a7` kings, eight turns tapped through the session) gives "Draw by repetition"; replaying E2's 80-turn king tour through the session's taps (Light king b2 cycling c1, d2, e3, d4, c5, b4, c3, b2; Dark king e7 cycling f8, g7, h6, g5, f6, e7; `specs/002-rules-engine/tasks.md` T025) gives "Draw by no progress".
   - `US4 FR-END-06`: once over, taps, drags, `undo()` and `resign()` change nothing, and `selection`, `notice`, `hintedPieces` are empty.
   - `US4 FR-END-07`: `AppRouter.playAgain()` replaces the session with one from `GameState()` and the same setup; `requestHome()` on a finished game empties the path without asking.
   Fails until T032–T033.
-- [ ] T031 [P] [US4] Write `UI/US4GameEndUITests.swift`: `testUS4_resignAndPlayAgain`: `startTwoPlayerGame()`; play `c3`→`d4`; open `game.menu`, tap `game.menu.resign`, tap `game.resign.cancel`: the game continues ("Dark to move"); resign again and confirm (`game.resign.confirm`): `result.text` reads "Dark resigned", `square.d4` is still "d4, Light man"; tap `result.playAgain`: `game.turn` "Light to move" and `square.c3` "c3, Light man"; resign and confirm, then `result.home`: `home.newGame` exists. Fails until T035.
+- [X] T031 [P] [US4] Write `UI/US4GameEndUITests.swift`: `testUS4_resignAndPlayAgain`: `startTwoPlayerGame()`; play `c3`→`d4`; open `game.menu`, tap `game.menu.resign`, tap `game.resign.cancel`: the game continues ("Dark to move"); resign again and confirm (`game.resign.confirm`): `result.text` reads "Dark resigned", `square.d4` is still "d4, Light man"; tap `result.playAgain`: `game.turn` "Light to move" and `square.c3` "c3, Light man"; resign and confirm, then `result.home`: `home.newGame` exists. Fails until T035.
 
 ### Implementation for User Story 4
 
-- [ ] T032 [P] [US4] Extend `App/Features/Game/GameText.swift`: `result(_ outcome: Outcome) -> LocalizedStringResource?` with the six sentences (a resignation names the side that resigned, the winner's opponent) and `resignTitle(_ side: Side)` ("Resign as Light?", "Resign as Dark?").
-- [ ] T033 [US4] Extend `App/Features/Game/GameSession.swift` (`resigningSide`, `resign()`, `isOver`, `resultText`; rule 1 for taps and drags; clear selection and notice when over) and `App/App/AppRouter.swift` (`playAgain()`, `requestHome()` for a finished game or no session). T030 passes.
-- [ ] T034 [P] [US4] Create `App/Features/Game/ResultPanel.swift`: an overlay with a material background holding `result.text` and the `result.playAgain` and `result.home` buttons, scrolling at large text sizes; previews for all six results in light, dark and `accessibility5`.
-- [ ] T035 [US4] Extend `App/Features/Game/GameView.swift`: a toolbar menu (`game.menu`) with Resign (`game.menu.resign`) while in progress; a confirmation dialog titled `resignTitle(resigningSide)` with Resign (destructive, `game.resign.confirm`) and Cancel (`game.resign.cancel`); `ResultPanel` over the board when over, wired to `router.playAgain()` and `router.requestHome()`. Sync the catalog. Accessibility pass for the result panel and the dialog (#92): `accessibility5`, Dark Mode and labels; record in `validation.md`. US4 tests pass.
+- [X] T032 [P] [US4] Extend `App/Features/Game/GameText.swift`: `result(_ outcome: Outcome) -> LocalizedStringResource?` with the six sentences (a resignation names the side that resigned, the winner's opponent) and `resignTitle(_ side: Side)` ("Resign as Light?", "Resign as Dark?").
+- [X] T033 [US4] Extend `App/Features/Game/GameSession.swift` (`resigningSide`, `resign()`, `isOver`, `resultText`; rule 1 for taps and drags; clear selection and notice when over) and `App/App/AppRouter.swift` (`playAgain()`, `requestHome()` for a finished game or no session). T030 passes.
+- [X] T034 [P] [US4] Create `App/Features/Game/ResultPanel.swift`: an overlay with a material background holding `result.text` and the `result.playAgain` and `result.home` buttons, scrolling at large text sizes; previews for all six results in light, dark and `accessibility5`.
+- [X] T035 [US4] Extend `App/Features/Game/GameView.swift`: a toolbar menu (`game.menu`) with Resign (`game.menu.resign`) while in progress; a confirmation alert titled `resignTitle(resigningSide)` with Resign (destructive, `game.resign.confirm`) and Cancel (`game.resign.cancel`); `ResultPanel` over the board when over, wired to `router.playAgain()` and `router.requestHome()`. Sync the catalog. Accessibility pass for the result panel and the dialog (#92): `accessibility5`, Dark Mode and labels; record in `validation.md`. US4 tests pass.
 
 **Checkpoint**: US4 complete: every game ends with a clear result.
 

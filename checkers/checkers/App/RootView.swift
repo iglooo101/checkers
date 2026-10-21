@@ -20,7 +20,7 @@ struct RootView: View {
             SetupView(router: router)
         case .game:
             if let session = router.session {
-                GameView(session: session)
+                GameView(session: session, router: router)
             }
         case .statistics:
             PlaceholderView(title: "Statistics")

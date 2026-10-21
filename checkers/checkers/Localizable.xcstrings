@@ -19,6 +19,9 @@
     "A capture is required." : {
 
     },
+    "Cancel" : {
+
+    },
     "Checkers" : {
 
     },
@@ -28,16 +31,40 @@
     "Computer" : {
 
     },
+    "Dark resigned" : {
+
+    },
     "Dark to move" : {
 
     },
     "Dark to move · capture required" : {
 
     },
+    "Dark wins: no moves left" : {
+
+    },
+    "Draw by no progress" : {
+
+    },
+    "Draw by repetition" : {
+
+    },
+    "Game menu" : {
+
+    },
+    "Home" : {
+
+    },
+    "Light resigned" : {
+
+    },
     "Light to move" : {
 
     },
     "Light to move · capture required" : {
+
+    },
+    "Light wins: no moves left" : {
 
     },
     "Modern" : {
@@ -52,7 +79,19 @@
     "Play" : {
 
     },
+    "Play again" : {
+
+    },
     "Playful" : {
+
+    },
+    "Resign" : {
+
+    },
+    "Resign as Dark?" : {
+
+    },
+    "Resign as Light?" : {
 
     },
     "Rules" : {

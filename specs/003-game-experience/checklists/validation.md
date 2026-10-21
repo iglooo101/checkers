@@ -34,7 +34,9 @@ starting 2026-10-21.
 | Game screen on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T029) | Pass | `US1`, `US2` and `US3` UI tests all pass: board fits with 44-point squares, labels and indicator correct, tap and drag work |
 | Previews (T029) | Written | `GameView`, `BoardView`, `PieceView`: start, capture required with notice, selection with targets, Dark at the bottom with kings, `accessibility5`, dark |
 | Visual review of the large-text layout | *Pending* | For the hand check in T057 |
-| Result panel and dialogs (T035), setup (T046), Home and navigation (T053) | *Pending* | |
+| Result panel and resign alert on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T035) | Pass | `US4GameEndUITests` passes: alert buttons, result text and both result buttons found and tapped; previews for all six results at `accessibility5` and dark |
+| Resign confirmation as an alert (T035) | Changed | On iOS 26 a confirmation dialog from a toolbar item shows as a popover without Cancel (*measured*), so resign uses an alert; research R10 updated |
+| Setup (T046), Home and navigation (T053) | *Pending* | |
 
 ## 5. No web content and launch time (SC-005, FR-006)
 

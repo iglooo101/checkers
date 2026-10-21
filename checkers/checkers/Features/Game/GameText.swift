@@ -21,6 +21,28 @@ enum GameText {
         }
     }
 
+    /// The result panel's sentence once the game is over (FR-033). A resignation names the side
+    /// that resigned: the winner's opponent.
+    static func result(_ outcome: Outcome) -> LocalizedStringResource? {
+        switch outcome {
+        case .inProgress: nil
+        case .win(winner: .light, reason: .noMovesLeft): "Light wins: no moves left"
+        case .win(winner: .dark, reason: .noMovesLeft): "Dark wins: no moves left"
+        case .win(winner: .dark, reason: .resignation): "Light resigned"
+        case .win(winner: .light, reason: .resignation): "Dark resigned"
+        case .draw(reason: .repetition): "Draw by repetition"
+        case .draw(reason: .noProgress): "Draw by no progress"
+        }
+    }
+
+    /// The resign confirmation's title (FR-032).
+    static func resignTitle(_ side: Side) -> LocalizedStringResource {
+        switch side {
+        case .light: "Resign as Light?"
+        case .dark: "Resign as Dark?"
+        }
+    }
+
     /// A square's VoiceOver label: its coordinate and contents (FR-040).
     static func squareLabel(_ square: Square, _ piece: Piece?) -> LocalizedStringResource {
         let name = square.name

@@ -1,10 +1,13 @@
 import CheckersEngine
 import SwiftUI
 
-/// The game screen: the turn indicator above the board, and no other game information
-/// (FR-012).
+/// The game screen: the turn indicator and any notice above the board, the game menu, and the
+/// result panel over the board once the game ends. No other game information (FR-012).
 struct GameView: View {
     let session: GameSession
+    let router: AppRouter
+
+    @State private var isConfirmingResign = false
 
     var body: some View {
         VStack(spacing: 12) {
@@ -25,15 +28,45 @@ struct GameView: View {
                     .padding(.horizontal)
             }
             BoardView(session: session)
+                .overlay {
+                    if let result = session.resultText {
+                        ResultPanel(
+                            text: result, playAgain: { router.playAgain() },
+                            home: { router.requestHome() })
+                    }
+                }
         }
         .padding(.top)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            if !session.isOver {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Button("Resign", role: .destructive) { isConfirmingResign = true }
+                            .accessibilityIdentifier("game.menu.resign")
+                    } label: {
+                        Label("Game menu", systemImage: "ellipsis.circle")
+                    }
+                    .accessibilityIdentifier("game.menu")
+                }
+            }
+        }
+        // An alert, not a confirmation dialog: from a toolbar item iOS shows a dialog as a popover
+        // without a Cancel button.
+        .alert(Text(GameText.resignTitle(session.resigningSide)), isPresented: $isConfirmingResign)
+        {
+            Button("Resign", role: .destructive) { session.resign() }
+                .accessibilityIdentifier("game.resign.confirm")
+            Button("Cancel", role: .cancel) {}
+                .accessibilityIdentifier("game.resign.cancel")
+        }
     }
 }
 
 #Preview("New game") {
     NavigationStack {
-        GameView(session: GameSession(setup: .defaults))
+        GameView(
+            session: GameSession(setup: .defaults), router: AppRouter(store: InMemorySetupStore()))
     }
 }
 
@@ -54,18 +87,15 @@ struct GameView: View {
         session.tap(manThatCannotCapture)
     }
     return NavigationStack {
-        GameView(session: session)
+        GameView(session: session, router: AppRouter(store: InMemorySetupStore()))
     }
 }
 
-#Preview("After a move, large text, dark") {
+#Preview("Finished, large text, dark") {
     let session = GameSession(setup: .defaults)
-    if let from = Square(name: "c3"), let to = Square(name: "d4") {
-        session.tap(from)
-        session.tap(to)
-    }
+    session.resign()
     return NavigationStack {
-        GameView(session: session)
+        GameView(session: session, router: AppRouter(store: InMemorySetupStore()))
     }
     .environment(\.dynamicTypeSize, .accessibility5)
     .preferredColorScheme(.dark)

@@ -32,6 +32,28 @@ extension XCUIApplication {
             line: line)
     }
 
+    /// Opens the game menu and chooses an item by its label, such as "Resign". System menus
+    /// expose their items by label.
+    @MainActor
+    func chooseFromGameMenu(_ item: String, file: StaticString = #filePath, line: UInt = #line) {
+        element("game.menu").tap()
+        let button = buttons[item]
+        XCTAssertTrue(
+            button.waitForExistence(timeout: 3), "No \(item) in the game menu", file: file,
+            line: line)
+        button.tap()
+    }
+
+    /// Answers a confirmation alert by the label of one of its buttons.
+    @MainActor
+    func confirm(_ answer: String, file: StaticString = #filePath, line: UInt = #line) {
+        // iOS exposes an alert's Cancel button more than once in the accessibility tree.
+        let button = alerts.buttons[answer].firstMatch
+        XCTAssertTrue(
+            button.waitForExistence(timeout: 3), "No \(answer) button", file: file, line: line)
+        button.tap()
+    }
+
     /// Taps one square and then another.
     @MainActor
     func move(_ from: String, _ to: String) {
