@@ -101,7 +101,7 @@ description: "Task list for the rules engine slice (epic E2)"
 
 ### Tests for User Story 2 (MANDATORY - write first) ⚠️
 
-- [ ] T017 [US2] Write `EngineTests/US2CaptureAndKingTests.swift` (`struct US2CaptureAndKingTests`) with:
+- [X] T017 [US2] Write `EngineTests/US2CaptureAndKingTests.swift` (`struct US2CaptureAndKingTests`) with:
   - `US2 FR-RULE-03 FR-RULE-05`: Light men on c3 and a1 and Dark men on d4 and h8, Light to move: `legalSteps == [c3–e5]`, `movablePieces == [c3]`, `isCaptureRequired == true` (AS1).
   - `US2 FR-RULE-03`: applying `c3–e5` there empties c3 and d4, puts the Light man on e5, makes Dark to move, and the result has `captured == d4` and `turnContinues == false`.
   - `US2 FR-RULE-03`: a Light man on d4 with a Dark man on c3 and b2 empty (plus a Dark man on h8) cannot jump backward: `d4–b2` is not legal and throws `illegalStep` (AS2).
@@ -114,8 +114,8 @@ description: "Task list for the rules engine slice (epic E2)"
 
 ### Implementation for User Story 2
 
-- [ ] T018 [US2] Extend `Sources/Position+Steps.swift`: kings' simple moves in all four directions; jumps for men along `forwardDirections` and for kings in all four directions, over an adjacent opposing piece onto an empty landing square (`landing(of:_:)`); `steps(for:)` returns only jumps when any jump exists (FR-007), keeping the contract order.
-- [ ] T019 [US2] Extend `Sources/GameState.swift`: `isCaptureRequired` is true when the legal steps are jumps; `apply` adds check 5 (`captureRequired`) in contract order; applying a jump removes the piece on `captured` and reports it in the result; the turn still ends after one jump (chains come in US3). US1 and US2 tests pass.
+- [X] T018 [US2] Extend `Sources/Position+Steps.swift`: kings' simple moves in all four directions; jumps for men along `forwardDirections` and for kings in all four directions, over an adjacent opposing piece onto an empty landing square (`landing(of:_:)`); `steps(for:)` returns only jumps when any jump exists (FR-007), keeping the contract order.
+- [X] T019 [US2] Extend `Sources/GameState.swift`: `isCaptureRequired` is true when the legal steps are jumps; `apply` adds check 5 (`captureRequired`) in contract order; applying a jump removes the piece on `captured` and reports it in the result; the turn still ends after one jump (chains come in US3). US1 and US2 tests pass.
 
 **Checkpoint**: US2 complete: every single step of American checkers is generated and applied.
 

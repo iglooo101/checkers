@@ -55,6 +55,9 @@ Epics are listed in execution order.
 - #38 Standard starting position: 12 men per side, Light to move
 - #39 F2.2: Move generation
 - #40 Man moves one square diagonally forward
+- #41 Man captures diagonally forward
+- #42 King moves and captures in all four directions (no flying kings)
+- #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest)
 - #47 F2.4: Game state and endings
 - #48 Game state: board, side to move, pending chain, outcome
 - #195 Validate the E2 slice and update project docs
@@ -187,9 +190,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F2.2 Move generation** (#39) · FR-RULE-02, FR-RULE-03, FR-RULE-04, FR-RULE-05
 
 - [~] #40 Man moves one square diagonally forward · S
-- [ ] #41 Man captures diagonally forward · S
-- [ ] #42 King moves and captures in all four directions (no flying kings) · M
-- [ ] #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest) · S
+- [~] #41 Man captures diagonally forward · S
+- [~] #42 King moves and captures in all four directions (no flying kings) · M
+- [~] #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest) · S
 
 **F2.3 Capture chains and crowning** (#44) · FR-RULE-06, FR-RULE-07, FR-CHAIN-01, FR-CHAIN-02, FR-CHAIN-03
 

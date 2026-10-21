@@ -53,13 +53,18 @@ public struct GameState: Sendable, Equatable {
         guard outcome == .inProgress else { throw .gameOver }
         guard let piece = position.piece(at: step.from) else { throw .illegalStep }
         guard piece.side == sideToMove else { throw .notSideToMove }
-        guard legalSteps.contains(step) else { throw .illegalStep }
+        let legal = legalSteps
+        if legal.first?.isJump == true, !step.isJump { throw .captureRequired }
+        guard legal.contains(step) else { throw .illegalStep }
 
         position.remove(at: step.from)
+        if let captured = step.captured {
+            position.remove(at: captured)
+        }
         position.place(piece, at: step.to)
         sideToMove = sideToMove.opponent
         return StepResult(
-            side: piece.side, piece: piece, from: step.from, to: step.to, captured: nil,
+            side: piece.side, piece: piece, from: step.from, to: step.to, captured: step.captured,
             crowned: false, turnContinues: false, outcome: outcome)
     }
 }
