@@ -37,19 +37,21 @@ Epics are listed in execution order.
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
-| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
+| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 1/28 | In Progress |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **12/41** | **46/145** | |
+| | **Total** | | | | **12/41** | **47/145** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-Nothing in progress.
+- #57 E3: Game experience
+- #58 F3.0: Specification (Spec Kit)
+- #60 E3 Clarify: resolve open questions with /speckit-clarify
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -201,12 +203,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
 - [x] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
-### E3 Game experience (#57) · M2 Playable two-player game · P0 · 0/28 tasks
+### E3 Game experience (#57) · M2 Playable two-player game · P0 · 1/28 tasks
 
 **F3.0 Specification (Spec Kit)** (#58) · FRD §4–7, §9, §10
 
-- [ ] #59 E3 Specify: write spec.md with /speckit-specify · S
-- [ ] #60 E3 Clarify: resolve open questions with /speckit-clarify · S
+- [x] #59 E3 Specify: write spec.md with /speckit-specify · S
+- [~] #60 E3 Clarify: resolve open questions with /speckit-clarify · S
 - [ ] #61 E3 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #62 E3 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #63 E3 Reconcile this epic's board tasks with tasks.md · S
@@ -475,3 +477,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   `identifier_name` now accepts `to`.
 - 2026-10-21: E2 done. Closed #37, #38, #40–#43, #45, #46, #48–#52, #54–#56, #193–#195, features
   F2.1–F2.5 and epic #29; `main` fast-forwarded. Next is E3 (#59 Specify).
+- 2026-10-21: E3 started on branch `003-game-experience`. #59 done:
+  `specs/003-game-experience/spec.md`, 7 stories, 41 functional requirements traced to #65–#94,
+  checklist 16/16; four assumptions go to #60 Clarify.
