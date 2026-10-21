@@ -129,7 +129,7 @@ description: "Task list for the rules engine slice (epic E2)"
 
 ### Tests for User Story 3 (MANDATORY - write first) ⚠️
 
-- [ ] T020 [US3] Write `EngineTests/US3ChainAndCrowningTests.swift` (`struct US3ChainAndCrowningTests`) with:
+- [X] T020 [US3] Write `EngineTests/US3ChainAndCrowningTests.swift` (`struct US3ChainAndCrowningTests`) with:
   - `US3 FR-CHAIN-01 FR-CHAIN-02 FR-RULE-06`: Light men on a3 and g1, Dark men on b4, d6 and h8, Light to move; after `a3–c5`, b4 is empty, the man is on c5, Light is still to move, `chainSquare == c5`, `legalSteps == [c5–e7]`, `isCaptureRequired == true`, and the result has `turnContinues == true` (AS1).
   - `US3 FR-CHAIN-02`: in that chain, `g1–h2` (another piece) and `c5–b6` (a simple move) each throw `mustContinueChain` and change nothing (AS2).
   - `US3 FR-CHAIN-03 FR-RULE-06`: then `c5–e7` empties d6, ends the turn (Dark to move, `chainSquare == nil`, `turnContinues == false`; AS3).
@@ -139,13 +139,13 @@ description: "Task list for the rules engine slice (epic E2)"
   - `US3 FR-CHAIN-01`: a king's chain may cross a square again but never jumps a piece twice: a Light king on c1 with Dark men on d2, d4, b4, b2 (and h8) jumps `c1–e3`, `e3–c5`, `c5–a3`, `a3–c1`; after the fourth jump the four Dark men are gone and the turn ends.
   - `US3 FR-027`: for each step applied in the tests above, the result's `side`, `piece` (before the step), `from`, `to`, `captured`, `crowned` and `turnContinues` match the board change: the piece left `from`, stands on `to` (as a king if crowned), and `captured` alone was emptied (AS6).
   Fails until T023–T024.
-- [ ] T021 [P] [US3] Create `EngineTests/Support/TurnCounter.swift`: `func countTurnSequences(from state: GameState, turns: Int) throws -> Int`, returning 1 when `turns == 0`; otherwise, for each legal step, apply it to a copy and recurse with the same `turns` if the result's `turnContinues`, else with `turns - 1`, summing the counts (a finished game has no legal steps and contributes 0).
-- [ ] T022 [US3] Write `EngineTests/ReferenceCountTests.swift` (`struct ReferenceCountTests`): a parameterized `@Test("US3 SC-002: complete-turn sequences from the start match the published counts", arguments: [(1, 7), (2, 49), (3, 302), (4, 1_469), (5, 7_361), (6, 36_768), (7, 179_740)])`, with a comment citing OEIS A133046 and Aart Bik's checkers page (research R1); and `@Test("US3 SC-004: the 6-turn count takes under 10 seconds")` timing `countTurnSequences(from: GameState(), turns: 6)` with `ContinuousClock`. Observe depth 7 fail before T023–T024: an engine without chains or crowning counts 180,018 sequences, not 179,740 (*measured* with the research prototype).
+- [X] T021 [P] [US3] Create `EngineTests/Support/TurnCounter.swift`: `func countTurnSequences(from state: GameState, turns: Int) throws -> Int`, returning 1 when `turns == 0`; otherwise, for each legal step, apply it to a copy and recurse with the same `turns` if the result's `turnContinues`, else with `turns - 1`, summing the counts (a finished game has no legal steps and contributes 0).
+- [X] T022 [US3] Write `EngineTests/ReferenceCountTests.swift` (`struct ReferenceCountTests`): a parameterized `@Test("US3 SC-002: complete-turn sequences from the start match the published counts", arguments: [(1, 7), (2, 49), (3, 302), (4, 1_469), (5, 7_361), (6, 36_768), (7, 179_740)])`, with a comment citing OEIS A133046 and Aart Bik's checkers page (research R1); and `@Test("US3 SC-004: the 6-turn count takes under 10 seconds")` timing `countTurnSequences(from: GameState(), turns: 6)` with `ContinuousClock`. Observe depth 7 fail before T023–T024: an engine without chains or crowning counts 180,018 sequences, not 179,740 (*measured* with the research prototype).
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Add internal `jumps(from:)` (the jumps of one piece) to `Sources/Position+Steps.swift`, and chains to `Sources/GameState.swift`: after a jump that does not crown, if the piece can jump again, set `chainSquare` to its square, keep the side to move and report `turnContinues`; while `chainSquare` is set, `legalSteps` are that piece's jumps only; `apply` adds check 4 (`mustContinueChain`) in contract order (FR-010, FR-011).
-- [ ] T024 [US3] Add crowning to `apply` in `Sources/GameState.swift`: a man ending any step on its `farRow` becomes a king at once, the result has `crowned == true`, and the turn ends even if the new king could jump (FR-012). US1–US3 tests and `ReferenceCountTests` pass.
+- [X] T023 [US3] Add internal `jumps(from:)` (the jumps of one piece) to `Sources/Position+Steps.swift`, and chains to `Sources/GameState.swift`: after a jump that does not crown, if the piece can jump again, set `chainSquare` to its square, keep the side to move and report `turnContinues`; while `chainSquare` is set, `legalSteps` are that piece's jumps only; `apply` adds check 4 (`mustContinueChain`) in contract order (FR-010, FR-011).
+- [X] T024 [US3] Add crowning to `apply` in `Sources/GameState.swift`: a man ending any step on its `farRow` becomes a king at once, the result has `crowned == true`, and the turn ends even if the new king could jump (FR-012). US1–US3 tests and `ReferenceCountTests` pass.
 
 **Checkpoint**: US3 complete: whole turns, including chains and crowning, play correctly and match the reference counts (quickstart §3).
 

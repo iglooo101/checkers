@@ -58,8 +58,12 @@ Epics are listed in execution order.
 - #41 Man captures diagonally forward
 - #42 King moves and captures in all four directions (no flying kings)
 - #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest)
+- #44 F2.3: Capture chains and crowning
+- #45 Apply a capture one jump at a time with chain-continuation state
+- #46 Crowning on the far row ends the turn, including mid-chain
 - #47 F2.4: Game state and endings
 - #48 Game state: board, side to move, pending chain, outcome
+- #193 Reference move counts and speed check (SC-002, SC-004)
 - #195 Validate the E2 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -196,9 +200,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F2.3 Capture chains and crowning** (#44) · FR-RULE-06, FR-RULE-07, FR-CHAIN-01, FR-CHAIN-02, FR-CHAIN-03
 
-- [ ] #45 Apply a capture one jump at a time with chain-continuation state · M
-- [ ] #46 Crowning on the far row ends the turn, including mid-chain · S
-- [ ] #193 Reference move counts and speed check (SC-002, SC-004) · S · after #45, #46
+- [~] #45 Apply a capture one jump at a time with chain-continuation state · M
+- [~] #46 Crowning on the far row ends the turn, including mid-chain · S
+- [~] #193 Reference move counts and speed check (SC-002, SC-004) · S · after #45, #46
 
 **F2.4 Game state and endings** (#47) · FR-END-01, FR-END-02, FR-END-03, FR-END-04, FR-END-05
 

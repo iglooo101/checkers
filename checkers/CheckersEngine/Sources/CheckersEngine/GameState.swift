@@ -21,9 +21,13 @@ public struct GameState: Sendable, Equatable {
         outcome = .inProgress
     }
 
-    /// Every legal single step for the side to move; empty once the game is over (FR-008).
+    /// Every legal single step for the side to move: during a chain only the chain piece's jumps
+    /// (FR-010); empty once the game is over (FR-008).
     public var legalSteps: [Step] {
         guard outcome == .inProgress else { return [] }
+        if let chainSquare {
+            return position.jumps(from: chainSquare)
+        }
         return position.steps(for: sideToMove)
     }
 
@@ -53,6 +57,7 @@ public struct GameState: Sendable, Equatable {
         guard outcome == .inProgress else { throw .gameOver }
         guard let piece = position.piece(at: step.from) else { throw .illegalStep }
         guard piece.side == sideToMove else { throw .notSideToMove }
+        if let chainSquare, step.from != chainSquare || !step.isJump { throw .mustContinueChain }
         let legal = legalSteps
         if legal.first?.isJump == true, !step.isJump { throw .captureRequired }
         guard legal.contains(step) else { throw .illegalStep }
@@ -61,10 +66,19 @@ public struct GameState: Sendable, Equatable {
         if let captured = step.captured {
             position.remove(at: captured)
         }
-        position.place(piece, at: step.to)
-        sideToMove = sideToMove.opponent
+        // A man ending a step on its far row is crowned at once, and crowning ends the turn,
+        // even in the middle of a chain (FR-012).
+        let crowned = piece.kind == .man && step.to.row == piece.side.farRow
+        position.place(crowned ? Piece(side: piece.side, kind: .king) : piece, at: step.to)
+        let turnContinues = step.isJump && !crowned && !position.jumps(from: step.to).isEmpty
+        if turnContinues {
+            chainSquare = step.to
+        } else {
+            chainSquare = nil
+            sideToMove = sideToMove.opponent
+        }
         return StepResult(
             side: piece.side, piece: piece, from: step.from, to: step.to, captured: step.captured,
-            crowned: false, turnContinues: false, outcome: outcome)
+            crowned: crowned, turnContinues: turnContinues, outcome: outcome)
     }
 }
