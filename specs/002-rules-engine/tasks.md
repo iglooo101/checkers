@@ -216,8 +216,8 @@ description: "Task list for the rules engine slice (epic E2)"
 - [X] T033 Run `scripts/format.sh`, then confirm `scripts/check-format.sh --strict`, `scripts/tests/run.sh` and `(cd checkers/CheckersEngine && swift test)` pass with zero compiler warnings and zero SwiftLint errors.
 - [X] T034 Run every scenario in `specs/002-rules-engine/quickstart.md` (1–7) and record each result in `specs/002-rules-engine/checklists/validation.md`, including the engine suite's duration (target under 60 s), the SC-004 timing, the SC-001 search result (exactly the 21 FRD IDs), and the `xcresulttool` check that `CheckersEngineTests` ran in `scripts/test.sh`.
 - [X] T035 [P] Update `checkers/CLAUDE.md`: the engine's types and `GameState` API (pointing to `specs/002-rules-engine/contracts/engine-api.md`), the test layout and `swift test --filter US<n>`.
-- [ ] T036 [P] Update `HANDOFF.md` (current state and lessons learned from the slice) and `EXECUTION_PLAN.md` (close-out checklist).
-- [ ] T037 Final verification: push the branch, confirm `CI gate` is green on the last commit, fast-forward `main` (`git push origin <sha>:refs/heads/main`), and confirm SC-005: `grep -rE '^\s*import\s+(SwiftUI|UIKit|WebKit|Combine)' checkers/CheckersEngine/Sources` finds nothing.
+- [X] T036 [P] Update `HANDOFF.md` (current state and lessons learned from the slice) and `EXECUTION_PLAN.md` (close-out checklist).
+- [X] T037 Final verification: push the branch, confirm `CI gate` is green on the last commit, fast-forward `main` (`git push origin <sha>:refs/heads/main`), and confirm SC-005: `grep -rE '^\s*import\s+(SwiftUI|UIKit|WebKit|Combine)' checkers/CheckersEngine/Sources` finds nothing.
 
 ---
 

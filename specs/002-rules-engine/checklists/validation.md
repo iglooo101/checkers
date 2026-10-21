@@ -70,7 +70,7 @@ run as a Debug build.
 | `scripts/test.sh` | Pass | `TEST SUCCEEDED`; 72 of 72 tests (63 engine, 9 app and UI); 1 min 15 s; no SwiftLint violations |
 | Engine tests in the result bundle | Pass | `xcresulttool` lists `CheckersEngineTests` |
 | `scripts/tests/run.sh` | Pass | All script tests, including the lint rules after the `identifier_name` change |
-| `CI gate` on the branch | *Recorded at T037* | |
+| `CI gate` on the branch | Pass | Run 39680886427 on `cac611b`: 63 engine tests in 11 suites passed in 21.6 s on the runner's simulator (SC-004 6.7 s), `TEST SUCCEEDED`; US1 run 39678699051 also green |
 
 ## 7. Engine stays UI-free (SC-005, FR-025)
 

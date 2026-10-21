@@ -36,61 +36,35 @@ Epics are listed in execution order.
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
-| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 1/6 | 5/24 | In Progress |
+| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **7/41** | **27/145** | |
+| | **Total** | | | | **12/41** | **46/145** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-- #29 E2: Rules engine
-- #36 F2.1: Board model and starting position
-- #37 Board, square and piece types with a–h / 1–8 coordinates
-- #38 Standard starting position: 12 men per side, Light to move
-- #39 F2.2: Move generation
-- #40 Man moves one square diagonally forward
-- #41 Man captures diagonally forward
-- #42 King moves and captures in all four directions (no flying kings)
-- #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest)
-- #44 F2.3: Capture chains and crowning
-- #45 Apply a capture one jump at a time with chain-continuation state
-- #46 Crowning on the far row ends the turn, including mid-chain
-- #47 F2.4: Game state and endings
-- #48 Game state: board, side to move, pending chain, outcome
-- #49 Loss when the side to move has no legal move (or no pieces)
-- #50 Draw by threefold repetition (same position, same side to move)
-- #51 Draw by no progress: 40 moves per side without capture or man move
-- #52 Resignation outcome
-- #53 F2.5: Undo history
-- #54 Turn history that restores full state, including draw counters
-- #55 Undo mid-chain restores the position from before the chain
-- #56 Undo is unavailable after the game has ended
-- #193 Reference move counts and speed check (SC-002, SC-004)
-- #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003)
-- #195 Validate the E2 slice and update project docs
+Nothing in progress.
 <!-- END GENERATED: in-progress -->
 
 ## Next up
 
-E1 Project foundation is done (slice `specs/001-project-foundation/`, landed on `main`).
-E2 Rules engine is in progress: one Spec Kit slice taking its scope from FRD sections 8, 9 and
-10, on branch `002-rules-engine` (slice `specs/002-rules-engine/`). F2.0 Specification is done
-(#31–#35): `tasks.md` has 37 test-first tasks, and the board is reconciled with it.
+E1 Project foundation and E2 Rules engine are done (slices `specs/001-project-foundation/` and
+`specs/002-rules-engine/`, landed on `main`). The engine in `checkers/CheckersEngine` covers FRD
+sections 8–10 with 63 tests; its public API is `specs/002-rules-engine/contracts/engine-api.md`.
 
-1. `/speckit-implement` in `checkers/CheckersEngine`, story by story, moving each story's board
-   tasks to In Progress first:
-   - Setup and foundation (T001–T012): #195 (lint settings, baseline) and #37.
-   - US1 (T013–T016): #38, #40. US2 (T017–T019): #41, #42, #43.
-   - US3 (T020–T024): #45, #46, #193 (reference counts written with US3's tests).
-   - US4 (T025–T028): #48–#52. US5 (T029–T032): #54, #55, #56, #194 (random games).
-   - Polish (T033–T037): #195.
-2. Push after each story and wait for `CI gate`; then close E2 as E1 was closed.
+Next is E3 Game experience (#57), one Spec Kit slice taking its scope from FRD sections 4–7, 9
+and 10:
+
+1. F3.0 Specification (#58): #59 Specify (`/speckit-specify`, which creates branch and slice
+   `003-…`), #60 Clarify, #61 Plan, #62 Tasks + analyze, #63 Reconcile.
+2. Then implement E3 test-first in the order of the sequencing notes below, building the game
+   screen on the engine's `GameState`.
 
 ## Order and dependencies
 
@@ -183,7 +157,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
 - [x] #191 Validate the E1 slice and update project docs · S
 
-### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 5/24 tasks
+### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 24/24 tasks
 
 **F2.0 Specification (Spec Kit)** (#30) · FRD §8, §9, §10
 
@@ -195,37 +169,37 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F2.1 Board model and starting position** (#36) · FR-RULE-01, FR-SETUP-06
 
-- [~] #37 Board, square and piece types with a–h / 1–8 coordinates · S
-- [~] #38 Standard starting position: 12 men per side, Light to move · S
+- [x] #37 Board, square and piece types with a–h / 1–8 coordinates · S
+- [x] #38 Standard starting position: 12 men per side, Light to move · S
 
 **F2.2 Move generation** (#39) · FR-RULE-02, FR-RULE-03, FR-RULE-04, FR-RULE-05
 
-- [~] #40 Man moves one square diagonally forward · S
-- [~] #41 Man captures diagonally forward · S
-- [~] #42 King moves and captures in all four directions (no flying kings) · M
-- [~] #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest) · S
+- [x] #40 Man moves one square diagonally forward · S
+- [x] #41 Man captures diagonally forward · S
+- [x] #42 King moves and captures in all four directions (no flying kings) · M
+- [x] #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest) · S
 
 **F2.3 Capture chains and crowning** (#44) · FR-RULE-06, FR-RULE-07, FR-CHAIN-01, FR-CHAIN-02, FR-CHAIN-03
 
-- [~] #45 Apply a capture one jump at a time with chain-continuation state · M
-- [~] #46 Crowning on the far row ends the turn, including mid-chain · S
-- [~] #193 Reference move counts and speed check (SC-002, SC-004) · S · after #45, #46
+- [x] #45 Apply a capture one jump at a time with chain-continuation state · M
+- [x] #46 Crowning on the far row ends the turn, including mid-chain · S
+- [x] #193 Reference move counts and speed check (SC-002, SC-004) · S · after #45, #46
 
 **F2.4 Game state and endings** (#47) · FR-END-01, FR-END-02, FR-END-03, FR-END-04, FR-END-05
 
-- [~] #48 Game state: board, side to move, pending chain, outcome · M
-- [~] #49 Loss when the side to move has no legal move (or no pieces) · S
-- [~] #50 Draw by threefold repetition (same position, same side to move) · M
-- [~] #51 Draw by no progress: 40 moves per side without capture or man move · S
-- [~] #52 Resignation outcome · S
+- [x] #48 Game state: board, side to move, pending chain, outcome · M
+- [x] #49 Loss when the side to move has no legal move (or no pieces) · S
+- [x] #50 Draw by threefold repetition (same position, same side to move) · M
+- [x] #51 Draw by no progress: 40 moves per side without capture or man move · S
+- [x] #52 Resignation outcome · S
 
 **F2.5 Undo history** (#53) · FR-UNDO-01, FR-UNDO-02, FR-UNDO-05, FR-UNDO-06, FR-UNDO-07
 
-- [~] #54 Turn history that restores full state, including draw counters · M
-- [~] #55 Undo mid-chain restores the position from before the chain · S
-- [~] #56 Undo is unavailable after the game has ended · S
-- [~] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
-- [~] #195 Validate the E2 slice and update project docs · S · after #193, #194
+- [x] #54 Turn history that restores full state, including draw counters · M
+- [x] #55 Undo mid-chain restores the position from before the chain · S
+- [x] #56 Undo is unavailable after the game has ended · S
+- [x] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
+- [x] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
 ### E3 Game experience (#57) · M2 Playable two-player game · P0 · 0/28 tasks
 
@@ -493,3 +467,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   #193 (reference counts, F2.3), #194 (random games, F2.5) and #195 (slice validation and docs,
   F2.5). F2.0 (#30) closed. Backlog is now 8 epics, 41 features, 145 tasks. Next is
   implementation, starting with T001.
+- 2026-10-21: E2 implemented test-first in `checkers/CheckersEngine` (T001–T037): value types,
+  simple moves (US1), captures and kings (US2), chains and crowning with the published reference
+  counts for depths 1–7 (US3), endings (US4), and undo with 1,000 seeded random games (US5).
+  63 engine tests, all 21 FRD IDs named; the Xcode test plan passes 72/72 and CI is green
+  (run 39680886427). Found: `swift test` does not run SwiftLint (the Xcode build does);
+  `identifier_name` now accepts `to`.
+- 2026-10-21: E2 done. Closed #37, #38, #40–#43, #45, #46, #48–#52, #54–#56, #193–#195, features
+  F2.1–F2.5 and epic #29; `main` fast-forwarded. Next is E3 (#59 Specify).

@@ -28,28 +28,27 @@ Last updated: 2026-10-21
 - **Branches**: `main` is protected: a commit lands only if the `CI gate` check passed for that
   exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
-  branches). `001-project-foundation` was merged and deleted; `002-rules-engine` is the active
-  branch and `main` is level with it.
+  branches). `001-project-foundation` was merged and deleted; `002-rules-engine` is merged into
+  `main` (level with it) and can be deleted once E3's branch exists.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
-- **App**: still the SwiftUI shell around the bundled HTML/JS screens (replaced in E3), now with
-  Swift 6, unit/UI/engine test targets, the `CheckersEngine` package (only `Side` so far), a
-  privacy manifest, a shared logger, a string catalog and iPhone-only portrait settings.
+- **App**: still the SwiftUI shell around the bundled HTML/JS screens (replaced in E3), with
+  Swift 6, unit/UI/engine test targets, a privacy manifest, a shared logger, a string catalog and
+  iPhone-only portrait settings. The **`CheckersEngine` package holds the complete rules engine**
+  (E2): `GameState` with `apply`, `resign`, `undo` and the legal-step queries; public API in
+  `specs/002-rules-engine/contracts/engine-api.md`.
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 5–13 minutes.
 - **Backlog**: 8 epics, 41 features, 145 tasks (#1–#195; #188 is a PR) on the project board.
-  **E1 Project foundation is done** (22/22 board tasks). **E2 Rules engine is in progress**: its
-  specification feature F2.0 (#30) is done (#31–#35); implementation has not started. Progress
-  and the full list are in `EXECUTION_PLAN.md`.
+  **E1 Project foundation and E2 Rules engine are done** (46/145 tasks, 12/41 features). Next is
+  **E3 Game experience** (#57). Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`). The active slice is E2's `specs/002-rules-engine/` on branch
-  `002-rules-engine`: `spec.md` (5 stories, 27 functional requirements), `plan.md` (with
-  `research.md`, `data-model.md`, `contracts/engine-api.md`, `quickstart.md`) and `tasks.md`
-  (37 tasks, analyzed, board reconciled) are done; `/speckit-implement` is next.
-  `.specify/feature.json` is local and git-ignored; recreate it with
-  `{"feature_directory": "specs/002-rules-engine"}` if missing.
+  `002-rules-engine`: spec, plan, 37 tasks and validation (`checklists/validation.md`) are all
+  done. The next slice is E3's, created by `/speckit-specify`; `.specify/feature.json` is local
+  and git-ignored, and `/speckit-specify` points it at the new slice.
 
 ## Lessons learned
 
@@ -202,15 +201,13 @@ Last updated: 2026-10-21
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E2 Rules engine (#29)**, branch `002-rules-engine`, slice `specs/002-rules-engine/`:
-   - **F2.0 is done** (2026-10-21): the design is in `plan.md` and research R1–R12, the public
-     API in `contracts/engine-api.md`, and 37 test-first tasks in `tasks.md`; the board is
-     reconciled (#193–#195 added).
-   - **Next: `/speckit-implement`**, story by story (setup and foundation, then US1 → US5, then
-     polish). Before each story, move its board tasks to In Progress (the mapping is at the end
-     of `tasks.md` and in `EXECUTION_PLAN.md` Next up); push after each story and wait for CI.
-     Close out E2 as E1 was.
-2. Epic order after E2: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
+1. **E3 Game experience (#57)**: start with #59 Specify (`/speckit-specify`, scope from FRD
+   sections 4–7, 9 and 10), then #60 Clarify, #61 Plan, #62 Tasks + analyze, #63 Reconcile. The
+   game screen drives the engine's `GameState`; `StepResult` gives E3 what each step did (sounds,
+   jump-by-jump display), and `isCaptureRequired`, `movablePieces`, `targets(from:)` and
+   `chainSquare` drive the move aids.
+2. Epic order after E3: E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`). E4's search should
+   profile the engine first (see the speed risk in `EXECUTION_PLAN.md`).
 3. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;
    #192 (MetricKit) and #181 (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3)
    in step with the development Mac.
