@@ -21,7 +21,7 @@ public struct Piece: Sendable, Hashable {
 
 public struct Square: Sendable, Hashable {
     public init?(column: Int, row: Int)     // 0...7 each; nil for light squares
-    public init?(name: String)              // "a1" ... "h8"; nil for light or invalid squares
+    public init?(name: String)              // lowercase "a1" ... "h8"; nil for light or invalid squares
     public var column: Int { get }          // 0 = a
     public var row: Int { get }             // 0 = row 1 (Light's side)
     public var name: String { get }         // "c3"

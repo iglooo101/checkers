@@ -13,7 +13,8 @@ move, any unfinished chain, the no-progress count, the outcome and an undo histo
 records that doubles as the repetition record. Screens apply one `Step` (from, to) at a time and
 get a `StepResult` back; illegal actions throw a typed `RuleError` and change nothing. Correctness
 is proven by story-by-story acceptance tests, the published perft counts (OEIS A133046, depths
-1–7, independently reproduced to depth 9) and 1,000 seeded random games with full undo.
+1–7, independently reproduced to depth 9) and 1,000 seeded random games, each undone turn by
+turn from the start of its final turn.
 Research: [research.md](research.md).
 
 ## Technical Context
@@ -39,7 +40,7 @@ development Mac (SC-004); the whole engine suite in under 60 s with `swift test`
 every public type `Sendable` and usable off the main actor; no force unwraps; typed throws at the
 module boundary; deterministic results and step order
 
-**Scale/Scope**: 10 source files and 12 test files; 27 functional requirements, 5 user
+**Scale/Scope**: 10 source files and 14 test files; 27 functional requirements, 5 user
 stories, 21 FRD requirement IDs to cover (SC-001)
 
 ## Constitution Check
@@ -139,7 +140,9 @@ checkers/CheckersEngine/
         │   ├── PositionBuilder.swift     # positions from square names; board diagrams in failures
         │   ├── SeededGenerator.swift     # SplitMix64 RandomNumberGenerator
         │   └── TurnCounter.swift         # complete-turn counting for SC-002
-        ├── SquareTests.swift             # coordinates, names, validation
+        ├── SquareTests.swift             # coordinates, names, validation, diagonal neighbors
+        ├── PositionTests.swift           # placing, reading and comparing pieces
+        ├── StepTests.swift               # jump detection and captured square
         ├── US1StartAndMoveTests.swift
         ├── US2CaptureAndKingTests.swift
         ├── US3ChainAndCrowningTests.swift

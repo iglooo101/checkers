@@ -39,15 +39,16 @@ Last updated: 2026-10-21
   privacy manifest, a shared logger, a string catalog and iPhone-only portrait settings.
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 5–13 minutes.
-- **Backlog**: 8 epics, 41 features, 142 tasks (#1–#192; #188 is a PR) on the project board.
-  **E1 Project foundation is done** (22/22 board tasks). **E2 Rules engine is in progress**: E2
-  (#29) and its specification feature F2.0 (#30) are In Progress; #31 Specify, #32 Clarify and
-  #33 Plan are done. Progress and the full list are in `EXECUTION_PLAN.md`.
+- **Backlog**: 8 epics, 41 features, 145 tasks (#1–#195; #188 is a PR) on the project board.
+  **E1 Project foundation is done** (22/22 board tasks). **E2 Rules engine is in progress**: its
+  specification feature F2.0 (#30) is done (#31–#35); implementation has not started. Progress
+  and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`). The active slice is E2's `specs/002-rules-engine/` on branch
-  `002-rules-engine`: `spec.md` (5 stories, 27 functional requirements), three clarifications and
-  `plan.md` (with `research.md`, `data-model.md`, `contracts/engine-api.md`, `quickstart.md`) are
-  done; `tasks.md` is next. `.specify/feature.json` is local and git-ignored; recreate it with
+  `002-rules-engine`: `spec.md` (5 stories, 27 functional requirements), `plan.md` (with
+  `research.md`, `data-model.md`, `contracts/engine-api.md`, `quickstart.md`) and `tasks.md`
+  (37 tasks, analyzed, board reconciled) are done; `/speckit-implement` is next.
+  `.specify/feature.json` is local and git-ignored; recreate it with
   `{"feature_directory": "specs/002-rules-engine"}` if missing.
 
 ## Lessons learned
@@ -161,6 +162,22 @@ Last updated: 2026-10-21
   (FR-027, used by E3 sounds, E7 announcements, E4 jump-by-jump display); a win by no legal moves
   beats a same-turn draw; repetition counts turn starts and undo uncounts.
 
+## Lessons learned (E2 plan and tasks, 2026-10-21)
+
+- **Check reference data with a throwaway prototype.** A 100-line Python perft in the scratchpad
+  confirmed the published counts to depth 9 and showed what they cover: no king moves within 8
+  turns, crowning from turn 7, and a wrong crowning-mid-chain rule only from depth 9. That set the
+  test depth (7) and showed which rules need their own tests.
+- **Check scripted test positions before writing tasks.** The same prototype found that a naive
+  80-turn king shuffle repeats a position three times by turn 21, and that one test position left
+  the side to move with no legal move; both were fixed in `tasks.md` before implementation.
+- **Whole-engine checks belong with the story that completes them**, not in a final phase:
+  analyze flags tests placed after the code they check (Constitution III.1). The reference counts
+  fail at depth 7 until chains and crowning exist, so they are written with US3.
+- **Moving an issue to Done on the board closes it automatically**, sometimes before
+  `gh issue close --comment` runs, which then posts nothing. Post the summary with
+  `gh issue comment` (or before the move) and check that it landed.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -169,12 +186,13 @@ in product behavior is made in `FRD.md` first. Move each board item to In Progre
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E2 Rules engine (#29)**, branch `002-rules-engine`, slice `specs/002-rules-engine/`:
-   - **#33 Plan is done** (2026-10-21). The design is in `plan.md` and research R1–R12; the
-     public API is `contracts/engine-api.md`. Reference counts (OEIS A133046, Aart Bik) are
-     verified and reproduced independently to depth 9.
-   - **#34 Tasks + analyze** (`/speckit-tasks`, `/speckit-analyze`), then **#35 Reconcile** the
-     board with `tasks.md`.
-   - Then `/speckit-implement`, test-first, story by story (US1 → US5), and close out E2 as E1 was.
+   - **F2.0 is done** (2026-10-21): the design is in `plan.md` and research R1–R12, the public
+     API in `contracts/engine-api.md`, and 37 test-first tasks in `tasks.md`; the board is
+     reconciled (#193–#195 added).
+   - **Next: `/speckit-implement`**, story by story (setup and foundation, then US1 → US5, then
+     polish). Before each story, move its board tasks to In Progress (the mapping is at the end
+     of `tasks.md` and in `EXECUTION_PLAN.md` Next up); push after each story and wait for CI.
+     Close out E2 as E1 was.
 2. Epic order after E2: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
 3. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;
    #192 (MetricKit) and #181 (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3)

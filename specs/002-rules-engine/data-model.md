@@ -34,8 +34,9 @@ Dark, FR-004) and the far row (row 8 for Light, row 1 for Dark, FR-012).
 | `row` | `Int`, 0–7 | Rows 1–8 from Light's side. |
 | `name` | `String` | Notation such as "c3"; not localized (screens build their own text). |
 
-- **Validation**: created from a column and row, or a name; returns `nil` unless both are in
-  range and `column + row` is even (a dark square). a1 is dark.
+- **Validation**: created from a column and row, or a name (a lowercase column letter a–h
+  followed by a row 1–8); returns `nil` unless both are in range and `column + row` is even (a
+  dark square). a1 is dark.
 - `Square.all`: the 32 squares in index order (a1, c1, e1, g1, b2, …, h8).
 - `Hashable`; no other ordering is public.
 

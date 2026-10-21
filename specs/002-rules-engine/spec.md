@@ -267,7 +267,7 @@ end.
   a draw by repetition over a draw by no progress.
 - **FR-020**: Any move, resignation or undo that is not allowed in the current state MUST be
   rejected without changing the state, with a reason: game over, not that side's turn, capture
-  required, chain must continue with the same piece, or not a legal move.
+  required, chain must continue with the same piece, not a legal move, or nothing to undo.
 
 **Undo (#53: #54, #55, #56)**
 

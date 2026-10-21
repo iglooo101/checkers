@@ -36,33 +36,37 @@ Epics are listed in execution order.
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
-| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 3/21 | In Progress |
+| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 1/6 | 5/24 | In Progress |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **6/41** | **25/142** | |
+| | **Total** | | | | **7/41** | **27/145** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #29 E2: Rules engine
-- #30 F2.0: Specification (Spec Kit)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
 
 E1 Project foundation is done (slice `specs/001-project-foundation/`, landed on `main`).
 E2 Rules engine is in progress: one Spec Kit slice taking its scope from FRD sections 8, 9 and
-10, on branch `002-rules-engine` (slice `specs/002-rules-engine/`):
+10, on branch `002-rules-engine` (slice `specs/002-rules-engine/`). F2.0 Specification is done
+(#31–#35): `tasks.md` has 37 test-first tasks, and the board is reconciled with it.
 
-1. #33 Plan is done (`plan.md`, research R1–R12, data model, engine API contract, quickstart).
-2. #34 Tasks + analyze → #35 Reconcile the board with `tasks.md`.
-3. Then implement E2 test-first in `checkers/CheckersEngine` with `/speckit-implement`, story by
-   story (US1 → US5), then the reference-count and random-game checks (SC-002, SC-003).
+1. `/speckit-implement` in `checkers/CheckersEngine`, story by story, moving each story's board
+   tasks to In Progress first:
+   - Setup and foundation (T001–T012): #195 (lint settings, baseline) and #37.
+   - US1 (T013–T016): #38, #40. US2 (T017–T019): #41, #42, #43.
+   - US3 (T020–T024): #45, #46, #193 (reference counts written with US3's tests).
+   - US4 (T025–T028): #48–#52. US5 (T029–T032): #54, #55, #56, #194 (random games).
+   - Polish (T033–T037): #195.
+2. Push after each story and wait for `CI gate`; then close E2 as E1 was closed.
 
 ## Order and dependencies
 
@@ -105,6 +109,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E2's reference counts (SC-002, depths 1–7) never move a king and only show a wrong
   crowning-mid-chain rule from depth 9, so the US2 and US3 acceptance tests and the random games
   (SC-003) must cover those rules (`specs/002-rules-engine/research.md`, R1).
+- E2's test time in CI is unmeasured: the depth-7 reference count and 1,000 random games run as
+  a Debug build on the simulator. T034 records the time; the target is under 60 s on the
+  development Mac (research R12).
 
 ## Backlog
 
@@ -154,15 +161,15 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
 - [x] #191 Validate the E1 slice and update project docs · S
 
-### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 3/21 tasks
+### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 5/24 tasks
 
 **F2.0 Specification (Spec Kit)** (#30) · FRD §8, §9, §10
 
 - [x] #31 E2 Specify: write spec.md with /speckit-specify · S
 - [x] #32 E2 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #33 E2 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [ ] #34 E2 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
-- [ ] #35 E2 Reconcile this epic's board tasks with tasks.md · S
+- [x] #34 E2 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [x] #35 E2 Reconcile this epic's board tasks with tasks.md · S
 
 **F2.1 Board model and starting position** (#36) · FR-RULE-01, FR-SETUP-06
 
@@ -180,6 +187,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [ ] #45 Apply a capture one jump at a time with chain-continuation state · M
 - [ ] #46 Crowning on the far row ends the turn, including mid-chain · S
+- [ ] #193 Reference move counts and speed check (SC-002, SC-004) · S · after #45, #46
 
 **F2.4 Game state and endings** (#47) · FR-END-01, FR-END-02, FR-END-03, FR-END-04, FR-END-05
 
@@ -194,6 +202,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #54 Turn history that restores full state, including draw counters · M
 - [ ] #55 Undo mid-chain restores the position from before the chain · S
 - [ ] #56 Undo is unavailable after the game has ended · S
+- [ ] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
+- [ ] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
 ### E3 Game experience (#57) · M2 Playable two-player game · P0 · 0/28 tasks
 
@@ -452,3 +462,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   counts for SC-002 come from OEIS A133046 and Aart Bik's checkers page (depths 1–7 in the
   blocking suite) and were reproduced independently to depth 9. SC-003 reworded: undo starts
   before each game's final turn (FR-024). Next is #34 Tasks.
+- 2026-10-21: #34 done. `specs/002-rules-engine/tasks.md`: 37 tasks, test-first, by story.
+  `/speckit-analyze` found 8 issues (1 critical: the reference-count and random-game tests came
+  after the code they check); all fixed, so the reference counts are written with US3 (depth 7
+  fails until chains and crowning exist) and the random games with US5. FR-020 now lists
+  "nothing to undo".
+- 2026-10-21: #35 done: board reconciled with `tasks.md`; #37–#56 list their task IDs; added
+  #193 (reference counts, F2.3), #194 (random games, F2.5) and #195 (slice validation and docs,
+  F2.5). F2.0 (#30) closed. Backlog is now 8 epics, 41 features, 145 tasks. Next is
+  implementation, starting with T001.
