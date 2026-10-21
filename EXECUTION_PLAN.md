@@ -37,13 +37,13 @@ Epics are listed in execution order.
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
-| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 2/28 | In Progress |
+| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 3/28 | In Progress |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **12/41** | **48/145** | |
+| | **Total** | | | | **12/41** | **49/145** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -202,13 +202,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
 - [x] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
-### E3 Game experience (#57) · M2 Playable two-player game · P0 · 2/28 tasks
+### E3 Game experience (#57) · M2 Playable two-player game · P0 · 3/28 tasks
 
 **F3.0 Specification (Spec Kit)** (#58) · FRD §4–7, §9, §10
 
 - [x] #59 E3 Specify: write spec.md with /speckit-specify · S
 - [x] #60 E3 Clarify: resolve open questions with /speckit-clarify · S
-- [ ] #61 E3 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
+- [x] #61 E3 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #62 E3 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #63 E3 Reconcile this epic's board tasks with tasks.md · S
 
@@ -483,3 +483,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   still choosable and remembered; first-use opponent Two players until then); leaving an
   unfinished game asks for confirmation and discards it until E5 (new FR-042); Statistics, Rules
   and Settings are placeholder screens until E5/E6.
+- 2026-10-21: #61 done. `specs/003-game-experience/plan.md` with research R1–R14, data model,
+  contracts (`game-session.md`, `screens.md`) and quickstart; Constitution Check passes and
+  resolves E1's web-content exception. Next is #62 Tasks + analyze.
