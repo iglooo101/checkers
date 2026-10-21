@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-10-16
+Last updated: 2026-10-21
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -41,12 +41,13 @@ Last updated: 2026-10-16
   build (about 20 s); code pushes take 5–13 minutes.
 - **Backlog**: 8 epics, 41 features, 142 tasks (#1–#192; #188 is a PR) on the project board.
   **E1 Project foundation is done** (22/22 board tasks). **E2 Rules engine is in progress**: E2
-  (#29) and its specification feature F2.0 (#30) are In Progress; #31 Specify and #32 Clarify are
-  done. Progress and the full list are in `EXECUTION_PLAN.md`.
+  (#29) and its specification feature F2.0 (#30) are In Progress; #31 Specify, #32 Clarify and
+  #33 Plan are done. Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`). The active slice is E2's `specs/002-rules-engine/` on branch
-  `002-rules-engine`: `spec.md` (5 stories, 27 functional requirements) and three clarifications
-  are done; `plan.md` is next. `.specify/feature.json` is local and git-ignored; recreate it with
+  `002-rules-engine`: `spec.md` (5 stories, 27 functional requirements), three clarifications and
+  `plan.md` (with `research.md`, `data-model.md`, `contracts/engine-api.md`, `quickstart.md`) are
+  done; `tasks.md` is next. `.specify/feature.json` is local and git-ignored; recreate it with
   `{"feature_directory": "specs/002-rules-engine"}` if missing.
 
 ## Lessons learned
@@ -168,12 +169,11 @@ in product behavior is made in `FRD.md` first. Move each board item to In Progre
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E2 Rules engine (#29)**, branch `002-rules-engine`, slice `specs/002-rules-engine/`:
-   - **#33 Plan** (`/speckit-plan`): design the engine's value types (square, piece, position,
-     step, step result, game state, outcome) inside `checkers/CheckersEngine`; how positions are
-     compared for repetition; how undo history is kept; and find a citable source for the published
-     American checkers move counts used by SC-002 (expected 7, 49, 302, 1469, 7361, 36768 for
-     depths 1–6; verify before relying on them). Keep everything usable off the main actor.
-   - **#34 Tasks + analyze**, then **#35 Reconcile** the board with `tasks.md`.
+   - **#33 Plan is done** (2026-10-21). The design is in `plan.md` and research R1–R12; the
+     public API is `contracts/engine-api.md`. Reference counts (OEIS A133046, Aart Bik) are
+     verified and reproduced independently to depth 9.
+   - **#34 Tasks + analyze** (`/speckit-tasks`, `/speckit-analyze`), then **#35 Reconcile** the
+     board with `tasks.md`.
    - Then `/speckit-implement`, test-first, story by story (US1 → US5), and close out E2 as E1 was.
 2. Epic order after E2: E3 → E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`).
 3. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;

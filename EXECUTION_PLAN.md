@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-16 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.1, constitution v1.1.0
+Last updated: 2026-10-21 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.1, constitution v1.1.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -36,14 +36,14 @@ Epics are listed in execution order.
 | Order | Epic | Issue | Milestone | Priority | Features done | Tasks done | Status |
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
-| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 2/21 | In Progress |
+| 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 0/6 | 3/21 | In Progress |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 0/8 | 0/28 | Todo |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **6/41** | **24/142** | |
+| | **Total** | | | | **6/41** | **25/142** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -56,11 +56,13 @@ Epics are listed in execution order.
 ## Next up
 
 E1 Project foundation is done (slice `specs/001-project-foundation/`, landed on `main`).
-Next is E2 Rules engine, one Spec Kit slice taking its scope from FRD sections 8, 9 and 10,
-on branch `002-rules-engine` (slice `specs/002-rules-engine/`):
+E2 Rules engine is in progress: one Spec Kit slice taking its scope from FRD sections 8, 9 and
+10, on branch `002-rules-engine` (slice `specs/002-rules-engine/`):
 
-1. #33 Plan → #34 Tasks + analyze → #35 Reconcile the board with `tasks.md`.
-2. Then implement E2 test-first in `checkers/CheckersEngine` with `/speckit-implement`.
+1. #33 Plan is done (`plan.md`, research R1–R12, data model, engine API contract, quickstart).
+2. #34 Tasks + analyze → #35 Reconcile the board with `tasks.md`.
+3. Then implement E2 test-first in `checkers/CheckersEngine` with `/speckit-implement`, story by
+   story (US1 → US5), then the reference-count and random-game checks (SC-002, SC-003).
 
 ## Order and dependencies
 
@@ -100,8 +102,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   it with `xcstringstool` (see HANDOFF.md) or CI fails.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
   and the development Mac are updated together.
-- E2's SC-002 relies on published American checkers move counts; the E2 plan (#33) must verify
-  them against a citable source before tests depend on them.
+- E2's reference counts (SC-002, depths 1–7) never move a king and only show a wrong
+  crowning-mid-chain rule from depth 9, so the US2 and US3 acceptance tests and the random games
+  (SC-003) must cover those rules (`specs/002-rules-engine/research.md`, R1).
 
 ## Backlog
 
@@ -151,13 +154,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #28 Add cold-launch performance test baseline (XCTApplicationLaunchMetric) · S · after #9
 - [x] #191 Validate the E1 slice and update project docs · S
 
-### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 2/21 tasks
+### E2 Rules engine (#29) · M2 Playable two-player game · P0 · 3/21 tasks
 
 **F2.0 Specification (Spec Kit)** (#30) · FRD §8, §9, §10
 
 - [x] #31 E2 Specify: write spec.md with /speckit-specify · S
 - [x] #32 E2 Clarify: resolve open questions with /speckit-clarify · S
-- [ ] #33 E2 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
+- [x] #33 E2 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #34 E2 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #35 E2 Reconcile this epic's board tasks with tasks.md · S
 
@@ -444,3 +447,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   under `scripts/project/` (`board_move.py`, `update_plan.py`); this file's progress table,
   in-progress list and backlog are now generated between `GENERATED` markers, the rest is
   hand-written. Session closed out; next is #33 Plan.
+- 2026-10-21: #33 done. `specs/002-rules-engine/plan.md` with research R1–R12, data model, engine
+  API contract and quickstart; Constitution Check passes before and after design. Reference
+  counts for SC-002 come from OEIS A133046 and Aart Bik's checkers page (depths 1–7 in the
+  blocking suite) and were reproduced independently to depth 9. SC-003 reworded: undo starts
+  before each game's final turn (FR-024). Next is #34 Tasks.

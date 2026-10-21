@@ -341,8 +341,9 @@ recording results in E5.
   reference counts for American checkers for at least the first 6 turns (an independent check that
   move generation, captures, chains and crowning are all right).
 - **SC-003**: In 1,000 games played with random legal moves, every game reaches an outcome, no
-  illegal position ever occurs, and undoing every turn of each game returns exactly to the starting
-  state, matching the state recorded before each turn along the way.
+  illegal position ever occurs, and, from the start of each game's final turn (undo is unavailable
+  once the game has ended, FR-024), undoing every turn returns exactly to the starting state,
+  matching the state recorded before each turn along the way.
 - **SC-004**: Listing the legal moves of a position is fast enough for a computer opponent to search:
   the 6-turn reference count of SC-002 completes in under 10 seconds on the development Mac.
 - **SC-005**: The engine's tests run on the development Mac without building or launching the app,
