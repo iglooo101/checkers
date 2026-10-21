@@ -2,10 +2,12 @@ import CheckersEngine
 import SwiftUI
 
 /// A man or a king on its square. A king carries a crown, so kings differ from men by shape, not
-/// only color (FR-013); the selected piece has a thick ring (FR-027).
+/// only color (FR-013). A hinted piece has a thin ring (FR-025) and the selected piece a thick one
+/// (FR-027), so the marks differ by shape too.
 struct PieceView: View {
     let piece: Piece
     let isSelected: Bool
+    var isHinted = false
     let size: CGFloat
 
     var body: some View {
@@ -27,6 +29,10 @@ struct PieceView: View {
                 Circle()
                     .stroke(Palette.selection.color, lineWidth: max(2, size * 0.09))
                     .padding(size * 0.05)
+            } else if isHinted {
+                Circle()
+                    .stroke(Palette.hint.color, lineWidth: max(1.5, size * 0.04))
+                    .padding(size * 0.06)
             }
         }
         .frame(width: size, height: size)
@@ -51,6 +57,7 @@ struct PieceView: View {
         ) { piece in
             VStack(spacing: 0) {
                 PieceView(piece: piece, isSelected: false, size: 60)
+                PieceView(piece: piece, isSelected: false, isHinted: true, size: 60)
                 PieceView(piece: piece, isSelected: true, size: 60)
             }
         }

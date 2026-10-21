@@ -21,6 +21,8 @@ final class GameSession {
     private(set) var selection: Square?
     /// What the last tap told the player, if anything; cleared by the next tap or move.
     private(set) var notice: Notice?
+    /// The square of the piece being dragged, once a drag has been accepted.
+    @ObservationIgnored private var dragged: Square?
 
     init(setup: GameSetup, playerSide: Side? = nil, state: GameState = GameState()) {
         self.setup = setup
@@ -31,6 +33,19 @@ final class GameSession {
     /// Light at the bottom in a two-player game; the player's side against the computer (FR-015).
     var layout: BoardLayout {
         BoardLayout(bottomSide: playerSide ?? .light)
+    }
+
+    /// The pieces the board highlights: every movable piece of the side to move, which the
+    /// engine limits to capturing pieces when a capture is required (FR-025). Hints are always on
+    /// until Settings (E6) adds the switch.
+    var hintedPieces: Set<Square> {
+        Set(state.movablePieces)
+    }
+
+    /// The selected piece's legal target squares (FR-026, FR-030).
+    var targets: Set<Square> {
+        guard let selection else { return [] }
+        return Set(state.targets(from: selection))
     }
 
     /// The turn indicator's sentence (FR-014).
@@ -60,6 +75,35 @@ final class GameSession {
         } else {
             selection = nil
         }
+    }
+
+    /// Starts dragging the piece on a square, if it may move; otherwise answers as a tap would and
+    /// returns false, so the piece stays put (contract: Drags).
+    func beginDrag(at square: Square) -> Bool {
+        notice = nil
+        dragged = nil
+        guard state.outcome == .inProgress else { return false }
+        if let chainSquare = state.chainSquare {
+            guard square == chainSquare else { return false }
+        } else if square != selection {
+            guard state.movablePieces.contains(square) else {
+                tap(square)
+                return false
+            }
+            selection = square
+        }
+        dragged = square
+        return true
+    }
+
+    /// Ends a drag: moves the dragged piece if it was dropped on one of its targets; anything
+    /// else, including a drop off the board, leaves it where it was (FR-020).
+    func drop(on square: Square?) {
+        defer { dragged = nil }
+        guard let from = dragged, let square, state.targets(from: from).contains(square) else {
+            return
+        }
+        apply(Step(from: from, to: square))
     }
 
     /// Applies a step to a legal target: the piece stays selected while its chain continues

@@ -55,6 +55,8 @@ final class US1TwoPlayerMoveUITests: XCTestCase {
         let window = app.windows.firstMatch.frame
         XCTAssertTrue(window.contains(board), "Board \(board) is outside the window \(window)")
         XCTAssertEqual(board.width, board.height, accuracy: 1)
+        // The board element includes a 4-point frame on each side around the 8 squares.
+        XCTAssertGreaterThanOrEqual((board.width - 8) / 8, 44, "Squares smaller than 44 points")
         XCTAssertEqual(app.staticTexts.allElementsBoundByIndex.map(\.identifier), ["game.turn"])
     }
 }

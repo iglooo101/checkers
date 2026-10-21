@@ -130,19 +130,19 @@ description: "Task list for the game experience slice (epic E3)"
 
 ### Tests for User Story 3 (MANDATORY - write first) ⚠️
 
-- [ ] T025 [P] [US3] Write `Unit/US3HintsDragTests.swift` (`struct US3HintsDragTests`):
+- [X] T025 [P] [US3] Write `Unit/US3HintsDragTests.swift` (`struct US3HintsDragTests`):
   - `US3 FR-AID-01 FR-AID-04`: a new game's `hintedPieces` are exactly a3, c3, e3, g3; in the US2 capture position only c3 is hinted; once over, none.
   - `US3 FR-AID-02`: with c3 selected in a new game, `targets == [b4, d4]`; with nothing selected, empty.
   - `US3 FR-AID-03`: `selection` is set whatever the hints; the view model exposes it for marking (tested via the session).
   - `US3 FR-MOVE-02`: `beginDrag(at: c3)` returns true and selects c3; `drop(on: d4)` moves; `beginDrag(at: c1)` returns false and selects nothing; after `beginDrag(at: c3)`, `drop(on: c5)`, `drop(on: c3)` and `drop(on: nil)` each leave the state unchanged; in the US2 chain after the first jump, `beginDrag(at: g1)` returns false and `beginDrag(at: c5)` true; in the capture position, `beginDrag(at: a1)` returns false and shows `captureRequired`.
   Fails until T027.
-- [ ] T026 [P] [US3] Write `UI/US3DragUITests.swift`: `testUS3_dragToMove`: `startTwoPlayerGame()`; press `square.c3` and drag to `square.d4` (`press(forDuration:thenDragTo:)`): `square.d4` is "d4, Light man" and `game.turn` "Dark to move"; `testUS3_invalidDropReturns`: drag `square.c3` to `square.c5`: `square.c3` is still "c3, Light man" and `game.turn` "Light to move"; `testUS3_selectionIsMarked` (FR-AID-03): after tapping `square.c3` it reports as selected, and after tapping it again it does not. Fails until T028.
+- [X] T026 [P] [US3] Write `UI/US3DragUITests.swift`: `testUS3_dragToMove`: `startTwoPlayerGame()`; press `square.c3` and drag to `square.d4` (`press(forDuration:thenDragTo:)`): `square.d4` is "d4, Light man" and `game.turn` "Dark to move"; `testUS3_invalidDropReturns`: drag `square.c3` to `square.c5`: `square.c3` is still "c3, Light man" and `game.turn` "Light to move"; `testUS3_selectionIsMarked` (FR-AID-03): after tapping `square.c3` it reports as selected, and after tapping it again it does not. Fails until T028.
 
 ### Implementation for User Story 3
 
-- [ ] T027 [US3] Extend `App/Features/Game/GameSession.swift`: derived `hintedPieces` and `targets`, `beginDrag(at:) -> Bool` and `drop(on:)` per the contract's Drags section. T025 passes.
-- [ ] T028 [US3] Extend `App/Features/Game/BoardView.swift` and `PieceView.swift`: a thin `Hint` ring on hinted pieces, a `Target` dot on target squares, the thick `Selection` ring on the selected piece; a `DragGesture(minimumDistance: 8)` on pieces of the side to move that calls `beginDrag` on start, offsets the piece while dragging when accepted, converts the end location in the board's named coordinate space to a square through `BoardLayout` (or `nil` off the board) and calls `drop(on:)`; offsets reset without animation. US3 tests pass.
-- [ ] T029 [US3] Accessibility pass for the game screen (#78): check `GameView` at `accessibility5` and in Dark Mode on iPhone SE (3rd generation) and 17 Pro Max (board fully visible, squares at least 44 points, indicator and notice fully shown); every square labelled per contracts/screens.md (FR-040); previews in light, dark and `accessibility5` with hints, a selection and a king. Record the results in `validation.md`.
+- [X] T027 [US3] Extend `App/Features/Game/GameSession.swift`: derived `hintedPieces` and `targets`, `beginDrag(at:) -> Bool` and `drop(on:)` per the contract's Drags section. T025 passes.
+- [X] T028 [US3] Extend `App/Features/Game/BoardView.swift` and `PieceView.swift`: a thin `Hint` ring on hinted pieces, a `Target` dot on target squares, the thick `Selection` ring on the selected piece; a `DragGesture(minimumDistance: 8)` on pieces of the side to move that calls `beginDrag` on start, offsets the piece while dragging when accepted, converts the end location in the board's named coordinate space to a square through `BoardLayout` (or `nil` off the board) and calls `drop(on:)`; offsets reset without animation. US3 tests pass.
+- [X] T029 [US3] Accessibility pass for the game screen (#78): check `GameView` at `accessibility5` and in Dark Mode on iPhone SE (3rd generation) and 17 Pro Max (board fully visible, squares at least 44 points, indicator and notice fully shown); every square labelled per contracts/screens.md (FR-040); previews in light, dark and `accessibility5` with hints, a selection and a king. Record the results in `validation.md`.
 
 **Checkpoint**: US3 complete: the board shows hints and supports dragging.
 

@@ -27,7 +27,14 @@ starting 2026-10-21.
 
 ## 4. Screen sizes and text sizes (SC-003, SC-006)
 
-*Pending (T029, T035, T046, T053, T057).*
+| Check | Result | Notes |
+|---|---|---|
+| Game screen on iPhone SE (3rd generation), default text (T029) | Pass | `testUS1_boardFitsAndShowsOnlyTheIndicator` and `US2CaptureUITests`: board square, inside the window, squares at least 44 points |
+| Game screen on iPhone 17 Pro Max, default text (T029) | Pass | Same tests |
+| Game screen on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T029) | Pass | `US1`, `US2` and `US3` UI tests all pass: board fits with 44-point squares, labels and indicator correct, tap and drag work |
+| Previews (T029) | Written | `GameView`, `BoardView`, `PieceView`: start, capture required with notice, selection with targets, Dark at the bottom with kings, `accessibility5`, dark |
+| Visual review of the large-text layout | *Pending* | For the hand check in T057 |
+| Result panel and dialogs (T035), setup (T046), Home and navigation (T053) | *Pending* | |
 
 ## 5. No web content and launch time (SC-005, FR-006)
 
