@@ -52,6 +52,11 @@ Epics are listed in execution order.
 - #29 E2: Rules engine
 - #36 F2.1: Board model and starting position
 - #37 Board, square and piece types with a–h / 1–8 coordinates
+- #38 Standard starting position: 12 men per side, Light to move
+- #39 F2.2: Move generation
+- #40 Man moves one square diagonally forward
+- #47 F2.4: Game state and endings
+- #48 Game state: board, side to move, pending chain, outcome
 - #195 Validate the E2 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -177,11 +182,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F2.1 Board model and starting position** (#36) · FR-RULE-01, FR-SETUP-06
 
 - [~] #37 Board, square and piece types with a–h / 1–8 coordinates · S
-- [ ] #38 Standard starting position: 12 men per side, Light to move · S
+- [~] #38 Standard starting position: 12 men per side, Light to move · S
 
 **F2.2 Move generation** (#39) · FR-RULE-02, FR-RULE-03, FR-RULE-04, FR-RULE-05
 
-- [ ] #40 Man moves one square diagonally forward · S
+- [~] #40 Man moves one square diagonally forward · S
 - [ ] #41 Man captures diagonally forward · S
 - [ ] #42 King moves and captures in all four directions (no flying kings) · M
 - [ ] #43 Mandatory capture: only captures are legal when one exists (any chain, not the longest) · S
@@ -194,7 +199,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F2.4 Game state and endings** (#47) · FR-END-01, FR-END-02, FR-END-03, FR-END-04, FR-END-05
 
-- [ ] #48 Game state: board, side to move, pending chain, outcome · M
+- [~] #48 Game state: board, side to move, pending chain, outcome · M
 - [ ] #49 Loss when the side to move has no legal move (or no pieces) · S
 - [ ] #50 Draw by threefold repetition (same position, same side to move) · M
 - [ ] #51 Draw by no progress: 40 moves per side without capture or man move · S

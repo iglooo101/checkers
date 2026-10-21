@@ -74,7 +74,7 @@ description: "Task list for the rules engine slice (epic E2)"
 
 ### Tests for User Story 1 (MANDATORY - write first) ⚠️
 
-- [ ] T013 [US1] Add the `GameState` helper `init(_ layout: [String: Piece], toMove: Side)` (calls the internal `init(position:sideToMove:)`) to `EngineTests/Support/PositionBuilder.swift`, and write `EngineTests/US1StartAndMoveTests.swift` (`struct US1StartAndMoveTests`) with:
+- [X] T013 [US1] Add the `GameState` helper `init(_ layout: [String: Piece], toMove: Side)` (calls the internal `init(position:sideToMove:)`) to `EngineTests/Support/PositionBuilder.swift`, and write `EngineTests/US1StartAndMoveTests.swift` (`struct US1StartAndMoveTests`) with:
   - `US1 FR-RULE-01 FR-SETUP-06`: `GameState()` has a Light man on each dark square of rows 1–3, a Dark man on each dark square of rows 6–8, nothing on rows 4–5, Light to move, `chainSquare == nil`, `outcome == .inProgress` (AS1).
   - `US1 FR-RULE-02`: the opening `legalSteps` are exactly `a3–b4, c3–b4, c3–d4, e3–d4, e3–f4, g3–f4, g3–h4`, in that order (AS2); `movablePieces == [a3, c3, e3, g3]`; `targets(from: c3) == [b4, d4]`; `targets(from: c1) == []`; `isCaptureRequired == false`.
   - `US1 FR-RULE-02`: applying `c3–d4` empties c3, puts a Light man on d4 and makes Dark to move; the result is `side .light, piece .lightMan, from c3, to d4, captured nil, crowned false, turnContinues false, outcome .inProgress` (AS3, FR-027).
@@ -85,9 +85,9 @@ description: "Task list for the rules engine slice (epic E2)"
 
 ### Implementation for User Story 1
 
-- [ ] T014 [US1] Add `public static let start: Position` to `Sources/Position.swift`: "Light men on the 12 dark squares of rows 1–3, Dark men on those of rows 6–8".
-- [ ] T015 [US1] Create `Sources/Position+Steps.swift` (internal): `func steps(for side: Side) -> [Step]` returning the simple moves of the side's men along `forwardDirections` onto empty neighbor squares, ordered by from square in `Square.all` order, then by direction.
-- [ ] T016 [US1] Create `Sources/GameState.swift`: `public struct GameState: Sendable, Equatable` with `public private(set)` `position`, `sideToMove`, `chainSquare` and `outcome`; `public init()` (start position, Light to move, in progress); internal `init(position:sideToMove:)`; public `legalSteps`, `movablePieces` (distinct from squares of `legalSteps`, in order), `targets(from:)`, `isCaptureRequired`; and `apply(_:) throws(RuleError) -> StepResult` (`@discardableResult`) running checks 1, 2, 3 and 6 of the contract's apply table in that order, moving the piece and passing the turn. US1 tests pass.
+- [X] T014 [US1] Add `public static let start: Position` to `Sources/Position.swift`: "Light men on the 12 dark squares of rows 1–3, Dark men on those of rows 6–8".
+- [X] T015 [US1] Create `Sources/Position+Steps.swift` (internal): `func steps(for side: Side) -> [Step]` returning the simple moves of the side's men along `forwardDirections` onto empty neighbor squares, ordered by from square in `Square.all` order, then by direction.
+- [X] T016 [US1] Create `Sources/GameState.swift`: `public struct GameState: Sendable, Equatable` with `public private(set)` `position`, `sideToMove`, `chainSquare` and `outcome`; `public init()` (start position, Light to move, in progress); internal `init(position:sideToMove:)`; public `legalSteps`, `movablePieces` (distinct from squares of `legalSteps`, in order), `targets(from:)`, `isCaptureRequired`; and `apply(_:) throws(RuleError) -> StepResult` (`@discardableResult`) running checks 1, 2, 3 and 6 of the contract's apply table in that order, moving the piece and passing the turn. US1 tests pass.
 
 **Checkpoint**: US1 complete: E3's two-player board could be built on it.
 

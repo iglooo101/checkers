@@ -8,6 +8,20 @@ public struct Position: Sendable, Hashable {
     /// Squares holding a king of either side; always a subset of the occupied squares.
     private(set) var kings: UInt32 = 0
 
+    /// The standard starting position: Light men on the 12 dark squares of rows 1–3, Dark men on
+    /// those of rows 6–8 (FR-003).
+    public static let start: Position = {
+        var position = Position()
+        for square in Square.all {
+            switch square.row {
+            case 0...2: position.place(Piece(side: .light, kind: .man), at: square)
+            case 5...7: position.place(Piece(side: .dark, kind: .man), at: square)
+            default: break
+            }
+        }
+        return position
+    }()
+
     /// An empty board.
     init() {}
 

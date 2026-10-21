@@ -26,6 +26,20 @@ extension Position {
     }
 }
 
+extension Step {
+    /// The step between two named squares, such as `Step("c3", "d4")`.
+    init(_ from: String, _ to: String) {
+        self.init(from: Square(from), to: Square(to))
+    }
+}
+
+extension GameState {
+    /// A game in the named position with the given side to move, as if it started there.
+    init(_ layout: [String: Piece], toMove side: Side) {
+        self.init(position: Position(layout), sideToMove: side)
+    }
+}
+
 // Readable values in failure messages: squares by name, steps as "c3-d4", positions as a board.
 
 extension Square: CustomTestStringConvertible {
