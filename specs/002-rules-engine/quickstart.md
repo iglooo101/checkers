@@ -16,9 +16,9 @@ validates. Commands run from the repository root unless noted. The API under tes
 (cd checkers/CheckersEngine && swift test)
 ```
 
-Expected: every test passes without building the app, with zero compiler warnings and zero
-SwiftLint errors. Record the total time in `checklists/validation.md`; the target is under 60 s
-on the development Mac (research R12).
+Expected: every test passes without building the app, with zero compiler warnings. Record the
+total time in `checklists/validation.md`; the target is under 60 s on the development Mac
+(research R12). `swift test` does not run SwiftLint; the Xcode build in §6 does.
 
 ## 2. One story at a time (US1–US5)
 
@@ -71,10 +71,16 @@ scripts/test.sh
 xcrun xcresulttool get test-results tests --path .build/TestResults/checkers.xcresult | grep -c CheckersEngineTests
 ```
 
-Expected: the blocking test plan passes and its results include `CheckersEngineTests` (E1 lesson:
-check that package tests actually ran). After pushing the branch, the `CI gate` check is green.
+Expected: the blocking test plan passes with zero SwiftLint errors (this Xcode build is what
+lints the engine) and its results include `CheckersEngineTests` (E1 lesson: check that package
+tests actually ran). After pushing the branch, the `CI gate` check is green.
 
 ## 7. Engine stays UI-free (SC-005, FR-025)
 
-Add `import SwiftUI` to any file under `checkers/CheckersEngine/Sources/` and run step 1.
-Expected: the build reports the `engine_no_ui_imports` lint error. Revert the change.
+Add `import SwiftUI` to any file under `checkers/CheckersEngine/Sources/` and build with Xcode:
+
+```sh
+(source scripts/lib.sh && xcodebuild build-for-testing "${XCODEBUILD_FLAGS[@]}")
+```
+
+Expected: the build fails with the `engine_no_ui_imports` lint error. Revert the change.

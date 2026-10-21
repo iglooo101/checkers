@@ -85,6 +85,10 @@ an allow-list exception.
   blocking suite; depth 7 is the first that includes crowning (R1).
 - **Spec alignment**: SC-003 now undoes from the start of each game's final turn, because FR-024
   forbids undo after the game has ended (R11).
+- **Lint configuration** (decided in implementation, T001–T012): `checkers/.swiftlint.yml` lets
+  `identifier_name` accept `to`, the contract's name for a step's landing square, besides
+  SwiftLint's default `id`. Engine lint runs only in the Xcode build (`scripts/test.sh`, CI):
+  `swift test` does not run the SwiftLint plugin (measured, `checklists/validation.md`).
 - **Existing test name**: `SideTests` keeps its E1 display name, where "US4" means E1's
   engine-package story. `swift test --filter` matches type names, so `--filter US4` runs only
   this slice's `US4EndingTests`.

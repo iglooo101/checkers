@@ -50,6 +50,9 @@ Epics are listed in execution order.
 
 <!-- BEGIN GENERATED: in-progress -->
 - #29 E2: Rules engine
+- #36 F2.1: Board model and starting position
+- #37 Board, square and piece types with a–h / 1–8 coordinates
+- #195 Validate the E2 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -173,7 +176,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F2.1 Board model and starting position** (#36) · FR-RULE-01, FR-SETUP-06
 
-- [ ] #37 Board, square and piece types with a–h / 1–8 coordinates · S
+- [~] #37 Board, square and piece types with a–h / 1–8 coordinates · S
 - [ ] #38 Standard starting position: 12 men per side, Light to move · S
 
 **F2.2 Move generation** (#39) · FR-RULE-02, FR-RULE-03, FR-RULE-04, FR-RULE-05
@@ -203,7 +206,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #55 Undo mid-chain restores the position from before the chain · S
 - [ ] #56 Undo is unavailable after the game has ended · S
 - [ ] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
-- [ ] #195 Validate the E2 slice and update project docs · S · after #193, #194
+- [~] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
 ### E3 Game experience (#57) · M2 Playable two-player game · P0 · 0/28 tasks
 

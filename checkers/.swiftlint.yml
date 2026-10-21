@@ -32,6 +32,13 @@ force_try: error
 implicitly_unwrapped_optional:
   severity: error
 
+# Short names allowed as identifiers: `id` (SwiftLint's default) and `to`, the landing square of
+# a step (`Step(from:to:)`, specs/002-rules-engine/contracts/engine-api.md).
+identifier_name:
+  excluded:
+    - "^id$"
+    - "^to$"
+
 # Allow-list policy: an exception names specific files in a rule's `excluded` list and is recorded
 # with its reason in the plan's "Lint allow-list" table. The allow-list is empty.
 custom_rules:
