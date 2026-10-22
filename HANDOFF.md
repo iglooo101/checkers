@@ -28,8 +28,11 @@ Last updated: 2026-10-22
 - **Branches**: `main` is protected: a commit lands only if the `CI gate` check passed for that
   exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
-  branches). `001-project-foundation` was merged and deleted; `002-rules-engine`,
-  `003-game-experience` and `004-accessibility` are merged into `main` and can be deleted.
+  branches). Because `main` moves on GitHub, the local `main` lags: run
+  `git fetch origin main:main` before comparing branches. `001-project-foundation` was merged and
+  deleted; `002-rules-engine`, `003-game-experience` and `004-accessibility` are merged into
+  `main` and can be deleted (the auto-mode safety check blocked the deletion; the command is in
+  Next steps). E4 is on **`005-computer-opponent`**.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
@@ -40,7 +43,14 @@ Last updated: 2026-10-22
   `AppRouter` hold the interaction and navigation rules; setup choices are remembered in
   `UserDefaults` (declared in the privacy manifest). The **`CheckersEngine` package holds the
   rules engine** (E2); public API in `specs/002-rules-engine/contracts/engine-api.md`, whose
-  custom-position initializers E3 made public. Computer games cannot start until E4.
+  custom-position initializers E3 made public. **Computer games are playable** (E4 US1): the
+  engine's `ComputerPlayer` searches complete turns with alpha-beta and iterative deepening over
+  an allocation-free `TurnGenerator` (held to `GameState` by the published counts and a
+  1,000-position cross-check), and `GameSession` plays the computer's turn through two injected
+  seams, `ComputerOpponent` (`EngineComputerOpponent` searches in a `@concurrent` function with
+  a 0.8 s limit) and `TurnPacer` (0.5 s minimum thinking, 0.5 s between jumps), with the board
+  locked meanwhile. **All three levels still play alike** (depth 4) until US2 tunes them apart.
+  Setup defaults to Computer, Easy, Light and remembers choices when a game starts.
   **Accessibility** (E7): every dark square is a VoiceOver element with its state ("c3, Light
   man, can move"), double-tap plays square by square, each step, undo and resignation is
   announced once through the `Announcer` seam, and focus follows each step. Pieces and marks
@@ -48,16 +58,20 @@ Last updated: 2026-10-22
   in `specs/004-accessibility/plan.md`).
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits.
-- **Backlog**: 8 epics, 41 features, 146 tasks (#1–#196; #188 is a PR) on the project board.
-  **E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility are done**.
-  Next is **E4 Computer opponent** (#95). Progress and the full list are in `EXECUTION_PLAN.md`.
+- **Backlog**: 8 epics, 41 features, 150 tasks (#1–#200; #188 is a PR) on the project board.
+  **E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility are done**;
+  **E4 Computer opponent** (#95) is in progress. Progress and the full list are in
+  `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
   game and a visual review at large text are left for the user) and E7's
   `specs/004-accessibility/` (26 tasks, validation in `checklists/validation.md`; a VoiceOver game
-  by hand is left for the user). The next slice is E4's, created by `/speckit-specify` (and
-  `git checkout -b 005-…`); `.specify/feature.json` is local and git-ignored.
+  by hand is left for the user). E4's slice is `specs/005-computer-opponent/`: spec (3
+  clarifications), plan with measured research R1–R14, contracts `computer-player.md` and
+  `computer-turn.md`, 35 tasks; **T001–T015 (Setup, Foundational, US1) are done**, measurements
+  and results in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
+  it.
 
 ## Lessons learned
 
@@ -188,8 +202,9 @@ Last updated: 2026-10-22
 
 ## Lessons learned (E2 implementation, 2026-10-21)
 
-- **`swift test` does not run SwiftLint.** The SwiftLint plugin's prebuild command never runs
-  under `swift build`/`swift test`; only the Xcode build lints the engine (`scripts/test.sh`, CI).
+- **`swift test` did not run SwiftLint** (out of date since 2026-10-22: it does now, see the E4
+  lessons). The SwiftLint plugin's prebuild command did not run under `swift build`/`swift test`;
+  only the Xcode build linted the engine (`scripts/test.sh`, CI).
   For fast feedback, run the binary directly from `checkers/CheckersEngine`:
   `BUILD_WORKSPACE_DIRECTORY="$PWD" .build/artifacts/swiftlintplugins/SwiftLintBinary/SwiftLintBinary.artifactbundle/macos/swiftlint lint --quiet --force-exclude --no-cache $(find Sources Tests -name '*.swift')`.
 - **A push cancels the branch's running CI.** The cancelled commit's `CI gate` reports failure.
@@ -251,6 +266,43 @@ Last updated: 2026-10-22
 - **Push once the previous CI run finished**: commit stories locally while a run is going; a push
   cancels the branch's running run.
 
+## Lessons learned (E4 specification to US1, 2026-10-22)
+
+- **Profile before designing a search.** Through the public API the engine applies about 175,000
+  steps per second in Release and 11,000 in Debug; Time Profiler showed allocation, not rules, as
+  the cost. A throwaway allocation-free prototype in the scratchpad reproduced the published
+  counts to 10 turns at about 25 million turns per second, which justified a second generator for
+  the search (research R1). Keep `GameState` as the referee: the computer's root turns come from
+  it and every step it plays goes through `apply`.
+- **Hot loops: take a buffer out of its array before filling it** (`var turns = buffers[ply];
+  buffers[ply] = []`), or copy-on-write copies it on every node. The finished search runs at
+  3.3–4.6 million nodes per second in Release.
+- **Approachable concurrency is on in the app**: a `nonisolated async` function runs on its
+  caller's actor, so off-main work needs `@concurrent nonisolated`, and the static constants it
+  reads need `nonisolated` too. Store a non-escaping closure in a struct for one call with
+  `withoutActuallyEscaping`.
+- **Member import visibility is on**: a file that calls `Logger` methods must `import OSLog`
+  itself, even if another file of the target does.
+- **`swift test` does run SwiftLint now**: a lint error in an engine test file failed
+  `swift test` on 2026-10-22 (the E2 lesson below is out of date). SwiftLint caps functions at five
+  parameters; group them into a small value (`Search.Node`, `TurnGenerator.Mover`).
+- **Testing timed behavior without waiting**: `ScriptedComputerOpponent` (held until released)
+  and `ManualPacer` (records pauses, resumes on demand), with `waitUntil` and `settle` in
+  `checkersTests/Support/ManualPacer.swift`, which yield the main actor until a condition holds.
+- **UI tests cannot see sub-second states**: after a tap XCUITest waits for the app to go idle
+  and `XCTNSPredicateExpectation` polls about once a second, so the half-second "Dark is
+  thinking…" header is tested in unit tests and previews (research R12).
+- **The audit's edge-cut false positive moves with the layout**: with Computer chosen, setup is
+  longer and Start became the cut row, so the exception now covers Start too (E4 plan, audit
+  allow-list).
+- **Debug-run engine tests must stay shallow**: the blocking plan runs the engine in Debug on the
+  simulator, so its tests use small internal `SearchLimits`; Hard at full strength belongs in the
+  Release strength target (found by `/speckit-analyze`).
+- **New issues can be auto-added to the board**: `gh project item-add` failed with "Content
+  already exists" for #200; look the item up instead and set its fields.
+- **The auto-mode safety check blocks deleting remote branches** (`git push --delete`); give the
+  user the command.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -258,16 +310,26 @@ Last updated: 2026-10-22
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E4 Computer opponent (#95)**: start with #97 Specify (`/speckit-specify`, scope from FRD
-   section 11), on a new branch created with `git checkout -b 005-…`. E4 enables computer games
-   (Start, first-use defaults, the setup note and the audit allow-list entry for the disabled
-   Start), should profile the engine's move generation before the search (#104), and announces
-   the computer's moves through the `Announcer` seam (#190).
+1. **E4 Computer opponent (#95)**, branch `005-computer-opponent`, `specs/005-computer-opponent/`:
+   - Check that CI passed on the US1 commit and that #104, #107, #108, #109 and #198 are Done.
+   - **US2 (T016–T021; #103, #105, #199)**: level tests, the Release-only
+     `CheckersEngineStrengthTests` target with the matches, the `engine-strength` CI job that
+     `CI gate` must require (`gate.sh` takes a fourth argument), then tuning until Medium and Hard
+     each score at least 70 of 100 against the level below and Hard's slowest turn is at most
+     0.5 s on this Mac in Release; record the final values in research R3 and R4.
+   - Then US3 (T022–T023, #110), US4 (T024–T026, #112, #113), US5 (T027–T028, #190) and Polish
+     (T029–T035, #200), and fast-forward `main`.
 2. Epic order after E4: E5 → E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
    `US5AccessibilityAuditUITests` (#131, #142, #152); E6's themes must pass `US4ContrastTests`
    (#144).
-3. Open for the user: a VoiceOver game by hand (`specs/004-accessibility/quickstart.md` §3), and
-   from E3 a hand-played game and a visual review at the largest text size.
+3. Open for the user:
+   - Try a game against the computer (all levels play alike until US2).
+   - A VoiceOver game by hand (`specs/004-accessibility/quickstart.md` §3), and from E3 a
+     hand-played game and a visual review at the largest text size.
+   - E4's SC-005 needs a recent iPhone with a Release build; without one, the Mac measurement is
+     recorded as the closest proxy.
+   - Delete the merged branches:
+     `git branch -d 002-rules-engine 003-game-experience 004-accessibility && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility`.
 4. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the
    Settings and Rules placeholders; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in
    E8; keep the CI Xcode pin (26.3) in step with the development Mac.

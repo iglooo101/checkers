@@ -28,6 +28,11 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   audit's enlarged text cuts at the screen's edge, so E7's edge-cut exception now covers Start
   as well (plan, audit allow-list); and a UI test cannot see the half-second thinking sentence
   after a tap (research R12), so it is covered by unit tests and previews.
+- T012, privacy manifest: `EngineComputerOpponent` is the app's first use of `ContinuousClock`
+  (for the 0.8 s limit and the logged thinking time). Apple's required-reason list names, for
+  system boot time, `systemUptime` and `mach_absolute_time()`, not Swift's clocks, so
+  `PrivacyInfo.xcprivacy` is unchanged; the Xcode privacy report of the first release archive
+  confirms it (#177).
 - *(T021: final levels, match scores and Hard's slowest turn.)*
 
 ## 1. All blocking tests (SC-001, SC-006 to SC-010)

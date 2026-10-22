@@ -39,11 +39,11 @@ Epics are listed in execution order.
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
-| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 1/4 | 5/18 | In Progress |
+| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 1/4 | 10/18 | In Progress |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **26/41** | **91/150** | |
+| | **Total** | | | | **26/41** | **96/150** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,12 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
 - #102 F4.1: AI search
-- #104 Cancellable alpha-beta search off the main actor
 - #106 F4.2: Computer turn
-- #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked
-- #108 Show the computer's capture chains one jump at a time
-- #109 Computer makes the first move when it plays Light
-- #198 Start computer games from Game setup: first-use defaults, choices remembered on start
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -66,15 +61,17 @@ E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility 
 native SwiftUI: Home, setup, and a two-player game with tap and drag, hints, chains, crowning,
 undo, resign and a result panel, playable square by square with VoiceOver (square states,
 announcements, focus that follows each step), with non-color cues at 3:1 contrast and an
-accessibility audit of every screen. Computer games wait for E4; Statistics, Rules and Settings
-are placeholders until E5 and E6.
+accessibility audit of every screen. Games against the computer are playable (E4 US1), but all
+three levels play alike until US2 tunes them; Statistics, Rules and Settings are placeholders until
+E5 and E6.
 
-1. **E4 Computer opponent (#95)** on branch `005-computer-opponent`: F4.0 Specification is done
-   (`specs/005-computer-opponent/`: spec, plan, 35 tasks, board reconciled). Next is
-   implementation with `/speckit-implement`, starting with T001: Setup and Foundational (the
-   search's turn generator, the `ComputerOpponent` and `TurnPacer` seams), then US1 (#104, #107,
-   #108, #109, #198: a playable computer game at one strength), US2 (#103, #105, #199: three levels
-   proven by Release matches), US3 (#110), US4 (#112, #113), US5 (#190) and #200.
+1. **E4 Computer opponent (#95)** on branch `005-computer-opponent` (`specs/005-computer-opponent/`):
+   F4.0 Specification and US1 (T001–T015: the search's turn generator, the computer player, the
+   `ComputerOpponent` and `TurnPacer` seams, the computer's turn on the game screen, setup) are
+   done. Next is **US2** (T016–T021; #103, #105, #199): level tests, the Release-only strength
+   matches in a new `engine-strength` CI job that `CI gate` requires, and tuning the levels until
+   each scores at least 70% against the one below. Then US3 (#110), US4 (#112, #113), US5 (#190)
+   and #200.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -118,22 +115,27 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   largest text size are still open for the user (`specs/003-game-experience/checklists/validation.md`).
 - E7's VoiceOver game by hand (SC-001, quickstart §3) is open for the user: XCUITest cannot drive
   VoiceOver, so announcements and focus are tested through the `Announcer` seam and the session.
-- The accessibility audit allow-list has two entries on the Computer setup screen (the disabled
-  Start, and a Dynamic Type report on the line a scrolling form cuts at the screen's edge);
-  re-check them with each new iOS and Xcode (`specs/004-accessibility/plan.md`).
+- The accessibility audit allow-list has one entry: a Dynamic Type report on the setup row a
+  scrolling form cuts at the screen's edge (a line, or Start with Computer chosen); re-check it
+  with each new iOS and Xcode (`specs/004-accessibility/plan.md`, `specs/005-computer-opponent/plan.md`).
 - Code CI runs now take 15–25 minutes with E3's UI tests, and a push cancels the running one;
   push once per story.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
   and the development Mac are updated together.
 - The engine's move generation is only moderately fast in Debug builds: the 6-turn reference
   count takes 5 s against SC-004's 10 s budget on the Intel Mac, and the whole engine suite
-  about 24 s. E4's search uses its own allocation-free turn generator instead (measured about
-  140 times faster in Release, `specs/005-computer-opponent/research.md` R1); it must stay
-  identical to the engine's rules, which the published counts and a cross-check test enforce.
+  about 24 s. E4's search uses its own allocation-free turn generator instead (built in US1:
+  the search runs at 3.3–4.6 million nodes per second in Release); it must stay identical to the
+  engine's rules, which the published counts and a 1,000-position cross-check enforce.
 - E4's strength matches need Release builds, so they run in a new `engine-strength` CI job beside
   `build-and-test`, which `CI gate` must then require; keep it under 15 minutes.
 - SC-005 (the computer's timing) is defined on a recent iPhone; without one, the Mac measurement
   is recorded as the closest proxy and the check stays open for the user.
+- Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
+  limit there, and engine tests in the blocking plan must use small search limits.
+- The local `main` lags GitHub's (it moves by `git push origin <sha>:refs/heads/main`); run
+  `git fetch origin main:main` before comparing branches. The merged branches `002-…` to `004-…`
+  still exist; the command to delete them is in `HANDOFF.md`.
 
 ## Backlog
 
@@ -310,7 +312,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #168 UI test running performAccessibilityAudit() on every screen · M
 - [x] #197 Validate the E7 slice and update project docs · S · after #168
 
-### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 5/18 tasks
+### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 10/18 tasks
 
 **F4.0 Specification (Spec Kit)** (#96) · FRD §11
 
@@ -323,18 +325,18 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F4.1 AI search** (#102) · FR-AI-01, FR-AI-02
 
 - [ ] #103 Position evaluation function · M
-- [~] #104 Cancellable alpha-beta search off the main actor · L
+- [x] #104 Cancellable alpha-beta search off the main actor · L
 - [ ] #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps · M
 - [ ] #199 Run the strength matches in a Release CI job that the CI gate requires · S
 
 **F4.2 Computer turn** (#106) · FR-AI-03, FR-AI-04, FR-AI-05, FR-AI-06, FR-MOVE-04
 
-- [~] #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked · M
-- [~] #108 Show the computer's capture chains one jump at a time · S
+- [x] #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked · M
+- [x] #108 Show the computer's capture chains one jump at a time · S
 - [ ] #190 Announce the computer's moves with VoiceOver · S · after #164
-- [~] #109 Computer makes the first move when it plays Light · S
+- [x] #109 Computer makes the first move when it plays Light · S
 - [ ] #110 UI stays responsive while thinking: menu, Undo and Home work · S
-- [~] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
+- [x] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
 
 **F4.3 Undo against the computer** (#111) · FR-UNDO-03, FR-UNDO-04
 
@@ -581,3 +583,18 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   IDs; added #198 (computer games in setup, F4.2), #199 (strength matches in a Release CI job,
   F4.1) and #200 (slice validation and docs, F4.3, after #113). F4.0 (#96) closed. Backlog is now
   150 tasks. Next is implementation, starting with T001.
+- 2026-10-22: E4 US1 done (T001–T015, commit `ae8e4ed`, CI run 39775315919 green). The engine
+  gets an allocation-free `TurnGenerator` (published counts, 1,000-position cross-check) and
+  `ComputerPlayer` (alpha-beta over complete turns, iterative deepening, capture extension,
+  repetition and no-progress draws; 3.3–4.6 million nodes per second in Release); the game screen
+  plays the computer's turn through the `ComputerOpponent` and `TurnPacer` seams (0.5 s thinking
+  minimum, 0.5 s between jumps, board locked, 0.8 s search limit off the main actor); setup starts
+  computer games with the FRD defaults and remembers choices on start. 192 tests pass. Found: a
+  UI test cannot see the half-second thinking header (unit tests and previews cover it), and with
+  Computer chosen the audit's edge-cut false positive moved to Start (exception widened). Closed
+  #104, #107, #108, #109, #198. All levels still play alike until US2.
+- 2026-10-22: Session close-out. E4 specified, planned, reconciled and US1 implemented; next is
+  US2 (T016–T021). HANDOFF.md updated with the E4 lessons (profile first, approachable
+  concurrency and `@concurrent`, `swift test` now lints, timing tests without waiting, sub-second
+  UI states) and next steps. Local `main` was 35 commits behind GitHub's and was fast-forwarded;
+  deleting the merged branches 002–004 is left to the user.
