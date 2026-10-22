@@ -53,6 +53,8 @@ Epics are listed in execution order.
 - #64 F3.1: App shell and navigation
 - #69 F3.2: Game setup
 - #70 Setup screen: opponent, difficulty and side (Light, Dark, Random)
+- #71 Preselect last-used choices; first-use defaults Computer, Easy, Light
+- #73 Accessibility pass: Game setup
 - #74 F3.3: Board view
 - #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation
 - #88 F3.6: Game end and result
@@ -272,8 +274,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F3.2 Game setup** (#69) · FR-SETUP-01, FR-SETUP-02, FR-SETUP-03, FR-SETUP-05
 
 - [~] #70 Setup screen: opponent, difficulty and side (Light, Dark, Random) · M
-- [ ] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
-- [ ] #73 Accessibility pass: Game setup · S
+- [~] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
+- [~] #73 Accessibility pass: Game setup · S
 
 ### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 0/10 tasks
 

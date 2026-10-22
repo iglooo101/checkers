@@ -36,7 +36,8 @@ starting 2026-10-21.
 | Visual review of the large-text layout | *Pending* | For the hand check in T057 |
 | Result panel and resign alert on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T035) | Pass | `US4GameEndUITests` passes: alert buttons, result text and both result buttons found and tapped; previews for all six results at `accessibility5` and dark |
 | Resign confirmation as an alert (T035) | Changed | On iOS 26 a confirmation dialog from a toolbar item shows as a popover without Cancel (*measured*), so resign uses an alert; research R10 updated |
-| Setup (T046), Home and navigation (T053) | *Pending* | |
+| Setup on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T046) | Pass | `US6SetupUITests` passes after scrolling: the form is taller than the screen at this size and creates rows as they scroll into view, so the test scrolls to each choice; it also passes at default size on iPhone 17 |
+| Home and navigation (T053) | *Pending* | |
 
 ## 5. No web content and launch time (SC-005, FR-006)
 

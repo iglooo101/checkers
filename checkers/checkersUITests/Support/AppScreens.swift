@@ -54,6 +54,19 @@ extension XCUIApplication {
         button.tap()
     }
 
+    /// Scrolls the current screen until an element exists, for long screens at large text sizes,
+    /// where lists create rows only as they scroll into view. Returns the element.
+    @MainActor
+    @discardableResult
+    func scrolledTo(_ element: XCUIElement, attempts: Int = 6) -> XCUIElement {
+        var remaining = attempts
+        while !element.exists && remaining > 0 {
+            swipeUp()
+            remaining -= 1
+        }
+        return element
+    }
+
     /// Taps one square and then another.
     @MainActor
     func move(_ from: String, _ to: String) {

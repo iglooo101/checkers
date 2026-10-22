@@ -209,7 +209,7 @@ description: "Task list for the game experience slice (epic E3)"
 
 ### Tests for User Story 6 (MANDATORY - write first) ⚠️
 
-- [ ] T040 [P] [US6] Write `Unit/US6SetupTests.swift` (`struct US6SetupTests`):
+- [X] T040 [P] [US6] Write `Unit/US6SetupTests.swift` (`struct US6SetupTests`):
   - `US6 FR-SETUP-03`: `GameSetup.defaults` is Two players, Easy, Light; a `GameSetup` round-trips through `JSONEncoder`/`JSONDecoder`.
   - `US6 FR-SETUP-03`: `UserDefaultsSetupStore` on a private suite (`UserDefaults(suiteName: "US6SetupTests-<UUID>")`, removed after the test) returns the defaults when empty, returns what was saved, and returns the defaults for an undecodable stored value.
   - `US6 FR-SETUP-02 FR-SETUP-03`: changing `router.setup` (opponent, difficulty, side) saves each change to the store.
@@ -217,15 +217,15 @@ description: "Task list for the game experience slice (epic E3)"
   - `US6 FR-END-02`: in a computer session `resigningSide == playerSide` whoever is to move.
   - `US6 FR-END-07`: with a Random side and a seeded generator injected into `AppRouter`, `playAgain()` draws the player's side again from the generator (two successive Play agains follow the generator's sequence); with a fixed side it is kept.
   Fails to compile until T043–T045.
-- [ ] T041 [P] [US6] Update `Unit/PrivacyManifestTests.swift` first: `NSPrivacyAccessedAPITypes` holds exactly one entry, category `NSPrivacyAccessedAPICategoryUserDefaults` with reasons `["CA92.1"]`; tracking and collected data stay empty. Fails until T044.
-- [ ] T042 [P] [US6] Write `UI/US6SetupUITests.swift`: `testUS6_computerChoicesRemembered`: open setup; choose Computer: `setup.difficulty`, `setup.side` and `setup.computerNote` appear and `setup.start` is disabled; choose Hard and Dark; terminate and relaunch; open setup: Computer, Hard and Dark are selected; choose Two players: difficulty, side and the note disappear and `setup.start` is enabled. Fails until T046.
+- [X] T041 [P] [US6] Update `Unit/PrivacyManifestTests.swift` first: `NSPrivacyAccessedAPITypes` holds exactly one entry, category `NSPrivacyAccessedAPICategoryUserDefaults` with reasons `["CA92.1"]`; tracking and collected data stay empty. Fails until T044.
+- [X] T042 [P] [US6] Write `UI/US6SetupUITests.swift`: `testUS6_computerChoicesRemembered`: open setup; choose Computer: `setup.difficulty`, `setup.side` and `setup.computerNote` appear and `setup.start` is disabled; choose Hard and Dark; terminate and relaunch; open setup: Computer, Hard and Dark are selected; choose Two players: difficulty, side and the note disappear and `setup.start` is enabled. Fails until T046.
 
 ### Implementation for User Story 6
 
-- [ ] T043 [US6] Add `UserDefaultsSetupStore` to `App/Features/Setup/SetupStore.swift`: `init(defaults: UserDefaults, key: String = "lastGameSetup")`; `load()` decodes the JSON value, returning `.defaults` when missing and logging with `Log.setup` (private redaction) and returning `.defaults` when undecodable; `save(_:)` encodes and stores.
-- [ ] T044 [US6] Declare the user-defaults required-reason API in `App/PrivacyInfo.xcprivacy` (`NSPrivacyAccessedAPICategoryUserDefaults`, reason `CA92.1`) and switch `App/CheckersApp.swift` to `AppRouter(store: UserDefaultsSetupStore(defaults: .standard))` in the same change (Constitution VI.3). T041 passes.
-- [ ] T045 [US6] Extend `App/App/AppRouter.swift`: save `setup` to the store on every change; inject a random-number generator (`init(store:random:)`, the system generator by default) used to resolve a Random side in `startGame()` (for when E4 enables computer games) and `playAgain()`; pass the resolved `playerSide` to new sessions. Extend `GameSession` so `layout` and `resigningSide` use `playerSide`. T040 passes.
-- [ ] T046 [US6] Extend `App/Features/Setup/SetupView.swift`: `setup.difficulty` (Easy, Medium, Hard) and `setup.side` (Light, Dark, Random) pickers and the `setup.computerNote` text, shown only for Computer; `setup.start` disabled for Computer. Sync the catalog. Accessibility pass for setup (#73): `accessibility5`, Dark Mode, labels, previews for both opponents; record in `validation.md`. US6 tests pass.
+- [X] T043 [US6] Add `UserDefaultsSetupStore` to `App/Features/Setup/SetupStore.swift`: `init(defaults: UserDefaults, key: String = "lastGameSetup")`; `load()` decodes the JSON value, returning `.defaults` when missing and logging with `Log.setup` (private redaction) and returning `.defaults` when undecodable; `save(_:)` encodes and stores.
+- [X] T044 [US6] Declare the user-defaults required-reason API in `App/PrivacyInfo.xcprivacy` (`NSPrivacyAccessedAPICategoryUserDefaults`, reason `CA92.1`) and switch `App/CheckersApp.swift` to `AppRouter(store: UserDefaultsSetupStore(defaults: .standard))` in the same change (Constitution VI.3). T041 passes.
+- [X] T045 [US6] Extend `App/App/AppRouter.swift`: save `setup` to the store on every change; inject a side-drawing closure (`init(store:drawSide:)`, a random draw by default) used to resolve a Random side in `startGame()` (for when E4 enables computer games) and `playAgain()`; pass the resolved `playerSide` to new sessions. Extend `GameSession` so `layout` and `resigningSide` use `playerSide`. T040 passes.
+- [X] T046 [US6] Extend `App/Features/Setup/SetupView.swift`: `setup.difficulty` (Easy, Medium, Hard) and `setup.side` (Light, Dark, Random) pickers and the `setup.computerNote` text, shown only for Computer; `setup.start` disabled for Computer. Sync the catalog. Accessibility pass for setup (#73): `accessibility5`, Dark Mode, labels, previews for both opponents; record in `validation.md`. US6 tests pass.
 
 **Checkpoint**: US6 complete: setup is final except for enabling computer games in E4.
 

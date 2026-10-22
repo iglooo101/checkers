@@ -2,7 +2,7 @@ import SwiftUI
 
 @main
 struct CheckersApp: App {
-    @State private var router = AppRouter(store: InMemorySetupStore())
+    @State private var router = AppRouter(store: UserDefaultsSetupStore(defaults: .standard))
 
     var body: some Scene {
         WindowGroup {
