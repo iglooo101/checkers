@@ -62,10 +62,14 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   once `resign()` cancels the turn. The covered case in the middle of a chain is tested on the
   session (`setCovered`), the router's path wiring through Rules and Settings.
 - US3 main actor (SC-006): run alone, every main-actor hop during a Hard search (Debug, 0.8 s
-  limit) took 0.1–0.3 ms. Run beside the other suites, one hop took 196 ms, from other tests'
-  main-actor work, so the test requires at least 10 hops and 90% of them under 100 ms. A search
-  on the main actor fails it: with `@concurrent` removed from `EngineComputerOpponent` the loop
-  managed a single hop.
+  limit) took 0.1–0.3 ms. A timed test proved unreliable beside the other suites, which share the
+  main actor: one hop took 196 ms on the Mac, and on CI (run 39848881318, 3-core runner, every
+  app suite about 13 s) the first hop waited out the whole search, so `build-and-test` failed.
+  The test now checks order instead of time: from the main actor it queues the search, then a
+  probe task, and the probe must run before the search ends, which holds only if the search left
+  the main actor. With `@concurrent` removed from `EngineComputerOpponent` it fails (the search
+  ends first); with it, it passes inside the full parallel unit run. The task's "within 100 ms"
+  stays a measurement (the hop times above), since a time limit measures the test load.
 - US3 (T022–T023): `GameSession` went past SwiftLint's limits (class body 287 of 250 lines, file
   403 of 400; it was at about 248 before US3), so the covering moved into `ScreenCover` and the
   display queries into `GameSession+Display.swift` (data-model.md). `scripts/test.sh` with

@@ -183,8 +183,8 @@ struct US3ComputerControlTests {
         #expect(!opening.session.canUndo)
     }
 
-    @Test("US3 FR-AI-04 SC-006: while a Hard search runs, the main actor answers within 100 ms")
-    func mainActorStaysFree() async throws {
+    @Test("US3 FR-AI-04 SC-006: a Hard search leaves the main actor free while it runs")
+    func searchLeavesMainActor() async throws {
         let state = GameState(
             [
                 "a1": .lightMan, "c1": .lightMan, "e1": .lightMan, "b2": .lightMan,
@@ -193,29 +193,21 @@ struct US3ComputerControlTests {
                 "f6": .darkMan, "h6": .darkMan, "a7": .darkMan, "c7": .darkMan, "e7": .darkMan,
                 "g7": .darkMan, "d8": .darkMan, "f8": .darkMan,
             ], toMove: .light)
-        let finished = Flag()
+        let events = EventLog()
         let search = Task {
+            events.record("search started")
             let steps = await EngineComputerOpponent().chooseTurn(in: state, difficulty: .hard)
-            finished.isSet = true
+            events.record("search ended")
             return steps
         }
-        // Hop onto the main actor every 10 ms until the search answers, timing each hop. A search
-        // on the main actor would hold the first hop until it ended, leaving a single slow hop.
-        let clock = ContinuousClock()
-        var hops: [Duration] = []
-        while !finished.isSet {
-            let start = clock.now
-            await Task { @MainActor in }.value
-            hops.append(clock.now - start)
-            try await Task.sleep(for: .milliseconds(10))
-        }
+        // The main actor runs its tasks in order, so this one runs before the search ends only if
+        // the search left the main actor; a search on it would hold it to the end. Order, unlike
+        // a time limit, does not depend on how busy the other tests keep the main actor.
+        let probe = Task { events.record("main actor free") }
+        await probe.value
         let steps = try #require(await search.value)
         #expect(!steps.isEmpty)
-        try #require(hops.count >= 10, "\(hops.count) hops")
-        // Other suites share the main actor when tests run in parallel, so one slow hop can be
-        // theirs (run alone, every hop takes under 1 ms); 90% of the hops must be quick.
-        let sorted = hops.sorted()
-        #expect(sorted[sorted.count * 9 / 10] < .milliseconds(100), "\(sorted.suffix(3))")
+        #expect(events.entries == ["search started", "main actor free", "search ended"])
     }
 
     /// Light to move with h2–g3, after which Dark's f6 takes e5 and c3 in one chain.
@@ -223,8 +215,12 @@ struct US3ComputerControlTests {
         ["e5": .lightMan, "c3": .lightMan, "h2": .lightMan, "f6": .darkMan, "g7": .darkMan],
         toMove: .light)
 
-    /// Set by one task and read by another on the main actor.
-    final class Flag {
-        var isSet = false
+    /// What happened, in order, on the main actor.
+    final class EventLog {
+        private(set) var entries: [String] = []
+
+        func record(_ entry: String) {
+            entries.append(entry)
+        }
     }
 }
