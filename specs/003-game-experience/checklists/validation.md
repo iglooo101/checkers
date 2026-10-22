@@ -15,15 +15,25 @@ starting 2026-10-21.
 
 ## 1. All automated tests (SC-002)
 
-*Pending (T057).*
+| Check | Result | Notes |
+|---|---|---|
+| `scripts/test.sh` after T055 | Pass | 130 of 130 (app unit and UI, engine), zero warnings, zero SwiftLint errors; 5 min 26 s locally |
+| `scripts/tests/run.sh` | Pass | 6 of 6 script tests |
+| `scripts/check-format.sh --strict` | Pass | |
+| FRD IDs named by app tests | Pass | Every ID in the spec's traceability table: FR-NAV-01–04, FR-SETUP-01–03, 06, FR-GAME-01–07, FR-MOVE-01–05, FR-AID-01–04, FR-CHAIN-01–03, FR-RULE-07, FR-END-01–04, 06, 07, FR-UNDO-01, 02, 05, 06, FR-SND-04, FR-PLAT-01, 03, FR-A11Y-04; FR-006 by `NoWebContentTests` |
 
 ## 2. One story at a time (US1–US7)
 
-*Pending (T057).*
+| Story | Result | Notes |
+|---|---|---|
+| US1–US7 | Pass | Each story's unit suite and UI test class were run on their own while implementing it (`-only-testing`), observed failing first, then passing; all pass together in §1 |
 
 ## 3. Play a game by hand (SC-001)
 
-*Pending (T057).*
+| Check | Result | Notes |
+|---|---|---|
+| Two-player game from launch to the result panel by taps and drags | Automated | UI tests cover each step: tapped and dragged moves (US1, US3), the capture-required indicator and notice after `c3–d4, f6–e5` (US2), undo back to the start (US5), resign with confirm and cancel, the result panel and Play again (US4), setup choices across a relaunch (US6), Rules/Settings return and the leave confirmation (US7). Multi-jumps and crowning are covered by `US2CaptureChainTests` |
+| A full game played by hand | *For the user* | Not done by the implementer; the quickstart §3 list is the script |
 
 ## 4. Screen sizes and text sizes (SC-003, SC-006)
 
@@ -33,7 +43,7 @@ starting 2026-10-21.
 | Game screen on iPhone 17 Pro Max, default text (T029) | Pass | Same tests |
 | Game screen on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T029) | Pass | `US1`, `US2` and `US3` UI tests all pass: board fits with 44-point squares, labels and indicator correct, tap and drag work |
 | Previews (T029) | Written | `GameView`, `BoardView`, `PieceView`: start, capture required with notice, selection with targets, Dark at the bottom with kings, `accessibility5`, dark |
-| Visual review of the large-text layout | *Pending* | For the hand check in T057 |
+| Visual review of the large-text layout | *For the user* | The automated checks above show every control reachable and the board fitting; how it looks is for a person to judge (previews in Xcode, or the SE simulator at the largest size) |
 | Result panel and resign alert on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T035) | Pass | `US4GameEndUITests` passes: alert buttons, result text and both result buttons found and tapped; previews for all six results at `accessibility5` and dark |
 | Resign confirmation as an alert (T035) | Changed | On iOS 26 a confirmation dialog from a toolbar item shows as a popover without Cancel (*measured*), so resign uses an alert; research R10 updated |
 | Setup on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T046) | Pass | `US6SetupUITests` passes after scrolling: the form is taller than the screen at this size and creates rows as they scroll into view, so the test scrolls to each choice; it also passes at default size on iPhone 17 |
@@ -42,7 +52,11 @@ starting 2026-10-21.
 
 ## 5. No web content and launch time (SC-005, FR-006)
 
-*Pending (T057).*
+| Check | Result | Notes |
+|---|---|---|
+| `find checkers/checkers -name '*.html' -o -name '*.wav'` | Pass | 0 files |
+| `grep -rn 'WebKit\|WKWebView' checkers/checkers` | Pass | 0 lines |
+| Cold launch, Performance test plan | Pass | 2.108 s average of 5 runs, baseline 3.635 s (−42%), local Intel simulator, Debug |
 
 ## 6. Privacy and the string catalog
 
@@ -57,4 +71,7 @@ starting 2026-10-21.
 
 ## 7. CI
 
-*Pending (T060).*
+| Check | Result | Notes |
+|---|---|---|
+| `CI gate` on `e3c0c2b` (US7, the last code commit) | Pass | Run 39708152757: on a clean build, 52 app unit tests in 16 suites, the 63 engine tests and every UI test passed with warnings as errors; "String catalog is up to date."; launch timing passed |
+| Earlier story runs | Pass | 39693689326 (US1–US2), 39695274493 (US3), 39696916008 (US4), 39706223322 (US5–US6) |

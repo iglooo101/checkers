@@ -28,31 +28,30 @@ Last updated: 2026-10-21
 - **Branches**: `main` is protected: a commit lands only if the `CI gate` check passed for that
   exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
-  branches). `001-project-foundation` was merged and deleted; `002-rules-engine` is merged into
-  `main` (level with it) and can be deleted once E3's branch exists.
+  branches). `001-project-foundation` was merged and deleted; `002-rules-engine` and
+  `003-game-experience` are merged into `main` and can be deleted.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
-- **App**: still the SwiftUI shell around the bundled HTML/JS screens (replaced in E3), with
-  Swift 6, unit/UI/engine test targets, a privacy manifest, a shared logger, a string catalog and
-  iPhone-only portrait settings. The **`CheckersEngine` package holds the complete rules engine**
-  (E2): `GameState` with `apply`, `resign`, `undo` and the legal-step queries; public API in
-  `specs/002-rules-engine/contracts/engine-api.md`.
+- **App**: **fully native SwiftUI** (E3): Home, Game setup, a two-player game screen (tap and
+  drag, hints, chains, crowning, undo, resign, result panel, Play again) and placeholder
+  Statistics, Rules and Settings screens; the web prototype is gone. `GameSession` and
+  `AppRouter` hold the interaction and navigation rules; setup choices are remembered in
+  `UserDefaults` (declared in the privacy manifest). The **`CheckersEngine` package holds the
+  rules engine** (E2); public API in `specs/002-rules-engine/contracts/engine-api.md`, whose
+  custom-position initializers E3 made public. Computer games cannot start until E4.
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
-  build (about 20 s); code pushes take 5–13 minutes.
-- **Backlog**: 8 epics, 41 features, 145 tasks (#1–#195; #188 is a PR) on the project board.
-  **E1 Project foundation and E2 Rules engine are done**. **E3 Game experience** (#57) is in
-  progress: its specification feature F3.0 is done (#59–#63); implementation is next. Progress
-  and the full list are in `EXECUTION_PLAN.md`.
+  build (about 20 s); code pushes now take 15–25 minutes with the E3 UI tests.
+- **Backlog**: 8 epics, 41 features, 146 tasks (#1–#196; #188 is a PR) on the project board.
+  **E1 Project foundation, E2 Rules engine and E3 Game experience are done**. Next is **E7
+  Accessibility** (#153). Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
-  `checklists/validation.md`). The active slice is E2's `specs/002-rules-engine/` on branch
-  `002-rules-engine`: spec, plan, 37 tasks and validation are all done. The active slice is
-  E3's `specs/003-game-experience/` on branch `003-game-experience`: spec (7 stories, 42
-  requirements, 3 clarifications), plan (research R1–R14, data model, contracts
-  `game-session.md` and `screens.md`, quickstart) and 60 analyzed tasks are done.
-  `.specify/feature.json` is local and git-ignored; recreate it with
-  `{"feature_directory": "specs/003-game-experience"}` if missing.
+  `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
+  `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
+  game and a visual review at large text are left for the user). The next slice is E7's, created
+  by `/speckit-specify` (and `git checkout -b 004-…`); `.specify/feature.json` is local and
+  git-ignored.
 
 ## Lessons learned
 
@@ -198,6 +197,26 @@ Last updated: 2026-10-21
   typed throws and a mutating closure; failure messages do not show the value of a `try`
   expression, so assign it first when the value matters.
 
+## Lessons learned (E3 implementation, 2026-10-21)
+
+- **String extraction misses switch expressions with optional results.** The compiler extracted
+  only one literal from `switch` expressions returning `LocalizedStringResource?`; use explicit
+  `return`s there. Check `*.stringsdata` under `.build/DerivedData` when a string seems missing.
+  `scripts/sync-string-catalog.sh` updates the catalog after command-line builds;
+  `xcstringstool sync` drops untranslated keys that are no longer extracted.
+- **On iOS 26, a confirmation dialog from a toolbar item is a popover without Cancel.** Use an
+  alert for confirmations. In UI tests, alert buttons are found by label (`alerts.buttons[...]`
+  with `firstMatch`, since Cancel appears twice), and menu items by label too.
+- **Closing a menu in a UI test**: tap near the bottom edge, not on content the open menu covers
+  (a tap on the turn indicator hit Resign).
+- **Long forms at large text sizes create rows lazily**: UI tests must scroll to an element before
+  asserting on it (`AppScreens.scrolledTo`).
+- **Large-text checks**: `xcrun simctl ui <device> content_size accessibility-extra-extra-extra-large`
+  and `appearance dark`, then run the UI tests with `-destination id=<device>`; reset afterwards.
+  The `-UIPreferredContentSizeCategoryName` launch argument does the same inside one test.
+- **Previews need public API**: the app target cannot use `@testable`, so the engine's
+  custom-position initializers were made public for previews of kings, captures and chains.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -205,13 +224,13 @@ Last updated: 2026-10-21
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E3 Game experience (#57)**, branch `003-game-experience`: **next is `/speckit-implement`**,
-   story by story (setup and foundation, US1 → US7, polish). Move each story's board tasks to In
-   Progress first (mapping at the end of `tasks.md`); push after each story and wait for CI.
-   Spec Kit's `create_new_feature.py` creates no git branch; create slice branches with
-   `git checkout -b`.
-2. Epic order after E3: E7 → E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`). E4's search should
-   profile the engine first (see the speed risk in `EXECUTION_PLAN.md`).
-3. Follow-ups: #71 or #140 adds the UserDefaults entry to the privacy manifest when first used;
-   #192 (MetricKit) and #181 (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3)
-   in step with the development Mac.
+1. **E7 Accessibility (#153)**: start with #155 Specify (`/speckit-specify`, scope from FRD
+   section 17), on a new branch created with `git checkout -b`. E3 already gives every square a
+   coordinate-and-contents label and every control a label; E7 adds square states, VoiceOver
+   play square by square, announcements from `StepResult`, non-color cues in every theme and the
+   accessibility audit test on every screen.
+2. Epic order after E7: E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`). E4 enables computer games
+   (Start, first-use defaults, the setup note) and should profile the engine first.
+3. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the
+   Settings and Rules placeholders; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in
+   E8; keep the CI Xcode pin (26.3) in step with the development Mac.

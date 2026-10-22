@@ -268,11 +268,11 @@ description: "Task list for the game experience slice (epic E3)"
 
 ## Phase 10: Polish & Cross-Cutting Concerns
 
-- [ ] T056 Run `scripts/format.sh`, then confirm `scripts/check-format.sh --strict`, `scripts/tests/run.sh`, `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData` and `scripts/test.sh` pass with zero warnings and zero SwiftLint errors.
-- [ ] T057 Run every scenario in `specs/003-game-experience/quickstart.md` (1–7), including the hand-played game (§3), the iPhone SE (3rd generation) and 17 Pro Max checks at the largest text size in Dark Mode (§4), the launch timing against the baseline (§5) and the SC-002 search, and record each result in `specs/003-game-experience/checklists/validation.md`.
-- [ ] T058 [P] Update `checkers/CLAUDE.md`: the native app layout (`App/`, `Features/`), `GameSession` and `AppRouter`, the setup store and privacy entry, `scripts/sync-string-catalog.sh`, and the removal of the web screens.
-- [ ] T059 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
-- [ ] T060 Final verification: push the branch, confirm `CI gate` is green on the last commit, fast-forward `main`, and confirm SC-005 (no web content; launch no slower than the baseline in `checkers/launch-baselines.json`); record the CI run in `specs/003-game-experience/checklists/validation.md`.
+- [X] T056 Run `scripts/format.sh`, then confirm `scripts/check-format.sh --strict`, `scripts/tests/run.sh`, `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData` and `scripts/test.sh` pass with zero warnings and zero SwiftLint errors.
+- [X] T057 Run every scenario in `specs/003-game-experience/quickstart.md` (1–7), including the hand-played game (§3), the iPhone SE (3rd generation) and 17 Pro Max checks at the largest text size in Dark Mode (§4), the launch timing against the baseline (§5) and the SC-002 search, and record each result in `specs/003-game-experience/checklists/validation.md`.
+- [X] T058 [P] Update `checkers/CLAUDE.md`: the native app layout (`App/`, `Features/`), `GameSession` and `AppRouter`, the setup store and privacy entry, `scripts/sync-string-catalog.sh`, and the removal of the web screens.
+- [X] T059 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
+- [X] T060 Final verification: push the branch, confirm `CI gate` is green on the last commit, fast-forward `main`, and confirm SC-005 (no web content; launch no slower than the baseline in `checkers/launch-baselines.json`); record the CI run in `specs/003-game-experience/checklists/validation.md`.
 
 ---
 

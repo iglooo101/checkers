@@ -37,45 +37,36 @@ Epics are listed in execution order.
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
-| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 7/8 | 25/29 | In Progress |
+| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **19/41** | **71/146** | |
+| | **Total** | | | | **20/41** | **75/146** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-- #57 E3: Game experience
-- #64 F3.1: App shell and navigation
-- #66 Game screen menu: Undo, Resign, Rules, Settings, Home
-- #67 Remove the HTML screens, move.wav reference and WKWebView code
-- #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews)
-- #196 Validate the E3 slice and update project docs
+Nothing in progress.
 <!-- END GENERATED: in-progress -->
 
 ## Next up
 
-E1 Project foundation and E2 Rules engine are done (slices `specs/001-project-foundation/` and
-`specs/002-rules-engine/`, landed on `main`). The engine in `checkers/CheckersEngine` covers FRD
-sections 8–10 with 63 tests; its public API is `specs/002-rules-engine/contracts/engine-api.md`.
+E1 Project foundation, E2 Rules engine and E3 Game experience are done (slices
+`specs/001-project-foundation/`, `specs/002-rules-engine/` and `specs/003-game-experience/`,
+landed on `main`). The app is fully native SwiftUI: Home, setup, and a two-player game with tap
+and drag, hints, chains, crowning, undo, resign and a result panel; computer games wait for E4,
+and Statistics, Rules and Settings are placeholders until E5 and E6.
 
-E3 Game experience (#57) is in progress on branch `003-game-experience` (slice
-`specs/003-game-experience/`). F3.0 Specification is done (#59–#63): `tasks.md` has 60 test-first
-tasks, and the board is reconciled with it (#196 added).
+Next is E7 Accessibility (#153), one Spec Kit slice taking its scope from FRD section 17:
 
-1. `/speckit-implement`, story by story, moving each story's board tasks to In Progress first
-   (mapping at the end of `tasks.md`):
-   - Setup and foundation (T001–T006): #196 (catalog script, public engine initializers, helpers,
-     colors, log categories).
-   - US1 (T007–T019): #65, #70, #75, #76, #77, #80, #81. US2 (T020–T024): #83, #87.
-   - US3 (T025–T029): #78, #82, #85, #86. US4 (T030–T035): #89, #90, #91, #92.
-   - US5 (T036–T039): #94. US6 (T040–T046): #71, #73. US7 (T047–T055): #66, #67, #68.
-   - Polish (T056–T060): #196.
-2. Push after each story and wait for `CI gate` before pushing again; close E3 as E2 was.
+1. F7.0 Specification (#154): #155 Specify (`/speckit-specify`; create the branch with
+   `git checkout -b`), #156 Clarify, #157 Plan, #158 Tasks + analyze, #159 Reconcile.
+2. Then implement E7 test-first: square states and square-by-square VoiceOver play (#161, #162),
+   announcements from the engine's `StepResult` (#164), non-color cues (#166) and the
+   accessibility audit test on every screen (#168). E3 already labels every square and control.
 
 ## Order and dependencies
 
@@ -110,9 +101,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - FR-AI-02 (noticeable strength gaps) is partly subjective; the E4 plan needs a measurable
   test plus a playtest.
 - Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
-  Debug build) is 3.6 s and only guards against regressions.
-- Command-line builds do not update `Localizable.xcstrings`; when working without Xcode, sync
-  it with `xcstringstool` (see HANDOFF.md) or CI fails.
+  Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
+- Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
+  after adding or removing strings, or CI fails. Return optional strings from a `switch` with
+  explicit `return`s, or the compiler extracts only one of them (HANDOFF.md, E3 lessons).
+- E3 was validated by automated tests; a full game played by hand and a visual review at the
+  largest text size are still open for the user (`specs/003-game-experience/checklists/validation.md`).
+- Code CI runs now take 15–25 minutes with E3's UI tests, and a push cancels the running one;
+  push once per story.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
   and the development Mac are updated together.
 - The engine's move generation is only moderately fast in Debug builds: the 6-turn reference
@@ -212,7 +208,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
 - [x] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
-### E3 Game experience (#57) · M2 Playable two-player game · P0 · 25/29 tasks
+### E3 Game experience (#57) · M2 Playable two-player game · P0 · 29/29 tasks
 
 **F3.0 Specification (Spec Kit)** (#58) · FRD §4–7, §9, §10
 
@@ -256,10 +252,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F3.1 App shell and navigation** (#64) · FR-NAV-01, FR-NAV-02, FR-NAV-03, FR-NAV-04, FR-GAME-06
 
 - [x] #65 Home screen with New game, Statistics, Rules and Settings · M
-- [~] #66 Game screen menu: Undo, Resign, Rules, Settings, Home · M · after #75
-- [~] #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews) · S
-- [~] #67 Remove the HTML screens, move.wav reference and WKWebView code · S · after #66, #81
-- [~] #196 Validate the E3 slice and update project docs · S · after #67
+- [x] #66 Game screen menu: Undo, Resign, Rules, Settings, Home · M · after #75
+- [x] #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews) · S
+- [x] #67 Remove the HTML screens, move.wav reference and WKWebView code · S · after #66, #81
+- [x] #196 Validate the E3 slice and update project docs · S · after #67
 
 **F3.2 Game setup** (#69) · FR-SETUP-01, FR-SETUP-02, FR-SETUP-03, FR-SETUP-05
 
@@ -504,3 +500,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-21: #63 done: board reconciled; #65–#94 list their task IDs; added #196 (slice
   validation and docs, F3.1). F3.0 (#58) closed. Backlog is now 146 tasks. Next is
   implementation, starting with T001.
+- 2026-10-21: E3 implemented test-first (T001–T060): catalog sync script and public engine
+  initializers (setup), then US1 Home, setup and tapped moves; US2 captures, chain lock and
+  crowning; US3 hints and drag and drop; US4 resign, result panel and Play again; US5 undo; US6
+  setup choices remembered in UserDefaults (privacy manifest CA92.1); US7 the full game menu,
+  leave confirmation, placeholders and removal of the web prototype. 130 tests pass locally and
+  in CI (run 39708152757); launch 2.1 s against the 3.6 s baseline. Found: optional `switch`
+  expressions lose strings in extraction; confirmation dialogs from toolbars lack Cancel on
+  iOS 26 (alerts used).
+- 2026-10-21: E3 done. Closed #65–#94, #196, features F3.1–F3.7 and epic #57; `main`
+  fast-forwarded. Next is E7 (#155 Specify).
