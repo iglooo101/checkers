@@ -51,6 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
 - #106 F4.2: Computer turn
+- #110 UI stays responsive while thinking: menu, Undo and Home work
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -69,8 +70,9 @@ Rules and Settings are placeholders until E5 and E6.
    `ComputerOpponent` and `TurnPacer` seams, the computer's turn on the game screen, setup) are
    done, and so are US2 (T016–T021: the levels' depth, node limit and random margin, the
    Release-only strength matches and the `engine-strength` CI job) and with it F4.1 AI search.
-   Next is **US3** (T022–T023, #110): the menu, Undo and Home stay responsive while the computer
-   thinks. Then US4 (#112, #113), US5 (#190) and #200.
+   **US3** (T022–T023, #110) is implemented and passes locally: resigning or leaving stops the
+   computer's turn, and its move waits while Rules or Settings covers the game; it waits for CI.
+   Then US4 (#112, #113), US5 (#190) and #200.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -338,7 +340,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #108 Show the computer's capture chains one jump at a time · S
 - [ ] #190 Announce the computer's moves with VoiceOver · S · after #164
 - [x] #109 Computer makes the first move when it plays Light · S
-- [ ] #110 UI stays responsive while thinking: menu, Undo and Home work · S
+- [~] #110 UI stays responsive while thinking: menu, Undo and Home work · S
 - [x] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
 
 **F4.3 Undo against the computer** (#111) · FR-UNDO-03, FR-UNDO-04
@@ -611,3 +613,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-22: E4 US2 closed out. CI run 39841996479 passed on `59ab67b`; `engine-strength` took
   4.5 minutes and matched the Mac's results exactly. #103, #105, #199 and F4.1 (#102) Done; T021
   checked off. Next is US3 (#110).
+- 2026-10-22: E4 US3 (T022–T023) implemented; #110 In Progress. Resigning cancels the computer's
+  turn, leaving already did, and its next step waits while Rules or Settings covers the game,
+  then comes after a fresh 0.5 s pause (`ScreenCover`, wired to the router's path). A live test
+  shows the main actor stays free during a Hard search. `GameSession`'s display queries moved to
+  `GameSession+Display.swift` to stay within SwiftLint's length limits. 206 tests pass.

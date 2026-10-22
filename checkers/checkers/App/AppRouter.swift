@@ -6,7 +6,11 @@ import Observation
 /// screens opened on top of it (FR-005).
 @Observable
 final class AppRouter {
-    var path: [Route] = []
+    /// The screens above Home. While Rules or Settings covers the game, the computer's next step
+    /// waits (FR-NAV-04).
+    var path: [Route] = [] {
+        didSet { session?.setCovered(path.last != .game) }
+    }
     private(set) var session: GameSession?
     /// The setup choices, remembered when a game starts (FR-SETUP-03;
     /// specs/005-computer-opponent/research.md R11).

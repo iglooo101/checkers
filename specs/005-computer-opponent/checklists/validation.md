@@ -56,6 +56,21 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   second. Goal: at most 0.5 s.
 - Turn generator in Release (9-turn count from the start, 5,035,307 turns generated): 201–223 ms,
   22.5–25.0 million turns per second, above the plan's 10 million.
+- US3 tests first (T022), 2026-10-22: `US3ComputerControlTests` did not compile until
+  `isCovered` and `setCovered(_:)` existed; with only the covering in place, the two resign tests
+  failed (the computer's phase stayed `thinking` or `playing` after resigning), and they pass
+  once `resign()` cancels the turn. The covered case in the middle of a chain is tested on the
+  session (`setCovered`), the router's path wiring through Rules and Settings.
+- US3 main actor (SC-006): run alone, every main-actor hop during a Hard search (Debug, 0.8 s
+  limit) took 0.1–0.3 ms. Run beside the other suites, one hop took 196 ms, from other tests'
+  main-actor work, so the test requires at least 10 hops and 90% of them under 100 ms. A search
+  on the main actor fails it: with `@concurrent` removed from `EngineComputerOpponent` the loop
+  managed a single hop.
+- US3 (T022–T023): `GameSession` went past SwiftLint's limits (class body 287 of 250 lines, file
+  403 of 400; it was at about 248 before US3), so the covering moved into `ScreenCover` and the
+  display queries into `GameSession+Display.swift` (data-model.md). `scripts/test.sh` with
+  warnings as errors passes: **206 tests** (94 app unit tests, 83 engine tests, 29 UI tests),
+  9 min 9 s, with no warnings; the strict format check, lint and the string catalog check pass.
 
 ## 1. All blocking tests (SC-001, SC-006 to SC-010)
 

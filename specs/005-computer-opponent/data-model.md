@@ -115,6 +115,16 @@ sentence; `canUndo` and `undo()` follow research R9; `resign()` cancels the turn
 Injected through the initializer with defaults for the app: `opponent: any ComputerOpponent`,
 `pacer: any TurnPacer`.
 
+### ScreenCover (new, US3)
+
+Holds whether Rules or Settings covers the game screen and lets a task wait until it is visible
+again (`untilVisible()`, which also returns on cancellation). `GameSession` owns one:
+`isCovered` and `setCovered(_:)` forward to it, and before each computer step the session waits
+on it and then pauses afresh (FR-017). Added during implementation, together with moving the
+session's display queries (`layout`, `hintedPieces`, `targets`, `resultText`, `turnText`,
+`state(of:)`, `squareLabel`) into `GameSession+Display.swift`, to keep `GameSession` within
+SwiftLint's type and file length limits.
+
 ### ComputerPhase
 
 ```text

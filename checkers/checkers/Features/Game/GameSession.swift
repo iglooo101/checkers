@@ -41,6 +41,8 @@ final class GameSession {
     @ObservationIgnored private var computerTask: Task<Void, Never>?
     /// Counts the computer's turns, so a cancelled turn cannot reset the phase of a newer one.
     @ObservationIgnored private var computerTurnNumber = 0
+    /// Whether Rules or Settings covers the game screen (FR-NAV-04).
+    @ObservationIgnored private let cover = ScreenCover()
     /// Speaks game events with VoiceOver (FR-A11Y-03).
     @ObservationIgnored let announcer: any Announcer
     /// Chooses the computer's turns (specs/005-computer-opponent/research.md R7).
@@ -72,32 +74,9 @@ final class GameSession {
         computerPhase != .idle
     }
 
-    /// Light at the bottom in a two-player game; the player's side against the computer (FR-015).
-    var layout: BoardLayout {
-        BoardLayout(bottomSide: playerSide ?? .light)
-    }
-
-    /// The pieces the board highlights: every movable piece of the side to move, which the
-    /// engine limits to capturing pieces when a capture is required (FR-025). Hints are always on
-    /// until Settings (E6) adds the switch.
-    var hintedPieces: Set<Square> {
-        isComputerTurn ? [] : Set(state.movablePieces)
-    }
-
-    /// The selected piece's legal target squares (FR-026, FR-030).
-    var targets: Set<Square> {
-        guard let selection else { return [] }
-        return Set(state.targets(from: selection))
-    }
-
     /// Whether the game has ended.
     var isOver: Bool {
         state.outcome != .inProgress
-    }
-
-    /// The result panel's sentence, once the game is over (FR-033).
-    var resultText: LocalizedStringResource? {
-        GameText.result(state.outcome)
     }
 
     /// Whether Undo can take back a turn: the game is in progress and a turn has been played
@@ -110,32 +89,6 @@ final class GameSession {
     /// computer (FR-032).
     var resigningSide: Side {
         playerSide ?? state.sideToMove
-    }
-
-    /// What a square can do, for VoiceOver: whatever the hints setting, and nothing once the game
-    /// is over (FR-A11Y-01; specs/004-accessibility research R1).
-    func state(of square: Square) -> SquareState {
-        guard !isOver, !isComputerTurn else { return .none }
-        if square == selection { return .selected }
-        if let selection, state.position.piece(at: square) == nil,
-            state.targets(from: selection).contains(square)
-        {
-            return .legalTarget
-        }
-        return state.movablePieces.contains(square) ? .canMove : .none
-    }
-
-    /// A square's VoiceOver label: coordinate, contents and state.
-    func squareLabel(_ square: Square) -> LocalizedStringResource {
-        GameText.squareLabel(square, state.position.piece(at: square), state(of: square))
-    }
-
-    /// The turn indicator's sentence (FR-014), or that the computer is thinking (FR-AI-03).
-    var turnText: LocalizedStringResource {
-        if isComputerTurn, let computerSide {
-            return GameText.thinking(computerSide)
-        }
-        return GameText.turn(state.sideToMove, captureRequired: state.isCaptureRequired)
     }
 
     /// Handles a tap on a square, by the first matching row of the contract's taps table.
@@ -182,9 +135,11 @@ final class GameSession {
             GameText.undone(state.sideToMove, captureRequired: state.isCaptureRequired))
     }
 
-    /// Resigns for `resigningSide`; nothing happens once the game is over (FR-032).
+    /// Resigns for `resigningSide`; nothing happens once the game is over (FR-032). The computer's
+    /// turn stops first, so it never moves after the player resigned (FR-END-02).
     func resign() {
         guard !isOver else { return }
+        cancelComputerTurn()
         do {
             try state.resign(resigningSide)
         } catch {
@@ -295,6 +250,34 @@ final class GameSession {
         computerPhase = .idle
     }
 
+    /// Whether Rules or Settings covers the game screen; the computer's next step waits until the
+    /// game is visible again (FR-NAV-04).
+    var isCovered: Bool {
+        cover.isCovered
+    }
+
+    /// Holds the computer's next step while Rules or Settings covers the game, and lets it go once
+    /// the game is visible again (FR-NAV-04). The router calls it whenever its path changes.
+    func setCovered(_ covered: Bool) {
+        cover.set(covered)
+    }
+
+    /// Before each of the computer's steps: while the game is covered, waits until it is visible
+    /// again and then pauses afresh, so the player sees and hears the step (FR-NAV-04). Returns
+    /// false once the turn is cancelled.
+    private func waitUntilVisible() async -> Bool {
+        while cover.isCovered {
+            await cover.untilVisible()
+            guard !Task.isCancelled else { return false }
+            do {
+                try await pacer.pause(Self.thinkingPause)
+            } catch {
+                return false
+            }
+        }
+        return !Task.isCancelled
+    }
+
     /// Thinks and pauses together, then shows the turn step by step (contract: Timeline).
     private func playComputerTurn(from start: GameState) async {
         let opponent = opponent
@@ -327,7 +310,7 @@ final class GameSession {
                     return
                 }
             }
-            guard !Task.isCancelled, applyStep(step) != nil else { return }
+            guard await waitUntilVisible(), applyStep(step) != nil else { return }
             if index == 0, steps.count > 1 {
                 computerPhase = .playing
             }

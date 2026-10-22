@@ -128,7 +128,7 @@ description: "Task list for the computer opponent slice (epic E4)"
 
 ### Tests for User Story 3 (MANDATORY - write first) ⚠️
 
-- [ ] T022 [P] [US3] Write `Unit/US3ComputerControlTests.swift` (`struct US3ComputerControlTests`), through `AppRouter` with a scripted opponent and a manual pacer:
+- [X] T022 [P] [US3] Write `Unit/US3ComputerControlTests.swift` (`struct US3ComputerControlTests`), through `AppRouter` with a scripted opponent and a manual pacer:
   - `US3 FR-AI-04 FR-END-02`: resigning while the computer thinks shows "Light resigned"; after the opponent answers and the pause resumes, no step is applied.
   - `US3 FR-AI-04`: confirming Leave while it thinks drops the session and cancels its task; cancelling the leave alert lets the turn finish.
   - `US3 FR-NAV-04`: `open(.rules)` while it thinks: the opponent answers and the pause resumes, but nothing is applied; popping back asks the pacer for a fresh 0.5 s, after which the step is applied; the same for Settings and in the middle of a chain.
@@ -138,7 +138,7 @@ description: "Task list for the computer opponent slice (epic E4)"
 
 ### Implementation for User Story 3
 
-- [ ] T023 [US3] Add `isCovered` and `setCovered(_:)` to `App/Features/Game/GameSession.swift` (each step waits while covered, then a fresh 0.5 s pause); in `App/App/AppRouter.swift` call `setCovered(path.last != .game)` when the path changes and `cancelComputerTurn()` on confirmed leave; make `resign()` cancel the computer's turn first. T022 passes; all tests pass.
+- [X] T023 [US3] Add `isCovered` and `setCovered(_:)` to `App/Features/Game/GameSession.swift` (each step waits while covered, then a fresh 0.5 s pause); in `App/App/AppRouter.swift` call `setCovered(path.last != .game)` when the path changes and `cancelComputerTurn()` on confirmed leave; make `resign()` cancel the computer's turn first. T022 passes; all tests pass.
 
 **Checkpoint**: US3 complete.
 
