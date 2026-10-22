@@ -136,6 +136,31 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         try audit(app)
     }
 
+    /// FR-A11Y-04 (E4 FR-027): a computer game on the player's turn, after the computer's reply.
+    /// The thinking header lasts about half a second, less than an audit run, so it is checked by
+    /// unit tests and previews (specs/005-computer-opponent/research.md R12).
+    @MainActor
+    func testUS5_auditComputerGame() throws {
+        let app = launch()
+        app.startComputerGame(difficulty: "Easy", side: "Light")
+        app.waitForTurn(startingWith: "Light to move")
+        app.move("c3", "d4")
+        app.waitForTurn(startingWith: "Light to move")
+        try audit(app)
+    }
+
+    /// FR-A11Y-04 (E4 FR-027): a computer game with the result panel, after the player resigned.
+    @MainActor
+    func testUS5_auditComputerResult() throws {
+        let app = launch()
+        app.startComputerGame(difficulty: "Easy", side: "Light")
+        app.waitForTurn(startingWith: "Light to move")
+        app.chooseFromGameMenu("Resign")
+        app.confirm("Resign")
+        XCTAssertTrue(app.element("result.panel").waitForExistence(timeout: 3))
+        try audit(app)
+    }
+
     /// FR-A11Y-04: the Statistics placeholder.
     @MainActor
     func testUS5_auditStatistics() throws {

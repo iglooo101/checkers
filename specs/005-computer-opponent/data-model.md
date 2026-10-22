@@ -123,7 +123,9 @@ again (`untilVisible()`, which also returns on cancellation). `GameSession` owns
 on it and then pauses afresh (FR-017). Added during implementation, together with moving the
 session's display queries (`layout`, `hintedPieces`, `targets`, `resultText`, `turnText`,
 `state(of:)`, `squareLabel`) into `GameSession+Display.swift`, to keep `GameSession` within
-SwiftLint's type and file length limits.
+SwiftLint's type and file length limits. In Polish the computer's turn moved into an extension
+in `GameSession.swift` (it shares the session's private state), leaving the class body at 154 of
+250 lines for E5 and E6.
 
 ### ComputerPhase
 

@@ -169,7 +169,9 @@ column, toward row 1 and higher column. `movablePieces` and `targets(from:)` kee
 - **E4 (computer opponent)**: copy the `GameState` into a background task, search with
   `legalSteps` and `apply` (a turn is complete when `turnContinues` is false), and replay the
   chosen steps one by one on screen (FR-AI-05). Undo against the computer calls `undo()` until it
-  is the player's turn again.
+  is the player's turn again. Built that way, with the search's own turn generator: see
+  `specs/005-computer-opponent/contracts/computer-player.md` (the engine's additions) and
+  `contracts/computer-turn.md` (the app's computer turn).
 - **E5 (saving)**: everything that affects play is in `GameState` (FR-013); E5 adds `Codable`
   inside the package.
 - **E7 (accessibility)**: `StepResult` and `Square.name` give announcements and square labels

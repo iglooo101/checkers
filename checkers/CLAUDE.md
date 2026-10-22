@@ -6,9 +6,8 @@ Guidance for working with the code in this repository.
 
 An iPhone-only (portrait) SwiftUI checkers app, deployment target iOS 26.2, Swift 6 language mode
 with complete strict concurrency, entirely native SwiftUI (E3 removed the web prototype). The
-rules engine (E2) lives in the local package `CheckersEngine`, where the computer opponent (E4)
-will join it. The git
-repository root is the parent directory (remote:
+rules engine (E2) and the computer opponent's search (E4) live in the local package
+`CheckersEngine`. The git repository root is the parent directory (remote:
 `github.com/iglooo101/checkers`); product requirements are in `../FRD.md`, the constitution in
 `../.specify/memory/constitution.md`, and progress in `../EXECUTION_PLAN.md`.
 
@@ -20,8 +19,10 @@ Run these from the repository root:
 scripts/test.sh                         # blocking test plan: unit, UI and engine tests on iPhone 17
 TEST_PLAN=Performance scripts/test.sh   # cold-launch timing only
 scripts/report-launch.sh .build/TestResults/Performance.xcresult   # compare with launch-baselines.json
-(cd checkers/CheckersEngine && swift test)   # engine tests on the Mac, without the app (no lint)
+(cd checkers/CheckersEngine && swift test)   # engine tests on the Mac, without the app (lints too)
 (cd checkers/CheckersEngine && swift test --filter US3)   # one story's suite (US1…US5)
+(cd checkers/CheckersEngine && swift test -c release --filter CheckersEngineStrengthTests)
+                                        # strength matches, Release only (skipped in Debug)
 scripts/format.sh                       # format all Swift sources in place
 scripts/check-format.sh --strict        # what CI runs; without --strict it only warns
 scripts/tests/run.sh                    # script tests (CI rules, lint rules, format, catalog check)
@@ -73,11 +74,29 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
   squares long is a jump) and `GameState`, whose `apply(_:)` returns a `StepResult`, plus
   `resign(_:)`, `undo()` and the legal-step queries. Rejections throw `RuleError`. The public API
   and its rules are in `../specs/002-rules-engine/contracts/engine-api.md`.
+- The computer player (E4, `../specs/005-computer-opponent/contracts/computer-player.md`):
+  `ComputerPlayer.chooseTurn(in:level:seed:shouldStop:)` searches complete turns with alpha-beta
+  and iterative deepening (`Search`, `Evaluation`) over its own allocation-free `TurnGenerator`,
+  held to `GameState` by the published counts and a 1,000-position cross-check; the root turns
+  and every step played go through `GameState`. `ComputerLevel` sets depth, node limit and random
+  margin (research R4); `SeededGenerator` (SplitMix64) makes choices repeat by seed. The engine
+  has no clocks: the app's `shouldStop` adds the time limit.
+- The computer's turn in the app (`../specs/005-computer-opponent/contracts/computer-turn.md`):
+  `GameSession` plays it as a task through two injected seams, `ComputerOpponent`
+  (`EngineComputerOpponent` searches in a `@concurrent` function with a 0.8 s limit;
+  `ScriptedComputerOpponent` for tests and previews) and `TurnPacer` (`SleepingPacer`;
+  `ManualPacer` in tests). `computerPhase` locks the board; the next step waits while
+  `ScreenCover` says Rules or Settings covers the game (the router sets it from its path); undo
+  goes back to the player's turn and resign cancels the turn first. Display queries live in
+  `GameSession+Display.swift`.
 - Engine tests (`CheckersEngine/Tests/CheckersEngineTests/`): one suite per story
   (`US1StartAndMoveTests`…`US5UndoTests`) whose test names list the FRD IDs they prove; unit
   suites for squares, positions and steps; `ReferenceCountTests` (published move counts, depths
   1–7) and `RandomGameTests` (1,000 seeded games with full undo). Helpers in `Support/` build
-  positions from square names, for example `GameState(["c3": .lightMan], toMove: .light)`.
+  positions from square names, for example `GameState(["c3": .lightMan], toMove: .light)`. E4 adds
+  `TurnGeneratorTests`, `US1ComputerPlayerTests` and `US2ComputerLevelTests` (shallow searches:
+  these run in Debug in the blocking plan). `CheckersEngineStrengthTests` (Release only, not in
+  the Xcode test plan) plays 100-game matches between the levels and the counts to 9 turns.
 - Targets: app `checkers`, `checkersTests` (Swift Testing, MainActor default isolation; suites
   `US1TwoPlayerMoveTests`…`US7NavigationTests` (E3), `US1SquareDescriptionTests`…
   `US4ContrastTests` (E7), plus layout, palette, privacy and localization;
@@ -96,9 +115,10 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
 - SwiftLint 0.65.1 through the `SwiftLintPlugins` package plugin, configured in `.swiftlint.yml`
   (errors: force unwrap family, `ObservableObject`/`@Published`, Combine, `DispatchQueue`/
   `OperationQueue`/`Thread`, `print`). Test folders relax the force-unwrap family and `print`.
-  `identifier_name` also accepts `to` (`Step.to`). `swift test` does not run the plugin, so the
-  engine is linted only by the Xcode build (`scripts/test.sh`, CI).
+  `identifier_name` also accepts `to` (`Step.to`). Both the Xcode build and `swift test` run the
+  plugin.
 - swift-format (bundled with Xcode) with `../.swift-format`: warnings locally, errors in CI.
 - CI (`../.github/workflows/ci.yml`): pushes to any branch except `main`; Markdown-only pushes
-  skip build and tests; the `CI gate` job is the required check. Land work on `main` by
-  fast-forward after the branch is green; no pull requests.
+  skip build and tests. Code pushes run `build-and-test` and, in parallel, `engine-strength`
+  (the strength matches in Release); the `CI gate` job is the required check and needs both.
+  Land work on `main` by fast-forward after the branch is green; no pull requests.

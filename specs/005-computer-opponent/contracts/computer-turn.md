@@ -71,7 +71,7 @@ A cancelled turn never applies another step.
 | Element | Text | Identifier |
 |---|---|---|
 | Turn indicator while the computer's turn lasts | "Light is thinking…" / "Dark is thinking…" | `game.turn` |
-| Activity indicator beside it (hidden from VoiceOver) | — | `game.thinking` |
+| Activity indicator beside it (hidden from VoiceOver): a spinner, or a still hourglass with Reduce Motion on, since the system spinner keeps turning (FR-028, found in T030) | — | `game.thinking` |
 | Game setup, Computer chosen | No note; Start available | `setup.start` |
 
 The setup note "Games against the computer arrive in a later update." (`setup.computerNote`) is

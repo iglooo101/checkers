@@ -53,8 +53,12 @@ Last updated: 2026-10-22
   and plays any turn within 40 points of its best, Medium 4 turns with an 8-point margin, Hard up
   to 16 turns within 1,500,000 nodes, playing only exact ties; the root draws among them with a
   seed (`SeededGenerator`, now in the engine). Medium scores 90 of 100 against Easy and Hard 99
-  of 100 against Medium. Setup defaults to Computer, Easy, Light and remembers choices when a
-  game starts.
+  of 100 against Medium. While it thinks the menu works (E4 US3): resign and leave cancel its
+  turn, and its next step waits while Rules or Settings covers the game (`ScreenCover`, set by
+  the router from its path). Undo returns to the player's turn, cancelling the computer's (US4,
+  research R9). VoiceOver announces each computer step once, without "Jump again." in its chain,
+  and focus stays put (US5). With Reduce Motion on, the thinking spinner becomes a still
+  hourglass. Setup defaults to Computer, Easy, Light and remembers choices when a game starts.
   **Accessibility** (E7): every dark square is a VoiceOver element with its state ("c3, Light
   man, can move"), double-tap plays square by square, each step, undo and resignation is
   announced once through the `Announcer` seam, and focus follows each step. Pieces and marks
@@ -75,8 +79,9 @@ Last updated: 2026-10-22
   `specs/004-accessibility/` (26 tasks, validation in `checklists/validation.md`; a VoiceOver game
   by hand is left for the user). E4's slice is `specs/005-computer-opponent/`: spec (3
   clarifications), plan with measured research R1–R14, contracts `computer-player.md` and
-  `computer-turn.md`, 35 tasks; **T001–T021 (Setup, Foundational, US1, US2) are done**,
-  measurements and results in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
+  `computer-turn.md`, 35 tasks; **T001–T033 (Setup, Foundational, US1–US5, Polish) are done**;
+  T034–T035 close the slice (docs, final CI, fast-forward of `main`). Measurements and results
+  are in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
   it.
 
 ## Lessons learned
@@ -330,6 +335,29 @@ Last updated: 2026-10-22
 - **`Duration / Duration`** failed to type-check inside a larger expression with `Double`; divide
   in integer milliseconds instead.
 
+## Lessons learned (E4 US3 to Polish, 2026-10-22)
+
+- **Do not time the main actor in parallel unit tests.** The app's unit tests share it, and on
+  CI's 3-core runner other suites held it through a whole 0.8 s search. Test that work leaves the
+  main actor by order instead: queue it, then a probe, and require the probe to run first.
+- **Check new tests catch the bug with a mutation**: removing `@concurrent` made the order test
+  fail, which the timed version had not shown on CI.
+- **SwiftLint's limits bite at 250 lines of class body**: `GameSession` reached 249. Read-only
+  queries went to `GameSession+Display.swift` and the computer's turn to an extension in the same
+  file (it shares private state there); new E5 and E6 behavior should follow that pattern.
+- **The system spinner ignores Reduce Motion**, so the game shows a still hourglass then.
+  `accessibilityReduceMotion` cannot be set in a preview; check on a simulator: turn it on with
+  `xcrun simctl spawn <udid> defaults write com.apple.Accessibility ReduceMotionEnabled -bool YES`
+  and reboot it, record with `xcrun simctl io <udid> recordVideo`, then extract frames (an
+  `AVAssetImageGenerator` script, with Vision to find the frames by their text) and compare a
+  region between frames.
+- **XCUITest cannot act inside sub-second states**: after a tap it waits for the app to settle,
+  so pressing Home "while the computer thinks" happens after the reply.
+- **Commit the next story locally while CI runs**, and push once the run has finished: a push
+  cancels the branch's running run.
+- **`didSet` works on an `@Observable` property**: the router updates `setCovered` from `path`
+  that way, including when the navigation stack pops.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -337,13 +365,12 @@ Last updated: 2026-10-22
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E4 Computer opponent (#95)**, branch `005-computer-opponent`, `specs/005-computer-opponent/`:
-   - **US3 (T022–T023, #110)**: the UI stays responsive while the computer thinks (menu, Undo,
-     Home).
-   - Then US4 (T024–T026, #112, #113), US5 (T027–T028, #190) and Polish (T029–T035, #200), and
-     fast-forward `main`. T031 runs the strength matches again, and T032 updates
-     `checkers/CLAUDE.md` (its line saying `swift test` does not lint is out of date).
-2. Epic order after E4: E5 → E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
+1. **E4 Computer opponent (#95)**, branch `005-computer-opponent`: only the close-out is left
+   (T034–T035, #200): confirm CI on the last commit, move #200, F4.3 (#111) and E4 (#95) to Done,
+   and fast-forward `main`.
+2. **E5 Saving and statistics (#114)** next, as a new Spec Kit slice (`/speckit-specify` from
+   `FRD.md`). Epic order after E4: E5 → E6 → E8 (see `EXECUTION_PLAN.md`). E5 must resume a
+   game during the computer's turn (start it again with `startComputerTurnIfNeeded()`). New screens join
    `US5AccessibilityAuditUITests` (#131, #142, #152); E6's themes must pass `US4ContrastTests`
    (#144).
 3. Open for the user:
@@ -354,7 +381,10 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    - A VoiceOver game by hand (`specs/004-accessibility/quickstart.md` §3), and from E3 a
      hand-played game and a visual review at the largest text size.
    - E4's SC-005 needs a recent iPhone with a Release build; without one, the Mac measurement is
-     recorded as the closest proxy.
+     recorded as the closest proxy (Hard's slowest turn 419 ms in Release).
+   - E4 quickstart §3, last step: press Home while the computer thinks and come back; it should
+     make exactly one reply. UI tests cannot press Home inside the half-second thinking.
+   - E4 quickstart §6: a few moves against the computer with VoiceOver on.
    - Delete the merged branches:
      `git branch -d 002-rules-engine 003-game-experience 004-accessibility && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility`.
 4. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the

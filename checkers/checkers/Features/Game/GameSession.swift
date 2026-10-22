@@ -230,9 +230,12 @@ final class GameSession {
             return nil
         }
     }
+}
 
-    // MARK: - The computer's turn (specs/005-computer-opponent/contracts/computer-turn.md)
+// MARK: - The computer's turn (specs/005-computer-opponent/contracts/computer-turn.md)
 
+// An extension in this file, so it shares the session's private state.
+extension GameSession {
     /// The pause before the computer's first step, even if it chose sooner (FR-AI-03).
     static let thinkingPause = Duration.milliseconds(500)
     /// The pause before each further jump of the computer's chain (FR-AI-05, Clarifications).

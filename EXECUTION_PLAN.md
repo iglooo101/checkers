@@ -39,22 +39,18 @@ Epics are listed in execution order.
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
-| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 2/4 | 13/18 | In Progress |
+| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 3/4 | 17/18 | In Progress |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **27/41** | **99/150** | |
+| | **Total** | | | | **28/41** | **103/150** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
-- #106 F4.2: Computer turn
-- #110 UI stays responsive while thinking: menu, Undo and Home work
-- #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move
-- #113 Undo while the computer thinks cancels its turn
-- #190 Announce the computer's moves with VoiceOver
+- #200 Validate the E4 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -65,20 +61,17 @@ native SwiftUI: Home, setup, and a two-player game with tap and drag, hints, cha
 undo, resign and a result panel, playable square by square with VoiceOver (square states,
 announcements, focus that follows each step), with non-color cues at 3:1 contrast and an
 accessibility audit of every screen. Games against the computer are playable at three levels
-(E4 US1, US2): Medium scores 90 of 100 against Easy and Hard 99 of 100 against Medium. Statistics,
-Rules and Settings are placeholders until E5 and E6.
+(E4): Medium scores 90 of 100 against Easy and Hard 99 of 100 against Medium; the menu works
+while it thinks, Undo returns to the player's turn, and VoiceOver announces its moves.
+Statistics, Rules and Settings are placeholders until E5 and E6.
 
 1. **E4 Computer opponent (#95)** on branch `005-computer-opponent` (`specs/005-computer-opponent/`):
-   F4.0 Specification and US1 (T001–T015: the search's turn generator, the computer player, the
-   `ComputerOpponent` and `TurnPacer` seams, the computer's turn on the game screen, setup) are
-   done, and so are US2 (T016–T021: the levels' depth, node limit and random margin, the
-   Release-only strength matches and the `engine-strength` CI job) and with it F4.1 AI search.
-   **US3** (T022–T023, #110), **US4** (T024–T026, #112, #113) and **US5** (T027–T028, #190) are
-   implemented and pass locally: resigning or leaving stops the computer's turn, its move waits
-   while Rules or Settings covers the game, Undo returns to the player's turn, and VoiceOver
-   announces each computer step without moving focus. They wait for CI (US3's first run failed
-   on a timing test, since rewritten). Then Polish (T029–T035, #200) and fast-forwarding `main`.
-2. Then E5 → E6 → E8 (Order and dependencies).
+   US1–US5 are done and verified in CI (F4.0, F4.1 and F4.2 Done), and Polish T029–T033 is done:
+   audits of the computer game, a still hourglass for Reduce Motion, docs. Left: **#200's
+   close-out** (T034–T035): CI on the last commit, then #200, F4.3 (#111) and E4 to Done and the
+   fast-forward of `main`.
+2. **E5 Saving and statistics (#114)**, a new Spec Kit slice; then E6 → E8 (Order and
+   dependencies).
 
 ## Order and dependencies
 
@@ -114,6 +107,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   margin (Medium 90, Hard 99 of 100); the playtest by the user (SC-004, E4 quickstart §4) is
   still open: a beginner must be able to beat Easy, which plays any turn within 40 points of its
   best two turns ahead.
+- E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
+  Mac proxy is 419 ms), a VoiceOver game (§6), and pressing Home while the computer thinks (§3),
+  which UI tests cannot do inside the half-second thinking.
 - Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
   Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
@@ -322,7 +318,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #168 UI test running performAccessibilityAudit() on every screen · M
 - [x] #197 Validate the E7 slice and update project docs · S · after #168
 
-### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 13/18 tasks
+### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 17/18 tasks
 
 **F4.0 Specification (Spec Kit)** (#96) · FRD §11
 
@@ -343,16 +339,16 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [x] #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked · M
 - [x] #108 Show the computer's capture chains one jump at a time · S
-- [~] #190 Announce the computer's moves with VoiceOver · S · after #164
+- [x] #190 Announce the computer's moves with VoiceOver · S · after #164
 - [x] #109 Computer makes the first move when it plays Light · S
-- [~] #110 UI stays responsive while thinking: menu, Undo and Home work · S
+- [x] #110 UI stays responsive while thinking: menu, Undo and Home work · S
 - [x] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
 
 **F4.3 Undo against the computer** (#111) · FR-UNDO-03, FR-UNDO-04
 
-- [~] #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move · S
-- [~] #113 Undo while the computer thinks cancels its turn · S
-- [ ] #200 Validate the E4 slice and update project docs · S · after #113
+- [x] #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move · S
+- [x] #113 Undo while the computer thinks cancels its turn · S
+- [~] #200 Validate the E4 slice and update project docs · S · after #113
 
 ### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 0/16 tasks
 
@@ -633,3 +629,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-22: E4 US5 (T027–T028) implemented; #190 In Progress. VoiceOver announces each
   computer step once with E7's sentences, without "Jump again." in its chain, and focus stays
   where the player left it (`GameText.computerFollowUp`). 219 tests pass.
+- 2026-10-22: CI run 39851771770 passed (US3's fix and US4) and run 39857462543 (US5): #110,
+  #112, #113, #190 and F4.2 (#106) Done. Polish (T029–T033, #200 In Progress): the audit covers
+  a computer game on the player's turn and with the result panel, all 12 audits pass on the
+  iPhone 17 and on the iPhone SE at the largest text in Dark Mode; with Reduce Motion on the
+  system spinner kept turning, so the game shows a still hourglass then. `GameSession`'s
+  computer turn moved into an extension (class body 154 of 250 lines). 221 tests pass; the
+  strength matches repeat their results. `checkers/CLAUDE.md` and the engine contract updated.

@@ -94,7 +94,30 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
 
 ## 1. All blocking tests (SC-001, SC-006 to SC-010)
 
-*(T031, T033)*
+- T029, 2026-10-22: the audit gains a computer game on the player's turn (after the computer's
+  reply) and a computer game with the result panel (after resigning); setup with Computer chosen
+  (Start available) was already audited, and the disabled-Start exception went in US1. On the
+  iPhone 17 all 12 audits pass; the new game states report no issues, and setup with Computer
+  chosen reports only the allow-listed edge cut on Start.
+- T030, 2026-10-22: nothing to fix from T029. On the iPhone SE (3rd generation) at
+  `accessibility-extra-extra-extra-large` in Dark Mode, with Reduce Motion on, all 12 audits
+  pass with no issues, allowed or not. With Reduce Motion on, a screen recording of the
+  computer opening as Light showed the system spinner still turning (its region changed in every
+  frame, 50 ms apart), against FR-028 and Constitution V.2; the game screen now shows a still
+  hourglass instead while Reduce Motion is on (`GameView`, contracts/computer-turn.md), and a
+  second recording showed it still and legible at that size in Dark Mode. The simulator was
+  reset (text size large, light, Reduce Motion off). SwiftUI's `accessibilityReduceMotion` cannot
+  be set in a preview, so the recording is the check.
+- T031, 2026-10-22: `scripts/format.sh` changed nothing; the strict format check, the script
+  tests (6 of 6), the string catalog check and `scripts/test.sh` with warnings as errors pass:
+  **221 tests** (106 app unit tests, 83 engine tests, 32 UI tests), 10 min 33 s, no warnings.
+  The strength matches pass again with the same results (Medium 90.0, Hard 99.0 of 100; Hard's
+  slowest turn alone 357 ms; generator 24.3 million turns per second), 2 min 53 s. Afterwards
+  `GameSession`'s class body was at 249 of SwiftLint's 250 lines, so the computer's turn moved
+  into an extension in the same file (154 lines left in the class); lint, the strict format
+  check and the 106 app unit tests pass after the move, with no warnings.
+- T033, SC-010: every FRD ID of the slice is named by a test (`grep` of quickstart §1):
+  FR-AI-01 to FR-AI-06, FR-MOVE-04, FR-UNDO-03, FR-UNDO-04 and FR-A11Y-03.
 
 ## 2. Strength matches and counts (SC-002, SC-003)
 
@@ -114,19 +137,38 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
 
 ## 3. Play the computer (SC-001, US1, US3, US4)
 
-*(T033)*
+T033, 2026-10-22. Each step of the scenario is covered by the blocking tests, which pass:
+
+- Thinking header, board ignoring taps, reply after the pause: `US1ComputerGameTests`
+  (`boardLockedWhileThinking`, `firstStepWaitsForBoth`), `testUS1_computerReplies`.
+- A double jump shown half a second apart: `US1ComputerGameTests.chainJumpByJump`.
+- Undo of a pair, and undo while it thinks: `US4ComputerUndoTests`,
+  `testUS4_undoTakesBackBothMoves`.
+- Rules while it thinks, then back: `US3ComputerControlTests.moveWaitsWhileCovered`.
+- New game as Dark, Undo unavailable until the player moves: `testUS1_computerOpensAsLight`,
+  `US4ComputerUndoTests.undoAvailability`.
+- Resign while it thinks: `US3ComputerControlTests.resignWhileThinking`.
+- Home while it thinks, then back: **open for the user**. A throwaway UI test (not committed)
+  could not press Home during the thinking, since XCUITest's wait after a tap outlasts it: the
+  reply had already appeared. It confirmed only that a computer game is intact after 6.6 s in the
+  background (exactly one reply, the player's turn).
 
 ## 4. Playtest (SC-004, US2)
 
-*(For the user.)*
+**Open for the user**: three games against Easy as a beginner, three against Hard at your best
+(quickstart §4).
 
 ## 5. Timing on an iPhone (SC-005)
 
-*(For the user, or the Mac measurement as the closest proxy.)*
+**Open for the user** (needs a recent iPhone with a Release build). Closest proxy, the development
+Mac in Release: Hard's slowest turn 419 ms (every Hard turn of 12 match games timed alone, mean
+262 ms), so with the 0.5 s minimum pause the first step appears at 0.5 s; the 0.8 s limit only
+applies in Debug builds.
 
 ## 6. VoiceOver (US5)
 
-*(For the user.)*
+**Open for the user**: a few moves against the computer with VoiceOver on (quickstart §6). The
+announcements and focus are covered by `US5ComputerAnnouncementTests`.
 
 ## 7. CI
 

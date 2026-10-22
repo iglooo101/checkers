@@ -8,16 +8,25 @@ struct GameView: View {
     let router: AppRouter
 
     @State private var isConfirmingResign = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 12) {
             HStack(spacing: 8) {
                 // While the computer thinks, a spinner beside the sentence; the sentence alone
-                // tells VoiceOver (FR-AI-03).
+                // tells VoiceOver (FR-AI-03). The system spinner keeps turning with Reduce Motion
+                // on, so a still hourglass stands in for it then (E4 FR-028).
                 if session.isComputerTurn {
-                    ProgressView()
-                        .accessibilityHidden(true)
-                        .accessibilityIdentifier("game.thinking")
+                    Group {
+                        if reduceMotion {
+                            Image(systemName: "hourglass")
+                                .font(.title2.weight(.semibold))
+                        } else {
+                            ProgressView()
+                        }
+                    }
+                    .accessibilityHidden(true)
+                    .accessibilityIdentifier("game.thinking")
                 }
                 Text(session.turnText)
                     .font(.title2.weight(.semibold))
