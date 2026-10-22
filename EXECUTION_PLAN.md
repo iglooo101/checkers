@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-21 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.1, constitution v1.1.0
+Last updated: 2026-10-22 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.1, constitution v1.1.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -55,6 +55,8 @@ Epics are listed in execution order.
 - #162 Double-tap to select and to move, including chains; UI test
 - #163 F7.2: VoiceOver announcements
 - #164 Announce moves (both sides), captures, crowning, turn changes, mandatory captures and results
+- #165 F7.3: Non-color cues
+- #166 Kings, selection and hints distinguishable without color in every theme
 - #167 F7.4: Accessibility audit automation
 - #197 Validate the E7 slice and update project docs
 <!-- END GENERATED: in-progress -->
@@ -293,7 +295,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F7.3 Non-color cues** (#165) · FR-A11Y-05
 
-- [ ] #166 Kings, selection and hints distinguishable without color in every theme · S
+- [~] #166 Kings, selection and hints distinguishable without color in every theme · S
 
 **F7.4 Accessibility audit automation** (#167) · FR-A11Y-04
 

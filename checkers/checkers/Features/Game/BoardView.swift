@@ -140,3 +140,28 @@ struct BoardView: View {
             setup: .defaults, playerSide: .dark,
             state: GameState(position: Position(pieces), sideToMove: .dark)))
 }
+
+/// Kings of both sides, a selected man with its targets and a hinted king: every mark at once,
+/// to compare in grayscale (specs/004-accessibility quickstart §4).
+private func everyMarkSession() -> GameSession {
+    let pieces: [Square: Piece] = Dictionary(
+        uniqueKeysWithValues: [
+            ("c3", Piece(side: .light, kind: .man)), ("e3", Piece(side: .light, kind: .king)),
+            ("g7", Piece(side: .dark, kind: .man)), ("a7", Piece(side: .dark, kind: .king)),
+        ].compactMap { name, piece in Square(name: name).map { ($0, piece) } })
+    let session = GameSession(
+        setup: .defaults, state: GameState(position: Position(pieces), sideToMove: .light))
+    if let man = Square(name: "c3") {
+        session.tap(man)
+    }
+    return session
+}
+
+#Preview("Every mark") {
+    BoardView(session: everyMarkSession())
+}
+
+#Preview("Every mark, dark mode") {
+    BoardView(session: everyMarkSession())
+        .preferredColorScheme(.dark)
+}

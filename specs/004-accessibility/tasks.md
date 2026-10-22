@@ -132,12 +132,12 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ### Tests for User Story 4 (MANDATORY - write first) ⚠️
 
-- [ ] T016 [P] [US4] Write `Unit/US4ContrastTests.swift` (`struct US4ContrastTests`): a WCAG contrast helper (relative luminance from `UIColor(named:)` resolved in light and dark trait collections) and, in both appearances, at least 3:1 for: `PieceLight`/`PieceDark` (`US4 FR-A11Y-05`, FR-015), `PieceLight`/`BoardDarkSquare`, `PieceDarkEdge`/`BoardDarkSquare`, `Selection`/`BoardDarkSquare`, `Target`/`BoardDarkSquare`, `Hint`/`BoardDarkSquare`, `CrownOnLight`/`PieceLight`, `CrownOnDark`/`PieceDark` (`US4 FR-A11Y-05`, FR-020). Also `Palette.crown(for: .light) == .crownOnLight` and `.dark == .crownOnDark`. Fails until T017.
+- [X] T016 [P] [US4] Write `Unit/US4ContrastTests.swift` (`struct US4ContrastTests`): a WCAG contrast helper (relative luminance from `UIColor(named:)` resolved in light and dark trait collections) and, in both appearances, at least 3:1 for: `PieceLight`/`PieceDark` (`US4 FR-A11Y-05`, FR-015), `PieceLight`/`BoardDarkSquare`, `PieceDarkEdge`/`BoardDarkSquare`, `Selection`/`BoardDarkSquare`, `Target`/`BoardDarkSquare`, `Hint`/`BoardDarkSquare`, `CrownOnLight`/`PieceLight`, `CrownOnDark`/`PieceDark` (`US4 FR-A11Y-05`, FR-020). Also `Palette.crown(for: .light) == .crownOnLight` and `.dark == .crownOnDark`. Fails until T017.
 
 ### Implementation for User Story 4
 
-- [ ] T017 [US4] Change the color sets in `App/Assets.xcassets` per data-model.md (`PieceDarkEdge` `#d9b48a`; `Selection` and `Target` `#7fd3ff` in both appearances, `Target` at 85% opacity; add `CrownOnLight` `#6b4426` and `CrownOnDark` `#e8c46a`; delete `Crown`), update `App/Support/Palette.swift` (cases `crownOnLight`, `crownOnDark`, `static func crown(for side: Side) -> Palette`) and `App/Features/Game/PieceView.swift` (crown color by side). T016 and `PaletteTests` pass.
-- [ ] T018 [US4] Check the board in grayscale on the simulator (quickstart §4) in light and dark appearance, and update the board previews to show a king of each side, a selection, hints and targets together; record the result in `validation.md`.
+- [X] T017 [US4] Change the color sets in `App/Assets.xcassets` per data-model.md (`PieceDarkEdge` `#d9b48a`; `Selection` and `Target` `#7fd3ff` in both appearances, `Target` at 85% opacity; add `CrownOnLight` `#6b4426` and `CrownOnDark` `#e8c46a`; delete `Crown`), update `App/Support/Palette.swift` (cases `crownOnLight`, `crownOnDark`, `static func crown(for side: Side) -> Palette`) and `App/Features/Game/PieceView.swift` (crown color by side). T016 and `PaletteTests` pass.
+- [X] T018 [US4] Check the board in grayscale on the simulator (quickstart §4) in light and dark appearance, and update the board previews to show a king of each side, a selection, hints and targets together; record the result in `validation.md`.
 
 **Checkpoint**: US4 complete.
 

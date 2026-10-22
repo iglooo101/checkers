@@ -19,7 +19,7 @@ struct PieceView: View {
                 Image(systemName: "crown.fill")
                     .resizable()
                     .scaledToFit()
-                    .foregroundStyle(Palette.crown.color)
+                    .foregroundStyle(Palette.crown(for: piece.side).color)
                     .frame(width: size * 0.42)
             }
         }

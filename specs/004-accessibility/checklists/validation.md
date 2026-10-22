@@ -25,7 +25,11 @@ starting 2026-10-22.
 
 ## 4. Without color (SC-005)
 
-*Pending (T018, T023).*
+| Check | Result | Notes |
+|---|---|---|
+| Contrast of every mark (`US4ContrastTests`, T016–T017) | Pass | 3:1 or more for all 8 pairs in both appearances; the Classic colors are now the same in light and dark appearance |
+| The board in grayscale on the simulator (T018) | Pass | Two-player game with c3 selected, screenshots in light and dark appearance converted to the Generic Gray profile (`simctl` has no Color Filters switch): Light and Dark pieces, the thick ring on the selected piece, the thin rings on the hinted pieces and the dots on the target squares are all told apart |
+| Kings in grayscale (T018) | Pass | `PieceView` kings rendered offscreen and converted the same way: the dark crown on a Light king and the gold crown on a Dark king both stand out. The offscreen renderer leaves out the board's square cells, so kings on the board are checked in the new "Every mark" previews |
 
 ## 5. CI
 
