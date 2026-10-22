@@ -21,6 +21,8 @@ final class GameSession {
     private(set) var selection: Square?
     /// What the last tap told the player, if anything; cleared by the next tap or move.
     private(set) var notice: Notice?
+    /// Where VoiceOver focus goes: the landing square of the last step (FR-A11Y-02).
+    private(set) var focusSquare: Square?
     /// The square of the piece being dragged, once a drag has been accepted.
     @ObservationIgnored private var dragged: Square?
     /// Speaks game events with VoiceOver (FR-A11Y-03).
@@ -118,6 +120,7 @@ final class GameSession {
             state.position.piece(at: square)?.side == state.sideToMove
         {
             notice = .captureRequired
+            announcer.announce(GameText.notice(.captureRequired))
         } else {
             selection = nil
         }
@@ -134,6 +137,7 @@ final class GameSession {
         }
         selection = nil
         notice = nil
+        focusSquare = nil
     }
 
     /// Resigns for `resigningSide`; nothing happens once the game is over (FR-032).
@@ -184,6 +188,7 @@ final class GameSession {
             let result = try state.apply(step)
             selection = result.turnContinues ? result.to : nil
             notice = nil
+            focusSquare = result.to
         } catch {
             Log.game.error(
                 "Rejected step \(step.from.name)-\(step.to.name): \(String(describing: error))")

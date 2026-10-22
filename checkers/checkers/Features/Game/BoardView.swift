@@ -14,6 +14,8 @@ struct BoardView: View {
     }
 
     @State private var drag: Drag?
+    /// The square VoiceOver focus is on, moved to each step's landing square (FR-A11Y-02).
+    @AccessibilityFocusState private var focusedSquare: Square?
 
     private static let inset: CGFloat = 8
     private static let frameWidth: CGFloat = 4
@@ -41,6 +43,9 @@ struct BoardView: View {
             .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
         }
         .transaction { $0.animation = nil }
+        .onChange(of: session.focusSquare) { _, square in
+            focusedSquare = square
+        }
     }
 
     @ViewBuilder
@@ -73,6 +78,7 @@ struct BoardView: View {
             .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
             .accessibilityIdentifier("square.\(square.name)")
             .accessibilityAction { session.tap(square) }
+            .accessibilityFocused($focusedSquare, equals: square)
         } else {
             Rectangle()
                 .fill(Palette.boardLightSquare.color)

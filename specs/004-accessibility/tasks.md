@@ -82,7 +82,7 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ### Tests for User Story 2 (MANDATORY - write first) ⚠️
 
-- [ ] T010 [P] [US2] Write `Unit/US2VoiceOverPlayTests.swift` (`struct US2VoiceOverPlayTests`), with a `RecordingAnnouncer`:
+- [X] T010 [P] [US2] Write `Unit/US2VoiceOverPlayTests.swift` (`struct US2VoiceOverPlayTests`), with a `RecordingAnnouncer`:
   - `US2 FR-A11Y-02`: after `c3`, `d4` (taps, the path VoiceOver activation uses), `focusSquare == d4`; after the double jump's first jump `focusSquare == c5`, after the second `e7`; selecting a piece does not change `focusSquare`.
   - `US2 FR-A11Y-02`: `undo()` and a new session (Play again) clear `focusSquare`.
   - `US2 FR-A11Y-02`: in the capture position, tapping a1 announces exactly "A capture is required."; beginning a drag on a1 announces it too.
@@ -91,8 +91,8 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ### Implementation for User Story 2
 
-- [ ] T011 [US2] Extend `App/Features/Game/GameSession.swift`: `private(set) var focusSquare: Square?`, set to the step's landing square in `apply`, cleared by `undo()`; announce `GameText.notice(.captureRequired)` whenever the notice is set (taps and drags). T010 passes.
-- [ ] T012 [US2] Bind VoiceOver focus in `App/Features/Game/BoardView.swift`: an `@AccessibilityFocusState private var focusedSquare: Square?`, each dark square `.accessibilityFocused($focusedSquare, equals: square)`, and `.onChange(of: session.focusSquare)` moving focus there. Keep the squares' default accessibility action calling `session.tap`. Previews unchanged. All tests pass.
+- [X] T011 [US2] Extend `App/Features/Game/GameSession.swift`: `private(set) var focusSquare: Square?`, set to the step's landing square in `apply`, cleared by `undo()`; announce `GameText.notice(.captureRequired)` whenever the notice is set (taps and drags). T010 passes.
+- [X] T012 [US2] Bind VoiceOver focus in `App/Features/Game/BoardView.swift`: an `@AccessibilityFocusState private var focusedSquare: Square?`, each dark square `.accessibilityFocused($focusedSquare, equals: square)`, and `.onChange(of: session.focusSquare)` moving focus there. Keep the squares' default accessibility action calling `session.tap`. Previews unchanged. All tests pass.
 
 **Checkpoint**: US2 complete; the VoiceOver run by hand is marked for the user in T023.
 

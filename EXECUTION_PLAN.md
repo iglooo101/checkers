@@ -52,6 +52,7 @@ Epics are listed in execution order.
 - #153 E7: Accessibility
 - #160 F7.1: VoiceOver board
 - #161 Each square is a VoiceOver element: coordinate, contents, state ("c3, Light man, can move")
+- #162 Double-tap to select and to move, including chains; UI test
 - #167 F7.4: Accessibility audit automation
 - #197 Validate the E7 slice and update project docs
 <!-- END GENERATED: in-progress -->
@@ -282,7 +283,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F7.1 VoiceOver board** (#160) · FR-A11Y-01, FR-A11Y-02
 
 - [~] #161 Each square is a VoiceOver element: coordinate, contents, state ("c3, Light man, can move") · M
-- [ ] #162 Double-tap to select and to move, including chains; UI test · M
+- [~] #162 Double-tap to select and to move, including chains; UI test · M
 
 **F7.2 VoiceOver announcements** (#163) · FR-A11Y-03
 
