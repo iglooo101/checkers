@@ -38,19 +38,18 @@ Epics are listed in execution order.
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
-| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 3/10 | In Progress |
+| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 1/5 | 5/11 | In Progress |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **20/41** | **78/146** | |
+| | **Total** | | | | **21/41** | **80/147** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #153 E7: Accessibility
-- #154 F7.0: Specification (Spec Kit)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -61,13 +60,15 @@ landed on `main`). The app is fully native SwiftUI: Home, setup, and a two-playe
 and drag, hints, chains, crowning, undo, resign and a result panel; computer games wait for E4,
 and Statistics, Rules and Settings are placeholders until E5 and E6.
 
-Next is E7 Accessibility (#153), one Spec Kit slice taking its scope from FRD section 17:
+E7 Accessibility (#153) is in progress on branch `004-accessibility` (slice
+`specs/004-accessibility/`). F7.0 Specification is done (#155–#159): `tasks.md` has 26 test-first
+tasks, the board is reconciled (#197 added), and the plan changes four board colors to reach 3:1
+contrast.
 
-1. F7.0 Specification (#154): #155 Specify (`/speckit-specify`; create the branch with
-   `git checkout -b`), #156 Clarify, #157 Plan, #158 Tasks + analyze, #159 Reconcile.
-2. Then implement E7 test-first: square states and square-by-square VoiceOver play (#161, #162),
-   announcements from the engine's `StepResult` (#164), non-color cues (#166) and the
-   accessibility audit test on every screen (#168). E3 already labels every square and control.
+1. `/speckit-implement`: setup and foundation (T001–T004, #197), US1 square states (#161), US2
+   VoiceOver play (#162), US3 announcements (#164), US4 contrast and crowns (#166), US5 audit
+   (#168), polish (#197).
+2. Push after each story and wait for `CI gate`; close E7 as E3 was.
 
 ## Order and dependencies
 
@@ -264,15 +265,15 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
 - [x] #73 Accessibility pass: Game setup · S
 
-### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 3/10 tasks
+### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 5/11 tasks
 
 **F7.0 Specification (Spec Kit)** (#154) · FRD §17
 
 - [x] #155 E7 Specify: write spec.md with /speckit-specify · S
 - [x] #156 E7 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #157 E7 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [ ] #158 E7 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
-- [ ] #159 E7 Reconcile this epic's board tasks with tasks.md · S
+- [x] #158 E7 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [x] #159 E7 Reconcile this epic's board tasks with tasks.md · S
 
 **F7.1 VoiceOver board** (#160) · FR-A11Y-01, FR-A11Y-02
 
@@ -290,6 +291,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F7.4 Accessibility audit automation** (#167) · FR-A11Y-04
 
 - [ ] #168 UI test running performAccessibilityAudit() on every screen · M
+- [ ] #197 Validate the E7 slice and update project docs · S · after #168
 
 ### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 0/15 tasks
 
@@ -521,3 +523,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   contract `announcements.md` and quickstart; Constitution Check passes. Measured the Classic
   palette: dark pieces, the selection ring, target dots and the crown on Light kings were below
   3:1 against their background; the plan changes those colors and adds FR-020. Next is #158 Tasks.
+- 2026-10-22: #158 done: `specs/004-accessibility/tasks.md`, 26 tasks; `/speckit-analyze` found 4
+  issues, none critical or high (a reading-order test added). #159 done: board reconciled, #197
+  added. F7.0 (#154) closed. Backlog is now 147 tasks. Next is implementation.
