@@ -54,6 +54,7 @@ Epics are listed in execution order.
 - #110 UI stays responsive while thinking: menu, Undo and Home work
 - #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move
 - #113 Undo while the computer thinks cancels its turn
+- #190 Announce the computer's moves with VoiceOver
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -72,10 +73,11 @@ Rules and Settings are placeholders until E5 and E6.
    `ComputerOpponent` and `TurnPacer` seams, the computer's turn on the game screen, setup) are
    done, and so are US2 (T016–T021: the levels' depth, node limit and random margin, the
    Release-only strength matches and the `engine-strength` CI job) and with it F4.1 AI search.
-   **US3** (T022–T023, #110) and **US4** (T024–T026, #112, #113) are implemented and pass
-   locally: resigning or leaving stops the computer's turn, its move waits while Rules or Settings
-   covers the game, and Undo returns to the player's turn, cancelling the computer's. Both wait
-   for CI (US3's first run failed on a timing test, since rewritten). Then US5 (#190) and #200.
+   **US3** (T022–T023, #110), **US4** (T024–T026, #112, #113) and **US5** (T027–T028, #190) are
+   implemented and pass locally: resigning or leaving stops the computer's turn, its move waits
+   while Rules or Settings covers the game, Undo returns to the player's turn, and VoiceOver
+   announces each computer step without moving focus. They wait for CI (US3's first run failed
+   on a timing test, since rewritten). Then Polish (T029–T035, #200) and fast-forwarding `main`.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -341,7 +343,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [x] #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked · M
 - [x] #108 Show the computer's capture chains one jump at a time · S
-- [ ] #190 Announce the computer's moves with VoiceOver · S · after #164
+- [~] #190 Announce the computer's moves with VoiceOver · S · after #164
 - [x] #109 Computer makes the first move when it plays Light · S
 - [~] #110 UI stays responsive while thinking: menu, Undo and Home work · S
 - [x] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
@@ -628,3 +630,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   Undo takes back turns until it is the player's turn (the computer's reply, its thinking or its
   partial chain, and the player's turn), cancelling the computer's turn first, and is unavailable
   until the player has moved (research R9). 213 tests pass.
+- 2026-10-22: E4 US5 (T027–T028) implemented; #190 In Progress. VoiceOver announces each
+  computer step once with E7's sentences, without "Jump again." in its chain, and focus stays
+  where the player left it (`GameText.computerFollowUp`). 219 tests pass.

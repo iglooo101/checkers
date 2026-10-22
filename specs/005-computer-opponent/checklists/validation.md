@@ -84,6 +84,13 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
 - US4 (T024–T026): `scripts/test.sh` with warnings as errors passes: **213 tests** (100 app unit
   tests, 83 engine tests, 30 UI tests), 9 min 26 s, with no warnings; the strict format check and
   lint pass.
+- US5 tests first (T027), 2026-10-22: `US5ComputerAnnouncementTests` failed 2 of 6 tests before
+  T028: a computer chain said "Dark captures e5. Jump again.", and VoiceOver focus followed the
+  computer's steps (to d4, then b2). The other four (simple move, crowning and result, one
+  announcement per step, undo) already held through E7's announcements.
+- US5 (T027–T028): `scripts/test.sh` with warnings as errors passes: **219 tests** (106 app unit
+  tests, 83 engine tests, 30 UI tests), 9 min 22 s, with no warnings; the strict format check,
+  lint and the string catalog check pass (no new strings).
 
 ## 1. All blocking tests (SC-001, SC-006 to SC-010)
 

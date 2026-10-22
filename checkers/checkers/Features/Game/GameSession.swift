@@ -206,16 +206,23 @@ final class GameSession {
         }
     }
 
-    /// Applies a step and announces it; `nil` if the engine rejected it.
+    /// Applies a step and announces it; `nil` if the engine rejected it. The player's steps move
+    /// VoiceOver focus to where they land; the computer's leave it where the player left it, and
+    /// its chain goes on without "Jump again." (FR-A11Y-02, FR-A11Y-03).
     @discardableResult
-    private func applyStep(_ step: Step) -> StepResult? {
+    private func applyStep(_ step: Step, byComputer: Bool = false) -> StepResult? {
         do {
             let result = try state.apply(step)
             notice = nil
-            focusSquare = result.to
-            announcer.announce(
-                GameText.joined(
-                    GameText.stepSentence(result), GameText.followUp(after: result, in: state)))
+            let sentence = GameText.stepSentence(result)
+            let followUp =
+                byComputer
+                ? GameText.computerFollowUp(after: result, in: state)
+                : GameText.followUp(after: result, in: state)
+            if !byComputer {
+                focusSquare = result.to
+            }
+            announcer.announce(followUp.map { GameText.joined(sentence, $0) } ?? sentence)
             return result
         } catch {
             Log.game.error(
@@ -324,7 +331,9 @@ final class GameSession {
                     return
                 }
             }
-            guard await waitUntilVisible(), applyStep(step) != nil else { return }
+            guard await waitUntilVisible(), applyStep(step, byComputer: true) != nil else {
+                return
+            }
             if index == 0, steps.count > 1 {
                 computerPhase = .playing
             }

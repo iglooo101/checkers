@@ -70,6 +70,15 @@ enum GameText {
         return spokenTurn(state.sideToMove, captureRequired: state.isCaptureRequired)
     }
 
+    /// What follows one of the computer's steps: nothing while its chain continues, since "Jump
+    /// again." tells the player what to do; otherwise as `followUp` (FR-A11Y-03;
+    /// specs/005-computer-opponent/contracts/computer-turn.md, Announcements and focus).
+    static func computerFollowUp(after step: StepResult, in state: GameState)
+        -> LocalizedStringResource?
+    {
+        step.turnContinues ? nil : followUp(after: step, in: state)
+    }
+
     /// The announcement after an undo (contract: When to announce).
     static func undone(_ side: Side, captureRequired: Bool) -> LocalizedStringResource {
         joined("Move undone.", spokenTurn(side, captureRequired: captureRequired))

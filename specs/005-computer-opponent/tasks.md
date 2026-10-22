@@ -178,7 +178,7 @@ description: "Task list for the computer opponent slice (epic E4)"
 
 ### Tests for User Story 5 (MANDATORY - write first) ⚠️
 
-- [ ] T027 [P] [US5] Write `Unit/US5ComputerAnnouncementTests.swift` (`struct US5ComputerAnnouncementTests`), with a `RecordingAnnouncer`, a scripted opponent and a manual pacer:
+- [X] T027 [P] [US5] Write `Unit/US5ComputerAnnouncementTests.swift` (`struct US5ComputerAnnouncementTests`), with a `RecordingAnnouncer`, a scripted opponent and a manual pacer:
   - `US5 FR-A11Y-03`: after the player's `c3–d4` ("Light c3 to d4. Dark to move."), the computer's `f6–e5` announces "Dark f6 to e5. Light to move, capture required."
   - `US5 FR-A11Y-03`: a computer double jump announces "Dark captures e5." then "Dark captures c3. Light to move." (no "Jump again.").
   - `US5 FR-A11Y-03`: a crowning computer step "Dark b2 to a1, crowned. Light to move."; a game-ending one ends with the result sentence.
@@ -189,7 +189,7 @@ description: "Task list for the computer opponent slice (epic E4)"
 
 ### Implementation for User Story 5
 
-- [ ] T028 [US5] Add `GameText.computerFollowUp(after:in:)` (`nil` while the chain continues, otherwise as `followUp`) in `App/Features/Game/GameText.swift`, and in `App/Features/Game/GameSession.swift` announce each computer step with it and leave `focusSquare` unchanged. T027 passes; all tests pass.
+- [X] T028 [US5] Add `GameText.computerFollowUp(after:in:)` (`nil` while the chain continues, otherwise as `followUp`) in `App/Features/Game/GameText.swift`, and in `App/Features/Game/GameSession.swift` announce each computer step with it and leave `focusSquare` unchanged. T027 passes; all tests pass.
 
 **Checkpoint**: US5 complete; the VoiceOver game by hand is marked for the user in T033.
 
