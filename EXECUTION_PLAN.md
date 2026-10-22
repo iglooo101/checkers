@@ -39,24 +39,24 @@ Epics are listed in execution order.
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
-| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 3/4 | 17/18 | In Progress |
+| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **28/41** | **103/150** | |
+| | **Total** | | | | **29/41** | **104/150** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-- #95 E4: Computer opponent
-- #200 Validate the E4 slice and update project docs
+Nothing in progress.
 <!-- END GENERATED: in-progress -->
 
 ## Next up
 
-E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility are done (slices
-`specs/001-project-foundation/` to `specs/004-accessibility/`, landed on `main`). The app is fully
+E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
+opponent are done (slices `specs/001-project-foundation/` to `specs/005-computer-opponent/`,
+landed on `main`). The app is fully
 native SwiftUI: Home, setup, and a two-player game with tap and drag, hints, chains, crowning,
 undo, resign and a result panel, playable square by square with VoiceOver (square states,
 announcements, focus that follows each step), with non-color cues at 3:1 contrast and an
@@ -65,13 +65,11 @@ accessibility audit of every screen. Games against the computer are playable at 
 while it thinks, Undo returns to the player's turn, and VoiceOver announces its moves.
 Statistics, Rules and Settings are placeholders until E5 and E6.
 
-1. **E4 Computer opponent (#95)** on branch `005-computer-opponent` (`specs/005-computer-opponent/`):
-   US1–US5 are done and verified in CI (F4.0, F4.1 and F4.2 Done), and Polish T029–T033 is done:
-   audits of the computer game, a still hourglass for Reduce Motion, docs. Left: **#200's
-   close-out** (T034–T035): CI on the last commit, then #200, F4.3 (#111) and E4 to Done and the
-   fast-forward of `main`.
-2. **E5 Saving and statistics (#114)**, a new Spec Kit slice; then E6 → E8 (Order and
-   dependencies).
+1. **E5 Saving and statistics (#114)**: a new Spec Kit slice, starting with its F5.0
+   Specification (`/speckit-specify` from `FRD.md`) on a new branch. It saves the game in play
+   (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
+   computer's turn, and keeps the record against the computer.
+2. Then E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
 
@@ -140,7 +138,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
   limit there, and engine tests in the blocking plan must use small search limits.
 - The local `main` lags GitHub's (it moves by `git push origin <sha>:refs/heads/main`); run
-  `git fetch origin main:main` before comparing branches. The merged branches `002-…` to `004-…`
+  `git fetch origin main:main` before comparing branches. The merged branches `002-…` to `005-…`
   still exist; the command to delete them is in `HANDOFF.md`.
 
 ## Backlog
@@ -318,7 +316,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #168 UI test running performAccessibilityAudit() on every screen · M
 - [x] #197 Validate the E7 slice and update project docs · S · after #168
 
-### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 17/18 tasks
+### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 18/18 tasks
 
 **F4.0 Specification (Spec Kit)** (#96) · FRD §11
 
@@ -348,7 +346,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [x] #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move · S
 - [x] #113 Undo while the computer thinks cancels its turn · S
-- [~] #200 Validate the E4 slice and update project docs · S · after #113
+- [x] #200 Validate the E4 slice and update project docs · S · after #113
 
 ### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 0/16 tasks
 
@@ -636,3 +634,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   system spinner kept turning, so the game shows a still hourglass then. `GameSession`'s
   computer turn moved into an extension (class body 154 of 250 lines). 221 tests pass; the
   strength matches repeat their results. `checkers/CLAUDE.md` and the engine contract updated.
+- 2026-10-22: E4 Computer opponent closed out. CI run 39861850824 passed on `a83be7c`
+  (`engine-strength` 5.4 minutes, results unchanged). #200, F4.3 (#111) and E4 (#95) Done; all
+  35 tasks of `specs/005-computer-opponent/` checked off; `main` fast-forwarded to the close-out
+  commit. Next is E5 Saving and statistics.

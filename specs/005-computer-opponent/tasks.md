@@ -203,7 +203,7 @@ description: "Task list for the computer opponent slice (epic E4)"
 - [X] T032 [P] Update `checkers/CLAUDE.md` (the computer player in the engine and its turn generator, the two seams, the computer turn in `GameSession`, the strength target and CI job) and add a pointer to `contracts/computer-player.md` in `specs/002-rules-engine/contracts/engine-api.md` ("How later epics use it", E4).
 - [X] T033 Run the quickstart (1, 2, 3, 7) and record the results in `validation.md`, including the SC-010 search for the slice's FRD IDs and §3's background-and-return check; mark §4 (playtest), §5 (iPhone timing, or the Mac measurement as the closest proxy) and §6 (VoiceOver by hand) for the user.
 - [X] T034 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
-- [ ] T035 Final verification: push the branch, confirm `CI gate` is green with both jobs on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
+- [X] T035 Final verification: push the branch, confirm `CI gate` is green with both jobs on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
 
 ---
 

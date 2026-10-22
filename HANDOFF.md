@@ -30,9 +30,9 @@ Last updated: 2026-10-22
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
   branches). Because `main` moves on GitHub, the local `main` lags: run
   `git fetch origin main:main` before comparing branches. `001-project-foundation` was merged and
-  deleted; `002-rules-engine`, `003-game-experience` and `004-accessibility` are merged into
-  `main` and can be deleted (the auto-mode safety check blocked the deletion; the command is in
-  Next steps). E4 is on **`005-computer-opponent`**.
+  deleted; `002-rules-engine`, `003-game-experience`, `004-accessibility` and
+  `005-computer-opponent` are merged into `main` and can be deleted (the auto-mode safety check
+  blocks the deletion; the command is in Next steps). E5 starts on a new branch.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
@@ -69,9 +69,9 @@ Last updated: 2026-10-22
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
 - **Backlog**: 8 epics, 41 features, 150 tasks (#1–#200; #188 is a PR) on the project board.
-  **E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility are done**;
-  **E4 Computer opponent** (#95) is in progress. Progress and the full list are in
-  `EXECUTION_PLAN.md`.
+  **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
+  opponent are done**; **E5 Saving and statistics** (#114) is next. Progress and the full list
+  are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -79,9 +79,8 @@ Last updated: 2026-10-22
   `specs/004-accessibility/` (26 tasks, validation in `checklists/validation.md`; a VoiceOver game
   by hand is left for the user). E4's slice is `specs/005-computer-opponent/`: spec (3
   clarifications), plan with measured research R1–R14, contracts `computer-player.md` and
-  `computer-turn.md`, 35 tasks; **T001–T033 (Setup, Foundational, US1–US5, Polish) are done**;
-  T034–T035 close the slice (docs, final CI, fast-forward of `main`). Measurements and results
-  are in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
+  `computer-turn.md`, 35 tasks, **all done** (final CI run 39861850824, landed on `main`);
+  measurements, results and the checks left for the user are in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
   it.
 
 ## Lessons learned
@@ -365,15 +364,12 @@ Last updated: 2026-10-22
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E4 Computer opponent (#95)**, branch `005-computer-opponent`: only the close-out is left
-   (T034–T035, #200): confirm CI on the last commit, move #200, F4.3 (#111) and E4 (#95) to Done,
-   and fast-forward `main`.
-2. **E5 Saving and statistics (#114)** next, as a new Spec Kit slice (`/speckit-specify` from
-   `FRD.md`). Epic order after E4: E5 → E6 → E8 (see `EXECUTION_PLAN.md`). E5 must resume a
-   game during the computer's turn (start it again with `startComputerTurnIfNeeded()`). New screens join
-   `US5AccessibilityAuditUITests` (#131, #142, #152); E6's themes must pass `US4ContrastTests`
-   (#144).
-3. Open for the user:
+1. **E5 Saving and statistics (#114)** next, as a new Spec Kit slice (`/speckit-specify` from
+   `FRD.md`, on a new branch from `main` after `git fetch origin main:main`). Epic order: E5 →
+   E6 → E8 (see `EXECUTION_PLAN.md`). E5 must resume a game during the computer's turn (start it
+   again with `startComputerTurnIfNeeded()`). New screens join `US5AccessibilityAuditUITests`
+   (#131, #142, #152); E6's themes must pass `US4ContrastTests` (#144).
+2. Open for the user:
    - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
      §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
      casual player. If Easy proves too strong, widen its margin, or revisit random blunders as
@@ -386,7 +382,7 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      make exactly one reply. UI tests cannot press Home inside the half-second thinking.
    - E4 quickstart §6: a few moves against the computer with VoiceOver on.
    - Delete the merged branches:
-     `git branch -d 002-rules-engine 003-game-experience 004-accessibility && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility`.
-4. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the
+     `git branch -d 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent`.
+3. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the
    Settings and Rules placeholders; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in
    E8; keep the CI Xcode pin (26.3) in step with the development Mac.

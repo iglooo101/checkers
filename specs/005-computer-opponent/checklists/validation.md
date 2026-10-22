@@ -172,4 +172,9 @@ announcements and focus are covered by `US5ComputerAnnouncementTests`.
 
 ## 7. CI
 
-*(T035)*
+T035, 2026-10-22: run 39861850824 on `a83be7c`, the slice's last code commit: `CI gate` passed.
+`build-and-test` took 22 min 18 s; `engine-strength` 5 min 23 s, with the same results as on
+the Mac (Medium 90.0 and Hard 99.0 of 100, the same wins and draws; Hard's slowest turn alone
+303 ms, depth 11; the generator 24.9 million turns per second). Earlier runs: 39841996479 (US2),
+39848881318 (US3, failed on the timed main-actor test), 39851771770 (US3's fix and US4),
+39857462543 (US5). `main` is fast-forwarded to the close-out commit that records this run.
