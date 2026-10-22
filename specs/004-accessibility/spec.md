@@ -224,6 +224,9 @@ them accessible as later epics change them.
   (Clarifications).
 - **FR-016**: FR-013 to FR-015 MUST hold in light and dark appearance in the Classic theme; E6 keeps
   them in its themes (#144).
+- **FR-020**: Every piece (by its fill or outline), the crown, the selection ring, the hint ring and
+  the target dot MUST have a contrast of at least 3:1 against what it is drawn on, in light and dark
+  appearance, so each can be seen at all (WCAG non-text contrast; added in planning, research R5).
 
 **Accessibility audit (#167: #168)**
 
@@ -243,7 +246,7 @@ them accessible as later epics change them.
 | #161 Square elements with states | FR-001, FR-002, FR-003 | FR-A11Y-01 |
 | #162 Double-tap play, including chains | FR-004, FR-005, FR-006 | FR-A11Y-02 |
 | #164 Announcements | FR-007 to FR-012 | FR-A11Y-03 |
-| #166 Non-color cues | FR-013 to FR-016 | FR-A11Y-05 |
+| #166 Non-color cues | FR-013 to FR-016, FR-020 | FR-A11Y-05 |
 | #168 Accessibility audit | FR-017, FR-018, FR-019 | FR-A11Y-04 |
 
 Covered elsewhere: the computer's moves announced (#190, E4); the cues in the Modern and Playful
@@ -272,7 +275,8 @@ themes (#144, E6); Statistics, Settings and Rules added to the audit (#131, #142
 - **SC-004**: The accessibility audit reports zero problems on every screen and state listed in
   FR-017.
 - **SC-005**: Viewed in grayscale, Light and Dark pieces have a lightness contrast of at least 3:1
-  against each other, and kings, selection, hints and targets are each identifiable by shape.
+  against each other, every piece and mark has at least 3:1 against what it is drawn on, and kings,
+  selection, hints and targets are each identifiable by shape.
 - **SC-006**: FR-A11Y-01 to FR-A11Y-05 each have at least one automated test that names its user
   story.
 

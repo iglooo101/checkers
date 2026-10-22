@@ -38,12 +38,12 @@ Epics are listed in execution order.
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
-| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 2/10 | In Progress |
+| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 3/10 | In Progress |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **20/41** | **77/146** | |
+| | **Total** | | | | **20/41** | **78/146** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -264,13 +264,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
 - [x] #73 Accessibility pass: Game setup · S
 
-### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 2/10 tasks
+### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 3/10 tasks
 
 **F7.0 Specification (Spec Kit)** (#154) · FRD §17
 
 - [x] #155 E7 Specify: write spec.md with /speckit-specify · S
 - [x] #156 E7 Clarify: resolve open questions with /speckit-clarify · S
-- [ ] #157 E7 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
+- [x] #157 E7 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #158 E7 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #159 E7 Reconcile this epic's board tasks with tasks.md · S
 
@@ -517,3 +517,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-22: #156 done. Three clarifications: VoiceOver square states are always given; Light and
   Dark differ by lightness (at least 3:1), no extra mark; one announcement per step, including the
   turn that follows.
+- 2026-10-22: #157 done. `specs/004-accessibility/plan.md` with research R1–R8, data model,
+  contract `announcements.md` and quickstart; Constitution Check passes. Measured the Classic
+  palette: dark pieces, the selection ring, target dots and the crown on Light kings were below
+  3:1 against their background; the plan changes those colors and adds FR-020. Next is #158 Tasks.
