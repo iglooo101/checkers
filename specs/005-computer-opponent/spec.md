@@ -281,8 +281,10 @@ computer step's announcement; play one game by hand with VoiceOver.
 **Accessibility**
 
 - **FR-027**: The automated accessibility audit MUST cover Game setup with Computer chosen and Start
-  available, and the game screen during the computer's turn; the allow-list entry for the disabled
-  Start goes (FR-A11Y-04).
+  available, and a computer game's screen on the player's turn and with the result panel; the
+  allow-list entry for the disabled Start goes (FR-A11Y-04). The computer's thinking lasts under a
+  second, shorter than an audit run, so the thinking indicator MUST instead be checked by an
+  automated test while the computer thinks and by previews (aligned in planning, research R12).
 - **FR-028**: The thinking indicator MUST support Dynamic Type up to the largest accessibility size
   and Dark Mode, and any motion in it MUST respect Reduce Motion (Constitution V.2).
 
