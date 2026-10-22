@@ -49,15 +49,21 @@ Last updated: 2026-10-22
   1,000-position cross-check), and `GameSession` plays the computer's turn through two injected
   seams, `ComputerOpponent` (`EngineComputerOpponent` searches in a `@concurrent` function with
   a 0.8 s limit) and `TurnPacer` (0.5 s minimum thinking, 0.5 s between jumps), with the board
-  locked meanwhile. **All three levels still play alike** (depth 4) until US2 tunes them apart.
-  Setup defaults to Computer, Easy, Light and remembers choices when a game starts.
+  locked meanwhile. **The three levels differ** (E4 US2, research R4): Easy looks 2 turns ahead
+  and plays any turn within 40 points of its best, Medium 4 turns with an 8-point margin, Hard up
+  to 16 turns within 1,500,000 nodes, playing only exact ties; the root draws among them with a
+  seed (`SeededGenerator`, now in the engine). Medium scores 90 of 100 against Easy and Hard 99
+  of 100 against Medium. Setup defaults to Computer, Easy, Light and remembers choices when a
+  game starts.
   **Accessibility** (E7): every dark square is a VoiceOver element with its state ("c3, Light
   man, can move"), double-tap plays square by square, each step, undo and resignation is
   announced once through the `Announcer` seam, and focus follows each step. Pieces and marks
   keep 3:1 contrast with side-specific crowns, and an audit test checks every screen (allow-list
   in `specs/004-accessibility/plan.md`).
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
-  build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits.
+  build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
+  second job, `engine-strength`, runs the Release-only strength matches in parallel, and
+  `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
 - **Backlog**: 8 epics, 41 features, 150 tasks (#1–#200; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility are done**;
   **E4 Computer opponent** (#95) is in progress. Progress and the full list are in
@@ -69,8 +75,8 @@ Last updated: 2026-10-22
   `specs/004-accessibility/` (26 tasks, validation in `checklists/validation.md`; a VoiceOver game
   by hand is left for the user). E4's slice is `specs/005-computer-opponent/`: spec (3
   clarifications), plan with measured research R1–R14, contracts `computer-player.md` and
-  `computer-turn.md`, 35 tasks; **T001–T015 (Setup, Foundational, US1) are done**, measurements
-  and results in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
+  `computer-turn.md`, 35 tasks; **T001–T021 (Setup, Foundational, US1, US2) are done**,
+  measurements and results in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
   it.
 
 ## Lessons learned
@@ -303,6 +309,27 @@ Last updated: 2026-10-22
 - **The auto-mode safety check blocks deleting remote branches** (`git push --delete`); give the
   user the command.
 
+## Lessons learned (E4 US2, 2026-10-22)
+
+- **Release-only suites**: SwiftPM defines `DEBUG` in debug builds, so
+  `@Suite(.enabled(if: isOptimized))` with `#if DEBUG` skips the strength matches in a plain
+  `swift test` (hours in Debug) and runs them with `swift test -c release`, which keeps
+  `@testable import` working.
+- **Find test positions with a throwaway search, not by hand.** A scratch package with a copy of
+  the engine scored every root turn at several depths over thousands of random positions, then
+  removed pieces one at a time while the property held. That found the four-turn position (Easy
+  against Medium) and the six-turn win (Medium against Hard) in seconds; checking deeper depths
+  showed the six-turn win stays best up to depth 14.
+- **Ties by construction** make "only the best turns" testable without depending on evaluation
+  weights: a king that takes four men by two routes ending on the same board.
+- **Time turns alone, not in parallel matches.** With 100 games running on 16 threads a Hard turn
+  took up to 3.5 times longer than alone; the matches replay their slowest turns by state and
+  seed, and the 0.5 s budget was checked by timing every Hard turn of 12 games one at a time.
+- **Pipes in GitHub Actions**: the default `run` shell has no `pipefail`, so `swift test | tee`
+  would hide a failure; `shell: bash` adds `-o pipefail`.
+- **`Duration / Duration`** failed to type-check inside a larger expression with `Double`; divide
+  in integer milliseconds instead.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -311,19 +338,19 @@ in product behavior is made in `FRD.md` first. Move each board item to In Progre
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E4 Computer opponent (#95)**, branch `005-computer-opponent`, `specs/005-computer-opponent/`:
-   - Check that CI passed on the US1 commit and that #104, #107, #108, #109 and #198 are Done.
-   - **US2 (T016–T021; #103, #105, #199)**: level tests, the Release-only
-     `CheckersEngineStrengthTests` target with the matches, the `engine-strength` CI job that
-     `CI gate` must require (`gate.sh` takes a fourth argument), then tuning until Medium and Hard
-     each score at least 70 of 100 against the level below and Hard's slowest turn is at most
-     0.5 s on this Mac in Release; record the final values in research R3 and R4.
-   - Then US3 (T022–T023, #110), US4 (T024–T026, #112, #113), US5 (T027–T028, #190) and Polish
-     (T029–T035, #200), and fast-forward `main`.
+   - **US3 (T022–T023, #110)**: the UI stays responsive while the computer thinks (menu, Undo,
+     Home).
+   - Then US4 (T024–T026, #112, #113), US5 (T027–T028, #190) and Polish (T029–T035, #200), and
+     fast-forward `main`. T031 runs the strength matches again, and T032 updates
+     `checkers/CLAUDE.md` (its line saying `swift test` does not lint is out of date).
 2. Epic order after E4: E5 → E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
    `US5AccessibilityAuditUITests` (#131, #142, #152); E6's themes must pass `US4ContrastTests`
    (#144).
 3. Open for the user:
-   - Try a game against the computer (all levels play alike until US2).
+   - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
+     §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
+     casual player. If Easy proves too strong, widen its margin, or revisit random blunders as
+     research R4 notes.
    - A VoiceOver game by hand (`specs/004-accessibility/quickstart.md` §3), and from E3 a
      hand-played game and a visual review at the largest text size.
    - E4's SC-005 needs a recent iPhone with a Release build; without one, the Mac measurement is

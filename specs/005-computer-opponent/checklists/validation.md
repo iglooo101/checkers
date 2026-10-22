@@ -71,7 +71,11 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   - Every step of all 200 games applied through `GameState.apply`, and every game ended (SC-002).
   - Turn generator counts for 1–9 turns match the published counts.
   - In the six-turn position Hard plays e5–f4 for every seed and Medium never does.
-- CI: *(T021, the first push with the `engine-strength` job.)*
+- CI, 2026-10-22, run 39841996479 on `59ab67b` (the first with the `engine-strength` job): `CI
+  gate` passed. `engine-strength` took 4 min 31 s (build 28 s, the 3 tests 226 s), within the
+  15-minute budget, and gave the same results as the Mac: Medium 90.0 and Hard 99.0 of 100 with
+  the same wins and draws, Hard's slowest turn replayed alone 283 ms (depth 10), the turn
+  generator 25.3 million turns per second. `build-and-test` took 19 min.
 
 ## 3. Play the computer (SC-001, US1, US3, US4)
 

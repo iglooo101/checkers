@@ -39,22 +39,18 @@ Epics are listed in execution order.
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
-| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 1/4 | 10/18 | In Progress |
+| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 2/4 | 13/18 | In Progress |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **26/41** | **96/150** | |
+| | **Total** | | | | **27/41** | **99/150** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
-- #102 F4.1: AI search
-- #103 Position evaluation function
-- #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps
 - #106 F4.2: Computer turn
-- #199 Run the strength matches in a Release CI job that the CI gate requires
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -71,10 +67,10 @@ Rules and Settings are placeholders until E5 and E6.
 1. **E4 Computer opponent (#95)** on branch `005-computer-opponent` (`specs/005-computer-opponent/`):
    F4.0 Specification and US1 (T001–T015: the search's turn generator, the computer player, the
    `ComputerOpponent` and `TurnPacer` seams, the computer's turn on the game screen, setup) are
-   done. **US2** (T016–T021; #103, #105, #199) is implemented and passes locally: the levels'
-   depth, node limit and random margin, the Release-only strength matches and the
-   `engine-strength` CI job that `CI gate` now requires; T021 waits for that job's first CI run.
-   Then US3 (#110), US4 (#112, #113), US5 (#190) and #200.
+   done, and so are US2 (T016–T021: the levels' depth, node limit and random margin, the
+   Release-only strength matches and the `engine-strength` CI job) and with it F4.1 AI search.
+   Next is **US3** (T022–T023, #110): the menu, Undo and Home stay responsive while the computer
+   thinks. Then US4 (#112, #113), US5 (#190) and #200.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -107,8 +103,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 
 - Board tasks are a first cut from the FRD; each slice's `tasks.md` will add, split or close
   tasks during reconciliation.
-- FR-AI-02 (noticeable strength gaps) is partly subjective; the E4 spec measures it by matches
-  between the levels (SC-003, a 70% margin) and a playtest by the user (SC-004).
+- FR-AI-02 (noticeable strength gaps) is partly subjective. The matches (SC-003) pass by a wide
+  margin (Medium 90, Hard 99 of 100); the playtest by the user (SC-004, E4 quickstart §4) is
+  still open: a beginner must be able to beat Easy, which plays any turn within 40 points of its
+  best two turns ahead.
 - Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
   Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
@@ -131,9 +129,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   the search runs at 3.3–4.6 million nodes per second in Release); it must stay identical to the
   engine's rules, which the published counts and a 1,000-position cross-check enforce.
 - E4's strength matches need Release builds, so they run in the `engine-strength` CI job beside
-  `build-and-test`, and `CI gate` requires both (US2). Locally they take 3.5 minutes with the
-  build on the 8-core Mac; keep the job under 15 minutes on CI's runner. Hard's slowest turn is
-  419 ms against a 0.5 s budget on this Mac, so a slower search would need a lower node limit.
+  `build-and-test`, and `CI gate` requires both (US2). The job takes 4.5 minutes on CI (budget
+  15). Hard's slowest turn is 419 ms against a 0.5 s budget on this Mac, so a slower search would
+  need a lower node limit.
 - SC-005 (the computer's timing) is defined on a recent iPhone; without one, the Mac measurement
   is recorded as the closest proxy and the check stays open for the user.
 - Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
@@ -317,7 +315,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #168 UI test running performAccessibilityAudit() on every screen · M
 - [x] #197 Validate the E7 slice and update project docs · S · after #168
 
-### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 10/18 tasks
+### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 13/18 tasks
 
 **F4.0 Specification (Spec Kit)** (#96) · FRD §11
 
@@ -329,10 +327,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F4.1 AI search** (#102) · FR-AI-01, FR-AI-02
 
-- [~] #103 Position evaluation function · M
+- [x] #103 Position evaluation function · M
 - [x] #104 Cancellable alpha-beta search off the main actor · L
-- [~] #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps · M
-- [~] #199 Run the strength matches in a Release CI job that the CI gate requires · S
+- [x] #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps · M
+- [x] #199 Run the strength matches in a Release CI job that the CI gate requires · S
 
 **F4.2 Computer turn** (#106) · FR-AI-03, FR-AI-04, FR-AI-05, FR-AI-06, FR-MOVE-04
 
@@ -610,3 +608,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   90 of 100 against Easy, Hard 99 of 100 against Medium, every step legal; Hard's slowest turn
   419 ms. CI gains the `engine-strength` job, and `CI gate` requires it. 199 tests pass in the
   blocking plan.
+- 2026-10-22: E4 US2 closed out. CI run 39841996479 passed on `59ab67b`; `engine-strength` took
+  4.5 minutes and matched the Mac's results exactly. #103, #105, #199 and F4.1 (#102) Done; T021
+  checked off. Next is US3 (#110).
