@@ -14,9 +14,9 @@ types follow E3 and E7 (`specs/003-game-experience/data-model.md`,
 |---|---|---|---|
 | `easy` | 2 | none | 40 |
 | `medium` | 4 | none | 8 |
-| `hard` | 16 | measured (R4) | 0 |
+| `hard` | 16 | 1,500,000 | 0 |
 
-Starting values; the tuned values are recorded in research R4. Depth counts complete turns;
+Final values (US2), with the measurements behind them in research R4. Depth counts complete turns;
 margins are in evaluation points (a man is 100). Each level's values are an internal
 `SearchLimits` (`maxDepth`, `nodeLimit: Int?`, `margin`), exposed as `ComputerLevel.limits`.
 

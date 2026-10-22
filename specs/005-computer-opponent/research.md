@@ -73,8 +73,8 @@ programs outside the repository.
 
 ## R3. Evaluation
 
-- **Decision**: A score from the side to move's view, in points where a man is 100. Starting
-  weights, tuned during implementation by the matches (R6) and recorded here when final:
+- **Decision**: A score from the side to move's view, in points where a man is 100. Final
+  weights (US2): both strength matches passed with the starting weights, so they were kept:
   - man 100, king 130;
   - each man 2 points per row advanced from its own back row;
   - 8 points for each man still on its own back row while the opponent has men (guards against
@@ -92,14 +92,21 @@ programs outside the repository.
 ## R4. Difficulty levels
 
 - **Decision**: A public `ComputerLevel` (easy, medium, hard) in the engine, each with a maximum
-  depth, a node limit and a random margin. Starting values, tuned until SC-003 and SC-004 hold
-  and then recorded here:
+  depth, a node limit and a random margin. Final values (US2), the starting values, which met
+  SC-003 at the first run; SC-004 is the user's playtest:
 
   | Level | Maximum depth (turns) | Node limit | Random margin |
   |---|---|---|---|
   | Easy | 2 | none | 40 points |
   | Medium | 4 | none | 8 points |
-  | Hard | 16 | set by measurement: Hard's slowest turn in the match games at most 0.5 s on the development Mac in Release | 0 (only exact ties) |
+  | Hard | 16 | 1,500,000 | 0 (only exact ties) |
+
+  Measured on the development Mac in Release (*measured*, 2026-10-22): Medium scores 90 of 100
+  against Easy (83 wins, 14 draws) and Hard 99 of 100 against Medium (98 wins, 2 draws). Every
+  Hard turn of 12 match games, timed one at a time: 522 turns, mean 262 ms, slowest 419 ms; 492
+  of them stopped at the node limit, after completing depth 9 to 12, at 3.6–7.4 million nodes per
+  second. A limit of 1.5 million nodes therefore keeps Hard's slowest turn under 0.5 s with about
+  15% to spare.
 
   The app maps its `Difficulty` to `ComputerLevel` in one place.
 - **Rationale**: Depth sets strength; the margin makes Easy miss the best move often (a beginner

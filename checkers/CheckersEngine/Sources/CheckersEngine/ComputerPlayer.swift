@@ -53,8 +53,13 @@ public enum ComputerPlayer {
                 from: Board(state.position), side: side, noProgress: state.noProgressCount,
                 children: roots.map(\.turn), exact: exact)
             let best = result.scores.compactMap { $0 }.max() ?? -Search.infinity
-            // Ties go to the first turn in the rules engine's order.
-            let index = result.scores.firstIndex { ($0 ?? -Search.infinity) >= best } ?? 0
+            // Any turn within the level's margin of the best may be played, drawn with the seed
+            // (FR-013, research R5).
+            let choices = result.scores.indices.filter {
+                (result.scores[$0] ?? -Search.infinity) >= best - limits.margin
+            }
+            var generator = SeededGenerator(seed: seed)
+            let index = choices.randomElement(using: &generator) ?? 0
             return ComputerTurn(
                 steps: roots[index].steps, depth: result.depth, nodes: search.nodes,
                 score: result.scores[index] ?? best)

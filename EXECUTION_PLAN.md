@@ -51,7 +51,10 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
 - #102 F4.1: AI search
+- #103 Position evaluation function
+- #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps
 - #106 F4.2: Computer turn
+- #199 Run the strength matches in a Release CI job that the CI gate requires
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -61,17 +64,17 @@ E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility 
 native SwiftUI: Home, setup, and a two-player game with tap and drag, hints, chains, crowning,
 undo, resign and a result panel, playable square by square with VoiceOver (square states,
 announcements, focus that follows each step), with non-color cues at 3:1 contrast and an
-accessibility audit of every screen. Games against the computer are playable (E4 US1), but all
-three levels play alike until US2 tunes them; Statistics, Rules and Settings are placeholders until
-E5 and E6.
+accessibility audit of every screen. Games against the computer are playable at three levels
+(E4 US1, US2): Medium scores 90 of 100 against Easy and Hard 99 of 100 against Medium. Statistics,
+Rules and Settings are placeholders until E5 and E6.
 
 1. **E4 Computer opponent (#95)** on branch `005-computer-opponent` (`specs/005-computer-opponent/`):
    F4.0 Specification and US1 (T001–T015: the search's turn generator, the computer player, the
    `ComputerOpponent` and `TurnPacer` seams, the computer's turn on the game screen, setup) are
-   done. Next is **US2** (T016–T021; #103, #105, #199): level tests, the Release-only strength
-   matches in a new `engine-strength` CI job that `CI gate` requires, and tuning the levels until
-   each scores at least 70% against the one below. Then US3 (#110), US4 (#112, #113), US5 (#190)
-   and #200.
+   done. **US2** (T016–T021; #103, #105, #199) is implemented and passes locally: the levels'
+   depth, node limit and random margin, the Release-only strength matches and the
+   `engine-strength` CI job that `CI gate` now requires; T021 waits for that job's first CI run.
+   Then US3 (#110), US4 (#112, #113), US5 (#190) and #200.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -127,8 +130,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   about 24 s. E4's search uses its own allocation-free turn generator instead (built in US1:
   the search runs at 3.3–4.6 million nodes per second in Release); it must stay identical to the
   engine's rules, which the published counts and a 1,000-position cross-check enforce.
-- E4's strength matches need Release builds, so they run in a new `engine-strength` CI job beside
-  `build-and-test`, which `CI gate` must then require; keep it under 15 minutes.
+- E4's strength matches need Release builds, so they run in the `engine-strength` CI job beside
+  `build-and-test`, and `CI gate` requires both (US2). Locally they take 3.5 minutes with the
+  build on the 8-core Mac; keep the job under 15 minutes on CI's runner. Hard's slowest turn is
+  419 ms against a 0.5 s budget on this Mac, so a slower search would need a lower node limit.
 - SC-005 (the computer's timing) is defined on a recent iPhone; without one, the Mac measurement
   is recorded as the closest proxy and the check stays open for the user.
 - Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
@@ -324,10 +329,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F4.1 AI search** (#102) · FR-AI-01, FR-AI-02
 
-- [ ] #103 Position evaluation function · M
+- [~] #103 Position evaluation function · M
 - [x] #104 Cancellable alpha-beta search off the main actor · L
-- [ ] #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps · M
-- [ ] #199 Run the strength matches in a Release CI job that the CI gate requires · S
+- [~] #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps · M
+- [~] #199 Run the strength matches in a Release CI job that the CI gate requires · S
 
 **F4.2 Computer turn** (#106) · FR-AI-03, FR-AI-04, FR-AI-05, FR-AI-06, FR-MOVE-04
 
@@ -598,3 +603,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   concurrency and `@concurrent`, `swift test` now lints, timing tests without waiting, sub-second
   UI states) and next steps. Local `main` was 35 commits behind GitHub's and was fast-forwarded;
   deleting the merged branches 002–004 is left to the user.
+- 2026-10-22: E4 US2 (T016–T020) implemented; #103, #105 and #199 In Progress. The levels take
+  research R4's starting values (Easy depth 2, margin 40; Medium depth 4, margin 8; Hard depth
+  16, 1,500,000 nodes, only exact ties), and the root draws among turns within the margin with
+  the seed. The new Release-only `CheckersEngineStrengthTests` play 100 games per pairing: Medium
+  90 of 100 against Easy, Hard 99 of 100 against Medium, every step legal; Hard's slowest turn
+  419 ms. CI gains the `engine-strength` job, and `CI gate` requires it. 199 tests pass in the
+  blocking plan.

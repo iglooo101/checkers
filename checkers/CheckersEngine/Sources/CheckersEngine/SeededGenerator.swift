@@ -1,5 +1,6 @@
-/// A random number generator with a fixed seed (SplitMix64), so that random tests replay
-/// exactly the same games on every run.
+/// A random number generator with a fixed seed (SplitMix64): the computer draws among its good
+/// turns with it, so the same seed always gives the same turn, and random tests replay exactly
+/// the same games on every run (specs/005-computer-opponent/research.md R5).
 struct SeededGenerator: RandomNumberGenerator {
     private var state: UInt64
 

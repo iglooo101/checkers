@@ -27,12 +27,15 @@ The pushed range is `before..after` of the push. For a new branch it is the merg
 
 ## Outcomes
 
-| Classification | Build and tests run? | `CI gate` result |
+| Classification | Build, tests and strength matches run? | `CI gate` result |
 |---|---|---|
 | docs-only | No | success |
-| code, every step green | Yes | success |
-| code, any blocking step fails | Yes | failure |
+| code, every step of both jobs green | Yes | success |
+| code, any blocking step of either job fails, or either job is cancelled or skipped | Yes | failure |
 | classification step itself fails | — | failure |
+
+On code pushes two jobs run in parallel: `build-and-test` (blocking steps 1–3 and the launch
+timing) and `engine-strength` (blocking step 4). `CI gate` passes only when both succeed.
 
 ## Blocking steps (code pushes)
 
@@ -44,6 +47,11 @@ Each fails `CI gate` and names its cause in the log:
    inside the build; lint **errors** fail it, lint **warnings** are reported only.
 3. String catalog check: the committed `Localizable.xcstrings` equals the result of syncing it
    with the strings the build extracted.
+4. Strength matches (job `engine-strength`, added by E4): in `checkers/CheckersEngine`,
+   `swift test -c release --filter CheckersEngineStrengthTests` on macOS 26 with Xcode 26.3, with
+   a 20-minute limit: the computer levels' matches and the turn generator's counts
+   (`specs/005-computer-opponent/contracts/computer-player.md`, "Strength matches"). The match
+   scores and timings are written to the job summary.
 
 ## Launch timing step (code pushes)
 

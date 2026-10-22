@@ -26,5 +26,13 @@ let package = Package(
             dependencies: ["CheckersEngine"],
             plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
         ),
+        // The computer's strength matches (specs/005-computer-opponent/research.md R6). They
+        // need a Release build (`swift test -c release`), so they run in the CI job
+        // engine-strength instead of the Xcode test plan.
+        .testTarget(
+            name: "CheckersEngineStrengthTests",
+            dependencies: ["CheckersEngine"],
+            plugins: [.plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")]
+        ),
     ]
 )

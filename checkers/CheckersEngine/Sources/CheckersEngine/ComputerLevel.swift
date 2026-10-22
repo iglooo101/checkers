@@ -4,10 +4,15 @@ public enum ComputerLevel: Sendable, CaseIterable {
     case medium
     case hard
 
-    /// How this level searches. Until the levels are tuned apart, every level looks four turns
-    /// ahead and plays its best turn.
+    /// How this level searches (research R4): Easy looks two turns ahead and often strays from
+    /// its best turn, Medium looks four turns ahead and strays a little, and Hard looks as far as
+    /// its node limit allows and plays only its best turns.
     var limits: SearchLimits {
-        SearchLimits(maxDepth: 4, nodeLimit: nil, margin: 0)
+        switch self {
+        case .easy: SearchLimits(maxDepth: 2, nodeLimit: nil, margin: 40)
+        case .medium: SearchLimits(maxDepth: 4, nodeLimit: nil, margin: 8)
+        case .hard: SearchLimits(maxDepth: 16, nodeLimit: 1_500_000, margin: 0)
+        }
     }
 }
 

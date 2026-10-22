@@ -95,9 +95,38 @@ jobs:
           path: .build/TestResults
           if-no-files-found: ignore
 
+  # The computer's strength matches need a Release build, too slow for the Debug test plan
+  # (specs/005-computer-opponent/contracts/computer-player.md, "Strength matches").
+  engine-strength:
+    name: engine-strength
+    needs: changes
+    if: needs.changes.outputs.code == 'true'
+    runs-on: macos-26
+    timeout-minutes: 20
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Show toolchain
+        run: swift --version
+
+      - name: Strength matches and turn counts (Release)
+        shell: bash
+        working-directory: checkers/CheckersEngine
+        run: |
+          swift test -c release --filter CheckersEngineStrengthTests 2>&1 \
+            | tee "$RUNNER_TEMP/strength.log"
+
+      - name: Report the matches
+        if: always()
+        run: |
+          grep -E '^(medium|hard) against|^Turn generator' "$RUNNER_TEMP/strength.log" \
+            >> "$GITHUB_STEP_SUMMARY" || true
+
   gate:
     name: CI gate
-    needs: [changes, build-and-test]
+    needs: [changes, build-and-test, engine-strength]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -108,4 +137,5 @@ jobs:
           CHANGES: ${{ needs.changes.result }}
           CODE: ${{ needs.changes.outputs.code || 'false' }}
           BUILD: ${{ needs.build-and-test.result }}
-        run: scripts/ci/gate.sh "$CHANGES" "$CODE" "$BUILD"
+          STRENGTH: ${{ needs.engine-strength.result }}
+        run: scripts/ci/gate.sh "$CHANGES" "$CODE" "$BUILD" "$STRENGTH"
