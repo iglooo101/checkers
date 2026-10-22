@@ -1,6 +1,16 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
     "%@, Dark king" : {
 
     },
@@ -61,6 +71,39 @@
     "Dark" : {
 
     },
+    "Dark %@ to %@, crowned." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Dark %1$@ to %2$@, crowned."
+          }
+        }
+      }
+    },
+    "Dark %@ to %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Dark %1$@ to %2$@."
+          }
+        }
+      }
+    },
+    "Dark captures %@, crowned on %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Dark captures %1$@, crowned on %2$@."
+          }
+        }
+      }
+    },
+    "Dark captures %@." : {
+
+    },
     "Dark resigned" : {
 
     },
@@ -68,6 +111,12 @@
 
     },
     "Dark to move · capture required" : {
+
+    },
+    "Dark to move, capture required." : {
+
+    },
+    "Dark to move." : {
 
     },
     "Dark wins: no moves left" : {
@@ -103,6 +152,9 @@
     "It can't be resumed yet." : {
 
     },
+    "Jump again." : {
+
+    },
     "Leave" : {
 
     },
@@ -110,6 +162,39 @@
 
     },
     "Light" : {
+
+    },
+    "Light %@ to %@, crowned." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Light %1$@ to %2$@, crowned."
+          }
+        }
+      }
+    },
+    "Light %@ to %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Light %1$@ to %2$@."
+          }
+        }
+      }
+    },
+    "Light captures %@, crowned on %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Light captures %1$@, crowned on %2$@."
+          }
+        }
+      }
+    },
+    "Light captures %@." : {
 
     },
     "Light resigned" : {
@@ -121,10 +206,19 @@
     "Light to move · capture required" : {
 
     },
+    "Light to move, capture required." : {
+
+    },
+    "Light to move." : {
+
+    },
     "Light wins: no moves left" : {
 
     },
     "Medium" : {
+
+    },
+    "Move undone." : {
 
     },
     "New game" : {

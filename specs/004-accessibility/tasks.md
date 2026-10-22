@@ -106,7 +106,7 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ### Tests for User Story 3 (MANDATORY - write first) ⚠️
 
-- [ ] T013 [P] [US3] Write `Unit/US3AnnouncementTests.swift` (`struct US3AnnouncementTests`), with a `RecordingAnnouncer`:
+- [X] T013 [P] [US3] Write `Unit/US3AnnouncementTests.swift` (`struct US3AnnouncementTests`), with a `RecordingAnnouncer`:
   - `US3 FR-A11Y-03`: `c3–d4` announces "Light c3 to d4. Dark to move."; then `f6–e5` "Dark f6 to e5. Light to move, capture required."; then `d4–f6` "Light captures e5. Dark to move, capture required."
   - `US3 FR-A11Y-03`: the double jump's first jump "Light captures b4. Jump again.", the second "Light captures d6. Dark to move."
   - `US3 FR-A11Y-03`: a crowning jump (Light man b6, Dark men c7, e7) "Light captures c7, crowned on d8. Dark to move."; a crowning move (Dark man b2, Light man g3, Dark to move) "Dark b2 to a1, crowned. Light to move."
@@ -117,8 +117,8 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ### Implementation for User Story 3
 
-- [ ] T014 [P] [US3] Add to `App/Features/Game/GameText.swift`: `stepSentence(_ result: StepResult) -> LocalizedStringResource` (the 8 sentences of "What happened"), `followUp(after result: StepResult, in state: GameState) -> LocalizedStringResource` ("Jump again.", the four turn sentences with a final period, or the result sentence), `undone(_ side: Side, captureRequired: Bool)` and `joined(_:_:)` (the "%1$@ %2$@" template), all with explicit `return`s.
-- [ ] T015 [US3] Announce in `App/Features/Game/GameSession.swift`: after every applied step `joined(stepSentence, followUp)`; after `undo()` the undone sentence; after `resign()` the result sentence (contract: When to announce). Add every new sentence to `Unit/LocalizationTests.swift` and sync the catalog. T013 passes; all tests pass.
+- [X] T014 [P] [US3] Add to `App/Features/Game/GameText.swift`: `stepSentence(_ result: StepResult) -> LocalizedStringResource` (the 8 sentences of "What happened"), `followUp(after result: StepResult, in state: GameState) -> LocalizedStringResource` ("Jump again.", the four turn sentences with a final period, or the result sentence), `undone(_ side: Side, captureRequired: Bool)` and `joined(_:_:)` (the "%1$@ %2$@" template), all with explicit `return`s.
+- [X] T015 [US3] Announce in `App/Features/Game/GameSession.swift`: after every applied step `joined(stepSentence, followUp)`; after `undo()` the undone sentence; after `resign()` the result sentence (contract: When to announce). Add every new sentence to `Unit/LocalizationTests.swift` and sync the catalog. T013 passes; all tests pass.
 
 **Checkpoint**: US3 complete: a VoiceOver player hears the whole game.
 

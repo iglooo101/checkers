@@ -134,10 +134,13 @@ final class GameSession {
             try state.undo()
         } catch {
             Log.game.error("Undo rejected: \(String(describing: error))")
+            return
         }
         selection = nil
         notice = nil
         focusSquare = nil
+        announcer.announce(
+            GameText.undone(state.sideToMove, captureRequired: state.isCaptureRequired))
     }
 
     /// Resigns for `resigningSide`; nothing happens once the game is over (FR-032).
@@ -150,6 +153,9 @@ final class GameSession {
         }
         selection = nil
         notice = nil
+        if let result = resultText {
+            announcer.announce(result)
+        }
     }
 
     /// Starts dragging the piece on a square, if it may move; otherwise answers as a tap would and
@@ -189,6 +195,9 @@ final class GameSession {
             selection = result.turnContinues ? result.to : nil
             notice = nil
             focusSquare = result.to
+            announcer.announce(
+                GameText.joined(
+                    GameText.stepSentence(result), GameText.followUp(after: result, in: state)))
         } catch {
             Log.game.error(
                 "Rejected step \(step.from.name)-\(step.to.name): \(String(describing: error))")

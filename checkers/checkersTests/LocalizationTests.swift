@@ -24,6 +24,12 @@ struct LocalizationTests {
         "%@, empty, legal target", "%@, Light man, can move", "%@, Light man, selected",
         "%@, Light king, can move", "%@, Light king, selected", "%@, Dark man, can move",
         "%@, Dark man, selected", "%@, Dark king, can move", "%@, Dark king, selected",
+        // VoiceOver announcements (specs/004-accessibility/contracts/announcements.md)
+        "%@ %@", "Light %@ to %@.", "Light %@ to %@, crowned.", "Light captures %@.",
+        "Light captures %@, crowned on %@.", "Dark %@ to %@.", "Dark %@ to %@, crowned.",
+        "Dark captures %@.", "Dark captures %@, crowned on %@.", "Jump again.", "Move undone.",
+        "Light to move.", "Dark to move.", "Light to move, capture required.",
+        "Dark to move, capture required.",
         // Result panel
         "Light wins: no moves left", "Dark wins: no moves left", "Light resigned", "Dark resigned",
         "Draw by repetition", "Draw by no progress", "Play again",

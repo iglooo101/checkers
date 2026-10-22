@@ -37,6 +37,53 @@ enum GameText {
         }
     }
 
+    /// What a step did, for its announcement (FR-A11Y-03; contract: What happened).
+    static func stepSentence(_ result: StepResult) -> LocalizedStringResource {
+        let from = result.from.name
+        let to = result.to.name
+        switch (result.side, result.captured?.name, result.crowned) {
+        case (.light, nil, false): return "Light \(from) to \(to)."
+        case (.light, nil, true): return "Light \(from) to \(to), crowned."
+        case (.light, let captured?, false): return "Light captures \(captured)."
+        case (.light, let captured?, true): return "Light captures \(captured), crowned on \(to)."
+        case (.dark, nil, false): return "Dark \(from) to \(to)."
+        case (.dark, nil, true): return "Dark \(from) to \(to), crowned."
+        case (.dark, let captured?, false): return "Dark captures \(captured)."
+        case (.dark, let captured?, true): return "Dark captures \(captured), crowned on \(to)."
+        }
+    }
+
+    /// What follows a step, for its announcement: jump again, the result, or the next turn
+    /// (contract: What follows).
+    static func followUp(after step: StepResult, in state: GameState) -> LocalizedStringResource {
+        if step.turnContinues { return "Jump again." }
+        if let ending = result(step.outcome) { return ending }
+        return spokenTurn(state.sideToMove, captureRequired: state.isCaptureRequired)
+    }
+
+    /// The announcement after an undo (contract: When to announce).
+    static func undone(_ side: Side, captureRequired: Bool) -> LocalizedStringResource {
+        joined("Move undone.", spokenTurn(side, captureRequired: captureRequired))
+    }
+
+    /// Two whole sentences spoken as one announcement, through a localizable template
+    /// (research R4).
+    static func joined(_ first: LocalizedStringResource, _ second: LocalizedStringResource)
+        -> LocalizedStringResource
+    {
+        "\(first) \(second)"
+    }
+
+    /// The turn as a spoken sentence, ending with a period.
+    private static func spokenTurn(_ side: Side, captureRequired: Bool) -> LocalizedStringResource {
+        switch (side, captureRequired) {
+        case (.light, false): return "Light to move."
+        case (.dark, false): return "Dark to move."
+        case (.light, true): return "Light to move, capture required."
+        case (.dark, true): return "Dark to move, capture required."
+        }
+    }
+
     /// The resign confirmation's title (FR-032).
     static func resignTitle(_ side: Side) -> LocalizedStringResource {
         switch side {

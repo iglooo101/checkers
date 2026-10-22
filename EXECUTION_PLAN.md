@@ -53,6 +53,8 @@ Epics are listed in execution order.
 - #160 F7.1: VoiceOver board
 - #161 Each square is a VoiceOver element: coordinate, contents, state ("c3, Light man, can move")
 - #162 Double-tap to select and to move, including chains; UI test
+- #163 F7.2: VoiceOver announcements
+- #164 Announce moves (both sides), captures, crowning, turn changes, mandatory captures and results
 - #167 F7.4: Accessibility audit automation
 - #197 Validate the E7 slice and update project docs
 <!-- END GENERATED: in-progress -->
@@ -287,7 +289,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F7.2 VoiceOver announcements** (#163) · FR-A11Y-03
 
-- [ ] #164 Announce moves (both sides), captures, crowning, turn changes, mandatory captures and results · M
+- [~] #164 Announce moves (both sides), captures, crowning, turn changes, mandatory captures and results · M
 
 **F7.3 Non-color cues** (#165) · FR-A11Y-05
 
