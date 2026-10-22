@@ -40,16 +40,18 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 1/16 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **29/41** | **104/150** | |
+| | **Total** | | | | **29/41** | **105/150** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-Nothing in progress.
+- #114 E5: Saving and statistics
+- #115 F5.0: Specification (Spec Kit)
+- #117 E5 Clarify: resolve open questions with /speckit-clarify
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -65,9 +67,10 @@ accessibility audit of every screen. Games against the computer are playable at 
 while it thinks, Undo returns to the player's turn, and VoiceOver announces its moves.
 Statistics, Rules and Settings are placeholders until E5 and E6.
 
-1. **E5 Saving and statistics (#114)**: a new Spec Kit slice, starting with its F5.0
-   Specification (`/speckit-specify` from `FRD.md`) on a new branch. It saves the game in play
-   (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
+1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
+   (`specs/006-saving-and-statistics/`): the spec is written (#116: 4 user stories, 26
+   requirements); **clarify (#117)** is next, then plan, tasks and reconcile. It saves the game in
+   play (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
    computer's turn, and keeps the record against the computer.
 2. Then E6 → E8 (Order and dependencies).
 
@@ -348,12 +351,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 0/16 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 1/16 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
-- [ ] #116 E5 Specify: write spec.md with /speckit-specify · S
-- [ ] #117 E5 Clarify: resolve open questions with /speckit-clarify · S
+- [x] #116 E5 Specify: write spec.md with /speckit-specify · S
+- [~] #117 E5 Clarify: resolve open questions with /speckit-clarify · S
 - [ ] #118 E5 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #119 E5 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #120 E5 Reconcile this epic's board tasks with tasks.md · S
@@ -638,3 +641,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   (`engine-strength` 5.4 minutes, results unchanged). #200, F4.3 (#111) and E4 (#95) Done; all
   35 tasks of `specs/005-computer-opponent/` checked off; `main` fast-forwarded to the close-out
   commit. Next is E5 Saving and statistics.
+- 2026-10-22: E5 started on branch `006-saving-and-statistics`. Spec written (#116 Done, #117
+  In Progress): 4 user stories, 26 requirements traced to #72, #122–#127, #129–#131 and #189;
+  leaving a game no longer asks (it stays saved), and Start asks "Abandon current game?" when a
+  saved game exists.
