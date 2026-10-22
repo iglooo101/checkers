@@ -5,7 +5,7 @@ import Testing
 @testable import checkers
 
 struct US5GameUndoTests {
-    static let twoPlayers = GameSetup.defaults
+    static let twoPlayers = GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light)
 
     @Test(
         "US5 FR-UNDO-01 FR-UNDO-02: undo takes back the last turn, whichever side made it, back to the start"

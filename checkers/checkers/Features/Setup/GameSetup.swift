@@ -1,3 +1,5 @@
+import CheckersEngine
+
 /// Who the player plays against (FR-SETUP-01).
 nonisolated enum Opponent: String, Codable, CaseIterable, Sendable {
     case computer
@@ -9,6 +11,17 @@ nonisolated enum Difficulty: String, Codable, CaseIterable, Sendable {
     case easy
     case medium
     case hard
+}
+
+extension Difficulty {
+    /// The engine's level for this difficulty (specs/005-computer-opponent/research.md R4).
+    nonisolated var computerLevel: ComputerLevel {
+        switch self {
+        case .easy: .easy
+        case .medium: .medium
+        case .hard: .hard
+        }
+    }
 }
 
 /// The side the player takes against the computer; Random is drawn when a game starts
@@ -26,13 +39,6 @@ nonisolated struct GameSetup: Codable, Equatable, Sendable {
     var difficulty: Difficulty
     var side: SideChoice
 
-    /// First-use choices until the computer opponent exists (E4): Two players, with Easy and Light
-    /// ready for when Computer is chosen (spec, Clarifications).
-    static let defaults = GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light)
-
-    /// Whether a game with these choices can start: games against the computer wait for E4
-    /// (FR-011).
-    var canStart: Bool {
-        opponent == .twoPlayers
-    }
+    /// First-use choices: Computer, Easy and Light (FR-SETUP-03).
+    static let defaults = GameSetup(opponent: .computer, difficulty: .easy, side: .light)
 }

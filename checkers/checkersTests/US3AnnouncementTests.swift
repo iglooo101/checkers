@@ -7,7 +7,11 @@ import Testing
 struct US3AnnouncementTests {
     static func session(_ state: GameState = GameState()) -> (GameSession, RecordingAnnouncer) {
         let announcer = RecordingAnnouncer()
-        return (GameSession(setup: .defaults, state: state, announcer: announcer), announcer)
+        return (
+            GameSession(
+                setup: US1TwoPlayerMoveTests.twoPlayers, state: state, announcer: announcer),
+            announcer
+        )
     }
 
     @Test("US3 FR-A11Y-03: a move announces itself and the turn that follows")

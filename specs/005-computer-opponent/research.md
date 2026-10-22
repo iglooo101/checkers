@@ -229,8 +229,11 @@ programs outside the repository.
   audit test drops the allow-list entry for the disabled Start and audits Game setup with
   Computer chosen and Start available, and a computer game's screen on the player's turn and with
   the result panel. The thinking state lasts about 0.5–0.85 s, shorter than an audit run, so it
-  is checked by a UI test that reads the header while the computer thinks, and by previews at the
-  largest text size and in Dark Mode; FR-027 is aligned with this (spec alignment in the plan).
+  is checked by unit tests of the session while the computer thinks (`turnText`,
+  `isComputerTurn`) and by previews at the largest text size and in Dark Mode; FR-027 is aligned
+  with this (spec alignment in the plan). A UI test that read the header was tried in US1 and
+  never saw it: after a tap XCUITest waits for the app to go idle and polls about once a second,
+  so the half-second pause is over before it looks.
 - **Rationale**: An audit of a state that changes mid-run would be flaky; the indicator uses only
   primary text and a system control, which the audit already accepts on other screens.
 - **Alternatives considered**: a launch argument that slows the computer for the audit (rejected:

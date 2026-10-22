@@ -16,7 +16,7 @@ struct AnnouncerTests {
     @Test("A game session takes the announcer it is given")
     func sessionTakesAnAnnouncer() {
         let announcer = RecordingAnnouncer()
-        let session = GameSession(setup: .defaults, announcer: announcer)
+        let session = GameSession(setup: US1TwoPlayerMoveTests.twoPlayers, announcer: announcer)
         #expect(session.state == GameState())
         #expect(announcer.announcements.isEmpty)
     }

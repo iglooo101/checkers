@@ -7,13 +7,15 @@ import Testing
 struct US1TwoPlayerMoveTests {
     static let twoPlayers = GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light)
 
-    @Test("US1 FR-SETUP-01: setup starts on Two players, and only a two-player game can start")
-    func setupDefaultsAndStart() {
-        #expect(GameSetup.defaults.opponent == .twoPlayers)
-        #expect(Self.twoPlayers.canStart)
-        var computer = Self.twoPlayers
-        computer.opponent = .computer
-        #expect(!computer.canStart)
+    @Test("US1 FR-SETUP-01: a two-player game starts from setup")
+    func twoPlayerGameStarts() {
+        let router = AppRouter(store: InMemorySetupStore())
+        router.newGame()
+        router.setup.opponent = .twoPlayers
+        router.startGame()
+        #expect(router.path == [.game])
+        #expect(router.session?.setup.opponent == .twoPlayers)
+        #expect(router.session?.playerSide == nil)
     }
 
     @Test(
@@ -72,10 +74,6 @@ struct US1TwoPlayerMoveTests {
         #expect(router.session == nil)
         router.newGame()
         #expect(router.path == [.setup])
-        router.setup.opponent = .computer
-        router.startGame()
-        #expect(router.path == [.setup])
-        #expect(router.session == nil)
         router.setup.opponent = .twoPlayers
         router.startGame()
         #expect(router.path == [.game])

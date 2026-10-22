@@ -77,11 +77,15 @@ A pure function of a board and the side to move, returning points.
 
 | Member | Meaning |
 |---|---|
-| `func chooseTurn(in state: GameState, level: ComputerLevel) async -> ComputerTurn?` | The turn to play, or `nil` if cancelled. Never blocks the main actor. |
+| `func chooseTurn(in state: GameState, difficulty: Difficulty) async -> [Step]?` | The turn's steps, or `nil` if cancelled. Never blocks the main actor. |
 
-Conformances: `EngineComputerOpponent` (live: draws a seed, runs `ComputerPlayer` in a
-`@concurrent` function with a 0.8 s limit, logs the turn) and `ScriptedComputerOpponent` (tests
-and previews: returns the next scripted turn, or waits until cancelled).
+The seam uses the app's `Difficulty` and returns only the steps, so the session and its tests do
+not depend on the engine's search types (changed during implementation, US1: the foundational
+seams come before the engine's `ComputerTurn` exists). Conformances: `EngineComputerOpponent`
+(live: maps the difficulty to its `ComputerLevel`, draws a seed, runs `ComputerPlayer` in a
+`@concurrent` function with a 0.8 s limit, logs the turn's level, depth, nodes and time) and
+`ScriptedComputerOpponent` (tests and previews: returns the next scripted turn; with none left,
+or while held, waits until released or cancelled).
 
 ### TurnPacer (protocol, R8)
 
@@ -124,6 +128,7 @@ idle ──(computer to move)──► thinking ──(first step applied, chain
 
 | Change | Rule |
 |---|---|
+| `init` | Also takes the `opponent` and `pacer` every session it creates uses (live ones by default) |
 | `startGame()` | Saves the setup, opens the game and calls `startComputerTurnIfNeeded()` |
 | `playAgain()` | As before, then `startComputerTurnIfNeeded()` on the new session |
 | `path` changes | `session.setCovered(path.last != .game)` while a session exists |

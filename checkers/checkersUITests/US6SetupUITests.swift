@@ -5,8 +5,8 @@ final class US6SetupUITests: XCTestCase {
         continueAfterFailure = false
     }
 
-    /// FR-SETUP-02, FR-SETUP-03, FR-011: Computer offers difficulty and side, cannot start yet,
-    /// and its choices are remembered across a relaunch.
+    /// FR-SETUP-02, FR-SETUP-03 (E4 FR-001, FR-003): Computer offers difficulty and side and can
+    /// start, and the choices of the game started are remembered across a relaunch.
     @MainActor
     func testUS6_computerChoicesRemembered() {
         let app = XCUIApplication()
@@ -16,8 +16,11 @@ final class US6SetupUITests: XCTestCase {
         app.buttons["Computer"].tap()
         app.scrolledTo(app.buttons["Hard"]).tap()
         app.scrolledTo(app.buttons["Dark"]).tap()
-        XCTAssertTrue(app.scrolledTo(app.element("setup.computerNote")).exists)
-        XCTAssertFalse(app.scrolledTo(app.element("setup.start")).isEnabled)
+        XCTAssertFalse(app.element("setup.computerNote").exists)
+        let start = app.scrolledTo(app.element("setup.start"))
+        XCTAssertTrue(start.isEnabled)
+        start.tap()
+        XCTAssertTrue(app.element("game.turn").waitForExistence(timeout: 5))
 
         app.terminate()
         app.launch()
@@ -30,7 +33,6 @@ final class US6SetupUITests: XCTestCase {
         app.swipeDown()
         app.buttons["Two players"].tap()
         XCTAssertFalse(app.buttons["Hard"].exists)
-        XCTAssertFalse(app.element("setup.computerNote").exists)
         XCTAssertTrue(app.scrolledTo(app.element("setup.start")).isEnabled)
     }
 

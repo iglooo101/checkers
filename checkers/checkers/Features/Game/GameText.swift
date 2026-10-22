@@ -14,6 +14,15 @@ enum GameText {
         }
     }
 
+    /// The turn indicator while the computer takes its turn (FR-AI-03;
+    /// specs/005-computer-opponent/contracts/computer-turn.md).
+    static func thinking(_ side: Side) -> LocalizedStringResource {
+        switch side {
+        case .light: "Light is thinking…"
+        case .dark: "Dark is thinking…"
+        }
+    }
+
     /// A notice shown under the turn indicator (FR-023).
     static func notice(_ notice: Notice) -> LocalizedStringResource {
         switch notice {

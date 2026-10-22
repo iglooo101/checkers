@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Game setup: the opponent and, against the computer, the difficulty and side, then Start
 /// (FR-007, FR-008). Choices are rows with check marks, which keep their full text at every text
-/// size. Games against the computer cannot start until E4 (FR-011).
+/// size.
 struct SetupView: View {
     @Bindable var router: AppRouter
 
@@ -18,12 +18,6 @@ struct SetupView: View {
                 .accessibilityIdentifier("setup.opponent")
             } header: {
                 Text("Opponent").foregroundStyle(Color.primary)
-            } footer: {
-                if router.setup.opponent == .computer {
-                    Text("Games against the computer arrive in a later update.")
-                        .foregroundStyle(Color.primary)
-                        .accessibilityIdentifier("setup.computerNote")
-                }
             }
             if router.setup.opponent == .computer {
                 Section {
@@ -53,7 +47,6 @@ struct SetupView: View {
             }
             Section {
                 Button("Start") { router.startGame() }
-                    .disabled(!router.setup.canStart)
                     .accessibilityIdentifier("setup.start")
             }
         }

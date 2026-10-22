@@ -32,6 +32,43 @@ extension XCUIApplication {
             line: line)
     }
 
+    /// Goes from Home to a new game against the computer with these choices, such as "Easy" and
+    /// "Light".
+    @MainActor
+    func startComputerGame(
+        difficulty: String, side: String, file: StaticString = #filePath, line: UInt = #line
+    ) {
+        let newGame = element("home.newGame")
+        XCTAssertTrue(
+            newGame.waitForExistence(timeout: 10), "Home did not appear", file: file, line: line)
+        newGame.tap()
+        let computer = buttons["Computer"]
+        XCTAssertTrue(
+            computer.waitForExistence(timeout: 5), "Setup did not appear", file: file, line: line)
+        computer.tap()
+        scrolledTo(buttons[difficulty]).tap()
+        scrolledTo(buttons[side]).tap()
+        scrolledTo(element("setup.start")).tap()
+        XCTAssertTrue(
+            element("game.turn").waitForExistence(timeout: 5), "The game did not start", file: file,
+            line: line)
+    }
+
+    /// Waits until the turn indicator's text starts with `prefix`.
+    @MainActor
+    func waitForTurn(
+        startingWith prefix: String, timeout: TimeInterval = 5, file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        let turn = element("game.turn")
+        let predicate = NSPredicate(format: "label BEGINSWITH %@", prefix)
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: turn)
+        XCTAssertEqual(
+            XCTWaiter().wait(for: [expectation], timeout: timeout), .completed,
+            "The turn indicator never read \"\(prefix)…\"; it reads \"\(turn.label)\"", file: file,
+            line: line)
+    }
+
     /// Opens the game menu and chooses an item by its label, such as "Resign". System menus
     /// expose their items by label.
     @MainActor

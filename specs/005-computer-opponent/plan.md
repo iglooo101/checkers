@@ -89,14 +89,14 @@ target, a CI job; 28 functional requirements, 5 user stories
 | Screen | Element | Issue type | Reason |
 |---|---|---|---|
 | Game setup, Computer chosen | Start while disabled | | **Removed**: Start is available for computer games. |
-| Game setup | A static text line the scrolling form cuts at the screen's edge | Dynamic Type, "partially unsupported" only | Unchanged from E7 (`specs/004-accessibility/plan.md`). |
+| Game setup | A static text line, or Start (`setup.start`), that the scrolling form cuts at the screen's edge | Dynamic Type, "partially unsupported" only | E7's entry, widened in US1 to Start: with Computer chosen the form is longer and Start is the row at the bottom edge when the audit enlarges the text. It scales and scrolls into view (checked on screen at the largest size in E7). |
 
 ### Other recorded decisions
 
 - **Spec alignment**: FR-027 audited "the game screen during the computer's turn". That state
   lasts under a second, shorter than an audit run, so the audit covers a computer game on the
-  player's turn and with the result panel. The thinking header is checked by a UI test while the
-  computer thinks and by previews (R12). The spec is updated to match.
+  player's turn and with the result panel. The thinking header is checked by unit tests while
+  the computer thinks and by previews (R12). The spec is updated to match.
 - **Two turn generators**: `GameState` (single steps, for the screen and as the referee) and the
   search's `TurnGenerator` (complete turns, allocation-free). The generator is held to
   `GameState` by the published counts and a 1,000-position cross-check (R1).

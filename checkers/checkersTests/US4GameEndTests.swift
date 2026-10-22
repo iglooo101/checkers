@@ -5,7 +5,7 @@ import Testing
 @testable import checkers
 
 struct US4GameEndTests {
-    static let twoPlayers = GameSetup.defaults
+    static let twoPlayers = GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light)
 
     /// Taps each step's from and to squares in turn.
     static func play(_ steps: [Step], in session: GameSession) {

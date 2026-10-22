@@ -11,13 +11,22 @@ struct GameView: View {
 
     var body: some View {
         VStack(spacing: 12) {
-            Text(session.turnText)
-                .font(.title2.weight(.semibold))
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
-                .accessibilityAddTraits(.isHeader)
-                .accessibilityIdentifier("game.turn")
-                .padding(.horizontal)
+            HStack(spacing: 8) {
+                // While the computer thinks, a spinner beside the sentence; the sentence alone
+                // tells VoiceOver (FR-AI-03).
+                if session.isComputerTurn {
+                    ProgressView()
+                        .accessibilityHidden(true)
+                        .accessibilityIdentifier("game.thinking")
+                }
+                Text(session.turnText)
+                    .font(.title2.weight(.semibold))
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .accessibilityAddTraits(.isHeader)
+                    .accessibilityIdentifier("game.turn")
+            }
+            .padding(.horizontal)
             if let notice = session.notice {
                 Text(GameText.notice(notice))
                     .font(.callout)
@@ -117,6 +126,31 @@ struct GameView: View {
     return NavigationStack {
         GameView(session: session, router: AppRouter(store: InMemorySetupStore()))
     }
+}
+
+/// A game in which the computer plays Light and is thinking about its first move; the scripted
+/// opponent never answers.
+@MainActor
+private func thinkingSession() -> GameSession {
+    let session = GameSession(
+        setup: GameSetup(opponent: .computer, difficulty: .easy, side: .dark), playerSide: .dark,
+        opponent: ScriptedComputerOpponent())
+    session.startComputerTurnIfNeeded()
+    return session
+}
+
+#Preview("Computer thinking") {
+    NavigationStack {
+        GameView(session: thinkingSession(), router: AppRouter(store: InMemorySetupStore()))
+    }
+}
+
+#Preview("Computer thinking, large text, dark") {
+    NavigationStack {
+        GameView(session: thinkingSession(), router: AppRouter(store: InMemorySetupStore()))
+    }
+    .environment(\.dynamicTypeSize, .accessibility5)
+    .preferredColorScheme(.dark)
 }
 
 #Preview("Finished, large text, dark") {

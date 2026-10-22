@@ -15,10 +15,10 @@ struct US6SetupTests {
         body(defaults)
     }
 
-    @Test("US6 FR-SETUP-03: first use is Two players, Easy, Light, and choices survive encoding")
+    @Test("US6 FR-SETUP-03: first use is Computer, Easy, Light, and choices survive encoding")
     func defaultsAndEncoding() throws {
         #expect(
-            GameSetup.defaults == GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light))
+            GameSetup.defaults == GameSetup(opponent: .computer, difficulty: .easy, side: .light))
         let data = try JSONEncoder().encode(Self.computer)
         #expect(try JSONDecoder().decode(GameSetup.self, from: data) == Self.computer)
     }
@@ -37,17 +37,37 @@ struct US6SetupTests {
         }
     }
 
-    @Test("US6 FR-SETUP-02 FR-SETUP-03: every change in setup is remembered at once")
-    func choicesSavedOnChange() {
+    @Test(
+        "US6 FR-SETUP-02 FR-SETUP-03: choices are remembered when a game starts, not as they change"
+    )
+    func choicesSavedOnStart() {
         let store = InMemorySetupStore()
-        let router = AppRouter(store: store)
+        let router = AppRouter(store: store, opponent: ScriptedComputerOpponent())
         router.newGame()
-        router.setup.opponent = .computer
+        router.setup.difficulty = .hard
+        router.setup.side = .dark
+        #expect(store.load() == .defaults)
+        router.startGame()
+        #expect(store.load() == GameSetup(opponent: .computer, difficulty: .hard, side: .dark))
+
+        router.newGame()
+        #expect(router.setup == store.load())
+        router.setup.opponent = .twoPlayers
         #expect(store.load().opponent == .computer)
-        router.setup.difficulty = .medium
-        #expect(store.load().difficulty == .medium)
-        router.setup.side = .random
-        #expect(store.load().side == .random)
+    }
+
+    @Test("US6 FR-SETUP-01: setup starts a game against the computer as well as a two-player game")
+    func everySetupStarts() {
+        for opponent in Opponent.allCases {
+            let router = AppRouter(
+                store: InMemorySetupStore(), opponent: ScriptedComputerOpponent())
+            router.newGame()
+            router.setup.opponent = opponent
+            router.startGame()
+            #expect(router.path == [.game], "\(opponent)")
+            #expect(router.session?.setup.opponent == opponent)
+            #expect((router.session?.playerSide == nil) == (opponent == .twoPlayers))
+        }
     }
 
     @Test("US6 FR-GAME-03: against the computer the player's pieces are at the bottom")

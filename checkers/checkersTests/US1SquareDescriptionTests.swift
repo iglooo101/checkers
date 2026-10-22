@@ -5,7 +5,7 @@ import Testing
 @testable import checkers
 
 struct US1SquareDescriptionTests {
-    static let twoPlayers = GameSetup.defaults
+    static let twoPlayers = GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light)
 
     static func session(_ state: GameState = GameState()) -> GameSession {
         GameSession(setup: twoPlayers, state: state, announcer: RecordingAnnouncer())

@@ -8,10 +8,9 @@ import Observation
 final class AppRouter {
     var path: [Route] = []
     private(set) var session: GameSession?
-    /// The setup choices; every change is remembered at once (FR-009, research R7).
-    var setup: GameSetup {
-        didSet { store.save(setup) }
-    }
+    /// The setup choices, remembered when a game starts (FR-SETUP-03;
+    /// specs/005-computer-opponent/research.md R11).
+    var setup: GameSetup
 
     /// Whether the leave confirmation is showing (FR-042).
     var isConfirmingLeave = false
@@ -19,11 +18,20 @@ final class AppRouter {
     @ObservationIgnored private let store: any SetupStore
     /// Draws the player's side when the setup says Random (FR-034).
     @ObservationIgnored private let drawSide: () -> Side
+    /// Chooses the computer's turns in the games this router starts.
+    @ObservationIgnored private let opponent: any ComputerOpponent
+    /// Paces the computer's turns in the games this router starts.
+    @ObservationIgnored private let pacer: any TurnPacer
 
-    init(store: any SetupStore, drawSide: @escaping () -> Side = { Bool.random() ? .light : .dark })
-    {
+    init(
+        store: any SetupStore, drawSide: @escaping () -> Side = { Bool.random() ? .light : .dark },
+        opponent: any ComputerOpponent = EngineComputerOpponent(),
+        pacer: any TurnPacer = SleepingPacer()
+    ) {
         self.store = store
         self.drawSide = drawSide
+        self.opponent = opponent
+        self.pacer = pacer
         setup = store.load()
     }
 
@@ -33,22 +41,26 @@ final class AppRouter {
         path.append(.setup)
     }
 
-    /// Starts a game with the current choices, replacing setup in the path; games against the
-    /// computer cannot start yet (FR-011).
+    /// Starts a game with the current choices, replacing setup in the path, and remembers them
+    /// (FR-SETUP-03).
     func startGame() {
-        guard setup.canStart else { return }
+        store.save(setup)
         open(gameWith: setup)
     }
 
-    /// Opens a new game with these choices, in place of setup or of the current game.
+    /// Opens a new game with these choices, in place of setup or of the current game. The computer
+    /// moves first when it plays Light (FR-AI-06).
     func open(gameWith setup: GameSetup) {
-        session = GameSession(setup: setup, playerSide: playerSide(for: setup))
+        session?.cancelComputerTurn()
+        session = GameSession(
+            setup: setup, playerSide: playerSide(for: setup), opponent: opponent, pacer: pacer)
         if path.last == .setup {
             path.removeLast()
         }
         if path.last != .game {
             path.append(.game)
         }
+        session?.startComputerTurnIfNeeded()
     }
 
     /// Starts a new game with the finished game's setup, drawing a Random side again (FR-034).
@@ -90,6 +102,7 @@ final class AppRouter {
     private func leave() {
         isConfirmingLeave = false
         path.removeAll()
+        session?.cancelComputerTurn()
         session = nil
     }
 

@@ -5,7 +5,7 @@ import Testing
 @testable import checkers
 
 struct US3HintsDragTests {
-    static let twoPlayers = GameSetup.defaults
+    static let twoPlayers = GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light)
 
     @Test(
         "US3 FR-AID-01 FR-AID-04: hints mark every movable piece, only capturers when capture is required"

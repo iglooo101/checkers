@@ -13,7 +13,7 @@ struct LocalizationTests {
         "Board theme, sound effects and move hints will be set here.",
         // Setup
         "Opponent", "Computer", "Two players", "Difficulty", "Easy", "Medium", "Hard", "Side",
-        "Light", "Dark", "Random", "Games against the computer arrive in a later update.", "Start",
+        "Light", "Dark", "Random", "Start",
         // Game screen
         "Light to move", "Dark to move", "Light to move · capture required",
         "Dark to move · capture required", "A capture is required.", "Game menu", "Undo", "Resign",
@@ -30,6 +30,8 @@ struct LocalizationTests {
         "Dark captures %@.", "Dark captures %@, crowned on %@.", "Jump again.", "Move undone.",
         "Light to move.", "Dark to move.", "Light to move, capture required.",
         "Dark to move, capture required.",
+        // The computer's turn (specs/005-computer-opponent/contracts/computer-turn.md)
+        "Light is thinking…", "Dark is thinking…",
         // Result panel
         "Light wins: no moves left", "Dark wins: no moves left", "Light resigned", "Dark resigned",
         "Draw by repetition", "Draw by no progress", "Play again",

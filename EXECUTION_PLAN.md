@@ -50,6 +50,13 @@ Epics are listed in execution order.
 
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
+- #102 F4.1: AI search
+- #104 Cancellable alpha-beta search off the main actor
+- #106 F4.2: Computer turn
+- #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked
+- #108 Show the computer's capture chains one jump at a time
+- #109 Computer makes the first move when it plays Light
+- #198 Start computer games from Game setup: first-use defaults, choices remembered on start
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -316,18 +323,18 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F4.1 AI search** (#102) · FR-AI-01, FR-AI-02
 
 - [ ] #103 Position evaluation function · M
-- [ ] #104 Cancellable alpha-beta search off the main actor · L
+- [~] #104 Cancellable alpha-beta search off the main actor · L
 - [ ] #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps · M
 - [ ] #199 Run the strength matches in a Release CI job that the CI gate requires · S
 
 **F4.2 Computer turn** (#106) · FR-AI-03, FR-AI-04, FR-AI-05, FR-AI-06, FR-MOVE-04
 
-- [ ] #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked · M
-- [ ] #108 Show the computer's capture chains one jump at a time · S
+- [~] #107 Computer turn controller: thinking indicator, 0.5–1 s pause, board input locked · M
+- [~] #108 Show the computer's capture chains one jump at a time · S
 - [ ] #190 Announce the computer's moves with VoiceOver · S · after #164
-- [ ] #109 Computer makes the first move when it plays Light · S
+- [~] #109 Computer makes the first move when it plays Light · S
 - [ ] #110 UI stays responsive while thinking: menu, Undo and Home work · S
-- [ ] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
+- [~] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
 
 **F4.3 Undo against the computer** (#111) · FR-UNDO-03, FR-UNDO-04
 

@@ -8,6 +8,16 @@ enum Notice: Equatable {
     case captureRequired
 }
 
+/// Where the computer's turn stands (specs/005-computer-opponent/contracts/computer-turn.md).
+enum ComputerPhase: Equatable {
+    /// It is not the computer's turn, or its turn has not started.
+    case idle
+    /// Choosing its turn, or waiting to show the first step.
+    case thinking
+    /// Between the jumps of its capture chain.
+    case playing
+}
+
 /// One game on the game screen: the engine's rules state plus what the player has selected. It
 /// turns taps into engine steps by the rules in `contracts/game-session.md`, so every interaction
 /// rule is tested without the user interface (FR-024).
@@ -25,17 +35,41 @@ final class GameSession {
     private(set) var focusSquare: Square?
     /// The square of the piece being dragged, once a drag has been accepted.
     @ObservationIgnored private var dragged: Square?
+    /// Where the computer's turn stands; `idle` in a two-player game.
+    private(set) var computerPhase = ComputerPhase.idle
+    /// The task playing the computer's turn, if one is running.
+    @ObservationIgnored private var computerTask: Task<Void, Never>?
+    /// Counts the computer's turns, so a cancelled turn cannot reset the phase of a newer one.
+    @ObservationIgnored private var computerTurnNumber = 0
     /// Speaks game events with VoiceOver (FR-A11Y-03).
     @ObservationIgnored let announcer: any Announcer
+    /// Chooses the computer's turns (specs/005-computer-opponent/research.md R7).
+    @ObservationIgnored let opponent: any ComputerOpponent
+    /// Paces the computer's turn (research R8).
+    @ObservationIgnored let pacer: any TurnPacer
 
     init(
         setup: GameSetup, playerSide: Side? = nil, state: GameState = GameState(),
-        announcer: any Announcer = AccessibilityAnnouncer()
+        announcer: any Announcer = AccessibilityAnnouncer(),
+        opponent: any ComputerOpponent = ScriptedComputerOpponent(),
+        pacer: any TurnPacer = SleepingPacer()
     ) {
         self.setup = setup
         self.playerSide = playerSide
         self.state = state
         self.announcer = announcer
+        self.opponent = opponent
+        self.pacer = pacer
+    }
+
+    /// The computer's side in a game against the computer; `nil` in a two-player game.
+    var computerSide: Side? {
+        playerSide?.opponent
+    }
+
+    /// Whether the computer is taking its turn; the board takes no input meanwhile (FR-MOVE-04).
+    var isComputerTurn: Bool {
+        computerPhase != .idle
     }
 
     /// Light at the bottom in a two-player game; the player's side against the computer (FR-015).
@@ -47,7 +81,7 @@ final class GameSession {
     /// engine limits to capturing pieces when a capture is required (FR-025). Hints are always on
     /// until Settings (E6) adds the switch.
     var hintedPieces: Set<Square> {
-        Set(state.movablePieces)
+        isComputerTurn ? [] : Set(state.movablePieces)
     }
 
     /// The selected piece's legal target squares (FR-026, FR-030).
@@ -81,7 +115,7 @@ final class GameSession {
     /// What a square can do, for VoiceOver: whatever the hints setting, and nothing once the game
     /// is over (FR-A11Y-01; specs/004-accessibility research R1).
     func state(of square: Square) -> SquareState {
-        guard !isOver else { return .none }
+        guard !isOver, !isComputerTurn else { return .none }
         if square == selection { return .selected }
         if let selection, state.position.piece(at: square) == nil,
             state.targets(from: selection).contains(square)
@@ -96,13 +130,18 @@ final class GameSession {
         GameText.squareLabel(square, state.position.piece(at: square), state(of: square))
     }
 
-    /// The turn indicator's sentence (FR-014).
+    /// The turn indicator's sentence (FR-014), or that the computer is thinking (FR-AI-03).
     var turnText: LocalizedStringResource {
-        GameText.turn(state.sideToMove, captureRequired: state.isCaptureRequired)
+        if isComputerTurn, let computerSide {
+            return GameText.thinking(computerSide)
+        }
+        return GameText.turn(state.sideToMove, captureRequired: state.isCaptureRequired)
     }
 
     /// Handles a tap on a square, by the first matching row of the contract's taps table.
     func tap(_ square: Square) {
+        // The board takes no input during the computer's turn (FR-MOVE-04).
+        guard !isComputerTurn else { return }
         notice = nil
         guard state.outcome == .inProgress else { return }
         if let chainSquare = state.chainSquare {
@@ -161,8 +200,9 @@ final class GameSession {
     /// Starts dragging the piece on a square, if it may move; otherwise answers as a tap would and
     /// returns false, so the piece stays put (contract: Drags).
     func beginDrag(at square: Square) -> Bool {
-        notice = nil
         dragged = nil
+        guard !isComputerTurn else { return false }
+        notice = nil
         guard state.outcome == .inProgress else { return false }
         if let chainSquare = state.chainSquare {
             guard square == chainSquare else { return false }
@@ -188,19 +228,120 @@ final class GameSession {
     }
 
     /// Applies a step to a legal target: the piece stays selected while its chain continues
-    /// (contract: Applying a step).
+    /// (contract: Applying a step). When the player's turn ends, the computer's begins.
     private func apply(_ step: Step) {
+        guard let result = applyStep(step) else { return }
+        selection = result.turnContinues ? result.to : nil
+        if !result.turnContinues {
+            startComputerTurnIfNeeded()
+        }
+    }
+
+    /// Applies a step and announces it; `nil` if the engine rejected it.
+    @discardableResult
+    private func applyStep(_ step: Step) -> StepResult? {
         do {
             let result = try state.apply(step)
-            selection = result.turnContinues ? result.to : nil
             notice = nil
             focusSquare = result.to
             announcer.announce(
                 GameText.joined(
                     GameText.stepSentence(result), GameText.followUp(after: result, in: state)))
+            return result
         } catch {
             Log.game.error(
                 "Rejected step \(step.from.name)-\(step.to.name): \(String(describing: error))")
+            return nil
         }
+    }
+
+    // MARK: - The computer's turn (specs/005-computer-opponent/contracts/computer-turn.md)
+
+    /// The pause before the computer's first step, even if it chose sooner (FR-AI-03).
+    static let thinkingPause = Duration.milliseconds(500)
+    /// The pause before each further jump of the computer's chain (FR-AI-05, Clarifications).
+    static let jumpPause = Duration.milliseconds(500)
+
+    /// Starts the computer's turn when it is the computer's side to move in a game in progress
+    /// (FR-AI-06); does nothing otherwise.
+    func startComputerTurnIfNeeded() {
+        guard computerPhase == .idle, !isOver, state.chainSquare == nil,
+            let computerSide, state.sideToMove == computerSide
+        else { return }
+        computerPhase = .thinking
+        selection = nil
+        notice = nil
+        dragged = nil
+        computerTurnNumber += 1
+        let number = computerTurnNumber
+        let start = state
+        computerTask = Task { [weak self] in
+            await self?.playComputerTurn(from: start)
+            self?.endComputerTurn(number)
+        }
+    }
+
+    /// Stops the computer's turn; it applies no further step.
+    func cancelComputerTurn() {
+        computerTask?.cancel()
+        computerTask = nil
+        computerTurnNumber += 1
+        computerPhase = .idle
+    }
+
+    private func endComputerTurn(_ number: Int) {
+        guard number == computerTurnNumber else { return }
+        computerTask = nil
+        computerPhase = .idle
+    }
+
+    /// Thinks and pauses together, then shows the turn step by step (contract: Timeline).
+    private func playComputerTurn(from start: GameState) async {
+        let opponent = opponent
+        let difficulty = setup.difficulty
+        let choosing = Task { await opponent.chooseTurn(in: start, difficulty: difficulty) }
+        do {
+            try await pacer.pause(Self.thinkingPause)
+        } catch {
+            choosing.cancel()
+            return
+        }
+        let chosen = await withTaskCancellationHandler {
+            await choosing.value
+        } onCancel: {
+            choosing.cancel()
+        }
+        guard !Task.isCancelled, state == start else { return }
+        let steps: [Step]
+        if let chosen, !chosen.isEmpty {
+            steps = chosen
+        } else {
+            Log.computer.error("The computer chose no turn; playing the first legal one")
+            steps = Self.firstLegalTurn(from: start)
+        }
+        for (index, step) in steps.enumerated() {
+            if index > 0 {
+                do {
+                    try await pacer.pause(Self.jumpPause)
+                } catch {
+                    return
+                }
+            }
+            guard !Task.isCancelled, applyStep(step) != nil else { return }
+            if index == 0, steps.count > 1 {
+                computerPhase = .playing
+            }
+        }
+    }
+
+    /// The first complete turn in the engine's order, for when the opponent gives none.
+    private static func firstLegalTurn(from start: GameState) -> [Step] {
+        var state = start
+        var steps: [Step] = []
+        while let step = state.legalSteps.first {
+            steps.append(step)
+            guard let result = try? state.apply(step), result.turnContinues else { break }
+        }
+        return steps
     }
 }

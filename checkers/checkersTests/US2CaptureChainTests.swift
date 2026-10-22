@@ -5,7 +5,7 @@ import Testing
 @testable import checkers
 
 struct US2CaptureChainTests {
-    static let twoPlayers = GameSetup.defaults
+    static let twoPlayers = GameSetup(opponent: .twoPlayers, difficulty: .easy, side: .light)
 
     /// Light man c3 must jump d4; Light man a1 could otherwise move.
     static func capturePosition(toMove side: Side = .light) -> GameSession {

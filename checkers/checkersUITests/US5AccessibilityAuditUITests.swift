@@ -27,14 +27,11 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         -> Bool
     {
         guard let element = issue.element else { return false }
-        // Start while Computer is chosen: the system dims a disabled control, which WCAG exempts
-        // from contrast, and the audit misreads its Dynamic Type support (it scales).
-        if element.identifier == "setup.start", !element.isEnabled {
-            return issue.auditType == .contrast || issue.auditType == .dynamicType
-        }
-        // Setup text the scrolling form cuts at the screen's edge once the audit enlarges it: the
-        // text scales and scrolls into view, but the audit reports whichever line is cut.
-        return issue.auditType == .dynamicType && element.elementType == .staticText
+        // Setup rows the scrolling form cuts at the screen's edge once the audit enlarges the
+        // text, a line or Start below the computer's choices: they scale and scroll into view,
+        // but the audit reports whichever row is cut.
+        let isSetupRow = element.elementType == .staticText || element.identifier == "setup.start"
+        return issue.auditType == .dynamicType && isSetupRow
             && issue.compactDescription.contains("partially") && app.element("setup.start").exists
     }
 
@@ -90,7 +87,7 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         try audit(app)
     }
 
-    /// FR-A11Y-04: game setup with Computer chosen, showing difficulty, side and the note.
+    /// FR-A11Y-04: game setup with Computer chosen, showing difficulty, side and Start.
     @MainActor
     func testUS5_auditSetupComputer() throws {
         let app = launch()

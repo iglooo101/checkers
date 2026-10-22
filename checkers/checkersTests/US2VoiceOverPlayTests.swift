@@ -7,7 +7,11 @@ import Testing
 struct US2VoiceOverPlayTests {
     static func session(_ state: GameState = GameState()) -> (GameSession, RecordingAnnouncer) {
         let announcer = RecordingAnnouncer()
-        return (GameSession(setup: .defaults, state: state, announcer: announcer), announcer)
+        return (
+            GameSession(
+                setup: US1TwoPlayerMoveTests.twoPlayers, state: state, announcer: announcer),
+            announcer
+        )
     }
 
     @Test("US2 FR-A11Y-02: VoiceOver focus follows each move to the square the piece landed on")

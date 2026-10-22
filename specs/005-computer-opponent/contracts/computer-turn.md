@@ -90,5 +90,7 @@ removed from the screen and the String Catalog.
 ## Audited states (FR-027, R12)
 
 Game setup with Computer chosen (Start available); a computer game on the player's turn; a
-computer game with the result panel. The thinking header is checked by a UI test while the
-computer thinks and by previews at the largest text size and in Dark Mode.
+computer game with the result panel. The thinking header is checked by unit tests while the
+computer thinks (`turnText`, `isComputerTurn`) and by previews at the largest text size and in
+Dark Mode; a UI test cannot catch it, since XCUITest's wait for an idle app after a tap outlasts
+the half-second pause.
