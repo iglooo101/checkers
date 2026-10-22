@@ -54,7 +54,7 @@ final class US7NavigationUITests: XCTestCase {
         XCTAssertTrue(app.element("home.newGame").waitForExistence(timeout: 3))
 
         app.startTwoPlayerGame()
-        XCTAssertEqual(app.square("c3").label, "c3, Light man")
+        XCTAssertEqual(app.square("c3").label, "c3, Light man, can move")
         XCTAssertEqual(app.element("game.turn").label, "Light to move")
     }
 

@@ -45,15 +45,52 @@ enum GameText {
         }
     }
 
-    /// A square's VoiceOver label: its coordinate and contents (FR-040).
-    static func squareLabel(_ square: Square, _ piece: Piece?) -> LocalizedStringResource {
+    /// A square's VoiceOver label: its coordinate, contents and state, as one whole sentence
+    /// (FR-A11Y-01; specs/004-accessibility/contracts/announcements.md).
+    static func squareLabel(_ square: Square, _ piece: Piece?, _ state: SquareState)
+        -> LocalizedStringResource
+    {
         let name = square.name
-        guard let piece else { return "\(name), empty" }
+        guard let piece else {
+            return state == .legalTarget ? "\(name), empty, legal target" : "\(name), empty"
+        }
         switch (piece.side, piece.kind) {
-        case (.light, .man): return "\(name), Light man"
-        case (.light, .king): return "\(name), Light king"
-        case (.dark, .man): return "\(name), Dark man"
-        case (.dark, .king): return "\(name), Dark king"
+        case (.light, .man): return lightMan(name, state)
+        case (.light, .king): return lightKing(name, state)
+        case (.dark, .man): return darkMan(name, state)
+        case (.dark, .king): return darkKing(name, state)
+        }
+    }
+
+    private static func lightMan(_ name: String, _ state: SquareState) -> LocalizedStringResource {
+        switch state {
+        case .canMove: return "\(name), Light man, can move"
+        case .selected: return "\(name), Light man, selected"
+        case .none, .legalTarget: return "\(name), Light man"
+        }
+    }
+
+    private static func lightKing(_ name: String, _ state: SquareState) -> LocalizedStringResource {
+        switch state {
+        case .canMove: return "\(name), Light king, can move"
+        case .selected: return "\(name), Light king, selected"
+        case .none, .legalTarget: return "\(name), Light king"
+        }
+    }
+
+    private static func darkMan(_ name: String, _ state: SquareState) -> LocalizedStringResource {
+        switch state {
+        case .canMove: return "\(name), Dark man, can move"
+        case .selected: return "\(name), Dark man, selected"
+        case .none, .legalTarget: return "\(name), Dark man"
+        }
+    }
+
+    private static func darkKing(_ name: String, _ state: SquareState) -> LocalizedStringResource {
+        switch state {
+        case .canMove: return "\(name), Dark king, can move"
+        case .selected: return "\(name), Dark king, selected"
+        case .none, .legalTarget: return "\(name), Dark king"
         }
     }
 }

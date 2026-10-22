@@ -17,10 +17,10 @@ final class US5UndoUITests: XCTestCase {
         app.move("c3", "d4")
         app.move("f6", "e5")
         app.chooseFromGameMenu("Undo")
-        XCTAssertEqual(app.square("f6").label, "f6, Dark man")
+        XCTAssertEqual(app.square("f6").label, "f6, Dark man, can move")
         XCTAssertEqual(app.element("game.turn").label, "Dark to move")
         app.chooseFromGameMenu("Undo")
-        XCTAssertEqual(app.square("c3").label, "c3, Light man")
+        XCTAssertEqual(app.square("c3").label, "c3, Light man, can move")
         XCTAssertEqual(app.element("game.turn").label, "Light to move")
         XCTAssertFalse(undoIsEnabled(in: app), "Undo should be unavailable back at the start")
     }

@@ -4,16 +4,43 @@
     "%@, Dark king" : {
 
     },
+    "%@, Dark king, can move" : {
+
+    },
+    "%@, Dark king, selected" : {
+
+    },
     "%@, Dark man" : {
+
+    },
+    "%@, Dark man, can move" : {
+
+    },
+    "%@, Dark man, selected" : {
 
     },
     "%@, Light king" : {
 
     },
+    "%@, Light king, can move" : {
+
+    },
+    "%@, Light king, selected" : {
+
+    },
     "%@, Light man" : {
 
     },
+    "%@, Light man, can move" : {
+
+    },
+    "%@, Light man, selected" : {
+
+    },
     "%@, empty" : {
+
+    },
+    "%@, empty, legal target" : {
 
     },
     "A capture is required." : {

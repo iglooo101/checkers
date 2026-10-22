@@ -33,7 +33,7 @@ final class US1TwoPlayerMoveUITests: XCTestCase {
         app.launch()
         app.startTwoPlayerGame()
         XCTAssertEqual(app.element("game.turn").label, "Light to move")
-        XCTAssertEqual(app.square("c3").label, "c3, Light man")
+        XCTAssertEqual(app.square("c3").label, "c3, Light man, can move")
 
         app.move("c3", "d4")
 

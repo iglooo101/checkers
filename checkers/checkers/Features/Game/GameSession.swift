@@ -76,6 +76,24 @@ final class GameSession {
         playerSide ?? state.sideToMove
     }
 
+    /// What a square can do, for VoiceOver: whatever the hints setting, and nothing once the game
+    /// is over (FR-A11Y-01; specs/004-accessibility research R1).
+    func state(of square: Square) -> SquareState {
+        guard !isOver else { return .none }
+        if square == selection { return .selected }
+        if let selection, state.position.piece(at: square) == nil,
+            state.targets(from: selection).contains(square)
+        {
+            return .legalTarget
+        }
+        return state.movablePieces.contains(square) ? .canMove : .none
+    }
+
+    /// A square's VoiceOver label: coordinate, contents and state.
+    func squareLabel(_ square: Square) -> LocalizedStringResource {
+        GameText.squareLabel(square, state.position.piece(at: square), state(of: square))
+    }
+
     /// The turn indicator's sentence (FR-014).
     var turnText: LocalizedStringResource {
         GameText.turn(state.sideToMove, captureRequired: state.isCaptureRequired)

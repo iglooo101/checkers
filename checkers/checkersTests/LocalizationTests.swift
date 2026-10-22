@@ -20,6 +20,10 @@ struct LocalizationTests {
         "Home", "Resign as Light?", "Resign as Dark?", "Cancel", "Leave this game?",
         "It can't be resumed yet.", "Leave",
         "%@, empty", "%@, Light man", "%@, Light king", "%@, Dark man", "%@, Dark king",
+        // Square descriptions with states (specs/004-accessibility/contracts/announcements.md)
+        "%@, empty, legal target", "%@, Light man, can move", "%@, Light man, selected",
+        "%@, Light king, can move", "%@, Light king, selected", "%@, Dark man, can move",
+        "%@, Dark man, selected", "%@, Dark king, can move", "%@, Dark king, selected",
         // Result panel
         "Light wins: no moves left", "Dark wins: no moves left", "Light resigned", "Dark resigned",
         "Draw by repetition", "Draw by no progress", "Play again",

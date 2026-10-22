@@ -27,7 +27,7 @@ final class US4GameEndUITests: XCTestCase {
 
         app.element("result.playAgain").tap()
         XCTAssertEqual(app.element("game.turn").label, "Light to move")
-        XCTAssertEqual(app.square("c3").label, "c3, Light man")
+        XCTAssertEqual(app.square("c3").label, "c3, Light man, can move")
         XCTAssertFalse(app.element("result.panel").exists)
 
         app.chooseFromGameMenu("Resign")

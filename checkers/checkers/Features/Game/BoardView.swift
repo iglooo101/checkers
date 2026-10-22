@@ -69,7 +69,7 @@ struct BoardView: View {
             .contentShape(Rectangle())
             .onTapGesture { session.tap(square) }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(GameText.squareLabel(square, piece)))
+            .accessibilityLabel(Text(session.squareLabel(square)))
             .accessibilityAddTraits(isSelected ? [.isButton, .isSelected] : .isButton)
             .accessibilityIdentifier("square.\(square.name)")
             .accessibilityAction { session.tap(square) }

@@ -53,7 +53,7 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ### Tests for User Story 1 (MANDATORY - write first) ⚠️
 
-- [ ] T005 [P] [US1] Write `Unit/US1SquareDescriptionTests.swift` (`struct US1SquareDescriptionTests`):
+- [X] T005 [P] [US1] Write `Unit/US1SquareDescriptionTests.swift` (`struct US1SquareDescriptionTests`):
   - `US1 FR-A11Y-01`: in a new game, a3, c3, e3, g3 read "<c>, Light man, can move"; c1 "c1, Light man"; b6 "b6, Dark man"; d4 "d4, empty".
   - `US1 FR-A11Y-01`: after tapping c3, c3 reads "c3, Light man, selected", b4 and d4 "…, empty, legal target", e3 "e3, Light man, can move".
   - `US1 FR-A11Y-01`: in the capture position (`US2CaptureChainTests.capturePosition()`), only c3 reads "can move"; a1 reads "a1, Light man".
@@ -62,13 +62,13 @@ description: "Task list for the accessibility slice (epic E7)"
   - `US1 FR-A11Y-01` (SC-002): for every scripted game of T002, after every step every dark square's `squareLabel` equals the description computed from the engine (`movablePieces`, `selection`, `targets`, contents) by the test's own helper.
   - `US1 FR-A11Y-01`: the states do not depend on hints (there is no hints switch yet; the state rule reads only the engine and the selection).
   Fails to compile until T007.
-- [ ] T006 [P] [US1] Write `UI/US1SquareLabelUITests.swift`: `testUS1_squareDescriptions`: `startTwoPlayerGame()`; `square.c3` reads "c3, Light man, can move", `square.c1` "c1, Light man", `square.d4` "d4, empty"; tap c3: `square.c3` "c3, Light man, selected", `square.d4` "d4, empty, legal target"; `testUS1_readingOrder` (FR-003): the board's square elements, in accessibility order, are b8, d8, f8, h8, a7, c7, e7, g7, … , a1, c1, e1, g1 (light squares absent). Fails until T009.
+- [X] T006 [P] [US1] Write `UI/US1SquareLabelUITests.swift`: `testUS1_squareDescriptions`: `startTwoPlayerGame()`; `square.c3` reads "c3, Light man, can move", `square.c1` "c1, Light man", `square.d4` "d4, empty"; tap c3: `square.c3` "c3, Light man, selected", `square.d4` "d4, empty, legal target"; `testUS1_readingOrder` (FR-003): the board's square elements, in accessibility order, are b8, d8, f8, h8, a7, c7, e7, g7, … , a1, c1, e1, g1 (light squares absent). Fails until T009.
 
 ### Implementation for User Story 1
 
-- [ ] T007 [US1] Add to `App/Features/Game/GameText.swift` `squareLabel(_ square: Square, _ piece: Piece?, _ state: SquareState) -> LocalizedStringResource` returning the 14 sentences of the contract with explicit `return`s (replacing the two-argument version); add to `App/Features/Game/GameSession.swift` `state(of:) -> SquareState` and `squareLabel(_:)` per data-model.md. T005 passes.
-- [ ] T008 [US1] Update the E3 UI tests that read exact square labels to the new descriptions: `UI/US1TwoPlayerMoveUITests.swift` (c3 at the start "c3, Light man, can move"), `UI/US3DragUITests.swift` (after an invalid drop c3 is "c3, Light man, selected"), `UI/US4GameEndUITests.swift` and `UI/US7NavigationUITests.swift` (a fresh board's c3), `UI/US5UndoUITests.swift` (after one undo f6 is "f6, Dark man, can move"; back at the start c3 is "c3, Light man, can move"). Add the 10 new square sentences to `Unit/LocalizationTests.swift`.
-- [ ] T009 [US1] Use `session.squareLabel(square)` for each square's accessibility label in `App/Features/Game/BoardView.swift`. Sync the catalog. US1 tests and every E3 test pass.
+- [X] T007 [US1] Add to `App/Features/Game/GameText.swift` `squareLabel(_ square: Square, _ piece: Piece?, _ state: SquareState) -> LocalizedStringResource` returning the 14 sentences of the contract with explicit `return`s (replacing the two-argument version); add to `App/Features/Game/GameSession.swift` `state(of:) -> SquareState` and `squareLabel(_:)` per data-model.md. T005 passes.
+- [X] T008 [US1] Update the E3 UI tests that read exact square labels to the new descriptions: `UI/US1TwoPlayerMoveUITests.swift` (c3 at the start "c3, Light man, can move"), `UI/US3DragUITests.swift` (after an invalid drop c3 is "c3, Light man, selected"), `UI/US4GameEndUITests.swift` and `UI/US7NavigationUITests.swift` (a fresh board's c3), `UI/US5UndoUITests.swift` (after one undo f6 is "f6, Dark man, can move"; back at the start c3 is "c3, Light man, can move"). Add the 10 new square sentences to `Unit/LocalizationTests.swift`.
+- [X] T009 [US1] Use `session.squareLabel(square)` for each square's accessibility label in `App/Features/Game/BoardView.swift`. Sync the catalog. US1 tests and every E3 test pass.
 
 **Checkpoint**: US1 complete: VoiceOver can read the whole board with states.
 

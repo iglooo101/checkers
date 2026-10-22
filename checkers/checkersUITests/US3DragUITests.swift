@@ -23,7 +23,7 @@ final class US3DragUITests: XCTestCase {
         app.launch()
         app.startTwoPlayerGame()
         app.square("c3").press(forDuration: 0.2, thenDragTo: app.square("c5"))
-        XCTAssertEqual(app.square("c3").label, "c3, Light man")
+        XCTAssertEqual(app.square("c3").label, "c3, Light man, selected")
         XCTAssertEqual(app.element("game.turn").label, "Light to move")
     }
 
