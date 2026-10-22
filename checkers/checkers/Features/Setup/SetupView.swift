@@ -8,7 +8,7 @@ struct SetupView: View {
 
     var body: some View {
         Form {
-            Section("Opponent") {
+            Section {
                 Picker("Opponent", selection: $router.setup.opponent) {
                     Text("Computer").tag(Opponent.computer)
                     Text("Two players").tag(Opponent.twoPlayers)
@@ -16,9 +16,17 @@ struct SetupView: View {
                 .pickerStyle(.inline)
                 .labelsHidden()
                 .accessibilityIdentifier("setup.opponent")
+            } header: {
+                Text("Opponent").foregroundStyle(Color.primary)
+            } footer: {
+                if router.setup.opponent == .computer {
+                    Text("Games against the computer arrive in a later update.")
+                        .foregroundStyle(Color.primary)
+                        .accessibilityIdentifier("setup.computerNote")
+                }
             }
             if router.setup.opponent == .computer {
-                Section("Difficulty") {
+                Section {
                     Picker("Difficulty", selection: $router.setup.difficulty) {
                         Text("Easy").tag(Difficulty.easy)
                         Text("Medium").tag(Difficulty.medium)
@@ -27,6 +35,8 @@ struct SetupView: View {
                     .pickerStyle(.inline)
                     .labelsHidden()
                     .accessibilityIdentifier("setup.difficulty")
+                } header: {
+                    Text("Difficulty").foregroundStyle(Color.primary)
                 }
                 Section {
                     Picker("Side", selection: $router.setup.side) {
@@ -38,10 +48,7 @@ struct SetupView: View {
                     .labelsHidden()
                     .accessibilityIdentifier("setup.side")
                 } header: {
-                    Text("Side")
-                } footer: {
-                    Text("Games against the computer arrive in a later update.")
-                        .accessibilityIdentifier("setup.computerNote")
+                    Text("Side").foregroundStyle(Color.primary)
                 }
             }
             Section {

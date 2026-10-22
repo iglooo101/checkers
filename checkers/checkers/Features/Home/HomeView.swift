@@ -24,6 +24,7 @@ struct HomeView: View {
     ) -> some View {
         let button = Button(action: action) {
             Text(title)
+                .foregroundStyle(prominent ? Color.onAccent : Color.accentColor)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)
         }

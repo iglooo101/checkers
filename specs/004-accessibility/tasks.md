@@ -151,12 +151,12 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ### Tests for User Story 5 (MANDATORY - write first) ⚠️
 
-- [ ] T019 [P] [US5] Write `UI/US5AccessibilityAuditUITests.swift`: one `testUS5_audit…` method per screen and state of the contract's "Audited screens" table, each reaching the state with `AppScreens` helpers and calling `try app.performAccessibilityAudit()` (all types), named with `FR-A11Y-04` in a comment. Run it and record every reported problem in `validation.md`.
+- [X] T019 [P] [US5] Write `UI/US5AccessibilityAuditUITests.swift`: one `testUS5_audit…` method per screen and state of the contract's "Audited screens" table, each reaching the state with `AppScreens` helpers and calling `try app.performAccessibilityAudit()` (all types), named with `FR-A11Y-04` in a comment. Run it and record every reported problem in `validation.md`.
 
 ### Implementation for User Story 5
 
-- [ ] T020 [US5] Fix every problem T019 reports in the app's views under `App/Features/` (labels, traits, contrast, hit regions, Dynamic Type, clipped text). Only for a system element the app cannot change, handle the issue in the audit's issue handler by element and issue type, and add it with its reason to the plan's "Audit allow-list" table. All audits pass.
-- [ ] T021 [US5] Run the audit tests on the iPhone SE (3rd generation) at `accessibility-extra-extra-extra-large` in Dark Mode (`simctl ui`), fix anything new, reset the simulator, and record the result in `validation.md`.
+- [X] T020 [US5] Fix every problem T019 reports in the app's views under `App/Features/` (labels, traits, contrast, hit regions, Dynamic Type, clipped text). Only for a system element the app cannot change, handle the issue in the audit's issue handler by element and issue type, and add it with its reason to the plan's "Audit allow-list" table. All audits pass.
+- [X] T021 [US5] Run the audit tests on the iPhone SE (3rd generation) at `accessibility-extra-extra-extra-large` in Dark Mode (`simctl ui`), fix anything new, reset the simulator, and record the result in `validation.md`.
 
 **Checkpoint**: US5 complete.
 
@@ -164,10 +164,10 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ## Phase 8: Polish & Cross-Cutting Concerns
 
-- [ ] T022 Run `scripts/format.sh`, then confirm `scripts/check-format.sh --strict`, `scripts/tests/run.sh`, `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData` and `scripts/test.sh` pass with zero warnings and zero SwiftLint errors.
-- [ ] T023 Run the quickstart (1, 2, 4, 5) and record the results in `validation.md`, including the SC-006 search for FR-A11Y-01 to FR-A11Y-05; mark §3 (a full game with VoiceOver) for the user.
-- [ ] T024 [P] Update `checkers/CLAUDE.md`: square states, the `Announcer` seam, announcements, the palette contrast rule and test, and the audit tests.
-- [ ] T025 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
+- [X] T022 Run `scripts/format.sh`, then confirm `scripts/check-format.sh --strict`, `scripts/tests/run.sh`, `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData` and `scripts/test.sh` pass with zero warnings and zero SwiftLint errors.
+- [X] T023 Run the quickstart (1, 2, 4, 5) and record the results in `validation.md`, including the SC-006 search for FR-A11Y-01 to FR-A11Y-05; mark §3 (a full game with VoiceOver) for the user.
+- [X] T024 [P] Update `checkers/CLAUDE.md`: square states, the `Announcer` seam, announcements, the palette contrast rule and test, and the audit tests.
+- [X] T025 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
 - [ ] T026 Final verification: push the branch, confirm `CI gate` is green on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
 
 ---

@@ -28,8 +28,8 @@ Last updated: 2026-10-21
 - **Branches**: `main` is protected: a commit lands only if the `CI gate` check passed for that
   exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
-  branches). `001-project-foundation` was merged and deleted; `002-rules-engine` and
-  `003-game-experience` are merged into `main` and can be deleted.
+  branches). `001-project-foundation` was merged and deleted; `002-rules-engine`,
+  `003-game-experience` and `004-accessibility` are merged into `main` and can be deleted.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
@@ -41,17 +41,23 @@ Last updated: 2026-10-21
   `UserDefaults` (declared in the privacy manifest). The **`CheckersEngine` package holds the
   rules engine** (E2); public API in `specs/002-rules-engine/contracts/engine-api.md`, whose
   custom-position initializers E3 made public. Computer games cannot start until E4.
+  **Accessibility** (E7): every dark square is a VoiceOver element with its state ("c3, Light
+  man, can move"), double-tap plays square by square, each step, undo and resignation is
+  announced once through the `Announcer` seam, and focus follows each step. Pieces and marks
+  keep 3:1 contrast with side-specific crowns, and an audit test checks every screen (allow-list
+  in `specs/004-accessibility/plan.md`).
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
-  build (about 20 s); code pushes now take 15–25 minutes with the E3 UI tests.
+  build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits.
 - **Backlog**: 8 epics, 41 features, 146 tasks (#1–#196; #188 is a PR) on the project board.
-  **E1 Project foundation, E2 Rules engine and E3 Game experience are done**. Next is **E7
-  Accessibility** (#153). Progress and the full list are in `EXECUTION_PLAN.md`.
+  **E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility are done**.
+  Next is **E4 Computer opponent** (#95). Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
-  game and a visual review at large text are left for the user). The next slice is E7's, created
-  by `/speckit-specify` (and `git checkout -b 004-…`); `.specify/feature.json` is local and
-  git-ignored.
+  game and a visual review at large text are left for the user) and E7's
+  `specs/004-accessibility/` (26 tasks, validation in `checklists/validation.md`; a VoiceOver game
+  by hand is left for the user). The next slice is E4's, created by `/speckit-specify` (and
+  `git checkout -b 005-…`); `.specify/feature.json` is local and git-ignored.
 
 ## Lessons learned
 
@@ -217,6 +223,29 @@ Last updated: 2026-10-21
 - **Previews need public API**: the app target cannot use `@testable`, so the engine's
   custom-position initializers were made public for previews of kings, captures and chains.
 
+## Lessons learned (E7 implementation, 2026-10-22)
+
+- **The accessibility audit fails system defaults**: system blue on bordered and prominent
+  buttons, `.secondary` text, Form header and footer gray, and text over a material that shows
+  the board. The app now has its own `AccentColor` and `OnAccent`, primary text and an opaque
+  result panel. Inside a Form header, `.foregroundStyle(.primary)` keeps the header's gray; use
+  `Color.primary`.
+- **The audit's Dynamic Type check misfires on scrolling forms**: it reports "partially
+  unsupported" on whichever line the form cuts at the bottom edge once it enlarges the text, and
+  the report moves when the layout moves. Check with a screenshot at the largest size before
+  changing code; the allow-list rule is narrow (`isAllowed` in `US5AccessibilityAuditUITests`)
+  and logs every allowed issue as a test activity.
+- **XCUITest cannot drive VoiceOver.** Announcements are tested through the `Announcer` seam and
+  focus through `GameSession.focusSquare`; a VoiceOver game by hand stays with the user.
+- **Visual checks**: `ImageRenderer` leaves out the board's square cells, so use simulator
+  screenshots (an `XCTAttachment` in a throwaway UI test, then
+  `xcrun xcresulttool export attachments`). `simctl` has no grayscale filter; convert with
+  `sips -m "/System/Library/ColorSync/Profiles/Generic Gray Profile.icc"`.
+- **Parameterized Swift Testing arguments** in the MainActor-default test target must be
+  `nonisolated`, and so must the app types they hold (`Palette`).
+- **Push once the previous CI run finished**: commit stories locally while a run is going; a push
+  cancels the branch's running run.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -224,13 +253,16 @@ Last updated: 2026-10-21
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E7 Accessibility (#153)**: start with #155 Specify (`/speckit-specify`, scope from FRD
-   section 17), on a new branch created with `git checkout -b`. E3 already gives every square a
-   coordinate-and-contents label and every control a label; E7 adds square states, VoiceOver
-   play square by square, announcements from `StepResult`, non-color cues in every theme and the
-   accessibility audit test on every screen.
-2. Epic order after E7: E4 → E5 → E6 → E8 (see `EXECUTION_PLAN.md`). E4 enables computer games
-   (Start, first-use defaults, the setup note) and should profile the engine first.
-3. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the
+1. **E4 Computer opponent (#95)**: start with #97 Specify (`/speckit-specify`, scope from FRD
+   section 11), on a new branch created with `git checkout -b 005-…`. E4 enables computer games
+   (Start, first-use defaults, the setup note and the audit allow-list entry for the disabled
+   Start), should profile the engine's move generation before the search (#104), and announces
+   the computer's moves through the `Announcer` seam (#190).
+2. Epic order after E4: E5 → E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
+   `US5AccessibilityAuditUITests` (#131, #142, #152); E6's themes must pass `US4ContrastTests`
+   (#144).
+3. Open for the user: a VoiceOver game by hand (`specs/004-accessibility/quickstart.md` §3), and
+   from E3 a hand-played game and a visual review at the largest text size.
+4. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the
    Settings and Rules placeholders; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in
    E8; keep the CI Xcode pin (26.3) in step with the development Mac.

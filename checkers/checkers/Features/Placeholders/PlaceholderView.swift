@@ -10,7 +10,6 @@ struct PlaceholderView: View {
         ScrollView {
             Text(message)
                 .font(.body)
-                .foregroundStyle(.secondary)
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .frame(maxWidth: .infinity)

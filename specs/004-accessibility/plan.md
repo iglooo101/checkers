@@ -78,7 +78,8 @@ code in the app
 
 | Screen | Element | Issue type | Reason |
 |---|---|---|---|
-| *(none yet)* | | | Only a system element the app cannot change may be listed, with its reason (R6). |
+| Game setup, Computer chosen | Start (`setup.start`) while disabled | Contrast; Dynamic Type | The system dims a disabled control; WCAG exempts inactive controls from contrast. Start scales with Dynamic Type (checked on screen at the largest size), so the Dynamic Type report is wrong. |
+| Game setup | A static text line the scrolling form cuts at the screen's edge | Dynamic Type, "partially unsupported" only | When the audit enlarges the text, the system form scrolls and the audit reports whichever line crosses the bottom edge (R6 findings). The lines scale and scroll into view. Allowed issues are logged in the test report. |
 
 ### Other recorded decisions
 
@@ -86,6 +87,9 @@ code in the app
   after measuring the Classic palette (R5); SC-005 includes it.
 - **Palette**: `PieceDarkEdge`, `Selection`, `Target` change and `Crown` splits into `CrownOnLight`
   and `CrownOnDark` (data model). E6's themes (#144) must pass the same contrast test.
+- **Audit fixes** (R6): `AccentColor` `#0058c4` / `#66b2ff` and `OnAccent` for prominent button
+  labels; primary text for the notice, placeholders, setup headers and computer note; an opaque
+  result panel; the computer note under the opponent choice.
 - **Announcement template** "%1$@ %2$@" joins two whole sentences; it is a localizable entry, not
   string concatenation in code (R4).
 - **VoiceOver itself is not automatable** in XCUITest; double-tap activation shares the tested tap

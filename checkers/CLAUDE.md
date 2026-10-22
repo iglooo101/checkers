@@ -41,9 +41,21 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
   sentence; `BoardLayout` for orientation; `GameView`, `BoardView`, `PieceView`, `ResultPanel`)
   and `Features/Placeholders` (Statistics, Rules and Settings until E5 and E6). Behavior and
   texts follow `../specs/003-game-experience/contracts/` (`game-session.md`, `screens.md`).
+- VoiceOver (E7, `../specs/004-accessibility/contracts/announcements.md`): each dark square is one
+  element labelled by `GameSession.squareLabel(_:)` with its `SquareState` ("c3, Light man, can
+  move"); double-tap uses the tap path. `GameSession` speaks through the `Announcer` seam
+  (`AccessibilityAnnouncer` in the app, `RecordingAnnouncer` in tests): exactly one announcement
+  per step, undo or resignation, built from `GameText`, plus the capture-required notice; selecting
+  is silent. `focusSquare` moves VoiceOver focus to each step's landing square.
 - Views are thin: rules come from the engine, interaction rules from `GameSession`, navigation from
   `AppRouter`. Board colors come only from `Support/Palette.swift` (asset colors with light and
-  dark variants). Nothing on the board animates.
+  dark variants); every piece and mark keeps at least 3:1 contrast with what it is drawn on
+  (`US4ContrastTests`), and kings differ by a side-specific crown. Nothing on the board animates.
+- Every screen passes `US5AccessibilityAuditUITests` (all audit types). The audit fails secondary
+  text, system blue and text over translucent backgrounds: use primary text, the app's
+  `AccentColor` and `OnAccent` (label of prominent buttons), and opaque panels. Exceptions only for
+  system components, in the audit's `isAllowed` and the allow-list in
+  `../specs/004-accessibility/plan.md`.
 - Confirmations are alerts: on iOS 26 a confirmation dialog opened from a toolbar item shows as a
   popover without Cancel.
 - `checkers/Support/Logging.swift`: `Log` with one `Logger` per feature category under the bundle
@@ -67,8 +79,11 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
   1–7) and `RandomGameTests` (1,000 seeded games with full undo). Helpers in `Support/` build
   positions from square names, for example `GameState(["c3": .lightMan], toMove: .light)`.
 - Targets: app `checkers`, `checkersTests` (Swift Testing, MainActor default isolation; suites
-  `US1TwoPlayerMoveTests`…`US7NavigationTests` plus layout, palette, privacy and localization;
-  `Support/GamePositions.swift` builds positions through the engine's public API),
+  `US1TwoPlayerMoveTests`…`US7NavigationTests` (E3), `US1SquareDescriptionTests`…
+  `US4ContrastTests` (E7), plus layout, palette, privacy and localization;
+  `Support/GamePositions.swift` builds positions through the engine's public API and
+  `Support/ScriptedGames.swift` holds the scripted games the announcement tests replay; mark
+  parameterized-test arguments `nonisolated`),
   `checkersUITests` (XCUITest, nonisolated default; mark tests `@MainActor`; one class per story;
   `Support/AppScreens.swift` finds elements by the identifiers in `screens.md`). Acceptance tests
   name their story ID (`US1`…). Test plans: `checkers.xctestplan` (blocking) and

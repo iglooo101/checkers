@@ -50,7 +50,11 @@ order).
 |---|---|---|
 | `PieceDarkEdge` | `#6b4426` / `#8a5a36` | `#d9b48a` |
 | `Selection` | `#1f6fd1` / `#4c9bff` | `#7fd3ff` |
-| `Target` | `#1f6fd1` / `#4c9bff`, 85% | `#7fd3ff` |
+| `Target` | `#1f6fd1` / `#4c9bff`, 85% | `#7fd3ff`, 85% |
 | `Crown` | `#e8c46a` | removed |
 | `CrownOnLight` | — | `#6b4426` |
 | `CrownOnDark` | — | `#e8c46a` |
+
+App colors outside the board palette, set by the audit (R6): `AccentColor` (unset, the system
+blue) becomes `#0058c4` / `#66b2ff`, and the new `OnAccent` (`#ffffff` / `#001a33`) is the label
+color of prominent buttons, so white-on-blue and blue-on-background text both reach 4.5:1.

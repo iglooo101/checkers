@@ -1,7 +1,8 @@
 import SwiftUI
 
 /// The result shown over the final position once a game ends, with Play again and Home
-/// (FR-033). The board stays visible around and through it.
+/// (FR-033). The board stays visible around it; the panel itself is opaque so its text and
+/// buttons keep their contrast (specs/004-accessibility research R6).
 struct ResultPanel: View {
     let text: LocalizedStringResource
     let playAgain: () -> Void
@@ -17,7 +18,9 @@ struct ResultPanel: View {
                     .accessibilityAddTraits(.isHeader)
                     .accessibilityIdentifier("result.text")
                 Button(action: playAgain) {
-                    Text("Play again").frame(maxWidth: .infinity)
+                    Text("Play again")
+                        .foregroundStyle(Color.onAccent)
+                        .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(.borderedProminent)
                 .accessibilityIdentifier("result.playAgain")
@@ -32,7 +35,7 @@ struct ResultPanel: View {
         }
         .scrollBounceBehavior(.basedOnSize)
         .fixedSize(horizontal: false, vertical: true)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 16))
+        .background(.background, in: RoundedRectangle(cornerRadius: 16))
         .padding(24)
         .accessibilityElement(children: .contain)
         .accessibilityIdentifier("result.panel")

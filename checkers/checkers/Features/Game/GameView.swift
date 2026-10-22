@@ -21,7 +21,6 @@ struct GameView: View {
             if let notice = session.notice {
                 Text(GameText.notice(notice))
                     .font(.callout)
-                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)
                     .accessibilityIdentifier("game.notice")

@@ -38,46 +38,38 @@ Epics are listed in execution order.
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
-| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 1/5 | 5/11 | In Progress |
+| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 4/5 | 9/11 | In Progress |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **21/41** | **80/147** | |
+| | **Total** | | | | **24/41** | **84/147** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #153 E7: Accessibility
-- #160 F7.1: VoiceOver board
-- #161 Each square is a VoiceOver element: coordinate, contents, state ("c3, Light man, can move")
-- #162 Double-tap to select and to move, including chains; UI test
-- #163 F7.2: VoiceOver announcements
-- #164 Announce moves (both sides), captures, crowning, turn changes, mandatory captures and results
-- #165 F7.3: Non-color cues
-- #166 Kings, selection and hints distinguishable without color in every theme
 - #167 F7.4: Accessibility audit automation
+- #168 UI test running performAccessibilityAudit() on every screen
 - #197 Validate the E7 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
 
-E1 Project foundation, E2 Rules engine and E3 Game experience are done (slices
-`specs/001-project-foundation/`, `specs/002-rules-engine/` and `specs/003-game-experience/`,
-landed on `main`). The app is fully native SwiftUI: Home, setup, and a two-player game with tap
-and drag, hints, chains, crowning, undo, resign and a result panel; computer games wait for E4,
-and Statistics, Rules and Settings are placeholders until E5 and E6.
+E1 Project foundation, E2 Rules engine, E3 Game experience and E7 Accessibility are done (slices
+`specs/001-project-foundation/` to `specs/004-accessibility/`, landed on `main`). The app is fully
+native SwiftUI: Home, setup, and a two-player game with tap and drag, hints, chains, crowning,
+undo, resign and a result panel, playable square by square with VoiceOver (square states,
+announcements, focus that follows each step), with non-color cues at 3:1 contrast and an
+accessibility audit of every screen. Computer games wait for E4; Statistics, Rules and Settings
+are placeholders until E5 and E6.
 
-E7 Accessibility (#153) is in progress on branch `004-accessibility` (slice
-`specs/004-accessibility/`). F7.0 Specification is done (#155–#159): `tasks.md` has 26 test-first
-tasks, the board is reconciled (#197 added), and the plan changes four board colors to reach 3:1
-contrast.
-
-1. `/speckit-implement`: setup and foundation (T001–T004, #197), US1 square states (#161), US2
-   VoiceOver play (#162), US3 announcements (#164), US4 contrast and crowns (#166), US5 audit
-   (#168), polish (#197).
-2. Push after each story and wait for `CI gate`; close E7 as E3 was.
+1. **E4 Computer opponent (#95)**: F4.0 Specification first, #97 Specify (`/speckit-specify`,
+   scope from FRD section 11) on a new branch `005-…`, then #98–#101. Profile the engine's move
+   generation before the search (#104); #190 announces the computer's moves through the
+   `Announcer` seam.
+2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
 
@@ -118,6 +110,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   explicit `return`s, or the compiler extracts only one of them (HANDOFF.md, E3 lessons).
 - E3 was validated by automated tests; a full game played by hand and a visual review at the
   largest text size are still open for the user (`specs/003-game-experience/checklists/validation.md`).
+- E7's VoiceOver game by hand (SC-001, quickstart §3) is open for the user: XCUITest cannot drive
+  VoiceOver, so announcements and focus are tested through the `Announcer` seam and the session.
+- The accessibility audit allow-list has two entries on the Computer setup screen (the disabled
+  Start, and a Dynamic Type report on the line a scrolling form cuts at the screen's edge);
+  re-check them with each new iOS and Xcode (`specs/004-accessibility/plan.md`).
 - Code CI runs now take 15–25 minutes with E3's UI tests, and a push cancels the running one;
   push once per story.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
@@ -274,7 +271,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
 - [x] #73 Accessibility pass: Game setup · S
 
-### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 5/11 tasks
+### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 9/11 tasks
 
 **F7.0 Specification (Spec Kit)** (#154) · FRD §17
 
@@ -286,20 +283,20 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F7.1 VoiceOver board** (#160) · FR-A11Y-01, FR-A11Y-02
 
-- [~] #161 Each square is a VoiceOver element: coordinate, contents, state ("c3, Light man, can move") · M
-- [~] #162 Double-tap to select and to move, including chains; UI test · M
+- [x] #161 Each square is a VoiceOver element: coordinate, contents, state ("c3, Light man, can move") · M
+- [x] #162 Double-tap to select and to move, including chains; UI test · M
 
 **F7.2 VoiceOver announcements** (#163) · FR-A11Y-03
 
-- [~] #164 Announce moves (both sides), captures, crowning, turn changes, mandatory captures and results · M
+- [x] #164 Announce moves (both sides), captures, crowning, turn changes, mandatory captures and results · M
 
 **F7.3 Non-color cues** (#165) · FR-A11Y-05
 
-- [~] #166 Kings, selection and hints distinguishable without color in every theme · S
+- [x] #166 Kings, selection and hints distinguishable without color in every theme · S
 
 **F7.4 Accessibility audit automation** (#167) · FR-A11Y-04
 
-- [ ] #168 UI test running performAccessibilityAudit() on every screen · M
+- [~] #168 UI test running performAccessibilityAudit() on every screen · M
 - [~] #197 Validate the E7 slice and update project docs · S · after #168
 
 ### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 0/15 tasks
@@ -535,3 +532,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-22: #158 done: `specs/004-accessibility/tasks.md`, 26 tasks; `/speckit-analyze` found 4
   issues, none critical or high (a reading-order test added). #159 done: board reconciled, #197
   added. F7.0 (#154) closed. Backlog is now 147 tasks. Next is implementation.
+- 2026-10-22: E7 implemented on `004-accessibility` (26 tasks). US1 square states (#161), US2
+  VoiceOver play and focus (#162), US3 one announcement per step, undo and resignation (#164),
+  US4 3:1 contrast for every mark with side-specific crowns (#166) and US5 an accessibility audit
+  of all 10 screen states (#168). The audit's first run found 20 problems; fixed with an app
+  `AccentColor` and `OnAccent`, primary text, an opaque result panel and the computer note under
+  the opponent choice; two system-component issues on the Computer setup are allow-listed. 163
+  tests pass, also audited on the iPhone SE at the largest text in Dark Mode. Open for the user:
+  a VoiceOver game by hand. Next is E4 (#97 Specify).

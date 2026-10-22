@@ -117,6 +117,18 @@ what else was considered. Facts marked *measured* were checked on the developmen
 - **Alternatives considered**: auditing only Home and the game screen (rejected: FR-017 lists
   every screen); one test per audit type (rejected: one audit per state reports every problem at
   once).
+- **Findings (implementation)**: The first run reported 20 problems on 9 of the 10 states, all
+  contrast but two. Fixes in the app: an `AccentColor` dark enough for white text in light
+  appearance and light enough for dark backgrounds in dark appearance, with an `OnAccent` label
+  color for prominent buttons; primary instead of secondary text for the notice, the placeholder
+  messages, the setup headers and the computer note; an opaque result panel (the material let
+  the board behind lower its text's contrast; the board stays visible around the panel); and the
+  computer note moved under the opponent choice it explains. Two issues remain on system
+  components and are allow-listed in the plan: the disabled Start button, and the Dynamic Type
+  report on whichever setup line the scrolling form cuts at the screen's edge when the audit
+  enlarges the text. Evidence for the second: the report moved from the note to the "Side" header
+  when the note moved, disappeared when a row was added above, and both scale at the largest
+  size on screen.
 
 ## R7. Tests
 
