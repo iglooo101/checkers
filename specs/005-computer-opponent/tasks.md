@@ -152,7 +152,7 @@ description: "Task list for the computer opponent slice (epic E4)"
 
 ### Tests for User Story 4 (MANDATORY - write first) ⚠️
 
-- [ ] T024 [P] [US4] Write `Unit/US4ComputerUndoTests.swift` (`struct US4ComputerUndoTests`), with a scripted opponent and a manual pacer:
+- [X] T024 [P] [US4] Write `Unit/US4ComputerUndoTests.swift` (`struct US4ComputerUndoTests`), with a scripted opponent and a manual pacer:
   - `US4 FR-UNDO-03`: after the player's move and the computer's reply, `undo()` restores a state equal to the one before the player's move (position, side to move, draw counters) and announces "Move undone. Light to move."
   - `US4 FR-UNDO-03`: `canUndo` is false in a new game, also when the computer has opened as Light and the player has not moved; true after the player's first move; false once the game is over.
   - `US4 FR-UNDO-04`: undo while the computer thinks takes back the player's move only, and no step is applied after the opponent answers; undo between the jumps of the computer's chain takes back the partial chain and the player's move.
@@ -160,11 +160,11 @@ description: "Task list for the computer opponent slice (epic E4)"
   - `US4 FR-UNDO-01`: three turn pairs, then three undos, reach the start; the computer's opening move as Light is never taken back.
   - Two-player undo is unchanged (the E3 `US5GameUndoTests` still pass).
   Fails until T026.
-- [ ] T025 [P] [US4] Write `UI/US4ComputerUndoUITests.swift`: `testUS4_undoTakesBackBothMoves`: a computer game (Easy, Light); Undo is disabled in the menu; move c3–d4, wait for "Light to move"; Undo: `square.c3` reads "c3, Light man, can move", `square.d4` "d4, empty", every Dark man is on its starting square, and Undo is disabled again. Fails until T026.
+- [X] T025 [P] [US4] Write `UI/US4ComputerUndoUITests.swift`: `testUS4_undoTakesBackBothMoves`: a computer game (Easy, Light); Undo is disabled in the menu; move c3–d4, wait for "Light to move"; Undo: `square.c3` reads "c3, Light man, can move", `square.d4` "d4, empty", every Dark man is on its starting square, and Undo is disabled again. Fails until T026.
 
 ### Implementation for User Story 4
 
-- [ ] T026 [US4] Implement research R9 in `App/Features/Game/GameSession.swift`: in a computer game `undo()` cancels the computer's turn, then calls `state.undo()` at least once and until `sideToMove == playerSide`; `canUndo` applies the same rule to a copy of the state. Two-player games keep E3's rule. T024 and T025 pass; all tests pass.
+- [X] T026 [US4] Implement research R9 in `App/Features/Game/GameSession.swift`: in a computer game `undo()` cancels the computer's turn, then calls `state.undo()` at least once and until `sideToMove == playerSide`; `canUndo` applies the same rule to a copy of the state. Two-player games keep E3's rule. T024 and T025 pass; all tests pass.
 
 **Checkpoint**: US4 complete.
 

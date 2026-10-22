@@ -52,6 +52,8 @@ Epics are listed in execution order.
 - #95 E4: Computer opponent
 - #106 F4.2: Computer turn
 - #110 UI stays responsive while thinking: menu, Undo and Home work
+- #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move
+- #113 Undo while the computer thinks cancels its turn
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -70,9 +72,10 @@ Rules and Settings are placeholders until E5 and E6.
    `ComputerOpponent` and `TurnPacer` seams, the computer's turn on the game screen, setup) are
    done, and so are US2 (T016–T021: the levels' depth, node limit and random margin, the
    Release-only strength matches and the `engine-strength` CI job) and with it F4.1 AI search.
-   **US3** (T022–T023, #110) is implemented and passes locally: resigning or leaving stops the
-   computer's turn, and its move waits while Rules or Settings covers the game; it waits for CI.
-   Then US4 (#112, #113), US5 (#190) and #200.
+   **US3** (T022–T023, #110) and **US4** (T024–T026, #112, #113) are implemented and pass
+   locally: resigning or leaving stops the computer's turn, its move waits while Rules or Settings
+   covers the game, and Undo returns to the player's turn, cancelling the computer's. Both wait
+   for CI (US3's first run failed on a timing test, since rewritten). Then US5 (#190) and #200.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -345,8 +348,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F4.3 Undo against the computer** (#111) · FR-UNDO-03, FR-UNDO-04
 
-- [ ] #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move · S
-- [ ] #113 Undo while the computer thinks cancels its turn · S
+- [~] #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move · S
+- [~] #113 Undo while the computer thinks cancels its turn · S
 - [ ] #200 Validate the E4 slice and update project docs · S · after #113
 
 ### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 0/16 tasks
@@ -618,3 +621,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   then comes after a fresh 0.5 s pause (`ScreenCover`, wired to the router's path). A live test
   shows the main actor stays free during a Hard search. `GameSession`'s display queries moved to
   `GameSession+Display.swift` to stay within SwiftLint's length limits. 206 tests pass.
+- 2026-10-22: CI run 39848881318 failed on US3's timed main-actor test: on the 3-core runner the
+  other suites held the shared main actor through the whole search. The test now checks order
+  (a probe queued after the search runs before it ends), not time.
+- 2026-10-22: E4 US4 (T024–T026) implemented; #112 and #113 In Progress. Against the computer,
+  Undo takes back turns until it is the player's turn (the computer's reply, its thinking or its
+  partial chain, and the player's turn), cancelling the computer's turn first, and is unavailable
+  until the player has moved (research R9). 213 tests pass.

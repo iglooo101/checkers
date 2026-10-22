@@ -75,6 +75,15 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   display queries into `GameSession+Display.swift` (data-model.md). `scripts/test.sh` with
   warnings as errors passes: **206 tests** (94 app unit tests, 83 engine tests, 29 UI tests),
   9 min 9 s, with no warnings; the strict format check, lint and the string catalog check pass.
+- US4 tests first (T024–T025), 2026-10-22: `US4ComputerUndoTests` failed 5 of 6 tests before
+  T026 (undo took back only the computer's reply, Undo was available after the computer's opening
+  move, and undo left the computer's turn running); undo in the player's own chain already
+  worked. `testUS4_undoTakesBackBothMoves` failed: after Undo, Dark was to move and nobody moved.
+  E3's `undoIsEnabled` UI helper moved into `AppScreens` (`isUndoEnabled()`) for both undo UI
+  tests.
+- US4 (T024–T026): `scripts/test.sh` with warnings as errors passes: **213 tests** (100 app unit
+  tests, 83 engine tests, 30 UI tests), 9 min 26 s, with no warnings; the strict format check and
+  lint pass.
 
 ## 1. All blocking tests (SC-001, SC-006 to SC-010)
 

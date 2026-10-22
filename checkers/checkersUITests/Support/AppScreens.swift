@@ -81,6 +81,23 @@ extension XCUIApplication {
         button.tap()
     }
 
+    /// Opens the game menu, reads whether Undo is enabled, and closes the menu again.
+    @MainActor
+    func isUndoEnabled(file: StaticString = #filePath, line: UInt = #line) -> Bool {
+        element("game.menu").tap()
+        let undo = buttons["Undo"]
+        XCTAssertTrue(
+            undo.waitForExistence(timeout: 3), "No Undo in the game menu", file: file, line: line)
+        let enabled = undo.isEnabled
+        // Close the menu by tapping near the bottom edge, below the board, where no control is;
+        // the open menu covers the turn indicator.
+        coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.97)).tap()
+        XCTAssertTrue(
+            element("game.menu").waitForExistence(timeout: 3), "The menu did not close",
+            file: file, line: line)
+        return enabled
+    }
+
     /// Answers a confirmation alert by the label of one of its buttons.
     @MainActor
     func confirm(_ answer: String, file: StaticString = #filePath, line: UInt = #line) {

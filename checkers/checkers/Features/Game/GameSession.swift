@@ -80,9 +80,9 @@ final class GameSession {
     }
 
     /// Whether Undo can take back a turn: the game is in progress and a turn has been played
-    /// (FR-037).
+    /// (FR-037); against the computer, one of the player's own turns (FR-UNDO-03).
     var canUndo: Bool {
-        state.canUndo
+        undone() != nil
     }
 
     /// The side that resigns: the side to move in a two-player game, the player against the
@@ -118,21 +118,35 @@ final class GameSession {
         }
     }
 
-    /// Takes back the last turn, or the partial turn of a chain; nothing is selected afterwards
-    /// (FR-036, FR-038).
+    /// Takes back the last turn, or the partial turn of a chain; against the computer, back to the
+    /// player's turn, stopping the computer's turn first (FR-UNDO-03, FR-UNDO-04). Nothing is
+    /// selected afterwards (FR-036, FR-038).
     func undo() {
-        guard canUndo else { return }
-        do {
-            try state.undo()
-        } catch {
-            Log.game.error("Undo rejected: \(String(describing: error))")
-            return
-        }
+        guard let undone = undone() else { return }
+        cancelComputerTurn()
+        state = undone
         selection = nil
         notice = nil
         focusSquare = nil
         announcer.announce(
             GameText.undone(state.sideToMove, captureRequired: state.isCaptureRequired))
+    }
+
+    /// The state after Undo, or `nil` when there is nothing to take back. In a two-player game it
+    /// takes back one turn; against the computer, at least one and until it is the player's turn,
+    /// which covers the computer's reply, its thinking and its partial chain alike (research R9).
+    private func undone() -> GameState? {
+        var undone = state
+        repeat {
+            guard undone.canUndo else { return nil }
+            do {
+                try undone.undo()
+            } catch {
+                Log.game.error("Undo rejected: \(String(describing: error))")
+                return nil
+            }
+        } while playerSide.map { undone.sideToMove != $0 } ?? false
+        return undone
     }
 
     /// Resigns for `resigningSide`; nothing happens once the game is over (FR-032). The computer's
