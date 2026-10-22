@@ -29,8 +29,8 @@ description: "Task list for the accessibility slice (epic E7)"
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 Create `specs/004-accessibility/checklists/validation.md` with one section per quickstart scenario (1–5) and a "Baseline" section: `scripts/test.sh` passes before any slice code (record the count), and the Classic contrast ratios measured in research R5.
-- [ ] T002 [P] Create `Unit/Support/ScriptedGames.swift`: named step lists for scripted games through `GameSession`, each with its starting `GameState`: an opening (`c3–d4, b6–a5`); the capture after `c3–d4, f6–e5` (`d4–f6`, Dark then must capture); E2's double jump (Light men a3, g1; Dark men b4, d6, h8: `a3–c5`, `c5–e7`); a crowning (Light man b6, Dark men c7, e7: `b6–d8`); the king shuffle to a draw by repetition; and a game ending with the last capture (Light man c3, Dark man d4: `c3–e5`). Reuse `US4GameEndTests.play` and the `GamePositions` helpers.
+- [X] T001 Create `specs/004-accessibility/checklists/validation.md` with one section per quickstart scenario (1–5) and a "Baseline" section: `scripts/test.sh` passes before any slice code (record the count), and the Classic contrast ratios measured in research R5.
+- [X] T002 [P] Create `Unit/Support/ScriptedGames.swift`: named step lists for scripted games through `GameSession`, each with its starting `GameState`: an opening (`c3–d4, b6–a5`); the capture after `c3–d4, f6–e5` (`d4–f6`, Dark then must capture); E2's double jump (Light men a3, g1; Dark men b4, d6, h8: `a3–c5`, `c5–e7`); a crowning (Light man b6, Dark men c7, e7: `b6–d8`); the king shuffle to a draw by repetition; and a game ending with the last capture (Light man c3, Dark man d4: `c3–e5`). Reuse `US4GameEndTests.play` and the `GamePositions` helpers.
 
 ---
 
@@ -38,8 +38,8 @@ description: "Task list for the accessibility slice (epic E7)"
 
 **Purpose**: The announcer seam and the square state every story uses.
 
-- [ ] T003 [P] Write `Unit/AnnouncerTests.swift`: a `RecordingAnnouncer` keeps announcements in order as resolved strings; a `GameSession` built with it exposes nothing yet (compile-level seam). Fails to compile until T004.
-- [ ] T004 Create `App/Features/Game/Announcer.swift`: `protocol Announcer: AnyObject { func announce(_ text: LocalizedStringResource) }`, `final class AccessibilityAnnouncer: Announcer` (posts `AccessibilityNotification.Announcement`), `final class RecordingAnnouncer: Announcer` (an `announcements: [String]` list of resolved texts). Add `announcer: any Announcer = AccessibilityAnnouncer()` to `GameSession.init` and keep it in an `@ObservationIgnored` property. Create `App/Features/Game/SquareState.swift`: `enum SquareState: Equatable { case none, canMove, selected, legalTarget }`. T003 passes.
+- [X] T003 [P] Write `Unit/AnnouncerTests.swift`: a `RecordingAnnouncer` keeps announcements in order as resolved strings; a `GameSession` built with it exposes nothing yet (compile-level seam). Fails to compile until T004.
+- [X] T004 Create `App/Features/Game/Announcer.swift`: `protocol Announcer: AnyObject { func announce(_ text: LocalizedStringResource) }`, `final class AccessibilityAnnouncer: Announcer` (posts `AccessibilityNotification.Announcement`), `final class RecordingAnnouncer: Announcer` (an `announcements: [String]` list of resolved texts). Add `announcer: any Announcer = AccessibilityAnnouncer()` to `GameSession.init` and keep it in an `@ObservationIgnored` property. Create `App/Features/Game/SquareState.swift`: `enum SquareState: Equatable { case none, canMove, selected, legalTarget }`. T003 passes.
 
 **Checkpoint**: `scripts/test.sh` passes; nothing user-visible has changed.
 

@@ -50,6 +50,8 @@ Epics are listed in execution order.
 
 <!-- BEGIN GENERATED: in-progress -->
 - #153 E7: Accessibility
+- #167 F7.4: Accessibility audit automation
+- #197 Validate the E7 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -291,7 +293,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F7.4 Accessibility audit automation** (#167) · FR-A11Y-04
 
 - [ ] #168 UI test running performAccessibilityAudit() on every screen · M
-- [ ] #197 Validate the E7 slice and update project docs · S · after #168
+- [~] #197 Validate the E7 slice and update project docs · S · after #168
 
 ### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 0/15 tasks
 

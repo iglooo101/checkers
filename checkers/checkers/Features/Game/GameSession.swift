@@ -23,11 +23,17 @@ final class GameSession {
     private(set) var notice: Notice?
     /// The square of the piece being dragged, once a drag has been accepted.
     @ObservationIgnored private var dragged: Square?
+    /// Speaks game events with VoiceOver (FR-A11Y-03).
+    @ObservationIgnored let announcer: any Announcer
 
-    init(setup: GameSetup, playerSide: Side? = nil, state: GameState = GameState()) {
+    init(
+        setup: GameSetup, playerSide: Side? = nil, state: GameState = GameState(),
+        announcer: any Announcer = AccessibilityAnnouncer()
+    ) {
         self.setup = setup
         self.playerSide = playerSide
         self.state = state
+        self.announcer = announcer
     }
 
     /// Light at the bottom in a two-player game; the player's side against the computer (FR-015).
