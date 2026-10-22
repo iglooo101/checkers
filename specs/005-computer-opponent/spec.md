@@ -8,6 +8,14 @@
 
 **Input**: User description: "Computer opponent (epic E4, GitHub issue #95): a single player plays against the computer at three difficulty levels, from FRD.md v1.1 section 11, on top of the rules engine (E2), the game screen (E3) and the VoiceOver board (E7). The computer plays only legal moves (FR-AI-01); Easy, Medium and Hard differ noticeably in strength, Easy beatable by a beginner and Hard a challenge for an experienced casual player (FR-AI-02); a thinking indicator shows during its turn and it moves after a short pause of about 0.5–1 second, even if it chose sooner (FR-AI-03); the app stays responsive while it thinks, with the menu, Undo and Home working (FR-AI-04); its capture chains are shown one jump at a time (FR-AI-05); it makes the first move when it plays Light (FR-AI-06); the board accepts no input during its turn (FR-MOVE-04); undo takes back the player's turn and the computer's reply and is unavailable before the player's first move (FR-UNDO-03), and undo while it thinks cancels its turn (FR-UNDO-04); VoiceOver announces its moves (FR-A11Y-03, #190). Game setup can now start computer games, with the FRD's first-use defaults (FR-SETUP-03). Board tasks: F4.1 AI search (#102: #103, #104, #105), F4.2 Computer turn (#106: #107, #108, #190, #109, #110), F4.3 Undo against the computer (#111: #112, #113). Out of scope, delivered by later epics: saving and resuming a computer game, including the computer moving after a resume (FR-SAVE-04, E5); the record against the computer and the Statistics screen (E5); Settings, sound and the Rules screen (E6). Users are players who play alone against the computer, from beginners to experienced casual players."
 
+## Clarifications
+
+### Session 2026-10-22
+
+- Q: How should we prove that Easy, Medium and Hard differ enough in strength? → A: By automated matches and a playtest: at least 100 seeded games per pairing, each level playing each side in half, where the stronger level scores at least 70% (a win counts 1, a draw 0.5); and a playtest in which a beginner wins at least one of three games against Easy and Hard wins or draws at least one of three against an experienced casual player.
+- Q: When the computer makes a multi-jump capture, how long should the board wait between one jump and the next? → A: About 0.5 seconds before each further jump, so a three-jump chain plays out in about 1 second after its first jump.
+- Q: If the player opens Rules or Settings from the game menu while the computer is thinking, should the computer's move wait until they come back? → A: Yes: the move is held while Rules or Settings is open and appears after the usual pause once the player returns, so they come back to the position they left and see and hear the move.
+
 ## User Scenarios & Testing *(mandatory)*
 
 One player plays against the computer on one device. E3 built Game setup with the Computer
@@ -238,8 +246,9 @@ computer step's announcement; play one game by hand with VoiceOver.
 - **FR-016**: Leaving the game for Home MUST work during the computer's turn, with E3's leave
   confirmation; once the game is left, the computer MUST NOT move in it.
 - **FR-017**: While Rules or Settings is open from the game menu, the computer's move MUST NOT
-  appear; it appears, with its pause, after the player returns, so they come back to the position
-  they left (FR-NAV-04).
+  appear and nothing about it is announced; once the player returns, it appears after the pause of
+  FR-008, so they come back to the position they left (FR-NAV-04) and see and hear the move
+  (Clarifications).
 
 **Undo against the computer (#111: #112, #113)**
 
@@ -338,15 +347,15 @@ Settings screens (E6).
 
 ## Assumptions
 
-- **Measuring strength** (to confirm in Clarify): FR-AI-02 is judged by automated matches between
-  the levels (SC-003: at least 70% score over at least 100 games per pairing) plus a short playtest
-  (SC-004). The FRD gives no number.
-- **Pace of a computer chain** (to confirm in Clarify): about 0.5 seconds before each further jump,
-  so a three-jump chain takes about 1 second after the first jump. The FRD says only that the
-  player can follow it.
-- **Rules or Settings during the computer's turn** (to confirm in Clarify): the computer's move
-  waits until the player returns, so they come back to the position they left (FR-NAV-04) and see
-  and hear the move. The alternative is that the computer moves while they are away.
+- **Measuring strength** (confirmed in Clarifications): FR-AI-02 is judged by automated matches
+  between the levels (SC-003: at least 70% score over at least 100 games per pairing) plus a short
+  playtest (SC-004). The FRD gives no number.
+- **Pace of a computer chain** (confirmed in Clarifications): about 0.5 seconds before each
+  further jump (FR-009), so a three-jump chain takes about 1 second after the first jump. The FRD
+  says only that the player can follow it.
+- **Rules or Settings during the computer's turn** (confirmed in Clarifications): the computer's
+  move waits until the player returns (FR-017), so they come back to the position they left
+  (FR-NAV-04) and see and hear the move, rather than the computer moving while they are away.
 - **Variety**: the computer chooses at random among equally good moves, so games do not repeat;
   tests fix the random choices so they do. How a weaker level picks its moves is decided in the
   plan.

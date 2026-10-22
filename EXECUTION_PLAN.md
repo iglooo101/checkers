@@ -39,11 +39,11 @@ Epics are listed in execution order.
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
-| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 1/15 | In Progress |
+| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 2/15 | In Progress |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **25/41** | **87/147** | |
+| | **Total** | | | | **25/41** | **88/147** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,6 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
 - #96 F4.0: Specification (Spec Kit)
+- #99 E4 Plan: write plan.md with /speckit-plan, including the Constitution Check
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -63,12 +64,12 @@ announcements, focus that follows each step), with non-color cues at 3:1 contras
 accessibility audit of every screen. Computer games wait for E4; Statistics, Rules and Settings
 are placeholders until E5 and E6.
 
-1. **E4 Computer opponent (#95)** on branch `005-computer-opponent`: #97 Specify is done
-   (`specs/005-computer-opponent/spec.md`). Next is #98 Clarify, with three assumptions: how
-   strength is measured, the pace of a computer chain, and whether the computer's move waits while
-   Rules or Settings is open. Then #99 Plan, which profiles the engine's move generation before
-   choosing search depths, because the spec bounds each computer turn to about 1 s (FR-008);
-   #190 announces the computer's moves through the `Announcer` seam.
+1. **E4 Computer opponent (#95)** on branch `005-computer-opponent`: #97 Specify and #98 Clarify
+   are done (`specs/005-computer-opponent/spec.md`). #99 Plan is in progress: it profiles the
+   engine's move generation before choosing search depths, because the spec bounds each computer
+   turn to about 1 s (FR-008). Then #100 Tasks and #101 Reconcile, which adds board tasks for the
+   setup changes and the new audit states. #190 announces the computer's moves through the
+   `Announcer` seam.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -102,7 +103,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Board tasks are a first cut from the FRD; each slice's `tasks.md` will add, split or close
   tasks during reconciliation.
 - FR-AI-02 (noticeable strength gaps) is partly subjective; the E4 spec measures it by matches
-  between the levels (SC-003, a 70% margin to confirm in #98) and a playtest by the user (SC-004).
+  between the levels (SC-003, a 70% margin) and a playtest by the user (SC-004).
 - Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
   Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
@@ -300,13 +301,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #168 UI test running performAccessibilityAudit() on every screen · M
 - [x] #197 Validate the E7 slice and update project docs · S · after #168
 
-### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 1/15 tasks
+### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 2/15 tasks
 
 **F4.0 Specification (Spec Kit)** (#96) · FRD §11
 
 - [x] #97 E4 Specify: write spec.md with /speckit-specify · S
-- [ ] #98 E4 Clarify: resolve open questions with /speckit-clarify · S
-- [ ] #99 E4 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
+- [x] #98 E4 Clarify: resolve open questions with /speckit-clarify · S
+- [~] #99 E4 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #100 E4 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #101 E4 Reconcile this epic's board tasks with tasks.md · S
 
@@ -549,3 +550,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   FRD's first-use defaults (Computer, Easy, Light) and choices remembered when a game starts. The
   setup and audit requirements have no board task yet (#101 assigns them). Three assumptions go to
   #98 Clarify.
+- 2026-10-22: #98 done. Three clarifications: strength is proven by matches between the levels
+  (at least 100 games per pairing, the stronger level scoring at least 70%) plus a playtest; about
+  0.5 s before each further jump of a computer chain; the computer's move waits while Rules or
+  Settings is open. Next is #99 Plan.
