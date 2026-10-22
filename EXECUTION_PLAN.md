@@ -69,8 +69,9 @@ Statistics, Rules and Settings are placeholders until E5 and E6.
 
 1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
    (`specs/006-saving-and-statistics/`): spec, clarify and plan are done (#116 to #118: 4 user
-   stories, 26 requirements, 3 clarifications, research R1–R14); **tasks (#119)** is next, then
-   reconcile. It saves the game in
+   stories, 26 requirements, 3 clarifications, research R1–R14) and `tasks.md` is written (29
+   tasks). Next: **`/speckit-analyze` to finish #119**, then **#120 Reconcile** (board task IDs, a
+   new "Validate the E5 slice" task, F5.0 Done), then `/speckit-implement` from Setup and US1. It saves the game in
    play (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
    computer's turn, and keeps the record against the computer.
 2. Then E6 → E8 (Order and dependencies).
@@ -109,6 +110,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   margin (Medium 90, Hard 99 of 100); the playtest by the user (SC-004, E4 quickstart §4) is
   still open: a beginner must be able to beat Easy, which plays any turn within 40 points of its
   best two turns ahead.
+- E5 makes app data outlive each UI test: saved games stay between tests and the record cannot be
+  reset, so UI tests answer "Abandon current game?" in the start helpers, compare counts before and
+  after, and set known states with `UserDefaults` launch arguments (research R10, checked only on
+  the Mac so far).
+- E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
+  older saves become unreadable (shown once on Home). A test fixture guards it.
 - E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
   Mac proxy is 419 ms), a VoiceOver game (§6), and pressing Home while the computer thinks (§3),
   which UI tests cannot do inside the half-second thinking.
@@ -653,3 +660,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   engine with validation; the saved game and the record are JSON in `UserDefaults` behind
   protocols (a 220-turn game is about 23 KB and codes in about 2 ms); UI tests set saved data
   through launch arguments; no constitution violations.
+- 2026-10-22: Session close-out. E5's `tasks.md` written (29 tasks: Setup and Foundational T001–T007,
+  US1 T008–T012, US2 T013–T015, US3 T016–T019, US4 T020–T022, Polish T023–T029); #119 stays In
+  Progress until `/speckit-analyze` has run. HANDOFF.md updated with the E5 lessons (no Spec Kit
+  branch hook, measure before choosing storage, launch arguments for test data, persisted data in
+  UI tests) and next steps.

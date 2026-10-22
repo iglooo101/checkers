@@ -32,7 +32,8 @@ Last updated: 2026-10-22
   `git fetch origin main:main` before comparing branches. `001-project-foundation` was merged and
   deleted; `002-rules-engine`, `003-game-experience`, `004-accessibility` and
   `005-computer-opponent` are merged into `main` and can be deleted (the auto-mode safety check
-  blocks the deletion; the command is in Next steps). E5 starts on a new branch.
+  blocks the deletion; the command is in Next steps). E5 is on **`006-saving-and-statistics`**
+  (pushed; only Spec Kit documents so far).
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
@@ -70,8 +71,8 @@ Last updated: 2026-10-22
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
 - **Backlog**: 8 epics, 41 features, 150 tasks (#1–#200; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
-  opponent are done**; **E5 Saving and statistics** (#114) is next. Progress and the full list
-  are in `EXECUTION_PLAN.md`.
+  opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
+  (#115) is at its tasks step (#119). Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -80,8 +81,12 @@ Last updated: 2026-10-22
   by hand is left for the user). E4's slice is `specs/005-computer-opponent/`: spec (3
   clarifications), plan with measured research R1–R14, contracts `computer-player.md` and
   `computer-turn.md`, 35 tasks, **all done** (final CI run 39861850824, landed on `main`);
-  measurements, results and the checks left for the user are in `checklists/validation.md`. `.specify/feature.json` (local, git-ignored) points at
-  it.
+  measurements, results and the checks left for the user are in `checklists/validation.md`.
+  E5's slice is `specs/006-saving-and-statistics/`: spec (4 user stories, 26 requirements, 3
+  clarifications), plan with measured research R1–R14, data model, contracts `saved-game.md`
+  (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
+  abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
+  not yet analyzed)**. `.specify/feature.json` (local, git-ignored) points at it.
 
 ## Lessons learned
 
@@ -357,6 +362,27 @@ Last updated: 2026-10-22
 - **`didSet` works on an `@Observable` property**: the router updates `setCovered` from `path`
   that way, including when the navigation stack pops.
 
+## Lessons learned (E5 specification to tasks, 2026-10-22)
+
+- **Spec Kit makes no branch here**: `create_new_feature.py` creates the spec folder and
+  `.specify/feature.json` but no git branch (no git hook is installed). Create it by hand from an
+  up-to-date `main` (`git checkout main && git checkout -b 006-…`) before committing the spec.
+- **Measure before choosing storage**: a 220-turn game is about 23 KB as JSON and codes in about
+  2 ms, and a `UserDefaults` write takes microseconds, so files, actors and background tasks were
+  not needed. Seeded random play ends games fast (47 turns for most seeds); a long test game
+  needs steps that end it refused, across many seeds.
+- **The compiler's `Codable` for `GameState` is a poor save format**: a side encodes as
+  `{"light":{}}`, and `private(set)` properties can only be set from their own file, so custom
+  decoding needs an internal initializer in `GameState.swift`.
+- **`UserDefaults` launch arguments set test data without app switches**: `-key <hex bytes>` makes
+  `data(forKey:)` return those bytes for the whole launch, and writes do not replace them
+  (checked on the Mac; research R10).
+- **Persisted data changes UI testing**: saved games and the record outlive each test, the record
+  cannot be reset, so UI tests compare counts before and after, the start helpers answer
+  "Abandon current game?", and audits that need a known state set it with launch arguments.
+- **The GitHub API can drop a connection** (`update_plan.py` failed once with "connection reset by
+  peer"); rerunning it worked.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -364,11 +390,18 @@ Last updated: 2026-10-22
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E5 Saving and statistics (#114)** next, as a new Spec Kit slice (`/speckit-specify` from
-   `FRD.md`, on a new branch from `main` after `git fetch origin main:main`). Epic order: E5 →
-   E6 → E8 (see `EXECUTION_PLAN.md`). E5 must resume a game during the computer's turn (start it
-   again with `startComputerTurnIfNeeded()`). New screens join `US5AccessibilityAuditUITests`
-   (#131, #142, #152); E6's themes must pass `US4ContrastTests` (#144).
+1. **E5 Saving and statistics (#114)**, branch `006-saving-and-statistics`,
+   `specs/006-saving-and-statistics/`:
+   - **#119 (In Progress)**: run `/speckit-analyze` on spec, plan and `tasks.md`; fix what it
+     finds; then move #119 to Done.
+   - **#120 Reconcile**: add each board task's task IDs (`tasks.md`, "Board Mapping"), create the
+     new task "Validate the E5 slice and update project docs" (T001, T002, T023–T029; look it up
+     if the board adds it automatically, E4 lessons), and close F5.0 (#115).
+   - Then `/speckit-implement`: Setup and Foundational (T001–T007), then US1 (T008–T012) as the
+     MVP, US2, US3, US4 and Polish. Check early that `-savedGame`/`-record` launch arguments work
+     in the simulator (T017, T021; verified only on the Mac so far, research R10).
+   - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
+     `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:
    - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
      §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
