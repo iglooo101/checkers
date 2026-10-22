@@ -235,6 +235,11 @@ Last updated: 2026-10-21
   the report moves when the layout moves. Check with a screenshot at the largest size before
   changing code; the allow-list rule is narrow (`isAllowed` in `US5AccessibilityAuditUITests`)
   and logs every allowed issue as a test activity.
+- **System banners break audits on CI**: a fresh CI simulator showed "Ready for Apple
+  Intelligence" over the app, and the audit read it as inaccessible text with no element. The
+  audit helper re-audits a screen with problems after 8 s and fails only on problems found both
+  times. CI keeps the result bundle (`test-results` artifact), whose screen recording shows such
+  overlays.
 - **XCUITest cannot drive VoiceOver.** Announcements are tested through the `Announcer` seam and
   focus through `GameSession.focusSquare`; a VoiceOver game by hand stays with the user.
 - **Visual checks**: `ImageRenderer` leaves out the board's square cells, so use simulator

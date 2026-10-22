@@ -39,9 +39,25 @@ final class US5AccessibilityAuditUITests: XCTestCase {
     }
 
     /// Runs every audit type on the current screen; each problem not on the allow-list fails the
-    /// test with the element it was found on.
+    /// test with the element it was found on. A system banner over the app, such as a fresh
+    /// simulator's notifications on CI, is read as inaccessible text, so a screen with problems is
+    /// audited once more after banners have gone; only problems found both times fail.
     @MainActor
     private func audit(_ app: XCUIApplication) throws {
+        var problems = try findProblems(app)
+        if !problems.isEmpty {
+            _ = XCTWaiter.wait(for: [XCTestExpectation(description: "Banners gone")], timeout: 8)
+            problems = try findProblems(app)
+        }
+        for problem in problems {
+            XCTFail(problem)
+        }
+    }
+
+    /// One audit with every audit type, returning the problems not on the allow-list.
+    @MainActor
+    private func findProblems(_ app: XCUIApplication) throws -> [String] {
+        var problems: [String] = []
         try app.performAccessibilityAudit { issue in
             let element = issue.element.map {
                 "\($0.elementType.rawValue) '\($0.identifier)' '\($0.label)'"
@@ -51,10 +67,11 @@ final class US5AccessibilityAuditUITests: XCTestCase {
                 // Kept in the test report, so allowed issues stay visible.
                 XCTContext.runActivity(named: "Allowed: \(summary)") { _ in }
             } else {
-                XCTFail("\(summary): \(issue.detailedDescription)")
+                problems.append("\(summary): \(issue.detailedDescription)")
             }
             return true
         }
+        return problems
     }
 
     /// FR-A11Y-04: Home as launched.

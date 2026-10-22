@@ -128,7 +128,9 @@ what else was considered. Facts marked *measured* were checked on the developmen
   report on whichever setup line the scrolling form cuts at the screen's edge when the audit
   enlarges the text. Evidence for the second: the report moved from the note to the "Side" header
   when the note moved, disappeared when a row was added above, and both scale at the largest
-  size on screen.
+  size on screen. On CI a system notification banner on the fresh simulator was read as
+  inaccessible text with no element; a screen with problems is therefore audited again after
+  8 s, and only problems found both times fail.
 
 ## R7. Tests
 
