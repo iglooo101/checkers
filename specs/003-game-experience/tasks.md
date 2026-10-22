@@ -239,13 +239,13 @@ description: "Task list for the game experience slice (epic E3)"
 
 ### Tests for User Story 7 (MANDATORY - write first) ⚠️
 
-- [ ] T047 [P] [US7] Write `Unit/US7NavigationTests.swift` (`struct US7NavigationTests`):
+- [X] T047 [P] [US7] Write `Unit/US7NavigationTests.swift` (`struct US7NavigationTests`):
   - `US7 FR-NAV-04`: with a game open and a chain in progress (US2 chain position), `open(.rules)` makes the path `[.game, .rules]`; removing the last path element leaves the same session object with an equal state and the chain still selected; likewise `.settings`.
   - `US7 FR-NAV-03`: `requestHome()` during a game in progress sets `isConfirmingLeave` and leaves the path and session unchanged; `cancelLeave()` clears it with nothing else changed; `confirmLeave()` empties the path and drops the session.
   - `US7 FR-NAV-02`: `PlaceholderText.message(for:)` gives the three one-line messages of contracts/screens.md for `.statistics`, `.rules` and `.settings`.
   Fails to compile until T050–T051.
-- [ ] T048 [P] [US7] Write `Unit/NoWebContentTests.swift` (`struct NoWebContentTests`, `US7`): the app bundle contains no `.html` and no `.wav` resources (FR-006). Fails until T055.
-- [ ] T049 [P] [US7] Write `UI/US7NavigationUITests.swift`:
+- [X] T048 [P] [US7] Write `Unit/NoWebContentTests.swift` (`struct NoWebContentTests`, `US7`): the app bundle contains no `.html` and no `.wav` resources (FR-006). Fails until T055.
+- [X] T049 [P] [US7] Write `UI/US7NavigationUITests.swift`:
   - `testUS7_menuOffersEverything`: in a game, `game.menu` offers `game.menu.undo`, `game.menu.resign`, `game.menu.rules`, `game.menu.settings` and `game.menu.home`.
   - `testUS7_rulesAndSettingsReturnToTheGame`: play `c3`→`d4`; open Rules from the menu, check `placeholder.message`, go Back: `square.d4` is "d4, Light man" and `game.turn` "Dark to move"; the same for Settings.
   - `testUS7_leaveConfirmation`: play a move; menu → Home: `game.leave.cancel` keeps the game; menu → Home → `game.leave.confirm` shows Home; New game → Two players → Start shows a fresh board.
@@ -255,12 +255,12 @@ description: "Task list for the game experience slice (epic E3)"
 
 ### Implementation for User Story 7
 
-- [ ] T050 [P] [US7] Create `App/Features/Placeholders/PlaceholderText.swift` (`message(for: Route) -> LocalizedStringResource?` with the three lines) and show the message (`placeholder.message`) in `PlaceholderView`, scrolling at large text sizes.
-- [ ] T051 [US7] Extend `App/App/AppRouter.swift`: `requestHome()` sets `isConfirmingLeave` while the game is in progress; `confirmLeave()` and `cancelLeave()` per the contract. T047 passes.
-- [ ] T052 [US7] Extend the game menu in `App/Features/Game/GameView.swift` with Rules, Settings (pushing `.rules`, `.settings`) and Home (`router.requestHome()`), shown in progress and after the end, and the leave confirmation dialog ("Leave this game?", "It can't be resumed yet.", Leave destructive `game.leave.confirm`, Cancel `game.leave.cancel`) bound to `isConfirmingLeave`. Sync the catalog.
-- [ ] T053 [US7] Accessibility pass for Home, setup navigation and placeholders (#68): `accessibility5`, Dark Mode, labels, previews; record in `validation.md`. US7 unit and UI tests pass except `NoWebContentTests`.
-- [ ] T054 [US7] Update `Unit/LocalizationTests.swift` first: expect every string of contracts/screens.md in the catalog (titles, buttons, choices, the note, the four turn sentences, the notice, the six results, the dialog texts, the five square-label formats, the three placeholder messages) and none of `Classic`, `Modern`, `Play`, `Playful`, `Screen`. Fails until T055.
-- [ ] T055 [US7] Remove the web prototype (#67): delete `App/ContentView.swift`, `App/Classic.html`, `App/Modern.html`, `App/Playful.html`, `App/Play.html`, `App/move.wav` and `Unit/ScreenCatalogTests.swift`; build, run `scripts/sync-string-catalog.sh` so the picker strings are removed, and commit the catalog. Confirm `grep -rn 'WebKit\|WKWebView\|UIViewRepresentable' checkers/checkers` finds nothing. T048 and T054 pass; all tests pass.
+- [X] T050 [P] [US7] Create `App/Features/Placeholders/PlaceholderText.swift` (`message(for: Route) -> LocalizedStringResource?` with the three lines) and show the message (`placeholder.message`) in `PlaceholderView`, scrolling at large text sizes.
+- [X] T051 [US7] Extend `App/App/AppRouter.swift`: `requestHome()` sets `isConfirmingLeave` while the game is in progress; `confirmLeave()` and `cancelLeave()` per the contract. T047 passes.
+- [X] T052 [US7] Extend the game menu in `App/Features/Game/GameView.swift` with Rules, Settings (pushing `.rules`, `.settings`) and Home (`router.requestHome()`), shown in progress and after the end, and the leave confirmation dialog ("Leave this game?", "It can't be resumed yet.", Leave destructive `game.leave.confirm`, Cancel `game.leave.cancel`) bound to `isConfirmingLeave`. Sync the catalog.
+- [X] T053 [US7] Accessibility pass for Home, setup navigation and placeholders (#68): `accessibility5`, Dark Mode, labels, previews; record in `validation.md`. US7 unit and UI tests pass except `NoWebContentTests`.
+- [X] T054 [US7] Update `Unit/LocalizationTests.swift` first: expect every string of contracts/screens.md in the catalog (titles, buttons, choices, the note, the four turn sentences, the notice, the six results, the dialog texts, the five square-label formats, the three placeholder messages) and none of `Classic`, `Modern`, `Play`, `Playful`, `Screen`. Fails until T055.
+- [X] T055 [US7] Remove the web prototype (#67): delete `App/ContentView.swift`, `App/Classic.html`, `App/Modern.html`, `App/Playful.html`, `App/Play.html`, `App/move.wav` and `Unit/ScreenCatalogTests.swift`; build, run `scripts/sync-string-catalog.sh` so the picker strings are removed, and commit the catalog. Confirm `grep -rn 'WebKit\|WKWebView\|UIViewRepresentable' checkers/checkers` finds nothing. T048 and T054 pass; all tests pass.
 
 **Checkpoint**: US7 complete: the app is fully native.
 

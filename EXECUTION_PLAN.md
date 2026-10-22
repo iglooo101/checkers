@@ -37,13 +37,13 @@ Epics are listed in execution order.
 |---|---|---|---|---|---|---|---|
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
-| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 3/8 | 16/29 | In Progress |
+| 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 7/8 | 25/29 | In Progress |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 0/5 | 0/10 | Todo |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **15/41** | **62/146** | |
+| | **Total** | | | | **19/41** | **71/146** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,19 +51,9 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #57 E3: Game experience
 - #64 F3.1: App shell and navigation
-- #69 F3.2: Game setup
-- #70 Setup screen: opponent, difficulty and side (Light, Dark, Random)
-- #71 Preselect last-used choices; first-use defaults Computer, Easy, Light
-- #73 Accessibility pass: Game setup
-- #74 F3.3: Board view
-- #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation
-- #88 F3.6: Game end and result
-- #89 Resign with confirmation (human vs computer; side to move in two-player)
-- #90 Result panel over the final position with outcome and reason, Play again and Home
-- #91 Play again keeps opponent, difficulty and side; Random re-rolls the side
-- #92 Accessibility pass: result panel and confirmations
-- #93 F3.7: Undo in the game
-- #94 Undo menu item with enable/disable rules; two-player undo takes back one turn
+- #66 Game screen menu: Undo, Resign, Rules, Settings, Home
+- #67 Remove the HTML screens, move.wav reference and WKWebView code
+- #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews)
 - #196 Validate the E3 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -222,7 +212,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #194 Random games: 1,000 seeded games end, stay legal and undo exactly (SC-003) · M · after #54
 - [x] #195 Validate the E2 slice and update project docs · S · after #193, #194
 
-### E3 Game experience (#57) · M2 Playable two-player game · P0 · 16/29 tasks
+### E3 Game experience (#57) · M2 Playable two-player game · P0 · 25/29 tasks
 
 **F3.0 Specification (Spec Kit)** (#58) · FRD §4–7, §9, §10
 
@@ -235,7 +225,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F3.3 Board view** (#74) · FR-GAME-01, FR-GAME-02, FR-GAME-03, FR-GAME-04, FR-GAME-05, FR-GAME-07, FR-SND-04
 
 - [x] #75 SwiftUI board: 8×8 grid, men and kings, sized to fit every supported iPhone · M
-- [~] #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation · S
+- [x] #76 Board orientation: player's side at bottom vs computer; Light at bottom in two-player, no rotation · S
 - [x] #77 Turn indicator, including "capture required" · S
 - [x] #78 Accessibility pass: Game screen layout at accessibility5 and Dark Mode · S
 
@@ -254,28 +244,28 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F3.7 Undo in the game** (#93) · FR-UNDO-01, FR-UNDO-02, FR-UNDO-06
 
-- [~] #94 Undo menu item with enable/disable rules; two-player undo takes back one turn · S
+- [x] #94 Undo menu item with enable/disable rules; two-player undo takes back one turn · S
 
 **F3.6 Game end and result** (#88) · FR-END-02, FR-END-06, FR-END-07, FR-END-08
 
-- [~] #89 Resign with confirmation (human vs computer; side to move in two-player) · S
-- [~] #90 Result panel over the final position with outcome and reason, Play again and Home · M
-- [~] #91 Play again keeps opponent, difficulty and side; Random re-rolls the side · S
-- [~] #92 Accessibility pass: result panel and confirmations · S
+- [x] #89 Resign with confirmation (human vs computer; side to move in two-player) · S
+- [x] #90 Result panel over the final position with outcome and reason, Play again and Home · M
+- [x] #91 Play again keeps opponent, difficulty and side; Random re-rolls the side · S
+- [x] #92 Accessibility pass: result panel and confirmations · S
 
 **F3.1 App shell and navigation** (#64) · FR-NAV-01, FR-NAV-02, FR-NAV-03, FR-NAV-04, FR-GAME-06
 
 - [x] #65 Home screen with New game, Statistics, Rules and Settings · M
-- [ ] #66 Game screen menu: Undo, Resign, Rules, Settings, Home · M · after #75
-- [ ] #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews) · S
-- [ ] #67 Remove the HTML screens, move.wav reference and WKWebView code · S · after #66, #81
+- [~] #66 Game screen menu: Undo, Resign, Rules, Settings, Home · M · after #75
+- [~] #68 Accessibility pass: Home and navigation (Dynamic Type, Dark Mode, VoiceOver labels, previews) · S
+- [~] #67 Remove the HTML screens, move.wav reference and WKWebView code · S · after #66, #81
 - [~] #196 Validate the E3 slice and update project docs · S · after #67
 
 **F3.2 Game setup** (#69) · FR-SETUP-01, FR-SETUP-02, FR-SETUP-03, FR-SETUP-05
 
-- [~] #70 Setup screen: opponent, difficulty and side (Light, Dark, Random) · M
-- [~] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
-- [~] #73 Accessibility pass: Game setup · S
+- [x] #70 Setup screen: opponent, difficulty and side (Light, Dark, Random) · M
+- [x] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
+- [x] #73 Accessibility pass: Game setup · S
 
 ### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 0/10 tasks
 

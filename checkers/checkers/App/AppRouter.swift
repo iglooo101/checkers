@@ -13,6 +13,9 @@ final class AppRouter {
         didSet { store.save(setup) }
     }
 
+    /// Whether the leave confirmation is showing (FR-042).
+    var isConfirmingLeave = false
+
     @ObservationIgnored private let store: any SetupStore
     /// Draws the player's side when the setup says Random (FR-034).
     @ObservationIgnored private let drawSide: () -> Side
@@ -64,9 +67,28 @@ final class AppRouter {
         }
     }
 
-    /// Returns Home. A finished game, or no game, is left at once.
+    /// Returns Home. A finished game, or no game, is left at once; a game in progress asks first,
+    /// because it cannot be resumed until saving exists (FR-042).
     func requestHome() {
-        guard session?.isOver ?? true else { return }
+        if let session, !session.isOver {
+            isConfirmingLeave = true
+        } else {
+            leave()
+        }
+    }
+
+    /// Leaves the game in progress for Home, discarding it.
+    func confirmLeave() {
+        leave()
+    }
+
+    /// Stays in the game.
+    func cancelLeave() {
+        isConfirmingLeave = false
+    }
+
+    private func leave() {
+        isConfirmingLeave = false
         path.removeAll()
         session = nil
     }

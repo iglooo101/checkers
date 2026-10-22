@@ -23,12 +23,16 @@ struct RootView: View {
                 GameView(session: session, router: router)
             }
         case .statistics:
-            PlaceholderView(title: "Statistics")
+            placeholder("Statistics", for: route)
         case .rules:
-            PlaceholderView(title: "Rules")
+            placeholder("Rules", for: route)
         case .settings:
-            PlaceholderView(title: "Settings")
+            placeholder("Settings", for: route)
         }
+    }
+
+    private func placeholder(_ title: LocalizedStringResource, for route: Route) -> some View {
+        PlaceholderView(title: title, message: PlaceholderText.message(for: route) ?? title)
     }
 }
 

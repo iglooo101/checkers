@@ -38,23 +38,32 @@ struct GameView: View {
         }
         .padding(.top)
         .navigationBarTitleDisplayMode(.inline)
+        // Leaving goes through the menu's Home, which asks first while the game is in progress
+        // (FR-042), so the system back button is hidden.
+        .navigationBarBackButtonHidden(true)
         .toolbar {
-            if !session.isOver {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    if !session.isOver {
                         Button("Undo", systemImage: "arrow.uturn.backward") { session.undo() }
                             .disabled(!session.canUndo)
                             .accessibilityIdentifier("game.menu.undo")
                         Button("Resign", role: .destructive) { isConfirmingResign = true }
                             .accessibilityIdentifier("game.menu.resign")
-                    } label: {
-                        Label("Game menu", systemImage: "ellipsis.circle")
                     }
-                    .accessibilityIdentifier("game.menu")
+                    Button("Rules", systemImage: "book") { router.open(.rules) }
+                        .accessibilityIdentifier("game.menu.rules")
+                    Button("Settings", systemImage: "gear") { router.open(.settings) }
+                        .accessibilityIdentifier("game.menu.settings")
+                    Button("Home", systemImage: "house") { router.requestHome() }
+                        .accessibilityIdentifier("game.menu.home")
+                } label: {
+                    Label("Game menu", systemImage: "ellipsis.circle")
                 }
+                .accessibilityIdentifier("game.menu")
             }
         }
-        // An alert, not a confirmation dialog: from a toolbar item iOS shows a dialog as a popover
+        // Alerts, not confirmation dialogs: from a toolbar item iOS shows a dialog as a popover
         // without a Cancel button.
         .alert(Text(GameText.resignTitle(session.resigningSide)), isPresented: $isConfirmingResign)
         {
@@ -63,6 +72,23 @@ struct GameView: View {
             Button("Cancel", role: .cancel) {}
                 .accessibilityIdentifier("game.resign.cancel")
         }
+        .alert("Leave this game?", isPresented: leaveBinding) {
+            Button("Leave", role: .destructive) { router.confirmLeave() }
+                .accessibilityIdentifier("game.leave.confirm")
+            Button("Cancel", role: .cancel) { router.cancelLeave() }
+                .accessibilityIdentifier("game.leave.cancel")
+        } message: {
+            Text("It can't be resumed yet.")
+        }
+    }
+
+    /// Shows the leave confirmation while the router asks for it; dismissing it cancels.
+    private var leaveBinding: Binding<Bool> {
+        Binding(
+            get: { router.isConfirmingLeave },
+            set: { isShowing in
+                if !isShowing { router.cancelLeave() }
+            })
     }
 }
 

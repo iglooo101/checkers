@@ -19,13 +19,13 @@
     "A capture is required." : {
 
     },
+    "Board theme, sound effects and move hints will be set here." : {
+
+    },
     "Cancel" : {
 
     },
     "Checkers" : {
-
-    },
-    "Classic" : {
 
     },
     "Computer" : {
@@ -70,6 +70,18 @@
     "Home" : {
 
     },
+    "How to play American checkers will be explained here." : {
+
+    },
+    "It can't be resumed yet." : {
+
+    },
+    "Leave" : {
+
+    },
+    "Leave this game?" : {
+
+    },
     "Light" : {
 
     },
@@ -88,22 +100,13 @@
     "Medium" : {
 
     },
-    "Modern" : {
-
-    },
     "New game" : {
 
     },
     "Opponent" : {
 
     },
-    "Play" : {
-
-    },
     "Play again" : {
-
-    },
-    "Playful" : {
 
     },
     "Random" : {
@@ -119,9 +122,6 @@
 
     },
     "Rules" : {
-
-    },
-    "Screen" : {
 
     },
     "Settings" : {
@@ -140,6 +140,9 @@
 
     },
     "Undo" : {
+
+    },
+    "Your wins, losses and draws against the computer will appear here." : {
 
     }
   },

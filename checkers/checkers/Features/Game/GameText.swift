@@ -24,14 +24,16 @@ enum GameText {
     /// The result panel's sentence once the game is over (FR-033). A resignation names the side
     /// that resigned: the winner's opponent.
     static func result(_ outcome: Outcome) -> LocalizedStringResource? {
+        // Explicit returns: from a switch expression with an optional result the compiler
+        // extracts only one literal into the String Catalog.
         switch outcome {
-        case .inProgress: nil
-        case .win(winner: .light, reason: .noMovesLeft): "Light wins: no moves left"
-        case .win(winner: .dark, reason: .noMovesLeft): "Dark wins: no moves left"
-        case .win(winner: .dark, reason: .resignation): "Light resigned"
-        case .win(winner: .light, reason: .resignation): "Dark resigned"
-        case .draw(reason: .repetition): "Draw by repetition"
-        case .draw(reason: .noProgress): "Draw by no progress"
+        case .inProgress: return nil
+        case .win(winner: .light, reason: .noMovesLeft): return "Light wins: no moves left"
+        case .win(winner: .dark, reason: .noMovesLeft): return "Dark wins: no moves left"
+        case .win(winner: .dark, reason: .resignation): return "Light resigned"
+        case .win(winner: .light, reason: .resignation): return "Dark resigned"
+        case .draw(reason: .repetition): return "Draw by repetition"
+        case .draw(reason: .noProgress): return "Draw by no progress"
         }
     }
 
