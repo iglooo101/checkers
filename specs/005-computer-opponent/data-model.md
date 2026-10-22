@@ -17,7 +17,8 @@ types follow E3 and E7 (`specs/003-game-experience/data-model.md`,
 | `hard` | 16 | measured (R4) | 0 |
 
 Starting values; the tuned values are recorded in research R4. Depth counts complete turns;
-margins are in evaluation points (a man is 100).
+margins are in evaluation points (a man is 100). Each level's values are an internal
+`SearchLimits` (`maxDepth`, `nodeLimit: Int?`, `margin`), exposed as `ComputerLevel.limits`.
 
 ### ComputerTurn
 
@@ -30,8 +31,10 @@ margins are in evaluation points (a man is 100).
 
 ### ComputerPlayer
 
-A namespace with one function: `chooseTurn(in:level:seed:shouldStop:)` (contract). No stored
-state; each call is independent.
+A namespace with one public function, `chooseTurn(in:level:seed:shouldStop:)` (contract), which
+calls the internal `chooseTurn(in:limits:seed:shouldStop:)` with `level.limits`. Tests in the
+Debug run use the internal form with small limits, so they never search at Hard's full node
+limit. No stored state; each call is independent.
 
 ## Engine (internal)
 

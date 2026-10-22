@@ -50,6 +50,8 @@ On the iPhone 17 simulator:
   the reply appears.
 - New game as Dark: the computer opens as Light; Undo is unavailable until you have moved.
 - Resign while it thinks: the result panel shows your resignation and no further move.
+- Move, and while it thinks press Home on the simulator (Device → Home), wait a few seconds and
+  return to the app: the computer has made exactly one reply (or makes it now), and it is your turn.
 
 ## 4. Playtest (SC-004, US2)
 

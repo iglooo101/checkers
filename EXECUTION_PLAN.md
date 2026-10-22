@@ -39,18 +39,17 @@ Epics are listed in execution order.
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
-| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 3/15 | In Progress |
+| 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 1/4 | 5/18 | In Progress |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **25/41** | **89/147** | |
+| | **Total** | | | | **26/41** | **91/150** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #95 E4: Computer opponent
-- #96 F4.0: Specification (Spec Kit)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -63,11 +62,12 @@ announcements, focus that follows each step), with non-color cues at 3:1 contras
 accessibility audit of every screen. Computer games wait for E4; Statistics, Rules and Settings
 are placeholders until E5 and E6.
 
-1. **E4 Computer opponent (#95)** on branch `005-computer-opponent`: #97 Specify, #98 Clarify and
-   #99 Plan are done (`specs/005-computer-opponent/`). Next is #100 Tasks with `/speckit-analyze`,
-   then #101 Reconcile, which adds board tasks for the setup changes, the new audit states, the
-   `engine-strength` CI job and the slice's validation. #190 announces the computer's moves
-   through the `Announcer` seam.
+1. **E4 Computer opponent (#95)** on branch `005-computer-opponent`: F4.0 Specification is done
+   (`specs/005-computer-opponent/`: spec, plan, 35 tasks, board reconciled). Next is
+   implementation with `/speckit-implement`, starting with T001: Setup and Foundational (the
+   search's turn generator, the `ComputerOpponent` and `TurnPacer` seams), then US1 (#104, #107,
+   #108, #109, #198: a playable computer game at one strength), US2 (#103, #105, #199: three levels
+   proven by Release matches), US3 (#110), US4 (#112, #113), US5 (#190) and #200.
 2. Then E5 → E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -303,21 +303,22 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #168 UI test running performAccessibilityAudit() on every screen · M
 - [x] #197 Validate the E7 slice and update project docs · S · after #168
 
-### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 3/15 tasks
+### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 5/18 tasks
 
 **F4.0 Specification (Spec Kit)** (#96) · FRD §11
 
 - [x] #97 E4 Specify: write spec.md with /speckit-specify · S
 - [x] #98 E4 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #99 E4 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [ ] #100 E4 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
-- [ ] #101 E4 Reconcile this epic's board tasks with tasks.md · S
+- [x] #100 E4 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [x] #101 E4 Reconcile this epic's board tasks with tasks.md · S
 
 **F4.1 AI search** (#102) · FR-AI-01, FR-AI-02
 
 - [ ] #103 Position evaluation function · M
 - [ ] #104 Cancellable alpha-beta search off the main actor · L
 - [ ] #105 Difficulty levels Easy, Medium, Hard with measurable strength gaps · M
+- [ ] #199 Run the strength matches in a Release CI job that the CI gate requires · S
 
 **F4.2 Computer turn** (#106) · FR-AI-03, FR-AI-04, FR-AI-05, FR-AI-06, FR-MOVE-04
 
@@ -326,11 +327,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #190 Announce the computer's moves with VoiceOver · S · after #164
 - [ ] #109 Computer makes the first move when it plays Light · S
 - [ ] #110 UI stays responsive while thinking: menu, Undo and Home work · S
+- [ ] #198 Start computer games from Game setup: first-use defaults, choices remembered on start · S
 
 **F4.3 Undo against the computer** (#111) · FR-UNDO-03, FR-UNDO-04
 
 - [ ] #112 Undo takes back the player's turn and the computer's reply; unavailable before the first move · S
 - [ ] #113 Undo while the computer thinks cancels its turn · S
+- [ ] #200 Validate the E4 slice and update project docs · S · after #113
 
 ### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 0/16 tasks
 
@@ -564,3 +567,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   second. So the search gets its own generator, with `GameState` as the referee for every step
   played. Strength matches run in Release in a new parallel CI job, `engine-strength`. FR-027
   aligned: the thinking state is too short to audit. Next is #100 Tasks.
+- 2026-10-22: #100 done: `specs/005-computer-opponent/tasks.md`, 35 tasks, test-first, by story.
+  `/speckit-analyze` found 6 issues (1 high: Debug-run engine tests would have searched at Hard's
+  full node limit, so they now use small internal `SearchLimits` and Hard at full strength runs
+  only in the Release strength tests); all fixed. #101 done: every E4 board task lists its task
+  IDs; added #198 (computer games in setup, F4.2), #199 (strength matches in a Release CI job,
+  F4.1) and #200 (slice validation and docs, F4.3, after #113). F4.0 (#96) closed. Backlog is now
+  150 tasks. Next is implementation, starting with T001.
