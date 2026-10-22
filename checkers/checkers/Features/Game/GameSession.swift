@@ -58,6 +58,12 @@ final class GameSession {
         GameText.result(state.outcome)
     }
 
+    /// Whether Undo can take back a turn: the game is in progress and a turn has been played
+    /// (FR-037).
+    var canUndo: Bool {
+        state.canUndo
+    }
+
     /// The side that resigns: the side to move in a two-player game, the player against the
     /// computer (FR-032).
     var resigningSide: Side {
@@ -91,6 +97,19 @@ final class GameSession {
         } else {
             selection = nil
         }
+    }
+
+    /// Takes back the last turn, or the partial turn of a chain; nothing is selected afterwards
+    /// (FR-036, FR-038).
+    func undo() {
+        guard canUndo else { return }
+        do {
+            try state.undo()
+        } catch {
+            Log.game.error("Undo rejected: \(String(describing: error))")
+        }
+        selection = nil
+        notice = nil
     }
 
     /// Resigns for `resigningSide`; nothing happens once the game is over (FR-032).

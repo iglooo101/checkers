@@ -42,6 +42,9 @@ struct GameView: View {
             if !session.isOver {
                 ToolbarItem(placement: .topBarTrailing) {
                     Menu {
+                        Button("Undo", systemImage: "arrow.uturn.backward") { session.undo() }
+                            .disabled(!session.canUndo)
+                            .accessibilityIdentifier("game.menu.undo")
                         Button("Resign", role: .destructive) { isConfirmingResign = true }
                             .accessibilityIdentifier("game.menu.resign")
                     } label: {

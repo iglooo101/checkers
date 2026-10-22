@@ -184,18 +184,18 @@ description: "Task list for the game experience slice (epic E3)"
 
 ### Tests for User Story 5 (MANDATORY - write first) ⚠️
 
-- [ ] T036 [P] [US5] Write `Unit/US5GameUndoTests.swift` (`struct US5GameUndoTests`):
+- [X] T036 [P] [US5] Write `Unit/US5GameUndoTests.swift` (`struct US5GameUndoTests`):
   - `US5 FR-UNDO-01 FR-UNDO-02`: after `c3–d4`, `b6–a5` (tapped), `undo()` restores the state before Dark's turn and `turnText` "Dark to move"; a second `undo()` restores `GameState()`; `canUndo` is then false.
   - `US5 FR-UNDO-05`: in the US2 chain after the first jump, `undo()` restores the position before the chain with Light to move and nothing selected.
   - `US5 FR-UNDO-06`: `canUndo` is false at the start and after resigning; true after one move.
   - `US5`: after `undo()`, `selection` and `notice` are cleared (FR-038).
   Fails until T038.
-- [ ] T037 [P] [US5] Write `UI/US5UndoUITests.swift`: `testUS5_undoBackToStart`: `startTwoPlayerGame()`; `game.menu.undo` is disabled; play `c3`→`d4` and `f6`→`e5`; Undo twice: `square.c3` is "c3, Light man", `square.f6` "f6, Dark man", `game.turn` "Light to move", and `game.menu.undo` is disabled again. Fails until T039.
+- [X] T037 [P] [US5] Write `UI/US5UndoUITests.swift`: `testUS5_undoBackToStart`: `startTwoPlayerGame()`; `game.menu.undo` is disabled; play `c3`→`d4` and `f6`→`e5`; Undo twice: `square.c3` is "c3, Light man", `square.f6` "f6, Dark man", `game.turn` "Light to move", and `game.menu.undo` is disabled again. Fails until T039.
 
 ### Implementation for User Story 5
 
-- [ ] T038 [US5] Extend `App/Features/Game/GameSession.swift`: `canUndo` and `undo()` per the contract. T036 passes.
-- [ ] T039 [US5] Add Undo (`game.menu.undo`, disabled when `!session.canUndo`, not shown once over) to the game menu in `App/Features/Game/GameView.swift`. Sync the catalog. US5 tests pass.
+- [X] T038 [US5] Extend `App/Features/Game/GameSession.swift`: `canUndo` and `undo()` per the contract. T036 passes.
+- [X] T039 [US5] Add Undo (`game.menu.undo`, disabled when `!session.canUndo`, not shown once over) to the game menu in `App/Features/Game/GameView.swift`. Sync the catalog. US5 tests pass.
 
 **Checkpoint**: US5 complete.
 

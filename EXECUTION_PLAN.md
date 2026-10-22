@@ -60,6 +60,8 @@ Epics are listed in execution order.
 - #90 Result panel over the final position with outcome and reason, Play again and Home
 - #91 Play again keeps opponent, difficulty and side; Random re-rolls the side
 - #92 Accessibility pass: result panel and confirmations
+- #93 F3.7: Undo in the game
+- #94 Undo menu item with enable/disable rules; two-player undo takes back one turn
 - #196 Validate the E3 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -250,7 +252,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F3.7 Undo in the game** (#93) · FR-UNDO-01, FR-UNDO-02, FR-UNDO-06
 
-- [ ] #94 Undo menu item with enable/disable rules; two-player undo takes back one turn · S
+- [~] #94 Undo menu item with enable/disable rules; two-player undo takes back one turn · S
 
 **F3.6 Game end and result** (#88) · FR-END-02, FR-END-06, FR-END-07, FR-END-08
 
