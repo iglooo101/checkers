@@ -8,6 +8,14 @@
 
 **Input**: User description: "Accessibility (epic E7, GitHub issue #153): the board-specific accessibility from FRD.md v1.1 section 17, on top of the native game screen from E3. Every board square is a VoiceOver element whose label states its coordinate, contents and state ("c3, Light man, can move", "d4, empty, legal target") (FR-A11Y-01); a VoiceOver user plays square by square: double-tap a piece to select it, then double-tap a target, with capture chains one jump at a time (FR-A11Y-02); VoiceOver announces each move, capture and crowning, turn changes, mandatory captures and the game result (FR-A11Y-03); light and dark pieces, kings, selection and hints are distinguishable without relying on color alone (FR-A11Y-05); and every screen meets the constitution's accessibility gates, checked by an automated accessibility audit of every screen (FR-A11Y-04). Board tasks: F7.1 VoiceOver board (#160: #161, #162), F7.2 VoiceOver announcements (#163: #164), F7.3 Non-color cues (#165: #166), F7.4 Accessibility audit automation (#167: #168). Out of scope, delivered by later epics: announcing the computer's moves (#190, E4), keeping the non-color cues in the Modern and Playful themes (#144, E6), and adding the Statistics, Settings and Rules screens to the audit when they are built (#131, #142, #152). Users are players who use VoiceOver, players who cannot tell colors apart, and every player."
 
+## Clarifications
+
+### Session 2026-10-22
+
+- Q: When E6 adds the switch that hides the visual move hints, should VoiceOver still say "can move" and "legal target" on squares? → A: Yes, always: VoiceOver states do not depend on the hints setting.
+- Q: How should Light and Dark pieces be told apart by players who cannot rely on color? → A: By lightness: pale versus dark pieces with at least 3:1 lightness contrast between them, checked by a test; no extra mark.
+- Q: After each step, should VoiceOver say the move and the turn that follows in one announcement, or separately? → A: One announcement per step: the move and what follows it ("Light c3 to d4. Dark to move."; during a chain "Light captures d4. Jump again.").
+
 ## User Scenarios & Testing *(mandatory)*
 
 Three kinds of players meet this feature: blind and low-vision players who play with VoiceOver,
@@ -97,7 +105,8 @@ resignation, and check each announcement.
 2. **Given** Light jumps from c3 over d4 and the turn ends, **When** the step is applied, **Then**
    VoiceOver announces "Light captures d4" followed by the next turn.
 3. **Given** a chain continues after a jump, **When** the jump is applied, **Then** VoiceOver
-   announces the capture and that the piece must jump again.
+   announces "Light captures d4. Jump again."
+
 4. **Given** a man reaches the far row, **When** the step is applied, **Then** the announcement
    includes "Light crowned on b8" (or the square it reached).
 5. **Given** a turn ends and the next side must capture, **When** the turn passes, **Then** the
@@ -180,7 +189,7 @@ them accessible as later epics change them.
   elements.
 - **FR-002**: The states MUST be "can move" for a movable piece of the side to move, "selected"
   for the selected piece and "legal target" for a target of the selected piece; a finished game
-  shows no states. Whether states follow the move hints setting is in Assumptions.
+  shows no states. The states MUST be given whatever the move hints setting is (Clarifications).
 - **FR-003**: VoiceOver MUST visit the dark squares in on-screen order, row by row from the top,
   left to right.
 - **FR-004**: Activating a square with VoiceOver MUST have exactly the effect of tapping it: select,
@@ -192,9 +201,11 @@ them accessible as later epics change them.
 
 - **FR-007**: Every applied step MUST be announced: a simple move as "<Side> <from> to <to>", a
   capture as "<Side> captures <square>", and a crowning as "<Side> crowned on <square>" (FR-A11Y-03).
-- **FR-008**: When a step ends the turn, the announcement MUST also state the turn that follows
-  ("Dark to move", "Dark to move, capture required"); when a chain continues it MUST say the piece
-  must jump again.
+- **FR-008**: Each step MUST produce exactly one announcement. When the step ends the turn, that
+  announcement MUST also state the turn that follows ("Light c3 to d4. Dark to move.", "… Dark to
+  move, capture required."); when a chain continues it MUST say the piece must jump again ("Light
+  captures d4. Jump again."); when the step ends the game it MUST end with the result instead
+  (Clarifications).
 - **FR-009**: When the game ends, by a step, a resignation or a draw, the result sentence of the
   result panel MUST be announced.
 - **FR-010**: An undo MUST be announced, with the turn it returns to.
@@ -208,8 +219,9 @@ them accessible as later epics change them.
 - **FR-013**: Kings MUST differ from men by a shape mark (the crown).
 - **FR-014**: The selected piece, hinted pieces and target squares MUST each have a distinct shape
   cue, so they can be told apart without color.
-- **FR-015**: Light and Dark pieces MUST be distinguishable without relying on hue (how, in
-  Assumptions).
+- **FR-015**: Light and Dark pieces MUST be distinguishable without relying on hue: by lightness,
+  with a contrast of at least 3:1 between the two sides' pieces in light and dark appearance
+  (Clarifications).
 - **FR-016**: FR-013 to FR-015 MUST hold in light and dark appearance in the Classic theme; E6 keeps
   them in its themes (#144).
 
@@ -266,14 +278,15 @@ themes (#144, E6); Statistics, Settings and Rules added to the audit (#131, #142
 
 ## Assumptions
 
-- **States and the hints setting** (to confirm in Clarify): VoiceOver states ("can move", "legal
-  target") are always given, even after E6 adds a switch to hide the visual hints, because a
-  VoiceOver player cannot look the board over.
-- **Light and Dark without color** (to confirm in Clarify): the sides differ by lightness (pale
-  versus dark pieces, at least 3:1 contrast), which survives color blindness and grayscale; no
-  extra mark is added.
-- **One announcement per step** (to confirm in Clarify): a step's announcement includes the turn
-  that follows, so a player hears one sentence per step rather than several in a row.
+- **States and the hints setting** (confirmed in Clarifications): VoiceOver states ("can move",
+  "legal target") are always given, even after E6 adds a switch to hide the visual hints, because
+  a VoiceOver player cannot look the board over.
+- **Light and Dark without color** (confirmed in Clarifications): the sides differ by lightness
+  (pale versus dark pieces, at least 3:1 contrast), which survives color blindness and grayscale;
+  no extra mark is added.
+- **One announcement per step** (confirmed in Clarifications): a step's announcement includes the
+  turn that follows, or the result, so a player hears one announcement per step rather than several
+  that could interrupt each other.
 - **Focus after a move**: focus stays on the square that was activated, where the piece now stands,
   so the next jump of a chain is one swipe away.
 - **Undo announcement**: "Move undone. Light to move." (or Dark); the FRD does not word it.
