@@ -8,6 +8,20 @@
 
 **Input**: User description: "E5 Saving and statistics (epic #114; FRD v1.1 §12 Saving and resuming, §13 Statistics). The app saves the unfinished game automatically after every turn and when the app goes to the background; the player never saves manually, and there is at most one saved game. Home offers Continue only when a saved game exists; Continue restores the game exactly (position, side to move, opponent, difficulty, the player's side, undo history and draw-rule counters), and if it was saved during the computer's turn the computer makes its move after the game resumes. A saved game that cannot be read is discarded, Continue is hidden, and the player is told the previous game could not be restored. A finished game is never the saved game, so Continue disappears once a game ends. Leaving a game for Home no longer asks for confirmation: the game stays the saved game (replacing E3's leave confirmation). Starting a new game while a saved game exists first asks "Abandon current game?": confirming discards it, cancelling returns to setup with it intact. Statistics: a new Statistics screen (replacing E3's placeholder) shows wins, losses and draws against the computer for each difficulty; a computer game is recorded when it ends by no legal moves, resignation (a loss for the player) or a draw rule; two-player games and abandoned games are not recorded; undo does not change how a game counts; with no games recorded the screen shows an empty state explaining how to get a record; the record cannot be reset in this release. All data stays on the device. The new and changed screens meet the accessibility gates (VoiceOver, Dynamic Type to the largest size, Dark Mode, the audit). Requirement IDs: FR-SAVE-01 to FR-SAVE-05, FR-STAT-01 to FR-STAT-05, FR-END-08, FR-NAV-02, FR-NAV-03, FR-SETUP-04, FR-SETUP-05, FR-UNDO-08, FR-A11Y-04, FR-PRIV-01. Board features: F5.1 Auto-save and resume (#121), F5.2 Statistics (#128)."
 
+## Clarifications
+
+### Session 2026-10-22
+
+- Q: If the app is interrupted in the middle of a turn, what should Continue bring back? → A: The
+  player's unfinished capture chain is kept as it was (the same piece must keep jumping, and Undo
+  can take it back); the computer's turn restarts from its beginning, so it thinks again and plays
+  its whole turn, possibly a different move of the same strength.
+- Q: How should the app tell the player that their previous game could not be restored? → A: One
+  alert on Home when the app finds the save unreadable ("Your previous game couldn't be restored."
+  with OK), shown once and never again for that save.
+- Q: If the record of wins, losses and draws can't be read, what should the app do? → A: The record
+  starts again from zero, the failure is logged, and nothing is shown to the player.
+
 ## User Scenarios & Testing *(mandatory)*
 
 Users are players of either kind the app already serves: two people sharing the phone, and a
@@ -119,14 +133,14 @@ be restored. Everything else works as usual. (#121: #126; FR-SAVE-05)
 that does nothing.
 
 **Independent Test**: Replace the saved game with damaged data, open the app, and check that Home
-shows the message once, offers no Continue, and that new games and Statistics work.
+shows the alert once, offers no Continue, and that new games and Statistics work.
 
 **Acceptance Scenarios**:
 
-1. **Given** a saved game that cannot be read, **When** the app opens, **Then** Home shows a message
+1. **Given** a saved game that cannot be read, **When** the app opens, **Then** Home shows an alert
    that the previous game could not be restored, and no Continue.
-2. **Given** that message was dismissed, **When** the player returns to Home later, **Then** the
-   message does not appear again.
+2. **Given** that alert was dismissed, **When** the player returns to Home later, **Then** it does
+   not appear again.
 3. **Given** a saved game that cannot be read, **When** the player starts a new game, **Then** it
    starts without asking "Abandon current game?".
 
@@ -152,8 +166,8 @@ shows the message once, offers no Continue, and that new games and Statistics wo
 - **A two-player game is saved and continued**: it works the same way and is never recorded.
 - **Saving fails** (for example, the device is full): play goes on; the next save tries again; the
   failure is logged. The player is not interrupted.
-- **The record cannot be read**: the record starts again from zero; the failure is logged (the FRD
-  gives no rule; see Assumptions).
+- **The record cannot be read**: the record starts again from zero; the failure is logged, and the
+  player is not told (FR-020, Clarifications).
 - **Undo after the game ends**: unavailable (FR-UNDO-06), so the record cannot change.
 
 ## Requirements *(mandatory)*
@@ -202,8 +216,9 @@ shows the message once, offers no Continue, and that new games and Statistics wo
 **A saved game that cannot be read (#121: #126)**
 
 - **FR-015**: If the saved game cannot be read, or does not describe a valid game, the app MUST
-  discard it, MUST NOT offer Continue, and MUST tell the player once, on Home, that the previous game
-  could not be restored (FR-SAVE-05). The app otherwise works as usual.
+  discard it, MUST NOT offer Continue, and MUST tell the player once, with an alert on Home, that
+  the previous game could not be restored (FR-SAVE-05). The alert has a single OK button and does
+  not appear again for that save. The app otherwise works as usual.
 
 **The record (#128: #129)**
 
@@ -218,7 +233,8 @@ shows the message once, offers no Continue, and that new games and Statistics wo
 - **FR-019**: Undo MUST NOT change how a game counts: only its final result is recorded
   (FR-UNDO-08).
 - **FR-020**: The record MUST persist on the device and MUST NOT be resettable in this release
-  (FR-STAT-05).
+  (FR-STAT-05). If the record cannot be read, it MUST start again from zero, with the failure logged
+  and no message to the player.
 
 **The Statistics screen (#128: #130)**
 
@@ -238,9 +254,9 @@ shows the message once, offers no Continue, and that new games and Statistics wo
 
 - **FR-025**: VoiceOver MUST read each difficulty's results on Statistics as one element (for
   example "Easy: 3 wins, 1 loss, 2 draws"), the empty state as text, and Continue, the abandon
-  question and the unreadable-save message like any other button or alert (FR-A11Y-04).
+  question and the unreadable-save alert like any other button or alert (FR-A11Y-04).
 - **FR-026**: Statistics (empty and with a record), Home with Continue, the abandon question and the
-  unreadable-save message MUST support Dynamic Type up to the largest accessibility size, render
+  unreadable-save alert MUST support Dynamic Type up to the largest accessibility size, render
   correctly in Dark Mode, and pass the automated accessibility audit (FR-A11Y-04).
 
 ### Traceability
@@ -287,7 +303,7 @@ real iPhone (E8, #181).
   changes by exactly one in the right place; two-player games, abandoned games, undos and leaving
   and continuing change it by nothing else (100% of scripted cases).
 - **SC-005**: With an unreadable saved game (empty, cut short, random data, or from an unknown
-  version), the app opens on Home in 100% of cases, never offers Continue, and shows the message
+  version), the app opens on Home in 100% of cases, never offers Continue, and shows the alert
   exactly once.
 - **SC-006**: Saving never slows the game down: moves appear at the same pace as without saving, with
   no pause a player can notice (under 100 ms).
@@ -298,22 +314,22 @@ real iPhone (E8, #181).
 
 ## Assumptions
 
-- **Where a game is saved during a turn**: during the computer's turn the game is saved as it was at
-  the start of that turn (FR-004), so the computer plays its whole turn again after Continue (it may
-  choose a different move of the same strength, since it picks at random among equally good ones).
-  During the player's own capture chain the game is saved with the chain unfinished, because that is
-  the exact state and Undo can take it back (FR-003).
-- **The unreadable-save message**: a one-time alert on Home, worded along the lines of "Your previous
-  game couldn't be restored."; the exact text is set in the plan's contracts.
+- **Where a game is saved during a turn** (confirmed in Clarifications): during the computer's turn
+  the game is saved as it was at the start of that turn (FR-004), so the computer plays its whole
+  turn again after Continue (it may choose a different move of the same strength, since it picks at
+  random among equally good ones). During the player's own capture chain the game is saved with the
+  chain unfinished, because that is the exact state and Undo can take it back (FR-003).
+- **The unreadable-save alert** (confirmed in Clarifications): a one-time alert on Home, "Your
+  previous game couldn't be restored." with OK; the plan's contracts fix the exact text.
 - **The abandon question**: the title is the FRD's "Abandon current game?"; it is asked when the
   player chooses Start in Game setup (as the FRD says), not when they choose New game on Home, so
   they can still look at the setup without losing anything. Its buttons are a destructive
   confirmation and Cancel.
 - **Statistics content**: exactly what the FRD names: wins, losses and draws per difficulty; no
   totals, percentages, streaks or game history.
-- **An unreadable record**: the FRD gives no rule; the record starts again from zero and the failure
-  is logged, without a message, since nothing can be done about it and the record cannot be reset
-  anyway.
+- **An unreadable record** (confirmed in Clarifications): the FRD gives no rule; the record starts
+  again from zero and the failure is logged, without a message, since nothing can be done about it
+  and the record cannot be reset anyway.
 - **Leaving a game**: E3's leave confirmation (FR-042) was a stopgap until saving existed; with
   saving, leaving keeps the game, as FR-NAV-03 says.
 - **What counts as "abandoned"**: a game the player discards by confirming "Abandon current game?".
