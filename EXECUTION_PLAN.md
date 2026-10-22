@@ -38,21 +38,18 @@ Epics are listed in execution order.
 | 1 | E1 Project foundation | #1 | M1 Foundation | P0 | 6/6 | 22/22 | Done |
 | 2 | E2 Rules engine | #29 | M2 Playable two-player game | P0 | 6/6 | 24/24 | Done |
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
-| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 4/5 | 9/11 | In Progress |
+| 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 0/4 | 0/15 | Todo |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 0/16 | Todo |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **24/41** | **84/147** | |
+| | **Total** | | | | **25/41** | **86/147** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-- #153 E7: Accessibility
-- #167 F7.4: Accessibility audit automation
-- #168 UI test running performAccessibilityAudit() on every screen
-- #197 Validate the E7 slice and update project docs
+Nothing in progress.
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -271,7 +268,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #71 Preselect last-used choices; first-use defaults Computer, Easy, Light · S
 - [x] #73 Accessibility pass: Game setup · S
 
-### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 9/11 tasks
+### E7 Accessibility (#153) · M2 Playable two-player game · P0 · 11/11 tasks
 
 **F7.0 Specification (Spec Kit)** (#154) · FRD §17
 
@@ -296,8 +293,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F7.4 Accessibility audit automation** (#167) · FR-A11Y-04
 
-- [~] #168 UI test running performAccessibilityAudit() on every screen · M
-- [~] #197 Validate the E7 slice and update project docs · S · after #168
+- [x] #168 UI test running performAccessibilityAudit() on every screen · M
+- [x] #197 Validate the E7 slice and update project docs · S · after #168
 
 ### E4 Computer opponent (#95) · M3 Computer opponent · P1 · 0/15 tasks
 
@@ -538,5 +535,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   of all 10 screen states (#168). The audit's first run found 20 problems; fixed with an app
   `AccentColor` and `OnAccent`, primary text, an opaque result panel and the computer note under
   the opponent choice; two system-component issues on the Computer setup are allow-listed. 163
-  tests pass, also audited on the iPhone SE at the largest text in Dark Mode. Open for the user:
-  a VoiceOver game by hand. Next is E4 (#97 Specify).
+  tests pass, also audited on the iPhone SE at the largest text in Dark Mode. CI failed once on
+  a system banner over the app (fixed: re-audit after banners); run 39726660079 green and `main`
+  fast-forwarded to `f01e4ee`. Closed #161, #162, #164, #166, #168, #197, features F7.1–F7.4
+  and E7 (#153). Open for the user: a VoiceOver game by hand. Next is E4 (#97 Specify).

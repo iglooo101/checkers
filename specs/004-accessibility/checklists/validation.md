@@ -55,4 +55,7 @@ runs the tap path, focus follows `focusSquare`, and every announcement goes thro
 
 ## 5. CI
 
-*Pending (T026).*
+| Check | Result | Notes |
+|---|---|---|
+| `f1842ca` (US5 and close-out), run 39724987102 | Fail | `testUS5_auditSettings`: a system notification on the fresh CI simulator ("Ready for Apple Intelligence", seen in the run's screen recording) was read as inaccessible text with no element |
+| `f01e4ee` (re-audit after banners), run 39726660079 | Pass | `CI gate` green in about 14 minutes; no re-audit was needed in this run; `main` fast-forwarded to `f01e4ee` (T026) |
