@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -450,14 +450,9 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E5 Saving and statistics (#114)**, branch `006-saving-and-statistics`,
    `specs/006-saving-and-statistics/`:
-   - **First, finish the close-out**: US1's CI run 39895348869 (commit `5018d46`) was still
-     running when the session ended, so the close-out commit is **local, not pushed** (a push
-     would have cancelled the run). Check the run; if it is green, comment on and move #122,
-     #123, #124, #125 and #189 to Done, run `scripts/project/update_plan.py`, add the run to the
-     change log, commit, and push. If it failed, fix US1 first.
    - **Done**: F5.0 (#115); Setup and Foundational (T001–T007, #122, #123) and US1 (T008–T012,
-     #124, #125, #189) in commits `93df603` and `5018d46`. #201 is In Progress (T001 and T002
-     done).
+     #124, #125, #189) in commits `93df603` and `5018d46`, green in CI run 39895348869 and moved
+     to Done on 2026-10-23. #201 is In Progress (T001 and T002 done).
    - **Next, US2** (#127 and #72 are In Progress): its tests are written but uncommitted (see
      Current state). Do **T015**: `GameSessionEvent.ended`, sent once from the last step of
      either side and from resignation (in `applyStep` and `resign()`); the router clears the

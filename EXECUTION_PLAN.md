@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-22 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.2, constitution v1.1.0
+Last updated: 2026-10-23 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.2, constitution v1.1.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -40,10 +40,10 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 5/17 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 10/17 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **30/41** | **109/151** | |
+| | **Total** | | | | **30/41** | **114/151** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -52,13 +52,8 @@ Epics are listed in execution order.
 - #72 "Abandon current game?" confirmation when a saved game exists
 - #114 E5: Saving and statistics
 - #121 F5.1: Auto-save and resume
-- #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters
-- #123 Saved-game store behind a protocol (live and in-memory fake)
-- #124 Save after every turn and when the app goes to the background
-- #125 Continue restores the game exactly; computer resumes if it was its turn
 - #127 Clear the saved game on game end and on abandon
 - #128 F5.2: Statistics
-- #189 Show Continue on Home only when a saved game exists
 - #201 Validate the E5 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -77,7 +72,7 @@ Statistics, Rules and Settings are placeholders until E5 and E6.
 
 1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
    (`specs/006-saving-and-statistics/`): F5.0 is done (#115), and Setup, Foundational and US1
-   are done (T001–T012): games are saved after every turn, on Home and in the background,
+   are done (T001–T012; #122–#125 and #189, CI run 39895348869): games are saved after every turn, on Home and in the background,
    during the computer's turn as they were at its start, and Continue on Home restores them
    exactly; leaving a game no longer asks. Next: **US2**, whose tests are written but
    uncommitted (`HANDOFF.md`, Current state): T015 adds "Abandon current game?" and clears
@@ -370,7 +365,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 5/17 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 10/17 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
@@ -382,13 +377,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F5.1 Auto-save and resume** (#121) · FR-SAVE-01, FR-SAVE-02, FR-SAVE-03, FR-SAVE-04, FR-SAVE-05, FR-END-08, FR-NAV-02, FR-NAV-03, FR-SETUP-04
 
-- [~] #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters · M
-- [~] #123 Saved-game store behind a protocol (live and in-memory fake) · M
-- [~] #124 Save after every turn and when the app goes to the background · S
-- [~] #125 Continue restores the game exactly; computer resumes if it was its turn · M
+- [x] #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters · M
+- [x] #123 Saved-game store behind a protocol (live and in-memory fake) · M
+- [x] #124 Save after every turn and when the app goes to the background · S
+- [x] #125 Continue restores the game exactly; computer resumes if it was its turn · M
 - [ ] #126 Unreadable save: discard, hide Continue, tell the player · S
 - [~] #127 Clear the saved game on game end and on abandon · S
-- [~] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
+- [x] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
 - [~] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
 
 **F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08
@@ -693,3 +688,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   #122–#125 and #189 move to Done once CI run 39895348869 is green (still running at the session
   close-out). US2's tests are written but uncommitted until T015. Session close-out: HANDOFF.md
   updated with the E5 implementation lessons and next steps.
+- 2026-10-23: CI run 39895348869 green on `5018d46` (E5 Setup, Foundational and US1);
+  #122–#125 and #189 moved to Done with a comment each. E5: 10/17 tasks; F5.1 stays open
+  for #126, #127 and #72.
