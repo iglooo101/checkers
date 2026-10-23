@@ -33,11 +33,8 @@ Last updated: 2026-10-23
   deleted; `002-rules-engine`, `003-game-experience`, `004-accessibility` and
   `005-computer-opponent` are merged into `main` and can be deleted (the auto-mode safety check
   blocks the deletion; the command is in Next steps). E5 is on **`006-saving-and-statistics`**
-  (pushed through US1 at `5018d46`). **Uncommitted in the working tree**: US2's tests (T013
-  `checkersTests/US2AbandonTests.swift`; T014 `checkersUITests/US2AbandonUITests.swift`,
-  `tapStart()` in `checkersUITests/Support/AppScreens.swift` and its use in `US6SetupUITests` and
-  `US7NavigationUITests`). They were seen failing to compile and wait for T015; the app does
-  not build for testing until T015 is done.
+  (pushed through US2 at `cab8db6`, green in CI; `main` is not fast-forwarded yet: E4 landed on
+  `main` at its close-out). The working tree is clean.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.2 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -77,7 +74,11 @@ Last updated: 2026-10-23
   every turn and undo and offers a `snapshot` (the start of the computer's turn while that turn is
   unfinished; `GameSession+Saving.swift`); the router saves on those events, on Home and when the
   scene moves to the background (`CheckersApp`); Home offers Continue while a game is saved;
-  leaving a game no longer asks. The record is stored but not yet counted or shown (US3).
+  leaving a game no longer asks. **US2**: `GameSession` sends `ended` once (the last step of
+  either side, or a resignation) and the router clears the saved game then; while a game is
+  saved, Start in setup asks "Abandon current game?" (`isConfirmingAbandon`, `confirmAbandon()`,
+  `cancelAbandon()`; the alert in `SetupView`), and the UI tests' `tapStart()` answers it. The
+  record is stored but not yet counted or shown (US3).
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
@@ -85,8 +86,8 @@ Last updated: 2026-10-23
 - **Backlog**: 8 epics, 41 features, 151 tasks (#1–#201; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) is done, Setup, Foundational and US1 are done (T001–T012), and US2 has its tests
-  written. Progress and the full list are in `EXECUTION_PLAN.md`.
+  (#115) is done, and Setup, Foundational, US1 and US2 are done (T001–T015). Progress and the
+  full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -101,7 +102,7 @@ Last updated: 2026-10-23
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
   analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks;
-  T001–T012 done)**; results so far in `checklists/validation.md`. `.specify/feature.json`
+  T001–T015 done)**; results so far in `checklists/validation.md`. `.specify/feature.json`
   (local, git-ignored) points at it.
 
 ## Lessons learned
@@ -441,6 +442,20 @@ Last updated: 2026-10-23
 - **`build-for-testing` lists only the first errors of a failing batch**; it is still the fastest
   way (about 2 minutes) to see new tests fail to compile before the implementation.
 
+## Lessons learned (E5 US2, 2026-10-23)
+
+- **A board move to Done does not always close the issue**: after `board_move.py Done 127 72`
+  both issues were still open a few seconds later. Check each issue's state after the move and
+  close it with `gh issue close --reason completed` if needed (the comment goes first).
+- **`gh run list --commit` wants the full SHA**: a short one finds nothing. Filter
+  `gh run list --branch <branch>` on `headSha` instead.
+- **swift-format flags a long string literal on the same line as `@Test(`**, not one on its own
+  line: wrap long test names as `@Test(\n "…"\n)`, or run `xcrun swift-format format --in-place`
+  on the file. `scripts/check-format.sh --strict` is what CI runs.
+- **`scripts/check-string-catalog.sh` takes arguments** (CI passes them); locally,
+  `LocalizationTests` and `scripts/sync-string-catalog.sh` cover a missing string: the test failed
+  on exactly the alert's three texts until the catalog was synced.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -452,20 +467,15 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    `specs/006-saving-and-statistics/`:
    - **Done**: F5.0 (#115); Setup and Foundational (T001–T007, #122, #123) and US1 (T008–T012,
      #124, #125, #189) in commits `93df603` and `5018d46`, green in CI run 39895348869 and moved
-     to Done on 2026-10-23. #201 is In Progress (T001 and T002 done).
-   - **Next, US2** (#127 and #72 are In Progress): its tests are written but uncommitted (see
-     Current state). Do **T015**: `GameSessionEvent.ended`, sent once from the last step of
-     either side and from resignation (in `applyStep` and `resign()`); the router clears the
-     saved game on `ended`; `startGame()` asks first when `hasSavedGame` (`isConfirmingAbandon`,
-     `confirmAbandon()` clears the save and starts, `cancelAbandon()`); the alert in `SetupView`
-     per `contracts/screens.md` (identifiers `setup.abandon.confirm` and `setup.abandon.cancel`);
-     the alert's three texts in `LocalizationTests`; `scripts/sync-string-catalog.sh`. Then run
-     `-only-testing` for `US2AbandonTests`, `US2AbandonUITests`, `US6SetupUITests` and
-     `US7NavigationUITests`, the full `scripts/test.sh`, commit, push, wait for CI, and move #127
-     and #72 to Done.
-   - Then US3 (T016–T019: the record, `GameResult`, `Record.adding(_:)` and `isEmpty` with their
-     tests first, and the Statistics screen), US4 (T020–T022: both restore alerts) and Polish
-     (T023–T029, #201).
+     to Done on 2026-10-23; US2 (T013–T015, #127, #72) in `cab8db6`, CI run 39949087079.
+     #201 is In Progress (T001 and T002 done).
+   - **Next, US3** (T016–T019; move #129 and #130 to In Progress first, #128 already is):
+     the record's tests first (T016 `US3RecordTests`, T017 `US3StatisticsUITests`), then T018
+     (`GameResult`, `Record.adding(_:)`, `isEmpty`, `GameSession.result`, the router's `record`,
+     recording on `ended`) and T019 (`StatisticsView` and `StatisticsText`, replacing the
+     placeholder). The router's `.ended` case is where recording goes. #129 stays open until US4
+     (T020–T022, the unreadable record); #130 closes with US3.
+   - Then US4 (T020–T022: both restore alerts; #126, #129) and Polish (T023–T029; #131, #201).
    - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
      `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:

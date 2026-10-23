@@ -40,19 +40,17 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 10/17 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 12/17 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **30/41** | **114/151** | |
+| | **Total** | | | | **30/41** | **116/151** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-- #72 "Abandon current game?" confirmation when a saved game exists
 - #114 E5: Saving and statistics
 - #121 F5.1: Auto-save and resume
-- #127 Clear the saved game on game end and on abandon
 - #128 F5.2: Statistics
 - #201 Validate the E5 slice and update project docs
 <!-- END GENERATED: in-progress -->
@@ -71,13 +69,14 @@ while it thinks, Undo returns to the player's turn, and VoiceOver announces its 
 Statistics, Rules and Settings are placeholders until E5 and E6.
 
 1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
-   (`specs/006-saving-and-statistics/`): F5.0 is done (#115), and Setup, Foundational and US1
-   are done (T001–T012; #122–#125 and #189, CI run 39895348869): games are saved after every turn, on Home and in the background,
-   during the computer's turn as they were at its start, and Continue on Home restores them
-   exactly; leaving a game no longer asks. Next: **US2**, whose tests are written but
-   uncommitted (`HANDOFF.md`, Current state): T015 adds "Abandon current game?" and clears
-   finished games (#72, #127). Then US3 (the record and Statistics), US4 (the restore alerts) and
-   Polish (#201).
+   (`specs/006-saving-and-statistics/`): F5.0 is done (#115), and Setup, Foundational, US1 and
+   US2 are done (T001–T015; #122–#125, #127, #189 and #72; CI runs 39895348869 and
+   39949087079): games are saved after every turn, on Home and in the background, during the
+   computer's turn as they were at its start, and Continue on Home restores them exactly;
+   leaving a game no longer asks; a finished game is no longer saved, and Start asks "Abandon
+   current game?" while one is. Next: **US3** (T016–T019: the record and the Statistics screen;
+   #129, which stays open until US4, and #130), then US4 (the restore alerts, #126 and #129) and
+   Polish (#131, #201).
 2. Then E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -118,8 +117,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   reset, so UI tests answer "Abandon current game?" in the start helpers and `tapStart()`, compare
   counts before and after, and set known states with `UserDefaults` launch arguments (research
   R10, confirmed in the simulator by T001).
-- Until T015 is done, the working tree holds US2's uncommitted tests, and the app does not build
-  for testing; `checkers/CLAUDE.md` still describes E3's leave confirmation until T026.
+- `checkers/CLAUDE.md` still describes E3's leave confirmation (the router now holds the abandon
+  question instead) until T026 updates it.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
 - E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
@@ -365,7 +364,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 10/17 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 12/17 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
@@ -382,9 +381,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #124 Save after every turn and when the app goes to the background · S
 - [x] #125 Continue restores the game exactly; computer resumes if it was its turn · M
 - [ ] #126 Unreadable save: discard, hide Continue, tell the player · S
-- [~] #127 Clear the saved game on game end and on abandon · S
+- [x] #127 Clear the saved game on game end and on abandon · S
 - [x] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
-- [~] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
+- [x] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
 
 **F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08
 
@@ -691,3 +690,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-23: CI run 39895348869 green on `5018d46` (E5 Setup, Foundational and US1);
   #122–#125 and #189 moved to Done with a comment each. E5: 10/17 tasks; F5.1 stays open
   for #126, #127 and #72.
+- 2026-10-23: E5 US2 (T013–T015, commit `cab8db6`): Start asks "Abandon current game?" while
+  a game is saved, and a finished game is no longer saved (the session sends `ended` once).
+  `scripts/test.sh` passes locally (243 tests) and CI run 39949087079 is green; #127 and #72
+  moved to Done. E5: 12/17 tasks; F5.1 stays open for #126 (US4).
