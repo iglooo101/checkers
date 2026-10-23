@@ -40,10 +40,10 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 12/17 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 13/17 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **30/41** | **116/151** | |
+| | **Total** | | | | **30/41** | **117/151** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,9 +51,9 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #114 E5: Saving and statistics
 - #121 F5.1: Auto-save and resume
+- #126 Unreadable save: discard, hide Continue, tell the player
 - #128 F5.2: Statistics
 - #129 Record model and recording rules (wins/losses/draws per difficulty)
-- #130 Statistics screen with empty state
 - #201 Validate the E5 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -76,11 +76,10 @@ Statistics, Rules and Settings are placeholders until E5 and E6.
    39949087079): games are saved after every turn, on Home and in the background, during the
    computer's turn as they were at its start, and Continue on Home restores them exactly;
    leaving a game no longer asks; a finished game is no longer saved, and Start asks "Abandon
-   current game?" while one is. **US3** (T016–T019, #129 and #130 In Progress) is written and
-   committed (`3bc52eb`): finished games against the computer count in the record, and
-   Statistics shows it; its tests pass locally, and the full blocking plan runs in CI (pushed at
-   the 2026-10-23 close-out). Next: check that run, close #130 (#129 stays open until US4), then
-   US4 (the restore alerts, #126 and #129) and Polish (#131, #201).
+   current game?" while one is. **US3** (T016–T019, commit `3bc52eb`, CI run 39954174275) is
+   done: finished games against the computer count in the record, and Statistics shows it (#130
+   Done; #129 stays open for US4's unreadable record). **Now US4** (T020–T022, #126 and #129 In
+   Progress): an unreadable save or record is reported once on Home. Then Polish (#131, #201).
 2. Then E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -370,7 +369,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 12/17 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 13/17 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
@@ -386,7 +385,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #123 Saved-game store behind a protocol (live and in-memory fake) · M
 - [x] #124 Save after every turn and when the app goes to the background · S
 - [x] #125 Continue restores the game exactly; computer resumes if it was its turn · M
-- [ ] #126 Unreadable save: discard, hide Continue, tell the player · S
+- [~] #126 Unreadable save: discard, hide Continue, tell the player · S
 - [x] #127 Clear the saved game on game end and on abandon · S
 - [x] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
 - [x] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
@@ -394,7 +393,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08
 
 - [~] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
-- [~] #130 Statistics screen with empty state · M
+- [x] #130 Statistics screen with empty state · M
 - [ ] #131 Accessibility pass: Statistics · S
 - [~] #201 Validate the E5 slice and update project docs · S · after #131
 
@@ -706,3 +705,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   placeholder. US3's test set passes locally (24 unit and 8 UI tests); the full blocking plan
   was left to CI. Session close-out: HANDOFF.md updated with the US2 and US3 lessons and next
   steps; #129 and #130 stay In Progress until that run is green.
+- 2026-10-23: CI run 39954174275 green on `68c58c6` (US3 at `3bc52eb` plus the close-out):
+  252 tests in the blocking plan. T016–T019 checked off; #130 moved to Done, #129's US3 part
+  noted (it stays open for US4). E5: 13/17 tasks. US4 started: #126 moved to In Progress.

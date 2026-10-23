@@ -79,7 +79,7 @@ Last updated: 2026-10-23
   either side, or a resignation) and the router clears the saved game then; while a game is
   saved, Start in setup asks "Abandon current game?" (`isConfirmingAbandon`, `confirmAbandon()`,
   `cancelAbandon()`; the alert in `SetupView`), and the UI tests' `tapStart()` answers it.
-  **US3** (committed, CI pending): `GameResult` (from the outcome, the player's side and the
+  **US3** (CI run 39954174275): `GameResult` (from the outcome, the player's side and the
   difficulty; `nil` for two-player or unfinished games), `Record.adding(_:)`, `isEmpty` and
   `tally(at:)` in `Record.swift`; `GameSession.result` in `GameSession+Saving.swift`; the router's
   `record`, loaded at creation and updated and saved in `finish(_:)` on `ended`; `StatisticsView`
@@ -92,8 +92,8 @@ Last updated: 2026-10-23
 - **Backlog**: 8 epics, 41 features, 151 tasks (#1–#201; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) is done, Setup, Foundational, US1 and US2 are done (T001–T015), and US3 (T016–T019) is
-  committed and waits for CI. Progress and the
+  (#115) is done, Setup, Foundational, US1, US2 and US3 are done (T001–T019), and US4 (T020–T022)
+  is in progress. Progress and the
   full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -109,7 +109,7 @@ Last updated: 2026-10-23
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
   analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks;
-  T001–T015 done, T016–T019 committed and waiting for CI)**; results so far in `checklists/validation.md`. `.specify/feature.json`
+  T001–T019 done, US4 next)**; results so far in `checklists/validation.md`. `.specify/feature.json`
   (local, git-ignored) points at it.
 
 ## Lessons learned
@@ -491,16 +491,9 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      #124, #125, #189) in commits `93df603` and `5018d46`, green in CI run 39895348869 and moved
      to Done on 2026-10-23; US2 (T013–T015, #127, #72) in `cab8db6`, CI run 39949087079.
      #201 is In Progress (T001 and T002 done).
-   - **First, check US3's CI run** (commit `3bc52eb`, pushed with the close-out commit at the
-     end of the 2026-10-23 session; find it with
-     `gh run list --branch 006-saving-and-statistics` and its `headSha`). The full blocking plan
-     was not run locally for US3; only its independent test set was (24 unit, 8 UI tests, all
-     passing). If the run is green: mark T016–T019 `[X]` in `tasks.md`, add the run and the
-     test count to `checklists/validation.md` (US3 line), comment on #130 and move it to Done
-     (check it closed), comment on #129 that its US3 part is done (it stays In Progress until
-     US4), run `scripts/project/update_plan.py`, add a change-log line, commit and push. If it
-     failed, fix US3 first.
-   - **Then US4** (T020–T022; move #126 to In Progress, #129 already is): tests first
+   - **US3 done** (T016–T019, `3bc52eb`, CI run 39954174275, 252 tests): #130 Done, #129
+     open for US4.
+   - **Now US4** (T020–T022; #126 and #129 In Progress): tests first
      (T020 `US4RestoreFailureTests` through the router with in-memory stores holding raw data;
      T021 `US4RestoreFailureUITests` launching with `-savedGame`/`-record` of bytes that are not
      JSON), then T022: `RestoreNotice` (`savedGame`, `record`), the router clears an unreadable

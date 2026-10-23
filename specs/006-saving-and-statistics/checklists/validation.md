@@ -53,7 +53,10 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   (`US3StatisticsUITests`, `US7NavigationUITests`, `testUS5_auditStatistics`). The counts' plural
   variations ("1 win", "3 wins") were added to the String Catalog by hand, and
   `scripts/check-string-catalog.sh` confirms a sync keeps them. The full blocking plan was left
-  to CI at the session's close-out.
+  to CI at the session's close-out: CI run 39954174275 (on `68c58c6`, the close-out commit
+  after `3bc52eb`) passed with **252 tests** (129 app unit tests in 30 suites, 86 engine tests
+  in 15 suites, 37 UI tests in 14 classes); `build-and-test` took 26 minutes and
+  `engine-strength` 5.
 
 ## 1. All blocking tests
 
