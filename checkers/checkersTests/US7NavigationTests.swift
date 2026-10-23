@@ -31,26 +31,23 @@ struct US7NavigationTests {
         #expect(router.session?.selection == Square("c3"))
     }
 
-    @Test("US7 FR-NAV-03: leaving a game in progress asks first; Cancel keeps it, Leave drops it")
-    func leaveConfirmation() {
-        let router = Self.routerInAGame()
-        let session = router.session
+    @Test(
+        "US7 FR-NAV-03: leaving a game in progress returns Home at once and keeps it saved (E5 FR-010)"
+    )
+    func leaveKeepsTheGame() throws {
+        let games = InMemorySavedGameStore()
+        let router = AppRouter(store: InMemorySetupStore(), games: games)
+        router.newGame()
+        router.startGame()
+        router.session?.tap(Square("c3"))
+        router.session?.tap(Square("d4"))
+        let state = router.session?.state
 
         router.requestHome()
-        #expect(router.isConfirmingLeave)
-        #expect(router.path == [.game])
-        #expect(router.session === session)
-
-        router.cancelLeave()
-        #expect(!router.isConfirmingLeave)
-        #expect(router.path == [.game])
-        #expect(router.session === session)
-
-        router.requestHome()
-        router.confirmLeave()
-        #expect(!router.isConfirmingLeave)
         #expect(router.path.isEmpty)
         #expect(router.session == nil)
+        #expect(router.hasSavedGame)
+        #expect(try games.load()?.state == state)
     }
 
     @Test("US7 FR-NAV-02: each placeholder screen says what it will contain")

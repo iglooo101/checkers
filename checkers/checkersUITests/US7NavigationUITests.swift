@@ -36,26 +36,21 @@ final class US7NavigationUITests: XCTestCase {
         }
     }
 
-    /// FR-NAV-03, FR-042: Home during a game asks first; Cancel keeps the game, Leave goes Home,
-    /// and the next game starts fresh.
+    /// FR-NAV-03 (E5 FR-010): Home during a game returns at once, and Continue brings the same
+    /// game back.
     @MainActor
-    func testUS7_leaveConfirmation() {
+    func testUS7_homeKeepsTheGame() {
         let app = XCUIApplication()
         app.launch()
         app.startTwoPlayerGame()
         app.move("c3", "d4")
 
         app.chooseFromGameMenu("Home")
-        app.confirm("Cancel")
+        let resume = app.element("home.continue")
+        XCTAssertTrue(resume.waitForExistence(timeout: 3))
+        resume.tap()
         XCTAssertEqual(app.square("d4").label, "d4, Light man")
-
-        app.chooseFromGameMenu("Home")
-        app.confirm("Leave")
-        XCTAssertTrue(app.element("home.newGame").waitForExistence(timeout: 3))
-
-        app.startTwoPlayerGame()
-        XCTAssertEqual(app.square("c3").label, "c3, Light man, can move")
-        XCTAssertEqual(app.element("game.turn").label, "Light to move")
+        XCTAssertEqual(app.element("game.turn").label, "Dark to move")
     }
 
     /// FR-NAV-02, FR-003: Home's Statistics opens its placeholder screen and returns.

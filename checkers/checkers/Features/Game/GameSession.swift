@@ -18,6 +18,14 @@ enum ComputerPhase: Equatable {
     case playing
 }
 
+/// A moment the session's owner acts on (specs/006-saving-and-statistics/contracts/
+/// saved-game.md, "Save points").
+enum GameSessionEvent: Equatable {
+    /// A turn of either side ended with the game going on, or a turn was undone: the game to
+    /// save has changed.
+    case saved
+}
+
 /// One game on the game screen: the engine's rules state plus what the player has selected. It
 /// turns taps into engine steps by the rules in `contracts/game-session.md`, so every interaction
 /// rule is tested without the user interface (FR-024).
@@ -49,6 +57,11 @@ final class GameSession {
     @ObservationIgnored let opponent: any ComputerOpponent
     /// Paces the computer's turn (research R8).
     @ObservationIgnored let pacer: any TurnPacer
+    /// Tells the owner when the game to save changes; the router sets it.
+    @ObservationIgnored var onEvent: (GameSessionEvent) -> Void = { _ in }
+    /// The state at the start of the computer's turn while that turn is unfinished, so a half-
+    /// played turn is never saved (E5 FR-004).
+    @ObservationIgnored private(set) var computerTurnStart: GameState?
 
     init(
         setup: GameSetup, playerSide: Side? = nil, state: GameState = GameState(),
@@ -62,6 +75,9 @@ final class GameSession {
         self.announcer = announcer
         self.opponent = opponent
         self.pacer = pacer
+        // A game that starts in the middle of a chain, such as a continued one, has the chain's
+        // piece selected, as while the chain was played.
+        selection = state.chainSquare
     }
 
     /// The computer's side in a game against the computer; `nil` in a two-player game.
@@ -125,11 +141,13 @@ final class GameSession {
         guard let undone = undone() else { return }
         cancelComputerTurn()
         state = undone
+        computerTurnStart = nil
         selection = nil
         notice = nil
         focusSquare = nil
         announcer.announce(
             GameText.undone(state.sideToMove, captureRequired: state.isCaptureRequired))
+        onEvent(.saved)
     }
 
     /// The state after Undo, or `nil` when there is nothing to take back. In a two-player game it
@@ -223,6 +241,12 @@ final class GameSession {
                 focusSquare = result.to
             }
             announcer.announce(followUp.map { GameText.joined(sentence, $0) } ?? sentence)
+            if !result.turnContinues {
+                computerTurnStart = nil
+                if !isOver {
+                    onEvent(.saved)
+                }
+            }
             return result
         } catch {
             Log.game.error(
@@ -254,6 +278,7 @@ extension GameSession {
         computerTurnNumber += 1
         let number = computerTurnNumber
         let start = state
+        computerTurnStart = start
         computerTask = Task { [weak self] in
             await self?.playComputerTurn(from: start)
             self?.endComputerTurn(number)

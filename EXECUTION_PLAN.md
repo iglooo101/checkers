@@ -53,7 +53,10 @@ Epics are listed in execution order.
 - #121 F5.1: Auto-save and resume
 - #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters
 - #123 Saved-game store behind a protocol (live and in-memory fake)
+- #124 Save after every turn and when the app goes to the background
+- #125 Continue restores the game exactly; computer resumes if it was its turn
 - #128 F5.2: Statistics
+- #189 Show Continue on Home only when a saved game exists
 - #201 Validate the E5 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -377,11 +380,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [~] #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters · M
 - [~] #123 Saved-game store behind a protocol (live and in-memory fake) · M
-- [ ] #124 Save after every turn and when the app goes to the background · S
-- [ ] #125 Continue restores the game exactly; computer resumes if it was its turn · M
+- [~] #124 Save after every turn and when the app goes to the background · S
+- [~] #125 Continue restores the game exactly; computer resumes if it was its turn · M
 - [ ] #126 Unreadable save: discard, hide Continue, tell the player · S
 - [ ] #127 Clear the saved game on game end and on abandon · S
-- [ ] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
+- [~] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
 - [ ] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
 
 **F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08

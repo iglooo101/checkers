@@ -89,23 +89,6 @@ struct GameView: View {
             Button("Cancel", role: .cancel) {}
                 .accessibilityIdentifier("game.resign.cancel")
         }
-        .alert("Leave this game?", isPresented: leaveBinding) {
-            Button("Leave", role: .destructive) { router.confirmLeave() }
-                .accessibilityIdentifier("game.leave.confirm")
-            Button("Cancel", role: .cancel) { router.cancelLeave() }
-                .accessibilityIdentifier("game.leave.cancel")
-        } message: {
-            Text("It can't be resumed yet.")
-        }
-    }
-
-    /// Shows the leave confirmation while the router asks for it; dismissing it cancels.
-    private var leaveBinding: Binding<Bool> {
-        Binding(
-            get: { router.isConfirmingLeave },
-            set: { isShowing in
-                if !isShowing { router.cancelLeave() }
-            })
     }
 }
 

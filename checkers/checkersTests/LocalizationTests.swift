@@ -4,7 +4,8 @@ import Testing
 @testable import checkers
 
 struct LocalizationTests {
-    /// Every user-facing string in `specs/003-game-experience/contracts/screens.md`.
+    /// Every user-facing string in `specs/003-game-experience/contracts/screens.md` and the later
+    /// slices' screen contracts.
     static let screenStrings: Set<String> = [
         // Home and placeholders
         "Checkers", "New game", "Statistics", "Rules", "Settings",
@@ -17,8 +18,7 @@ struct LocalizationTests {
         // Game screen
         "Light to move", "Dark to move", "Light to move · capture required",
         "Dark to move · capture required", "A capture is required.", "Game menu", "Undo", "Resign",
-        "Home", "Resign as Light?", "Resign as Dark?", "Cancel", "Leave this game?",
-        "It can't be resumed yet.", "Leave",
+        "Home", "Resign as Light?", "Resign as Dark?", "Cancel",
         "%@, empty", "%@, Light man", "%@, Light king", "%@, Dark man", "%@, Dark king",
         // Square descriptions with states (specs/004-accessibility/contracts/announcements.md)
         "%@, empty, legal target", "%@, Light man, can move", "%@, Light man, selected",
@@ -35,6 +35,8 @@ struct LocalizationTests {
         // Result panel
         "Light wins: no moves left", "Dark wins: no moves left", "Light resigned", "Dark resigned",
         "Draw by repetition", "Draw by no progress", "Play again",
+        // Saving and statistics (specs/006-saving-and-statistics/contracts/screens.md)
+        "Continue",
     ]
 
     /// Reads the source catalog rather than the compiled string table, which may omit untranslated

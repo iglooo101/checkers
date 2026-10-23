@@ -22,6 +22,22 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
 
 ## Implementation measurements
 
+- Setup and Foundational (T001–T007), 2026-10-22: engine tests (`swift test`) 89 pass in 22 s,
+  with no lint findings, including the three coding suites' tests. With the validity check turned
+  off for a moment, exactly the eight state-level damaged cases (no-progress counts, chains, no
+  step, a third repetition) failed; positions, turn records and unknown names are rejected by
+  their own decoders. App unit tests: 110 pass.
+- US1 (T008–T012), 2026-10-22: `scripts/test.sh` passes on the iPhone 17 simulator: **237
+  tests** (117 app unit tests in 28 suites, 86 engine tests in 15 suites, 34 UI tests in 12
+  classes), 10 min 46 s. Found while running it: XCUITest reports the app as running in the
+  background a moment before SwiftUI's scene phase becomes `.background`, so
+  `testUS1_chainSurvivesBackground` waits two seconds before terminating the app; without the
+  wait the save had not happened yet. The relaunched game shows the chain exactly as left, which
+  only the background save can have written (no turn ended during the chain, and Home was not
+  chosen). `GameSession.swift` reached SwiftLint's 400-line file limit, so saving lives in
+  `GameSession+Saving.swift`, and every session that starts in the middle of a chain has the
+  chain's piece selected.
+
 ## 1. All blocking tests
 
 ## 2. Continue after closing the app

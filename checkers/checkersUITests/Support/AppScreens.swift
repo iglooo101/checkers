@@ -121,6 +121,17 @@ extension XCUIApplication {
         return element
     }
 
+    /// Launches the app with one stored value replaced for this launch only, through a
+    /// `UserDefaults` launch argument (specs/006-saving-and-statistics/research.md R10): `key`
+    /// reads as the bytes of `text`. Writes during the launch go to the stored value, which the
+    /// next launch without the argument reads.
+    @MainActor
+    func launch(replacing key: String, with text: String) {
+        let hex = text.utf8.map { String(format: "%02x", $0) }.joined()
+        launchArguments = ["-\(key)", "<\(hex)>"]
+        launch()
+    }
+
     /// Taps one square and then another.
     @MainActor
     func move(_ from: String, _ to: String) {

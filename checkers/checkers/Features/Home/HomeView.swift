@@ -1,13 +1,22 @@
+import CheckersEngine
 import SwiftUI
 
-/// Home: the app's first screen (FR-001, FR-002). Continue arrives with saving in E5.
+/// Home: the app's first screen (FR-001, FR-002), with Continue first while a game is saved
+/// (FR-NAV-02; specs/006-saving-and-statistics/contracts/screens.md).
 struct HomeView: View {
     let router: AppRouter
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
-                entry("New game", identifier: "home.newGame", prominent: true) { router.newGame() }
+                if router.hasSavedGame {
+                    entry("Continue", identifier: "home.continue", prominent: true) {
+                        router.continueGame()
+                    }
+                }
+                entry("New game", identifier: "home.newGame", prominent: !router.hasSavedGame) {
+                    router.newGame()
+                }
                 entry("Statistics", identifier: "home.statistics") { router.open(.statistics) }
                 entry("Rules", identifier: "home.rules") { router.open(.rules) }
                 entry("Settings", identifier: "home.settings") { router.open(.settings) }
@@ -47,6 +56,27 @@ struct HomeView: View {
 #Preview("Home, large text, dark") {
     NavigationStack {
         HomeView(router: AppRouter(store: InMemorySetupStore()))
+    }
+    .environment(\.dynamicTypeSize, .accessibility5)
+    .preferredColorScheme(.dark)
+}
+
+/// A router over an in-memory saved game, so Home offers Continue.
+@MainActor
+private func routerWithSavedGame() -> AppRouter {
+    let saved = SavedGame(setup: .defaults, playerSide: .light, state: GameState())
+    return AppRouter(store: InMemorySetupStore(), games: InMemorySavedGameStore(saved))
+}
+
+#Preview("Home with a saved game") {
+    NavigationStack {
+        HomeView(router: routerWithSavedGame())
+    }
+}
+
+#Preview("Home with a saved game, large text, dark") {
+    NavigationStack {
+        HomeView(router: routerWithSavedGame())
     }
     .environment(\.dynamicTypeSize, .accessibility5)
     .preferredColorScheme(.dark)

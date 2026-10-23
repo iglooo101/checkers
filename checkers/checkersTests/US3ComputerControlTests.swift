@@ -14,11 +14,13 @@ struct US3ComputerControlTests {
         let session: GameSession
         let opponent: ScriptedComputerOpponent
         let pacer: ManualPacer
+        let games = InMemorySavedGameStore()
 
         init(playerSide: SideChoice = .light, turns: [[Step]] = [[Step("f6", "e5")]]) {
             opponent = ScriptedComputerOpponent(turns: turns)
             pacer = ManualPacer()
-            router = AppRouter(store: InMemorySetupStore(), opponent: opponent, pacer: pacer)
+            router = AppRouter(
+                store: InMemorySetupStore(), opponent: opponent, pacer: pacer, games: games)
             router.newGame()
             router.setup = GameSetup(opponent: .computer, difficulty: .easy, side: playerSide)
             router.startGame()
@@ -79,30 +81,22 @@ struct US3ComputerControlTests {
         #expect(session.resultText?.key == "Light resigned")
     }
 
-    @Test("US3 FR-AI-04: leaving while the computer thinks drops the game; staying lets it move")
-    func leaveWhileThinking() async {
+    @Test(
+        "US3 FR-AI-04 FR-NAV-03: leaving while the computer thinks cancels its turn and keeps the game from the start of its turn"
+    )
+    func leaveWhileThinking() async throws {
         let left = RoutedGame()
         left.playerMoves()
+        let start = left.session.state
         await left.computerHasAnswered()
         left.router.requestHome()
-        #expect(left.router.isConfirmingLeave)
-        left.router.confirmLeave()
         #expect(left.router.session == nil)
         #expect(left.router.path.isEmpty)
         #expect(left.session.computerPhase == .idle)
         left.pacer.resumeNext()
         await settle()
         #expect(left.isReplyUnplayed)
-
-        let stayed = RoutedGame()
-        stayed.playerMoves()
-        await stayed.computerHasAnswered()
-        stayed.router.requestHome()
-        stayed.router.cancelLeave()
-        #expect(stayed.router.path == [.game])
-        stayed.pacer.resumeNext()
-        await waitUntil { stayed.session.computerPhase == .idle }
-        #expect(stayed.session.state.position.piece(at: Square("e5")) == .darkMan)
+        #expect(try left.games.load()?.state == start)
     }
 
     @Test(
@@ -173,9 +167,6 @@ struct US3ComputerControlTests {
             #expect(game.router.path == [.game, route])
             game.router.path.removeLast()
         }
-        game.router.requestHome()
-        #expect(game.router.isConfirmingLeave)
-        game.router.cancelLeave()
 
         // When the computer opens as Light, the player has no turn to take back yet.
         let opening = RoutedGame(playerSide: .dark, turns: [[Step("c3", "d4")]])

@@ -16,8 +16,8 @@ final class AppRouter {
     /// specs/005-computer-opponent/research.md R11).
     var setup: GameSetup
 
-    /// Whether the leave confirmation is showing (FR-042).
-    var isConfirmingLeave = false
+    /// Whether a saved game exists, so Home offers Continue (FR-NAV-02).
+    private(set) var hasSavedGame = false
 
     @ObservationIgnored private let store: any SetupStore
     /// Draws the player's side when the setup says Random (FR-034).
@@ -47,6 +47,12 @@ final class AppRouter {
         self.games = games
         self.records = records
         setup = store.load()
+        do {
+            hasSavedGame = try games.load() != nil
+        } catch {
+            // The store has logged why; without a usable saved game Home offers no Continue.
+            hasSavedGame = false
+        }
     }
 
     /// Opens Game setup with the remembered choices (FR-007, FR-009).
@@ -65,16 +71,46 @@ final class AppRouter {
     /// Opens a new game with these choices, in place of setup or of the current game. The computer
     /// moves first when it plays Light (FR-AI-06).
     func open(gameWith setup: GameSetup) {
+        show(
+            GameSession(
+                setup: setup, playerSide: playerSide(for: setup), opponent: opponent, pacer: pacer))
+    }
+
+    /// Opens the saved game as it was left (FR-SAVE-03); the computer moves if it is its turn
+    /// (FR-SAVE-04). The setup choices stay as they are (FR-SETUP-03).
+    func continueGame() {
+        let saved: SavedGame?
+        do {
+            saved = try games.load()
+        } catch {
+            // The store has logged why; there is nothing to continue.
+            saved = nil
+        }
+        guard let saved else {
+            hasSavedGame = false
+            return
+        }
+        show(GameSession(saved: saved, opponent: opponent, pacer: pacer))
+    }
+
+    /// Shows a game in place of setup or of the current game, saving it at its save points, and
+    /// starts the computer's turn if it is the computer's to move.
+    private func show(_ game: GameSession) {
         session?.cancelComputerTurn()
-        session = GameSession(
-            setup: setup, playerSide: playerSide(for: setup), opponent: opponent, pacer: pacer)
+        game.onEvent = { [weak self, weak game] event in
+            guard let self, let game else { return }
+            switch event {
+            case .saved: save(game)
+            }
+        }
+        session = game
         if path.last == .setup {
             path.removeLast()
         }
         if path.last != .game {
             path.append(.game)
         }
-        session?.startComputerTurnIfNeeded()
+        game.startComputerTurnIfNeeded()
     }
 
     /// Starts a new game with the finished game's setup, drawing a Random side again (FR-034).
@@ -93,31 +129,32 @@ final class AppRouter {
         }
     }
 
-    /// Returns Home. A finished game, or no game, is left at once; a game in progress asks first,
-    /// because it cannot be resumed until saving exists (FR-042).
+    /// Returns Home at once; a game in progress stays the saved game (FR-NAV-03). It is saved
+    /// before the computer's turn is cancelled, so that turn is kept from its start.
     func requestHome() {
-        if let session, !session.isOver {
-            isConfirmingLeave = true
-        } else {
-            leave()
-        }
-    }
-
-    /// Leaves the game in progress for Home, discarding it.
-    func confirmLeave() {
-        leave()
-    }
-
-    /// Stays in the game.
-    func cancelLeave() {
-        isConfirmingLeave = false
-    }
-
-    private func leave() {
-        isConfirmingLeave = false
+        saveNow()
         path.removeAll()
         session?.cancelComputerTurn()
         session = nil
+    }
+
+    /// Saves the game on screen, if any; the app calls it when it moves to the background
+    /// (FR-SAVE-01).
+    func saveNow() {
+        guard let session else { return }
+        save(session)
+    }
+
+    /// Keeps a game in progress as the saved game, replacing the previous one, and clears the
+    /// saved game once the game is over (FR-SAVE-02, FR-END-08).
+    private func save(_ game: GameSession) {
+        if let snapshot = game.snapshot {
+            games.save(snapshot)
+            hasSavedGame = true
+        } else {
+            games.clear()
+            hasSavedGame = false
+        }
     }
 
     /// Opens a screen on top of the current one.
