@@ -20,7 +20,7 @@ Continue, abandon, unreadable-save and record tests, the UI tests and the audit.
 the slice is named by a test:
 
 ```sh
-grep -rhoE 'FR-(SAVE-0[1-5]|STAT-0[1-5]|END-08|NAV-0[23]|SETUP-0[45]|UNDO-08|PRIV-01)' checkers/checkersTests checkers/checkersUITests checkers/CheckersEngine/Tests | sort -u
+grep -rhoE 'FR-(SAVE-0[1-5]|STAT-0[1-6]|END-08|NAV-0[23]|SETUP-0[45]|UNDO-08|PRIV-01)' checkers/checkersTests checkers/checkersUITests checkers/CheckersEngine/Tests | sort -u
 ```
 
 ## 2. Continue after closing the app (US1, SC-001, SC-002)
@@ -51,11 +51,14 @@ On the iPhone 17 simulator:
 - Finish games against the computer at Easy and Medium (resign one, win or lose another), and a
   two-player game: Statistics counts only the computer games, at their levels, each once.
 
-## 5. A damaged saved game (US4, SC-005)
+## 5. A damaged saved game or record (US4, SC-005)
 
-Covered by the UI test that launches the app with a damaged saved game
-(`-savedGame <hex>`): Home shows "Your previous game couldn't be restored." once, then no Continue;
-a new game starts without the abandon question.
+Covered by the UI tests that launch the app with damaged data:
+
+- `-savedGame <hex>`: Home shows "Your previous game couldn't be restored." once, then no
+  Continue; a new game starts without the abandon question.
+- `-record <hex>`: Home shows "Your record couldn't be restored and starts again from zero." once;
+  Statistics shows the empty state.
 
 ## 6. Accessibility (SC-007)
 

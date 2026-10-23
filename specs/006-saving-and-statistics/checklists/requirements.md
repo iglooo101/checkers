@@ -43,3 +43,6 @@
 - Scope: FR-SAVE-01 to 05, FR-STAT-01 to 05, FR-END-08, FR-NAV-02, FR-NAV-03, FR-SETUP-04,
   FR-SETUP-05, FR-UNDO-08, FR-A11Y-04, FR-PRIV-01 and FR-PRIV-02, traced to board tasks #72,
   #122 to #127, #129 to #131 and #189. E3's leave confirmation (its FR-042) is replaced.
+- Revised 2026-10-22 after `/speckit-analyze`: an unreadable record is no longer reset silently,
+  which conflicted with Constitution IV.3; Home tells the player once (FRD 1.2, FR-STAT-06, now in
+  scope; US4 covers both unreadable values).

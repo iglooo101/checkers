@@ -65,10 +65,15 @@ every count is zero.
 
 | Member | Meaning |
 |---|---|
-| `func load() -> Record` | The record, or an empty one if none is stored or it cannot be read (logged) |
+| `func load() throws(RecordError) -> Record` | The record, an empty one if none is stored, `.unreadable` if it cannot be used (logged) |
 | `func save(_ record: Record)` | Replaces it |
 
-Conformances: `UserDefaultsRecordStore` (key `record`) and `InMemoryRecordStore`.
+Conformances: `UserDefaultsRecordStore` (key `record`) and `InMemoryRecordStore` (tests, previews;
+can be given raw data to test an unreadable record). `RecordError`: `unreadable`.
+
+### RestoreNotice (new, R7)
+
+`savedGame`, `record`: which stored value could not be read, for the alert Home shows.
 
 ### GameSession (changed, R3)
 
@@ -84,7 +89,7 @@ Conformances: `UserDefaultsRecordStore` (key `record`) and `InMemoryRecordStore`
 `saved`, `ended`. The router saves the snapshot on `saved`; on `ended` it clears the saved game and
 records the session's result, if any.
 
-### AppRouter (changed, R4 to R7, R11)
+### AppRouter (changed, R4 to R8, R11)
 
 | Change | Meaning |
 |---|---|
@@ -92,13 +97,13 @@ records the session's result, if any.
 | `hasSavedGame: Bool` | Observable; Home shows Continue while true |
 | `record: Record` | Observable; what Statistics shows |
 | `isConfirmingAbandon: Bool` | The abandon question is showing |
-| `isShowingRestoreFailure: Bool` | The unreadable-save alert is showing |
+| `restoreNotice: RestoreNotice?` | Observable; the restore alert Home shows, if any: the saved game's first, then the record's |
 | `continueGame()` | Opens the saved game and starts the computer's turn if it is its turn |
 | `startGame()` | Asks first when a saved game exists |
 | `confirmAbandon()`, `cancelAbandon()` | Answer the question |
-| `dismissRestoreFailure()` | Closes the alert |
+| `dismissRestoreNotice()` | Closes the alert; the next notice, if any, follows |
 | `saveNow()` | Saves the session's snapshot; called when the app moves to the background |
-| `requestHome()` | Saves and returns Home at once (no question) |
+| `requestHome()` | Saves the snapshot, then cancels the computer's turn, and returns Home at once (no question) |
 | Removed | `isConfirmingLeave`, `confirmLeave()`, `cancelLeave()` (E3's leave confirmation) |
 
 ### Log (changed, R12)

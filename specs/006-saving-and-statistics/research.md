@@ -14,7 +14,9 @@ repository.
 | Saved size and speed | The longest of 200 seeded random games played without ending it: 220 turns. Its state as compiler-generated JSON: 23,317 bytes; encode 1.6 ms and decode 1.7 ms (Release), 1.7 and 2.0 ms (Debug); `UserDefaults` write 5 µs and read 1.5 µs per call (*measured*) |
 | Launch arguments | A launch argument `-key <hex bytes>` gives `UserDefaults.data(forKey:)` that value for the whole launch (Foundation's argument domain), and writes do not replace it (*measured* with a command-line program) |
 | Router | `AppRouter` is built in 20 places: the app, 9 previews and 10 tests |
-| Leave confirmation | E3's FR-042 alert ("Leave this game?") lives in `GameView` and `AppRouter` (`isConfirmingLeave`, `confirmLeave`, `cancelLeave`); unit tests in `US7NavigationTests` and `US3ComputerControlTests` use it; no UI test does |
+| Leave confirmation | E3's FR-042 alert ("Leave this game?") lives in `GameView` and `AppRouter` (`isConfirmingLeave`, `confirmLeave`, `cancelLeave`); the unit tests `leaveConfirmation` (`US7NavigationTests`), `leaveWhileThinking` and `menuWhileThinking` (`US3ComputerControlTests`) and the UI test `testUS7_leaveConfirmation` use it (corrected by `/speckit-analyze`, which found the last two) |
+| Statistics placeholder | `placeholderMessages` (`US7NavigationTests`), `testUS7_placeholdersFromHome` and `testUS5_auditStatistics` check its message |
+| Direct Start taps | `testUS6_computerChoicesRemembered` and `testUS7_largestTextSize` tap `setup.start` themselves instead of using the `AppScreens` start helpers |
 | UI tests | Every UI test starts games through `AppScreens` helpers and leaves unfinished games behind; nothing resets the app's data between tests |
 | Session size | `GameSession`'s class body is 154 of SwiftLint's 250 lines; the computer's turn is an extension in the same file (E4) |
 
@@ -106,24 +108,34 @@ repository.
   setup"); an alert, as for E3's other confirmations (an iOS 26 confirmation dialog from a button
   becomes a popover without Cancel, E3 lessons).
 
-## R7. A saved game that cannot be read
+## R7. A saved game or record that cannot be read
 
-- **Decision**: The router loads the saved game when it is created. If the store reports it
-  unreadable (bad JSON, an unknown version, a state that fails validation, or a finished game), the
-  router clears it, logs the error and sets `isShowingRestoreFailure`; Home shows one alert, "Your
-  previous game couldn't be restored.", with OK (Clarifications). Clearing it means the alert
-  cannot come back for that save.
-- **Rationale**: FR-015; checking at launch means Home is right the first time it appears.
+- **Decision**: The router loads the saved game and the record when it is created. If the saved
+  game is unreadable (bad JSON, an unknown version, a state that fails validation, or a finished
+  game), the router clears it and logs the error; if the record is unreadable, the router starts an
+  empty record, saves it and logs the error. Each failure adds a notice, the saved game's first:
+  `restoreNotice` is the one Home shows as an alert with OK, and `dismissRestoreNotice()` moves to
+  the next. The texts are "Your previous game couldn't be restored." and "Your record couldn't be
+  restored and starts again from zero." (Clarifications). Clearing the save and saving the empty
+  record mean neither alert can come back for the same data.
+- **Rationale**: FR-015 and FR-020 (FR-SAVE-05, FR-STAT-06); checking at launch means Home is right
+  the first time it appears. One notice at a time, because one view cannot reliably present two
+  alerts at once. The record's alert was added after `/speckit-analyze`: a silent reset conflicted
+  with Constitution IV.3.
+- **Alternatives considered**: a silent reset of the record (the first decision; rejected by
+  Constitution IV.3); a notice on the Statistics screen (rejected: more state, a third Statistics
+  layout to audit, and a player who never opens Statistics would not be told).
 
 ## R8. The record
 
 - **Decision**: A `Record` value holds wins, losses and draws for each `Difficulty`, stored as one
-  JSON value with a version. When a computer game ends, the session's `ended` event carries its
-  `GameResult` (win when the computer's side is left without a move, loss when the player's side
-  is or when the player resigns, draw for repetition or no progress) and the router adds it and
-  saves the record. Two-player games carry no result. The event comes once per game, from the step
-  or resignation that ends it, so undo, leaving and Continue cannot count a game twice
-  (FR-017 to FR-019). An unreadable record starts again at zero and is logged (Clarifications).
+  JSON value with a version. When a computer game ends, the session sends `ended` and the router
+  adds the session's `result`, a `GameResult` (win when the computer's side is left without a
+  move, loss when the player's side is or when the player resigns, draw for repetition or no
+  progress), and saves the record. Two-player games have no result. The event comes once per game,
+  from the step or resignation that ends it, so undo, leaving and Continue cannot count a game twice
+  (FR-017 to FR-019). An unreadable record starts again at zero, is logged and is reported once
+  (R7).
 - **Rationale**: Counting at the end is the only point where the result is final, and undo is
   unavailable after it (FR-UNDO-06).
 
@@ -146,11 +158,16 @@ repository.
 
 - **Decision**: The app gets no test-only switches. UI tests that need a known saved game or record
   launch the app with `UserDefaults` launch arguments, `-savedGame <hex>` or `-record <hex>`, which
-  Foundation reads before the stored values; this sets up a damaged save (the alert), a saved game
-  (Continue) and an empty record (the empty state for the audit). The start helpers in `AppScreens`
-  answer "Abandon current game?" when it appears, since earlier tests leave games saved. The
-  Continue test relaunches the app (`terminate()`, `launch()`), and the Statistics test compares
-  counts before and after a game instead of assuming an empty record.
+  Foundation reads before the stored values; this sets up a damaged save or record (the alerts), a
+  saved game (Continue, or a chain to finish after a relaunch) and an empty record (the empty state
+  for the audit). A text value instead of hex bytes should read as no data (`data(forKey:)` returns
+  `nil` for a string; not yet measured), so `-savedGame none` would show Home without Continue. Writes during such a launch go to the stored values, which the next launch
+  without the argument reads. The start helpers in `AppScreens`, and a `tapStart()` helper for
+  tests that open setup themselves, answer "Abandon current game?" when it appears, since earlier
+  tests leave games saved. The Continue test relaunches the app (`terminate()`, `launch()`), and
+  the Statistics test compares counts before and after a game instead of assuming an empty record.
+  The mechanism was measured on the Mac only, so T001 checks it in the simulator first, with E3's
+  `lastGameSetup` key, and the text-value case with it.
 - **Rationale**: Keeps the shipped app free of test behavior while making each UI test independent
   of the ones before it.
 - **Alternatives considered**: a launch argument that switches the app to in-memory stores
@@ -184,10 +201,11 @@ repository.
   games (chains, kings, counters, every outcome), the version 1 fixture, and rejection of damaged
   states. App (`checkersTests`), with in-memory stores, a scripted opponent and a manual pacer:
   save points and snapshots (including the computer's turn and the player's chain), Continue,
-  leaving without a question, the abandon question, the unreadable save, recording every ending
-  once at its difficulty, and the `UserDefaults` stores against a temporary suite. UI
-  (`checkersUITests`): Continue after a relaunch, the abandon question, the unreadable-save alert,
-  Statistics counting a finished game, and the audit of Home with Continue and of Statistics, empty
-  and with a record. Acceptance tests name US1–US4.
+  leaving without a question, the abandon question, the unreadable save and record, recording every
+  ending once at its difficulty, and the `UserDefaults` stores against a temporary suite, with a
+  version 1 fixture of each stored value. UI (`checkersUITests`): Continue after a relaunch, a
+  chain saved in the background, the abandon question, the two restore alerts, Statistics counting
+  a finished game, and the audit of Home with and without Continue, of Statistics, empty and with
+  a record, and of the alerts. Acceptance tests name US1–US4.
 - **Rationale**: Every rule is tested without UI and without the device's storage; the UI tests
   prove the wiring, the relaunch and the screens.

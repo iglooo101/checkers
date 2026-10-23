@@ -1,6 +1,9 @@
 # Functional Requirements Document: Checkers
 
-Version 1.1 · 2026-10-16
+Version 1.2 · 2026-10-22
+
+Changes in 1.2: FR-STAT-06 added: an unreadable record starts again from zero and the player is
+told once.
 
 Changes in 1.1: the first release is iPhone only (FR-PLAT-01 reworded, FR-PLAT-02 removed,
 iPad added to section 19).
@@ -206,6 +209,8 @@ Home
 - **FR-STAT-04** When no game has been recorded, Statistics MUST show an empty state that explains
   how to get a record.
 - **FR-STAT-05** The record cannot be reset in this release.
+- **FR-STAT-06** If the record cannot be read, the app MUST start it again from zero and tell the
+  player once that it could not be restored.
 
 ## 14. Settings
 

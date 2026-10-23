@@ -16,7 +16,8 @@ E3's setup store; a 220-turn game is about 23 KB and codes in about 2 ms (*measu
 offers a snapshot that, during the computer's turn, is the state at the start of that turn. The
 router saves on those points, when the player leaves and when the app moves to the background;
 clears the save and records the result when a game ends; asks "Abandon current game?" before
-replacing a saved game; and reports an unreadable save once on Home. Home gains Continue; leaving
+replacing a saved game; and reports an unreadable save or record once on Home, one alert after the
+other. Home gains Continue; leaving
 a game no longer asks. A new Statistics screen shows wins, losses and draws per difficulty, with an
 empty state. Research: [research.md](research.md).
 
@@ -33,10 +34,11 @@ is nonisolated
 `lastGameSetup` (R2)
 
 **Testing**: Swift Testing for the engine (coding, validation, a version 1 fixture) and the app
-(save points, Continue, abandon, unreadable save, record; in-memory stores, scripted opponent,
-manual pacer; the `UserDefaults` stores against a temporary suite); XCUITest for Continue after a
-relaunch, the abandon question, the unreadable-save alert, Statistics and the audit, with saved
-data set through launch arguments (R10)
+(save points, Continue, abandon, unreadable save and record, record; in-memory stores, scripted
+opponent, manual pacer; the `UserDefaults` stores against a temporary suite, with version 1
+fixtures); XCUITest for Continue after a relaunch and after the background, the abandon question,
+the two restore alerts, Statistics and the audit, with saved data set through launch arguments
+(R10)
 
 **Target Platform**: iOS 26.2+, iPhone only, portrait; engine tests also on macOS 15+
 
@@ -49,7 +51,7 @@ a 220-turn game and microseconds to write it); Continue shows the game within 1 
 app; whole sentences from the String Catalog, with plural variants for the counts; previews never
 touch storage (workflow gate 4)
 
-**Scale/Scope**: 1 changed engine file and 1 new one, about 6 new and 8 changed app files, 4 user
+**Scale/Scope**: 2 changed engine files and 1 new one, about 6 new and 8 changed app files, 4 user
 stories, 26 functional requirements
 
 ## Constitution Check
@@ -61,7 +63,7 @@ stories, 26 functional requirements
 | I. Native & Modern Apple Stack | Pass | SwiftUI and `@Observable`; Foundation's JSON coding and `UserDefaults`; the scene phase from SwiftUI; no Combine, Dispatch or threads. |
 | II. Feature-Based Architecture | Pass | Saving (`SavedGame`, its store) and Statistics (`Record`, its store, `StatisticsView`) are features of their own; the rules of when to save and what to record live in `GameSession` and `AppRouter`, not in views; the stores are injected protocols with live and in-memory conformances (II.3, exempt from II.5), wrapping `UserDefaults.standard` (II.3). New types are structs and enums except the stores, which keep state. |
 | III. Test-First Quality | Pass | Each story's tests come first; app logic is tested against the in-memory stores (III.4), the `UserDefaults` stores against a temporary suite; acceptance tests name US1–US4; UI tests get their data through launch arguments, not app switches (R10). |
-| IV. Safety & Correctness | Pass | Typed `SavedGameError` for the store (IV.2); every decoding and encoding failure is logged and handled (unreadable save: alert and a fresh start; unreadable record: zero; write failure: the old value stays); no `try?` that hides a user-visible failure; no force unwraps. |
+| IV. Safety & Correctness | Pass | Typed `SavedGameError` and `RecordError` for the stores (IV.2); every decoding and encoding failure is logged and handled; both failures the player can see are shown on Home with OK (IV.3): an unreadable save (alert, no Continue) and an unreadable record (alert, zero; FR-STAT-06, added after `/speckit-analyze` found the first design reset it silently); a write failure keeps the old value; no `try?` that hides a user-visible failure; no force unwraps. |
 | V. UX & Accessibility | Pass | Continue, the alerts and Statistics in primary text, with VoiceOver labels and plural sentences from the String Catalog; previews at accessibility5 and in Dark Mode; the empty state is explicit (V.3); new audited states (contracts/screens.md). |
 | VI. Privacy & Security | Pass | Only game data, on the device (FR-024); `UserDefaults` is already declared with reason CA92.1, so the privacy manifest does not change (R13); no permissions, no network. |
 | VII. Performance | Pass | Saving and coding measured before the design (R2, environment facts); the writes are microseconds, so no file I/O runs on the main actor (VII.3). |
@@ -100,10 +102,16 @@ with its reason.
 - **Engine contract**: `specs/002-rules-engine/contracts/engine-api.md` gets a pointer to
   [contracts/saved-game.md](contracts/saved-game.md) for `GameState`'s coding; no other API
   changes.
-- **E3 and E4 tests that change**: the leave-confirmation tests in `US7NavigationTests` and
-  `US3ComputerControlTests` are rewritten first for leaving without a question; the UI start
-  helpers answer the abandon question; the Statistics placeholder's audit becomes Statistics'
-  audits.
+- **E3 and E4 tests that change** (completed by `/speckit-analyze`): the leave-confirmation tests
+  (`leaveConfirmation` in `US7NavigationTests`, `leaveWhileThinking` and `menuWhileThinking` in
+  `US3ComputerControlTests`, `testUS7_leaveConfirmation` in `US7NavigationUITests`) are rewritten
+  first for leaving without a question (US1); the tests of the Statistics placeholder
+  (`placeholderMessages`, `testUS7_placeholdersFromHome`, `testUS5_auditStatistics`) change with
+  the Statistics screen (US3); the UI start helpers, and the two tests that tap Start directly
+  (`US6SetupUITests`, `testUS7_largestTextSize`), answer the abandon question (US2).
+- **Launch arguments are checked first**: T001 confirms in the simulator, with E3's existing
+  `lastGameSetup` key, that a `-key <hex bytes>` launch argument sets stored data and that a text
+  value reads as no data (R10), before any story relies on it.
 
 ### Post-design re-check
 
@@ -138,6 +146,7 @@ specs/006-saving-and-statistics/
 checkers/CheckersEngine/
 ├── Sources/CheckersEngine/
 │   ├── GameState+Coding.swift            # new: Codable with explicit keys and validation (R1)
+│   ├── GameState.swift                   # internal initializer that decoding needs
 │   └── Side.swift                        # Codable as "light"/"dark"
 └── Tests/CheckersEngineTests/
     └── GameStateCodingTests.swift        # round trips, validation, version 1 fixture (inline JSON)
@@ -146,14 +155,14 @@ checkers/checkers/
 │   ├── SavedGame.swift                   # new: SavedGame, SavedGameError
 │   └── SavedGameStore.swift              # new: protocol, UserDefaults and in-memory stores
 ├── Features/Statistics/
-│   ├── Record.swift                      # new: Record, Tally, GameResult
+│   ├── Record.swift                      # new: Record, Tally, GameResult, RecordError
 │   ├── RecordStore.swift                 # new: protocol, UserDefaults and in-memory stores
 │   ├── StatisticsText.swift              # new: block sentences and VoiceOver labels
 │   └── StatisticsView.swift              # new: blocks per difficulty, empty state
 ├── Features/Game/
 │   ├── GameSession.swift                 # snapshot, result, events, init(saved:)
 │   └── GameView.swift                    # leave alert removed
-├── Features/Home/HomeView.swift          # Continue, restore-failure alert
+├── Features/Home/HomeView.swift          # Continue, the two restore alerts
 ├── Features/Setup/SetupView.swift        # abandon alert
 ├── Features/Placeholders/                # Statistics entry removed
 ├── App/AppRouter.swift                   # stores, save points, Continue, abandon, record
@@ -165,17 +174,20 @@ checkers/checkersTests/
 ├── US1ContinueTests.swift                # save points, snapshot, Continue, leave, background
 ├── US2AbandonTests.swift                 # abandon question, end clears the save, Play again
 ├── US3RecordTests.swift                  # recording every ending once; Statistics text
-├── US4RestoreFailureTests.swift          # unreadable save
+├── US4RestoreFailureTests.swift          # unreadable save and record
 ├── StorageTests.swift                    # UserDefaults stores against a temporary suite
-├── US7NavigationTests.swift              # changed: leaving without a question
+├── PrivacyManifestTests.swift            # changed: names FR-PRIV-01
+├── US7NavigationTests.swift              # changed: leaving without a question; no Statistics placeholder
 └── US3ComputerControlTests.swift         # changed: leaving without a question
 checkers/checkersUITests/
-├── Support/AppScreens.swift              # start helpers answer the abandon question
-├── US1ContinueUITests.swift              # Continue after a relaunch
+├── Support/AppScreens.swift              # start helpers and tapStart() answer the abandon question
+├── US1ContinueUITests.swift              # Continue after a relaunch; a chain saved in the background
 ├── US2AbandonUITests.swift               # the abandon question
 ├── US3StatisticsUITests.swift            # a finished game counts
-├── US4RestoreFailureUITests.swift        # a damaged save (launch argument)
-└── US5AccessibilityAuditUITests.swift    # changed: Home with Continue, Statistics empty and with a record
+├── US4RestoreFailureUITests.swift        # a damaged save and a damaged record (launch arguments)
+├── US6SetupUITests.swift                 # changed: Start through tapStart()
+├── US7NavigationUITests.swift            # changed: Home keeps the game; Rules placeholder; tapStart()
+└── US5AccessibilityAuditUITests.swift    # changed: Home with and without Continue, Statistics empty and with a record, the alerts
 ```
 
 **Structure Decision**: Saving and Statistics each get a feature folder for their types and

@@ -4,7 +4,7 @@ Changes to `specs/003-game-experience/contracts/screens.md` for saving and stati
 English, from the String Catalog; identifiers are for UI tests. Behavior is in
 [saved-game.md](saved-game.md).
 
-## Home (FR-007, FR-015)
+## Home (FR-007, FR-015, FR-020)
 
 | Element | Text | Identifier |
 |---|---|---|
@@ -12,8 +12,9 @@ English, from the String Catalog; identifiers are for UI tests. Behavior is in
 | Button, prominent without a saved game, bordered with one | New game | `home.newGame` |
 | Buttons (unchanged) | Statistics, Rules, Settings | `home.statistics`, `home.rules`, `home.settings` |
 | Alert (once, after an unreadable save) | Your previous game couldn't be restored. · OK | `home.restoreFailure.ok` |
+| Alert (once, after an unreadable record; after the save's alert when both) | Your record couldn't be restored and starts again from zero. · OK | `home.restoreFailure.ok` |
 
-Continue comes first when shown.
+Continue comes first when shown. The alerts' text is the alert's title, with no message.
 
 ## Game setup (FR-012 to FR-014)
 
@@ -46,6 +47,8 @@ No buttons. All text is primary text; blocks stack vertically and scroll at larg
 
 ## Audited states (FR-026, SC-007)
 
-Added to `US5AccessibilityAuditUITests`: Home with Continue; Statistics empty; Statistics with a
-record; the restore-failure alert and the abandon alert are system alerts and are checked by their
-UI tests. The Statistics placeholder audit becomes the Statistics audits.
+Added to `US5AccessibilityAuditUITests`: Home with Continue; Home without a saved game
+(`-savedGame none`, if T001 confirms a text value reads as no data); Statistics empty; Statistics
+with a record; the abandon alert; the two restore alerts (launch arguments with damaged data). The
+alerts are system alerts: an issue on a system component goes on the plan's audit allow-list with
+its reason. The Statistics placeholder audit becomes the empty Statistics audit (US3).

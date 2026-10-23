@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-22 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.1, constitution v1.1.0
+Last updated: 2026-10-22 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.2, constitution v1.1.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -40,10 +40,10 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 3/16 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 4/16 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **29/41** | **107/150** | |
+| | **Total** | | | | **29/41** | **108/150** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,7 +51,6 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #114 E5: Saving and statistics
 - #115 F5.0: Specification (Spec Kit)
-- #119 E5 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -68,11 +67,12 @@ while it thinks, Undo returns to the player's turn, and VoiceOver announces its 
 Statistics, Rules and Settings are placeholders until E5 and E6.
 
 1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
-   (`specs/006-saving-and-statistics/`): spec, clarify and plan are done (#116 to #118: 4 user
-   stories, 26 requirements, 3 clarifications, research R1–R14) and `tasks.md` is written (29
-   tasks). Next: **`/speckit-analyze` to finish #119**, then **#120 Reconcile** (board task IDs, a
-   new "Validate the E5 slice" task, F5.0 Done), then `/speckit-implement` from Setup and US1. It saves the game in
-   play (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
+   (`specs/006-saving-and-statistics/`): spec, clarify, plan and tasks are done (#116 to #119: 4
+   user stories, 26 requirements, research R1–R14, 29 tasks), and `/speckit-analyze` found 15
+   problems, all fixed (#119). Next: **#120 Reconcile** (board task IDs, a new "Validate the E5
+   slice" task, FR-STAT-06 on #128 and #129, F5.0 Done), then `/speckit-implement` from Setup
+   (T001 checks launch arguments in the simulator first) and US1. It saves the game in play
+   (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
    computer's turn, and keeps the record against the computer.
 2. Then E6 → E8 (Order and dependencies).
 
@@ -111,9 +111,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   still open: a beginner must be able to beat Easy, which plays any turn within 40 points of its
   best two turns ahead.
 - E5 makes app data outlive each UI test: saved games stay between tests and the record cannot be
-  reset, so UI tests answer "Abandon current game?" in the start helpers, compare counts before and
-  after, and set known states with `UserDefaults` launch arguments (research R10, checked only on
-  the Mac so far).
+  reset, so UI tests answer "Abandon current game?" in the start helpers and `tapStart()`, compare
+  counts before and after, and set known states with `UserDefaults` launch arguments (research
+  R10, checked only on the Mac so far; T001 checks them in the simulator before any story relies
+  on them).
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
 - E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
@@ -359,14 +360,14 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 3/16 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 4/16 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
 - [x] #116 E5 Specify: write spec.md with /speckit-specify · S
 - [x] #117 E5 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #118 E5 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [~] #119 E5 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [x] #119 E5 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #120 E5 Reconcile this epic's board tasks with tasks.md · S
 
 **F5.1 Auto-save and resume** (#121) · FR-SAVE-01, FR-SAVE-02, FR-SAVE-03, FR-SAVE-04, FR-SAVE-05, FR-END-08, FR-NAV-02, FR-SETUP-04
@@ -665,3 +666,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   Progress until `/speckit-analyze` has run. HANDOFF.md updated with the E5 lessons (no Spec Kit
   branch hook, measure before choosing storage, launch arguments for test data, persisted data in
   UI tests) and next steps.
+- 2026-10-22: #119 done. `/speckit-analyze` on E5 found 15 problems, all fixed in the slice
+  documents. Critical: an unreadable record was reset silently (Constitution IV.3); Home now tells
+  the player once, added to the FRD as FR-STAT-06 (`FRD.md` 1.2). High: existing tests the slice
+  would break had no task (leave confirmation, Statistics placeholder, direct Start taps). Medium
+  and low: leaving between the computer's jumps, a chain saved in the background, FR-PRIV-01 named
+  by a test, audits of the alerts, version 1 fixtures, launch arguments checked first.

@@ -36,7 +36,8 @@ Last updated: 2026-10-22
   (pushed; only Spec Kit documents so far).
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
-- **Functional requirements**: `FRD.md` v1.1 (iPhone only, portrait). Requirement IDs such as
+- **Functional requirements**: `FRD.md` v1.2 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
+  unreadable record is reported once). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
 - **App**: **fully native SwiftUI** (E3): Home, Game setup, a two-player game screen (tap and
   drag, hints, chains, crowning, undo, resign, result panel, Play again) and placeholder
@@ -72,7 +73,7 @@ Last updated: 2026-10-22
 - **Backlog**: 8 epics, 41 features, 150 tasks (#1–#200; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) is at its tasks step (#119). Progress and the full list are in `EXECUTION_PLAN.md`.
+  (#115) is at its reconcile step (#120). Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -86,7 +87,7 @@ Last updated: 2026-10-22
   clarifications), plan with measured research R1–R14, data model, contracts `saved-game.md`
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
-  not yet analyzed)**. `.specify/feature.json` (local, git-ignored) points at it.
+  analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks)**. `.specify/feature.json` (local, git-ignored) points at it.
 
 ## Lessons learned
 
@@ -383,6 +384,23 @@ Last updated: 2026-10-22
 - **The GitHub API can drop a connection** (`update_plan.py` failed once with "connection reset by
   peer"); rerunning it worked.
 
+## Lessons learned (E5 analysis, 2026-10-22)
+
+- **Grep the test targets for everything a slice removes or puts in the way.** Research said no
+  UI test used the leave alert; a grep for its texts, identifiers and router members found two
+  more tests, one of them a UI test, and the Statistics placeholder's message was checked by three
+  tests. A new question in a flow (the abandon alert) breaks every test that taps through that
+  flow without the shared helpers, so search for direct taps too.
+- **Check every "tell the player nothing" decision against Constitution IV.3.** The silent reset
+  of an unreadable record passed clarify and the plan's Constitution Check; `/speckit-analyze`
+  flagged it. The fix changed product behavior, so it went into the FRD first (FR-STAT-06,
+  version 1.2), then spec, plan, contracts and tasks.
+- **Test changes go in the test tasks, not in the implementation task that causes them**
+  (Constitution III.1), so they are seen failing first.
+- **Order of save and cancel matters**: leaving between the computer's jumps must take the
+  snapshot before cancelling its turn, or the save holds a half-played computer chain that
+  Continue cannot resume.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -392,14 +410,15 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E5 Saving and statistics (#114)**, branch `006-saving-and-statistics`,
    `specs/006-saving-and-statistics/`:
-   - **#119 (In Progress)**: run `/speckit-analyze` on spec, plan and `tasks.md`; fix what it
-     finds; then move #119 to Done.
-   - **#120 Reconcile**: add each board task's task IDs (`tasks.md`, "Board Mapping"), create the
+   - **#119 done**: `/speckit-analyze` ran and all 15 findings are fixed (issue comment on #119).
+   - **#120 Reconcile**: add each board task's task IDs (`tasks.md`, "Board Mapping"; #129 now
+     also has T020–T022 for the unreadable record), add FR-STAT-06 to #128 and #129, create the
      new task "Validate the E5 slice and update project docs" (T001, T002, T023–T029; look it up
      if the board adds it automatically, E4 lessons), and close F5.0 (#115).
    - Then `/speckit-implement`: Setup and Foundational (T001–T007), then US1 (T008–T012) as the
-     MVP, US2, US3, US4 and Polish. Check early that `-savedGame`/`-record` launch arguments work
-     in the simulator (T017, T021; verified only on the Mac so far, research R10).
+     MVP, US2, US3, US4 and Polish. T001 checks in the simulator that launch arguments set stored
+     data (research R10, verified only on the Mac so far) before any story relies on them; if they
+     do not, revise R10 and T009, T017, T019, T021 and T023 first.
    - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
      `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:

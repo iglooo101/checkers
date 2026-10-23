@@ -51,7 +51,7 @@ state is not in progress.
 | `SavedGameStore.load()` | No value → `nil`; a value that is unreadable by the rules above → throws `.unreadable` |
 | `SavedGameStore.save(_:)` | Replaces the value; an encoding failure is logged and leaves the old value |
 | `SavedGameStore.clear()` | Removes the value |
-| `RecordStore.load()` | No value → an empty record; an unreadable value → an empty record, logged |
+| `RecordStore.load()` | No value → an empty record; a value that does not decode or whose `version` is not 1 → throws `.unreadable`, logged |
 | `RecordStore.save(_:)` | Replaces the value; a failure is logged |
 
 ## Save points
@@ -61,7 +61,7 @@ state is not in progress.
 | A turn ends, of either side, the game going on (session event `saved`) | Saves the session's snapshot |
 | Undo (event `saved`) | Saves the snapshot |
 | The game ends: a last step or a resignation (event `ended`, once) | Clears the saved game; records the result of a computer game |
-| Home from the game menu | Saves the snapshot, cancels the computer's turn, returns to Home |
+| Home from the game menu | Saves the snapshot, then cancels the computer's turn (in that order, so a computer's chain is never saved half-played), and returns to Home |
 | The app moves to the background | Saves the snapshot if a game is open |
 | Abandon confirmed | Clears the saved game; records nothing |
 
@@ -72,7 +72,7 @@ state at the start of that turn (FR-004). A player's unfinished chain is saved a
 
 | Moment | Rule |
 |---|---|
-| The router is created | Loads the record; loads the saved game: if unreadable, clears it, logs and shows the restore-failure alert; `hasSavedGame` tells whether one exists |
+| The router is created | Loads the saved game: if unreadable, clears it, logs and adds the `savedGame` notice; `hasSavedGame` tells whether one exists. Loads the record: if unreadable, starts an empty record, saves it, logs and adds the `record` notice. Home shows the notices one at a time, the saved game's first; neither comes back for the same data |
 | Continue | Loads the saved game, builds the session (the chain piece selected), opens the game screen, then `startComputerTurnIfNeeded()`; the remembered setup is unchanged |
 
 ## Recording
