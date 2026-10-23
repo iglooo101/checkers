@@ -235,7 +235,7 @@ description: "Task list for the saving and statistics slice (epic E5)"
 
 ## Board Mapping
 
-Each board issue lists its task IDs; #120 Reconcile adds a task for the slice's setup and validation (T001, T002, T023–T029), as #200 did for E4:
+Each board issue lists its task IDs; #120 Reconcile added #201 for the slice's setup and validation (T001, T002, T023–T029), as #200 did for E4:
 
 | Board task | Tasks |
 |---|---|
@@ -250,7 +250,7 @@ Each board issue lists its task IDs; #120 Reconcile adds a task for the slice's 
 | #129 Record model and recording rules | T006 (`Record`), T016, T018, T020–T022 (the unreadable record, FR-STAT-06) |
 | #130 Statistics screen with empty state | T017, T019 |
 | #131 Accessibility pass: Statistics | T023, T024 |
-| *(new in #120)* Validate the E5 slice and update project docs | T001, T002, T023–T029 |
+| #201 Validate the E5 slice and update project docs | T001, T002, T023–T029 |
 
 ## Notes
 

@@ -40,17 +40,16 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 0/3 | 4/16 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 5/17 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **29/41** | **108/150** | |
+| | **Total** | | | | **30/41** | **109/151** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #114 E5: Saving and statistics
-- #115 F5.0: Specification (Spec Kit)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -67,11 +66,10 @@ while it thinks, Undo returns to the player's turn, and VoiceOver announces its 
 Statistics, Rules and Settings are placeholders until E5 and E6.
 
 1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
-   (`specs/006-saving-and-statistics/`): spec, clarify, plan and tasks are done (#116 to #119: 4
-   user stories, 26 requirements, research R1–R14, 29 tasks), and `/speckit-analyze` found 15
-   problems, all fixed (#119). Next: **#120 Reconcile** (board task IDs, a new "Validate the E5
-   slice" task, FR-STAT-06 on #128 and #129, F5.0 Done), then `/speckit-implement` from Setup
-   (T001 checks launch arguments in the simulator first) and US1. It saves the game in play
+   (`specs/006-saving-and-statistics/`): F5.0 is done (#115: spec, clarify, plan, tasks with 29
+   tasks, `/speckit-analyze` with 15 findings fixed, and the board reconciled, adding #201). Next:
+   **`/speckit-implement`** from Setup and Foundational (T001–T007; T001 checks launch arguments
+   in the simulator first, and belongs to #201), then US1 (T008–T012) as the MVP. It saves the game in play
    (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
    computer's turn, and keeps the record against the computer.
 2. Then E6 → E8 (Order and dependencies).
@@ -360,7 +358,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 4/16 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 5/17 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
@@ -368,9 +366,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #117 E5 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #118 E5 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [x] #119 E5 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
-- [ ] #120 E5 Reconcile this epic's board tasks with tasks.md · S
+- [x] #120 E5 Reconcile this epic's board tasks with tasks.md · S
 
-**F5.1 Auto-save and resume** (#121) · FR-SAVE-01, FR-SAVE-02, FR-SAVE-03, FR-SAVE-04, FR-SAVE-05, FR-END-08, FR-NAV-02, FR-SETUP-04
+**F5.1 Auto-save and resume** (#121) · FR-SAVE-01, FR-SAVE-02, FR-SAVE-03, FR-SAVE-04, FR-SAVE-05, FR-END-08, FR-NAV-02, FR-NAV-03, FR-SETUP-04
 
 - [ ] #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters · M
 - [ ] #123 Saved-game store behind a protocol (live and in-memory fake) · M
@@ -381,11 +379,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
 - [ ] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
 
-**F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-SETUP-05, FR-UNDO-08
+**F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08
 
 - [ ] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
 - [ ] #130 Statistics screen with empty state · M
 - [ ] #131 Accessibility pass: Statistics · S
+- [ ] #201 Validate the E5 slice and update project docs · S · after #131
 
 ### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 0/15 tasks
 
@@ -672,3 +671,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   would break had no task (leave confirmation, Statistics placeholder, direct Start taps). Medium
   and low: leaving between the computer's jumps, a chain saved in the background, FR-PRIV-01 named
   by a test, audits of the alerts, version 1 fixtures, launch arguments checked first.
+- 2026-10-22: #120 and F5.0 (#115) done. Every E5 board task lists its Spec Kit task IDs; added
+  #201 (validate the slice and update docs, F5.2, after #131); FR-STAT-06 added to #128 and #129,
+  and FR-NAV-03 to #121 and #189. Backlog: 8 epics, 41 features, 151 tasks.

@@ -70,10 +70,10 @@ Last updated: 2026-10-22
   build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 8 epics, 41 features, 150 tasks (#1–#200; #188 is a PR) on the project board.
+- **Backlog**: 8 epics, 41 features, 151 tasks (#1–#201; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) is at its reconcile step (#120). Progress and the full list are in `EXECUTION_PLAN.md`.
+  (#115) is done, and implementation starts with Setup (T001). Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -410,15 +410,13 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E5 Saving and statistics (#114)**, branch `006-saving-and-statistics`,
    `specs/006-saving-and-statistics/`:
-   - **#119 done**: `/speckit-analyze` ran and all 15 findings are fixed (issue comment on #119).
-   - **#120 Reconcile**: add each board task's task IDs (`tasks.md`, "Board Mapping"; #129 now
-     also has T020–T022 for the unreadable record), add FR-STAT-06 to #128 and #129, create the
-     new task "Validate the E5 slice and update project docs" (T001, T002, T023–T029; look it up
-     if the board adds it automatically, E4 lessons), and close F5.0 (#115).
-   - Then `/speckit-implement`: Setup and Foundational (T001–T007), then US1 (T008–T012) as the
-     MVP, US2, US3, US4 and Polish. T001 checks in the simulator that launch arguments set stored
-     data (research R10, verified only on the Mac so far) before any story relies on them; if they
-     do not, revise R10 and T009, T017, T019, T021 and T023 first.
+   - **F5.0 (#115) done**: `/speckit-analyze` fixed 15 findings (#119); #120 added the Spec Kit
+     task IDs to every board task and created #201 (T001, T002, T023–T029, after #131).
+   - Next `/speckit-implement`: Setup and Foundational (T001–T007; move #201, #122 and #123 to In
+     Progress first), then US1 (T008–T012) as the MVP, US2, US3, US4 and Polish. T001 checks in
+     the simulator that launch arguments set stored data (research R10, verified only on the Mac
+     so far) before any story relies on them; if they do not, revise R10 and T009, T017, T019,
+     T021 and T023 first.
    - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
      `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:
