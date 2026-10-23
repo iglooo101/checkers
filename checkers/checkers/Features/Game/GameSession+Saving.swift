@@ -1,6 +1,7 @@
 import CheckersEngine
 
-/// Saving the game in play (specs/006-saving-and-statistics/contracts/saved-game.md).
+/// Saving the game in play and recording its result
+/// (specs/006-saving-and-statistics/contracts/saved-game.md).
 extension GameSession {
     /// A session for a saved game, as it was left (FR-SAVE-03).
     convenience init(
@@ -17,5 +18,11 @@ extension GameSession {
     var snapshot: SavedGame? {
         guard !isOver else { return nil }
         return SavedGame(setup: setup, playerSide: playerSide, state: computerTurnStart ?? state)
+    }
+
+    /// How the game counts in the record once it is over; `nil` while it goes on and in a
+    /// two-player game (FR-STAT-02, FR-STAT-03).
+    var result: GameResult? {
+        GameResult(outcome: state.outcome, playerSide: playerSide, difficulty: setup.difficulty)
     }
 }

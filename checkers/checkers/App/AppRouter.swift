@@ -20,6 +20,8 @@ final class AppRouter {
     private(set) var hasSavedGame = false
     /// Whether Start is asking "Abandon current game?" (FR-SETUP-04).
     private(set) var isConfirmingAbandon = false
+    /// The player's results against the computer, which Statistics shows (FR-STAT-01).
+    private(set) var record = Record()
 
     @ObservationIgnored private let store: any SetupStore
     /// Draws the player's side when the setup says Random (FR-034).
@@ -54,6 +56,12 @@ final class AppRouter {
         } catch {
             // The store has logged why; without a usable saved game Home offers no Continue.
             hasSavedGame = false
+        }
+        do {
+            record = try records.load()
+        } catch {
+            // The store has logged why; the record starts again from zero (FR-STAT-06).
+            record = Record()
         }
     }
 
@@ -120,7 +128,7 @@ final class AppRouter {
             guard let self, let game else { return }
             switch event {
             case .saved: save(game)
-            case .ended: clearSavedGame()
+            case .ended: finish(game)
             }
         }
         session = game
@@ -174,6 +182,16 @@ final class AppRouter {
         }
         games.save(snapshot)
         hasSavedGame = true
+    }
+
+    /// A game has ended: it is no longer the saved game, and a game against the computer counts
+    /// once in the record (FR-END-08, FR-STAT-02). The session reports the end once, so undo,
+    /// leaving and Continue cannot count a game twice (FR-UNDO-08).
+    private func finish(_ game: GameSession) {
+        clearSavedGame()
+        guard let result = game.result else { return }
+        record = record.adding(result)
+        records.save(record)
     }
 
     /// No game is saved any more: it ended or was abandoned (FR-END-08, FR-SETUP-04).

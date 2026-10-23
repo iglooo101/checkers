@@ -23,7 +23,7 @@ struct RootView: View {
                 GameView(session: session, router: router)
             }
         case .statistics:
-            placeholder("Statistics", for: route)
+            StatisticsView(record: router.record)
         case .rules:
             placeholder("Rules", for: route)
         case .settings:

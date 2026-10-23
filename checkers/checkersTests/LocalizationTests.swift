@@ -9,7 +9,6 @@ struct LocalizationTests {
     static let screenStrings: Set<String> = [
         // Home and placeholders
         "Checkers", "New game", "Statistics", "Rules", "Settings",
-        "Your wins, losses and draws against the computer will appear here.",
         "How to play American checkers will be explained here.",
         "Board theme, sound effects and move hints will be set here.",
         // Setup
@@ -37,7 +36,9 @@ struct LocalizationTests {
         "Draw by repetition", "Draw by no progress", "Play again",
         // Saving and statistics (specs/006-saving-and-statistics/contracts/screens.md)
         "Continue", "Abandon current game?", "Starting a new game discards the game in progress.",
-        "Abandon",
+        "Abandon", "No games yet.", "Finish a game against the computer to start your record.",
+        "%lld wins", "%lld losses", "%lld draws", "Easy: %@, %@, %@", "Medium: %@, %@, %@",
+        "Hard: %@, %@, %@",
     ]
 
     /// Reads the source catalog rather than the compiled string table, which may omit untranslated

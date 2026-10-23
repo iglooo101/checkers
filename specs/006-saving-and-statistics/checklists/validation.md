@@ -45,6 +45,15 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   suites, 86 engine tests in 15 suites, 35 UI tests in 13 classes), 12 min 7 s. A finished game
   is never the saved game: the session sends `ended` once, from either side's last step or a
   resignation, and the router clears the save.
+- US3 (T016–T019), 2026-10-23: before T018 the new unit tests failed to compile
+  (`build-for-testing`: no `GameResult`, `AppRouter.record` or `StatisticsText`). With T018 and
+  T019, US3's independent test set passes on the iPhone 17 simulator, with the suites that share
+  its helpers: 24 unit tests in 5 suites (`US3RecordTests`, `US7NavigationTests`,
+  `LocalizationTests`, `US1ContinueTests`, `US2AbandonTests`) and 8 UI tests
+  (`US3StatisticsUITests`, `US7NavigationUITests`, `testUS5_auditStatistics`). The counts' plural
+  variations ("1 win", "3 wins") were added to the String Catalog by hand, and
+  `scripts/check-string-catalog.sh` confirms a sync keeps them. The full blocking plan was left
+  to CI at the session's close-out.
 
 ## 1. All blocking tests
 

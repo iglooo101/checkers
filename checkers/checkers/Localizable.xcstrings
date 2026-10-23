@@ -53,6 +53,72 @@
     "%@, empty, legal target" : {
 
     },
+    "%lld draws" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld draw"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld draws"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld losses" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld loss"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld losses"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld wins" : {
+      "localizations" : {
+        "en" : {
+          "variations" : {
+            "plural" : {
+              "one" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld win"
+                }
+              },
+              "other" : {
+                "stringUnit" : {
+                  "state" : "translated",
+                  "value" : "%lld wins"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "A capture is required." : {
 
     },
@@ -146,11 +212,34 @@
     "Easy" : {
 
     },
+    "Easy: %@, %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Easy: %1$@, %2$@, %3$@"
+          }
+        }
+      }
+    },
+    "Finish a game against the computer to start your record." : {
+
+    },
     "Game menu" : {
 
     },
     "Hard" : {
 
+    },
+    "Hard: %@, %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Hard: %1$@, %2$@, %3$@"
+          }
+        }
+      }
     },
     "Home" : {
 
@@ -221,10 +310,23 @@
     "Medium" : {
 
     },
+    "Medium: %@, %@, %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Medium: %1$@, %2$@, %3$@"
+          }
+        }
+      }
+    },
     "Move undone." : {
 
     },
     "New game" : {
+
+    },
+    "No games yet." : {
 
     },
     "Opponent" : {
@@ -267,9 +369,6 @@
 
     },
     "Undo" : {
-
-    },
-    "Your wins, losses and draws against the computer will appear here." : {
 
     }
   },

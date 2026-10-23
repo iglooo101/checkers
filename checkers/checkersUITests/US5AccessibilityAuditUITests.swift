@@ -161,11 +161,14 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         try audit(app)
     }
 
-    /// FR-A11Y-04: the Statistics placeholder.
+    /// FR-A11Y-04: Statistics with no game recorded, launched with an empty record
+    /// (specs/006-saving-and-statistics/contracts/screens.md, "Audited states").
     @MainActor
     func testUS5_auditStatistics() throws {
-        let app = launch()
-        open("home.statistics", waitingFor: app.element("placeholder.message"))
+        let app = XCUIApplication()
+        app.launch(replacing: "record", with: StoredValues.emptyRecord)
+        XCTAssertTrue(app.element("home.newGame").waitForExistence(timeout: 10))
+        open("home.statistics", waitingFor: app.element("statistics.empty"))
         try audit(app)
     }
 

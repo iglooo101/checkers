@@ -53,17 +53,18 @@ final class US7NavigationUITests: XCTestCase {
         XCTAssertEqual(app.element("game.turn").label, "Dark to move")
     }
 
-    /// FR-NAV-02, FR-003: Home's Statistics opens its placeholder screen and returns.
+    /// FR-NAV-02, FR-003: Home's Rules opens its placeholder screen and returns (Statistics is no
+    /// longer a placeholder since E5).
     @MainActor
     func testUS7_placeholdersFromHome() {
         let app = XCUIApplication()
         app.launch()
-        let statistics = app.element("home.statistics")
-        XCTAssertTrue(statistics.waitForExistence(timeout: 10))
-        statistics.tap()
+        let rules = app.element("home.rules")
+        XCTAssertTrue(rules.waitForExistence(timeout: 10))
+        rules.tap()
         XCTAssertEqual(
             app.element("placeholder.message").label,
-            "Your wins, losses and draws against the computer will appear here.")
+            "How to play American checkers will be explained here.")
         app.navigationBars.buttons.firstMatch.tap()
         XCTAssertTrue(app.element("home.newGame").waitForExistence(timeout: 3))
     }

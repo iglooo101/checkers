@@ -151,3 +151,14 @@ extension XCUIApplication {
         square(to).tap()
     }
 }
+
+/// Stored values for `launch(replacing:with:)`, in the format of
+/// specs/006-saving-and-statistics/contracts/saved-game.md.
+enum StoredValues {
+    /// A version 1 record with no game at any level: Statistics shows its empty state.
+    static let emptyRecord = """
+        {"version": 1, "easy": {"wins": 0, "losses": 0, "draws": 0},
+         "medium": {"wins": 0, "losses": 0, "draws": 0},
+         "hard": {"wins": 0, "losses": 0, "draws": 0}}
+        """
+}

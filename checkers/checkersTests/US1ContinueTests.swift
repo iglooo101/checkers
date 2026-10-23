@@ -14,13 +14,19 @@ struct US1ContinueTests {
         let opponent: ScriptedComputerOpponent
         let pacer: ManualPacer
         let setups: InMemorySetupStore
+        let records: InMemoryRecordStore
 
-        init(saved: SavedGame? = nil, turns: [[Step]] = []) {
+        init(
+            saved: SavedGame? = nil, turns: [[Step]] = [],
+            records: InMemoryRecordStore = InMemoryRecordStore()
+        ) {
             games = saved.map { InMemorySavedGameStore($0) } ?? InMemorySavedGameStore()
             opponent = ScriptedComputerOpponent(turns: turns)
             pacer = ManualPacer()
             setups = InMemorySetupStore()
-            router = AppRouter(store: setups, opponent: opponent, pacer: pacer, games: games)
+            self.records = records
+            router = AppRouter(
+                store: setups, opponent: opponent, pacer: pacer, games: games, records: records)
         }
 
         /// The session the router shows.

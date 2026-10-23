@@ -50,11 +50,11 @@ struct US7NavigationTests {
         #expect(try games.load()?.state == state)
     }
 
-    @Test("US7 FR-NAV-02: each placeholder screen says what it will contain")
+    @Test(
+        "US7 FR-NAV-02: each placeholder screen says what it will contain; Statistics is no longer one"
+    )
     func placeholderMessages() {
-        #expect(
-            PlaceholderText.message(for: .statistics)?.key
-                == "Your wins, losses and draws against the computer will appear here.")
+        #expect(PlaceholderText.message(for: .statistics) == nil)
         #expect(
             PlaceholderText.message(for: .rules)?.key
                 == "How to play American checkers will be explained here.")
