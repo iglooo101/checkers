@@ -208,6 +208,9 @@ what else was considered. Facts marked *measured* were checked on the developmen
     the invariants in `data-model.md`; each game must end within the turn bound derived from the
     rules (see R11); then it undoes turns as described in R11.
   - SC-004: a test times the depth-6 count with `ContinuousClock` and requires under 10 s.
+    Changed 2026-10-23 (#202, E5 T030): it times the CPU time of the counting thread instead,
+    after a CI runner about three times slower than usual failed the wall-clock check at
+    10.5 s; tests running in parallel no longer count against the engine.
   - SC-005: the tests run with `swift test` in the package, and the existing
     `engine_no_ui_imports` lint rule keeps UI frameworks out.
   - The engine's test folder gets the same nested lint configuration as the app's test targets

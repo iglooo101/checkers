@@ -40,21 +40,19 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 1/3 | 13/17 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 2/3 | 15/18 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **30/41** | **117/151** | |
+| | **Total** | | | | **31/41** | **119/152** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #114 E5: Saving and statistics
-- #121 F5.1: Auto-save and resume
-- #126 Unreadable save: discard, hide Continue, tell the player
 - #128 F5.2: Statistics
-- #129 Record model and recording rules (wins/losses/draws per difficulty)
 - #201 Validate the E5 slice and update project docs
+- #202 Time the 6-turn reference count by its thread's CPU time, not the wall clock
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -68,18 +66,18 @@ announcements, focus that follows each step), with non-color cues at 3:1 contras
 accessibility audit of every screen. Games against the computer are playable at three levels
 (E4): Medium scores 90 of 100 against Easy and Hard 99 of 100 against Medium; the menu works
 while it thinks, Undo returns to the player's turn, and VoiceOver announces its moves.
-Statistics, Rules and Settings are placeholders until E5 and E6.
+Rules and Settings are placeholders until E6.
 
 1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
-   (`specs/006-saving-and-statistics/`): F5.0 is done (#115), and Setup, Foundational, US1 and
-   US2 are done (T001–T015; #122–#125, #127, #189 and #72; CI runs 39895348869 and
-   39949087079): games are saved after every turn, on Home and in the background, during the
-   computer's turn as they were at its start, and Continue on Home restores them exactly;
-   leaving a game no longer asks; a finished game is no longer saved, and Start asks "Abandon
-   current game?" while one is. **US3** (T016–T019, commit `3bc52eb`, CI run 39954174275) is
-   done: finished games against the computer count in the record, and Statistics shows it (#130
-   Done; #129 stays open for US4's unreadable record). **Now US4** (T020–T022, #126 and #129 In
-   Progress): an unreadable save or record is reported once on Home. Then Polish (#131, #201).
+   (`specs/006-saving-and-statistics/`): F5.0 and F5.1 are done, and all four user stories
+   (T001–T022; CI runs 39895348869, 39949087079, 39954174275 and 40023240169): games are saved
+   after every turn, on Home and in the background, and Continue restores them exactly; Start
+   asks "Abandon current game?" while a game is saved; finished games against the computer count
+   in the record, which Statistics shows; an unreadable save or record is reported once on Home.
+   **Now T030 (#202)**: the engine's SC-004 timing check measures the counting thread's CPU time,
+   so a slow CI runner cannot fail it (written and checked under load; its CI run comes with this
+   close-out). **Then Polish** (T023–T029; #131, #201): audits of the new screens and alerts,
+   `checkers/CLAUDE.md`, the quickstart, closing E5 and fast-forwarding `main`.
 2. Then E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -122,6 +120,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   R10, confirmed in the simulator by T001).
 - `checkers/CLAUDE.md` still describes E3's leave confirmation (the router now holds the abandon
   question instead) until T026 updates it.
+- Timing checks on CI runners: the wall-clock SC-004 check failed once at 10.5 s on a runner
+  about three times slower than usual (CI run 40023240169; a rerun passed). It now times the
+  counting thread's CPU time (#202). Other wall-clock budgets (E4's Hard turn time, the launch
+  test) can be hit the same way; E4's are measured alone, and the launch test only reports.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
 - E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
@@ -369,7 +371,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 13/17 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 15/18 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
@@ -385,17 +387,18 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #123 Saved-game store behind a protocol (live and in-memory fake) · M
 - [x] #124 Save after every turn and when the app goes to the background · S
 - [x] #125 Continue restores the game exactly; computer resumes if it was its turn · M
-- [~] #126 Unreadable save: discard, hide Continue, tell the player · S
+- [x] #126 Unreadable save: discard, hide Continue, tell the player · S
 - [x] #127 Clear the saved game on game end and on abandon · S
 - [x] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
 - [x] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
 
 **F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08
 
-- [~] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
+- [x] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
 - [x] #130 Statistics screen with empty state · M
+- [~] #202 Time the 6-turn reference count by its thread's CPU time, not the wall clock · S
 - [ ] #131 Accessibility pass: Statistics · S
-- [~] #201 Validate the E5 slice and update project docs · S · after #131
+- [~] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
 ### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 0/15 tasks
 
@@ -713,3 +716,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   the saved game's first. A third UI test (both damaged) found the second alert never showed when
   presented in the update that closed the first; Home now presents each from a `.task(id:)`.
   `scripts/test.sh` passes locally (259 tests); #126 and #129 move to Done once CI is green.
+- 2026-10-23: CI run 40023240169 on `216c170` failed only on the engine's wall-clock SC-004
+  check (10.5 s against 10 s) on a slow runner; the engine was unchanged, and a rerun passed with
+  259 tests. #126, #129 and F5.1 (#121) moved to Done (comments posted, closed). E5: 15/17 tasks.
+  Added #202 (T030 in `tasks.md`, under F5.2, before #201): the check now times the counting
+  thread's CPU time; locally, with every core busy, the wall-clock version failed at 10.02 s and
+  the CPU-time version passes (6.92 s). Backlog: 152 tasks.

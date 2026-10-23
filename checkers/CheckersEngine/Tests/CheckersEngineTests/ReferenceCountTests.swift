@@ -1,3 +1,4 @@
+import Darwin
 import Testing
 
 @testable import CheckersEngine
@@ -16,12 +17,13 @@ struct ReferenceCountTests {
         #expect(try countTurnSequences(from: GameState(), turns: turns) == expected)
     }
 
-    @Test("US3 SC-004: the 6-turn count takes under 10 seconds")
+    /// Timed by the CPU time of the thread that counts, not the wall clock: on a busy CI runner the
+    /// tests running in parallel would otherwise count against the engine (#202).
+    @Test("US3 SC-004: the 6-turn count takes under 10 seconds of CPU time")
     func sixTurnSpeed() throws {
-        var count = 0
-        let duration = try ContinuousClock().measure {
-            count = try countTurnSequences(from: GameState(), turns: 6)
-        }
+        let start = clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID)
+        let count = try countTurnSequences(from: GameState(), turns: 6)
+        let duration = Duration.nanoseconds(clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID) - start)
         #expect(count == 36_768)
         #expect(duration < .seconds(10))
     }

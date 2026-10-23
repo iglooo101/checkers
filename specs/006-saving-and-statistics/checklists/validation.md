@@ -70,6 +70,15 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   warnings as errors passes on the iPhone 17 simulator: **259 tests** (133 app unit tests in 31
   suites, 86 engine tests in 15 suites, 40 UI tests in 15 classes); its one SwiftLint warning (a
   test variable named `ok`) was fixed and US4's suites rerun; format and catalog checks pass.
+  CI run 40023240169 on `216c170` failed at first only on the engine's SC-004 timing check
+  (10.5 s against 10 s; the engine suite took 56 s instead of 19.6 s and the UI tests 1,201 s
+  instead of 825 s: a slow runner, same image, engine unchanged); its rerun passed with **259
+  tests** (133 app unit tests, 86 engine tests, 40 UI tests).
+- T030 (#202), 2026-10-23: the SC-004 check failed locally with every core kept busy (16 `yes`
+  processes on the Intel Mac's 16 logical cores): the wall-clock count took 10.02 s, against
+  5.3 s unloaded. Timed by the counting thread's CPU time instead, the count takes 3.95 s
+  unloaded and 6.92 s under that load (hyperthreads share a core), and the suite passes under
+  the same load. `swift test`: 89 engine tests pass, no lint findings.
 
 ## 1. All blocking tests
 

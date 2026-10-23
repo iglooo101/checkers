@@ -85,15 +85,21 @@ Last updated: 2026-10-23
   `record`, loaded at creation and updated and saved in `finish(_:)` on `ended`; `StatisticsView`
   and `StatisticsText` (plural counts in the catalog, one VoiceOver sentence per difficulty,
   `statistics.empty` and `statistics.easy`/`medium`/`hard`) replace the Statistics placeholder.
+  **US4** (CI run 40023240169): `RestoreNotice` (`Features/Saving/RestoreNotice.swift`); the
+  router's `init` clears an unreadable save, replaces an unreadable record with an empty one that
+  it saves, logs both and queues a notice each (`restoreNotice`, `dismissRestoreNotice()`); Home
+  shows them one at a time from a `.task(id:)`, the saved game's first. **#202** (T030): the
+  engine's SC-004 check times the counting thread's CPU time (`clock_gettime_nsec_np`), not the
+  wall clock.
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 8 epics, 41 features, 151 tasks (#1–#201; #188 is a PR) on the project board.
+- **Backlog**: 8 epics, 41 features, 152 tasks (#1–#202; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) is done, Setup, Foundational, US1, US2 and US3 are done (T001–T019), and US4 (T020–T022)
-  is in progress. Progress and the
+  (#115) and F5.1 (#121) are done, all four user stories are done (T001–T022), T030 (#202) waits
+  for CI, and Polish (T023–T029) is next. Progress and the
   full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -109,7 +115,7 @@ Last updated: 2026-10-23
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
   analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks;
-  T001–T019 done, US4 next)**; results so far in `checklists/validation.md`. `.specify/feature.json`
+  T001–T022 and T030 done, Polish next)**; results so far in `checklists/validation.md`. `.specify/feature.json`
   (local, git-ignored) points at it.
 
 ## Lessons learned
@@ -478,6 +484,23 @@ Last updated: 2026-10-23
 - **SourceKit reports "No such module 'CheckersEngine'"** for new test files before the first
   build; it is noise, the build compiles them.
 
+## Lessons learned (E5 US4, 2026-10-23)
+
+- **One alert after another needs a later update.** Presenting the next alert in the update that
+  closed the previous one (a binding read false, then true again) never showed it; Home now
+  presents each notice from `.task(id:)`, which runs after that update. A test with both values
+  damaged found it; the stories' own tests had passed.
+- **XCUITest does not see identifiers on alert buttons** (`home.restoreFailure.ok`): find them by
+  label inside the alert, with `firstMatch`, since iOS can expose a button twice.
+- **Wall-clock budgets fail on a slow runner.** The engine's SC-004 check failed at 10.5 s on a
+  runner about three times slower than usual (every suite slower, same image, engine unchanged).
+  Reproduce with every core busy (`yes > /dev/null &` once per logical core, killed afterwards):
+  the wall clock failed at 10.02 s, the counting thread's CPU time (`clock_gettime_nsec_np
+  (CLOCK_THREAD_CPUTIME_ID)`, valid because a synchronous test stays on one thread) was 6.92 s.
+- **`gh run rerun <id> --failed`** reruns only the failed jobs of a commit; the `CI gate` of the
+  rerun counts for the branch protection. Use it only once the cause is known not to be the code.
+- **Do not push while a rerun runs**: a push to the branch cancels it like any other run.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -491,19 +514,19 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      #124, #125, #189) in commits `93df603` and `5018d46`, green in CI run 39895348869 and moved
      to Done on 2026-10-23; US2 (T013–T015, #127, #72) in `cab8db6`, CI run 39949087079.
      #201 is In Progress (T001 and T002 done).
-   - **US3 done** (T016–T019, `3bc52eb`, CI run 39954174275, 252 tests): #130 Done, #129
-     open for US4.
-   - **Now US4** (T020–T022; #126 and #129 In Progress): tests first
-     (T020 `US4RestoreFailureTests` through the router with in-memory stores holding raw data;
-     T021 `US4RestoreFailureUITests` launching with `-savedGame`/`-record` of bytes that are not
-     JSON), then T022: `RestoreNotice` (`savedGame`, `record`), the router clears an unreadable
-     save and replaces an unreadable record with an empty one that it saves, each with a notice,
-     `restoreNotice` and `dismissRestoreNotice()`; the alerts on Home per `contracts/screens.md`
-     (`home.restoreFailure.ok`); both texts in `LocalizationTests`; sync the catalog. The router's
-     `init` already loads both stores in `do`/`catch` blocks, which is where the notices go.
-   - Then Polish (T023–T029; #131, #201): the audits of the new states, docs (`checkers/CLAUDE.md`
-     still describes E3's leave confirmation and the Statistics placeholder), and the slice's
-     validation; then close E5 and fast-forward `main`.
+   - **US3 done** (T016–T019, `3bc52eb`, CI run 39954174275, 252 tests) and **US4 done**
+     (T020–T022, `216c170`, CI run 40023240169 on its second attempt, 259 tests): #126, #129, #130
+     and F5.1 (#121) Done.
+   - **First, check the CI run of T030 (#202)**, pushed with the US4 close-out: the engine's
+     SC-004 check now times the counting thread's CPU time. If it is green, move #202 to Done
+     (comment first, check it closed) and add the run to `checklists/validation.md`.
+   - **Then Polish** (T023–T029; #131, #201): T023 audits Home with and without Continue,
+     Statistics with a record, the abandon alert and the two restore alerts (launch with
+     `-savedGame`/`-record` of damaged bytes, as `US4RestoreFailureUITests` does); T024 fixes what
+     they report and runs them on the iPhone SE at the largest text in Dark Mode; T025 the format,
+     script, catalog and strength checks; T026 `checkers/CLAUDE.md` (still E3's leave confirmation
+     and the Statistics placeholder) and the engine contract's pointer; T027 the quickstart; T028
+     and T029 the docs, the final CI run, closing E5 and fast-forwarding `main`.
    - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
      `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:

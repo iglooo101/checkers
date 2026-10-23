@@ -169,6 +169,7 @@ description: "Task list for the saving and statistics slice (epic E5)"
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
+- [X] T030 Make the engine's SC-004 timing check independent of the runner's load (#202, added 2026-10-23 after CI run 40023240169 failed only on it: 10.5 s against 10 s on a runner about three times slower than usual; a rerun passed). First show the failure locally: run `ReferenceCountTests` with every core kept busy and see `sixTurnSpeed` fail on the wall clock. Then measure the CPU time of the thread that counts instead of `ContinuousClock` in `EngineTests/ReferenceCountTests.swift`, so SC-004 checks the engine's own speed (`specs/002-rules-engine/spec.md`; research R10, noted there); it passes under the same load. Done before any other Polish push.
 - [ ] T023 [P] Update `UI/US5AccessibilityAuditUITests.swift` for FR-026: audit Home with Continue (a game started, then Home), Home without a saved game (launched with `-savedGame none`, if T001 confirmed a text value reads as no data; otherwise record in `validation.md` that it is audited only on a fresh simulator), Statistics with a record (`-record` with counts at every level; Statistics empty is audited since T019), the abandon alert (Start with a saved game) and the two restore alerts (`-savedGame` and `-record` with damaged bytes). Run them and record every reported problem in `validation.md`.
 - [ ] T024 Fix every problem T023 reports in `App/Features/`; add a plan "Audit allow-list" entry only for a system component. Run the audits on the iPhone SE (3rd generation) at `accessibility-extra-extra-extra-large` in Dark Mode; reset the simulator, and record the results.
 - [ ] T025 Run `scripts/format.sh`, then confirm `scripts/check-format.sh --strict`, `scripts/tests/run.sh`, `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData`, `scripts/test.sh` and the strength matches pass with zero warnings and zero SwiftLint errors.
@@ -183,7 +184,7 @@ description: "Task list for the saving and statistics slice (epic E5)"
 
 - **Setup (Phase 1)** and **Foundational (Phase 2)** first; Phase 2 blocks all stories (the coding of a game, the stored values and stores).
 - **US1** next (P1, the MVP): saving and Continue. **US2** after US1 (it adds `ended` and the question to the same router and session). **US3** after US2 (it records on `ended`). **US4** after US3: it reports an unreadable save (US1 loads it) and an unreadable record (US3 loads it).
-- **Polish** last; T023 sees every story's screens.
+- **Polish** last; T030 first (every later push depends on a reliable CI), and T023 sees every story's screens.
 - Within a story: tests first and seen failing; implementation tasks in order.
 
 ### Parallel Opportunities
@@ -252,6 +253,7 @@ Each board issue lists its task IDs; #120 Reconcile added #201 for the slice's s
 | #130 Statistics screen with empty state | T017, T019 |
 | #131 Accessibility pass: Statistics | T023, T024 |
 | #201 Validate the E5 slice and update project docs | T001, T002, T023–T029 |
+| #202 Time the 6-turn reference count by its thread's CPU time | T030 |
 
 ## Notes
 
