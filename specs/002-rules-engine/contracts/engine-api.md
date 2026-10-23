@@ -173,6 +173,8 @@ column, toward row 1 and higher column. `movablePieces` and `targets(from:)` kee
   `specs/005-computer-opponent/contracts/computer-player.md` (the engine's additions) and
   `contracts/computer-turn.md` (the app's computer turn).
 - **E5 (saving)**: everything that affects play is in `GameState` (FR-013); E5 adds `Codable`
-  inside the package.
+  inside the package. Built that way: `GameState+Coding.swift` writes explicit keys and decoding
+  rejects a state the rules could not reach; the format (version 1), its validity rules and how
+  the app stores and reads it are in `specs/006-saving-and-statistics/contracts/saved-game.md`.
 - **E7 (accessibility)**: `StepResult` and `Square.name` give announcements and square labels
   their facts; the text itself comes from the app's String Catalog.

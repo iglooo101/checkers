@@ -83,14 +83,75 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
 
 ## 1. All blocking tests
 
+- 2026-10-23, T025, after T023–T026: `scripts/test.sh` with warnings as errors passes on the
+  iPhone 17 simulator: **264 tests** (133 app unit tests in 31 suites, 86 engine tests in 15
+  suites, 45 UI tests in 15 classes), testing 14.4 minutes, no warnings. `scripts/format.sh`
+  changed nothing; `scripts/check-format.sh --strict`, `scripts/tests/run.sh` (4 script tests)
+  and `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings
+  .build/DerivedData` pass. The Release strength matches (`swift test -c release --filter
+  CheckersEngineStrengthTests`, 232 s) repeat E4's results: Medium 90 of 100 against Easy, Hard
+  99 of 100 against Medium, Hard's slowest turn 390 ms alone; 3 tests pass. **Pass.**
+- SC-008: the quickstart's search finds all 18 FRD IDs of the slice in the tests (FR-SAVE-01 to
+  05, FR-STAT-01 to 06, FR-END-08, FR-NAV-02, FR-NAV-03, FR-SETUP-04, FR-SETUP-05, FR-UNDO-08,
+  FR-PRIV-01), each named 1 to 8 times. FR-PRIV-02 (no permission prompts), mentioned in FR-024,
+  is not traced to this slice: E1 covers it as a baseline and E8's #177 verifies it. **Pass.**
+- SC-006, measured with a throwaway unit test (not committed) through `UserDefaultsSavedGameStore`
+  in a Debug build on the simulator: the longest of 200 seeded random games whose steps never end
+  the game reached 188 turns (19,407 bytes as JSON); saving it, encoding included, takes 1.2 ms
+  (median of 21) and at most 12.6 ms (the first, cold save); loading it 2.2 ms (median) and at
+  most 3.3 ms. Research's 220-turn game would be about 23 KB and scale the same way, far below
+  the 100 ms a player could notice. **Pass.**
+
 ## 2. Continue after closing the app
+
+- Automated: `testUS1_continueAfterRelaunch` (a computer game at Easy, one move, Home,
+  `terminate()` and `launch()`: Continue shows every square as before within 1 second, SC-002)
+  and `testUS1_chainSurvivesBackground` (Home pressed mid-chain, relaunch: the same piece keeps
+  jumping); `US1ContinueTests` save after every turn and undo, keep the computer's turn from its
+  start (FR-004), and continue it with exactly one computer turn (SC-003). **Pass.**
+- Left for the user: closing the app from the app switcher (the tests use `terminate()`), and
+  pressing Home on the simulator while the computer thinks (UI tests cannot act inside the
+  half-second thinking; `US1ContinueTests` covers saving at that moment).
 
 ## 3. New game with a saved game
 
+- Automated: `testUS2_abandonQuestion` (Cancel keeps setup and Continue; Abandon starts the new
+  game, which Continue then leads to); `US2AbandonTests` (a finished game, by either side's last
+  step or a resignation, is no longer saved; Play again and Start without a saved game never ask;
+  abandoning records nothing). **Pass.**
+
 ## 4. Record
+
+- Automated: `testUS3_emptyState` (the two sentences) and `testUS3_finishedGameCounts` (a resigned
+  Easy game adds one loss); `US3RecordTests` (every ending at every difficulty changes one count
+  once; two-player, abandoned and left games change nothing; undo and continue count once,
+  SC-004). **Pass.**
+- Left for the user: finishing games by hand at Easy and Medium and checking Statistics.
 
 ## 5. A damaged saved game or record
 
+- Automated: `US4RestoreFailureUITests` (a damaged save, a damaged record, both: each alert once,
+  the save's first; no Continue; Start does not ask; Statistics empty) and
+  `US4RestoreFailureTests` (seven kinds of unreadable save and two of unreadable record, each
+  reported once, SC-005). **Pass.**
+
 ## 6. Accessibility
+
+- T023: `US5AccessibilityAuditUITests` audits 17 states, six of them new: Home without a saved
+  game (`-savedGame none` as a plain argument; passing it through `launch(replacing:with:)` gave
+  the bytes of "none", a damaged save, and its alert), Home with Continue, Statistics with a
+  record at every level, the abandon alert and the two restore alerts. First run: the system
+  alerts' texts were reported as "Dynamic Type font sizes are partially unsupported", on the
+  title, the abandon alert's message and unnamed elements; nothing else.
+- T024: on the iPhone 17 simulator at the largest accessibility size, the restore alert's title
+  and OK grow several times (screenshots at `large` and
+  `accessibility-extra-extra-extra-large`), so the report is the system alert's own; no app code
+  can change it. Added to the plan's audit allow-list (Dynamic Type, "partially unsupported",
+  only on an alert's texts or unnamed elements while an alert shows), logged in the test report.
+  All 17 audits pass on the iPhone 17, and on the iPhone SE (3rd generation) at
+  `accessibility-extra-extra-extra-large` in Dark Mode; that simulator was reset to `large` and
+  light afterwards. **Pass** (SC-007).
+- Left for the user: VoiceOver reading each Statistics block as one sentence on a device or
+  simulator (the label is tested in `US3RecordTests`; XCUITest cannot drive VoiceOver).
 
 ## 7. CI

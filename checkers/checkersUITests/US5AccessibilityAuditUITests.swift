@@ -26,13 +26,22 @@ final class US5AccessibilityAuditUITests: XCTestCase {
     private static func isAllowed(_ issue: XCUIAccessibilityAuditIssue, in app: XCUIApplication)
         -> Bool
     {
+        guard issue.auditType == .dynamicType, issue.compactDescription.contains("partially")
+        else { return false }
+        // System alerts (the abandon question, the restore notices): their texts and buttons
+        // scale (checked on screen at the largest size), but the audit reports the alert's texts,
+        // sometimes without naming them, as partially unsupported.
+        let alert = app.alerts.firstMatch
+        if alert.exists {
+            guard let element = issue.element else { return true }
+            return element.elementType == .staticText && alert.staticTexts[element.label].exists
+        }
         guard let element = issue.element else { return false }
         // Setup rows the scrolling form cuts at the screen's edge once the audit enlarges the
         // text, a line or Start below the computer's choices: they scale and scroll into view,
         // but the audit reports whichever row is cut.
         let isSetupRow = element.elementType == .staticText || element.identifier == "setup.start"
-        return issue.auditType == .dynamicType && isSetupRow
-            && issue.compactDescription.contains("partially") && app.element("setup.start").exists
+        return isSetupRow && app.element("setup.start").exists
     }
 
     /// Runs every audit type on the current screen; each problem not on the allow-list fails the
@@ -71,10 +80,48 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         return problems
     }
 
-    /// FR-A11Y-04: Home as launched.
+    /// FR-A11Y-04: Home without a saved game (specs/006-saving-and-statistics/contracts/
+    /// screens.md, "Audited states"). A text value reads as no saved game for this launch
+    /// (research R10, checked by T001); `launch(replacing:with:)` would pass bytes instead.
     @MainActor
     func testUS5_auditHome() throws {
+        let app = XCUIApplication()
+        app.launchArguments = ["-savedGame", "none"]
+        app.launch()
+        XCTAssertTrue(app.element("home.newGame").waitForExistence(timeout: 10))
+        XCTAssertFalse(app.element("home.continue").exists)
+        try audit(app)
+    }
+
+    /// FR-A11Y-04: Home with Continue, after leaving a game in progress.
+    @MainActor
+    func testUS5_auditHomeWithContinue() throws {
         let app = launch()
+        app.startTwoPlayerGame()
+        app.move("c3", "d4")
+        app.chooseFromGameMenu("Home")
+        XCTAssertTrue(app.element("home.continue").waitForExistence(timeout: 3))
+        try audit(app)
+    }
+
+    /// FR-A11Y-04: the alert after an unreadable saved game, launched with damaged bytes.
+    @MainActor
+    func testUS5_auditRestoreAlertSave() throws {
+        let app = XCUIApplication()
+        app.launch(replacing: "savedGame", with: "not a saved game")
+        XCTAssertTrue(
+            app.alerts["Your previous game couldn't be restored."].waitForExistence(timeout: 10))
+        try audit(app)
+    }
+
+    /// FR-A11Y-04: the alert after an unreadable record, launched with damaged bytes.
+    @MainActor
+    func testUS5_auditRestoreAlertRecord() throws {
+        let app = XCUIApplication()
+        app.launch(replacing: "record", with: "not a record")
+        XCTAssertTrue(
+            app.alerts["Your record couldn't be restored and starts again from zero."]
+                .waitForExistence(timeout: 10))
         try audit(app)
     }
 
@@ -93,6 +140,20 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         let app = launch()
         open("home.newGame", waitingFor: app.buttons["Computer"])
         app.buttons["Computer"].tap()
+        try audit(app)
+    }
+
+    /// FR-A11Y-04: the "Abandon current game?" alert, after Start with a game saved.
+    @MainActor
+    func testUS5_auditAbandonAlert() throws {
+        let app = launch()
+        app.startTwoPlayerGame()
+        app.move("c3", "d4")
+        app.chooseFromGameMenu("Home")
+        open("home.newGame", waitingFor: app.buttons["Two players"])
+        app.buttons["Two players"].tap()
+        app.scrolledTo(app.element("setup.start")).tap()
+        XCTAssertTrue(app.alerts["Abandon current game?"].waitForExistence(timeout: 3))
         try audit(app)
     }
 
@@ -169,6 +230,16 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         app.launch(replacing: "record", with: StoredValues.emptyRecord)
         XCTAssertTrue(app.element("home.newGame").waitForExistence(timeout: 10))
         open("home.statistics", waitingFor: app.element("statistics.empty"))
+        try audit(app)
+    }
+
+    /// FR-A11Y-04: Statistics with games at every level, launched with that record.
+    @MainActor
+    func testUS5_auditStatisticsRecord() throws {
+        let app = XCUIApplication()
+        app.launch(replacing: "record", with: StoredValues.fullRecord)
+        XCTAssertTrue(app.element("home.newGame").waitForExistence(timeout: 10))
+        open("home.statistics", waitingFor: app.element("statistics.hard"))
         try audit(app)
     }
 

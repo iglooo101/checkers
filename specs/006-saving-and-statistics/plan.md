@@ -90,6 +90,7 @@ stories, 26 functional requirements
 | Screen | Element | Issue type | Reason |
 |---|---|---|---|
 | Game setup | A static text line, or Start (`setup.start`), that the scrolling form cuts at the screen's edge | Dynamic Type, "partially unsupported" only | Unchanged from E4. |
+| Setup and Home, while a system alert shows (the abandon question, the two restore notices) | A static text of the alert (title or message), or an element the audit does not name | Dynamic Type, "partially unsupported" only | Added by T024. The alerts are system alerts: on screen at the largest accessibility size their title, message and buttons grow several times (screenshot check), but the audit reports their labels as partially unsupported, some runs without naming the element. The app cannot style a system alert's labels. Allowed issues are logged in the test report. |
 
 New screens add no entries; if their audits report a system component, the entry is added here
 with its reason.

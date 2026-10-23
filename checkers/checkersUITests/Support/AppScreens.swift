@@ -170,4 +170,12 @@ enum StoredValues {
          "medium": {"wins": 0, "losses": 0, "draws": 0},
          "hard": {"wins": 0, "losses": 0, "draws": 0}}
         """
+
+    /// A version 1 record with games at every level: Statistics shows its three blocks, with
+    /// singular and plural counts.
+    static let fullRecord = """
+        {"version": 1, "easy": {"wins": 3, "losses": 1, "draws": 2},
+         "medium": {"wins": 0, "losses": 4, "draws": 1},
+         "hard": {"wins": 1, "losses": 0, "draws": 0}}
+        """
 }

@@ -51,6 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #114 E5: Saving and statistics
 - #128 F5.2: Statistics
+- #131 Accessibility pass: Statistics
 - #201 Validate the E5 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -74,10 +75,11 @@ Rules and Settings are placeholders until E6.
    asks "Abandon current game?" while a game is saved; finished games against the computer count
    in the record, which Statistics shows; an unreadable save or record is reported once on Home.
    T030 (#202, CI run 40031135343) is done: the engine's SC-004 timing check measures the
-   counting thread's CPU time, so a slow CI runner cannot fail it. **Next: Polish**
-   (T023–T029; #131, #201): audits of the new screens and alerts,
-   `checkers/CLAUDE.md`, the quickstart, closing E5 and fast-forwarding `main`.
-2. Then E6 → E8 (Order and dependencies).
+   counting thread's CPU time. **Polish** (T023–T028) is done: audits of the new states pass on
+   the iPhone 17 and the iPhone SE at the largest text in Dark Mode, `scripts/test.sh` passes
+   with 264 tests, and the docs are updated. **Next: T029**, the final CI run, closing #131,
+   #201, F5.2 (#128) and E5 (#114), and fast-forwarding `main`.
+2. Then E6 (#132, starting with #134 Specify) → E8 (Order and dependencies).
 
 ## Order and dependencies
 
@@ -117,8 +119,6 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   reset, so UI tests answer "Abandon current game?" in the start helpers and `tapStart()`, compare
   counts before and after, and set known states with `UserDefaults` launch arguments (research
   R10, confirmed in the simulator by T001).
-- `checkers/CLAUDE.md` still describes E3's leave confirmation (the router now holds the abandon
-  question instead) until T026 updates it.
 - Timing checks on CI runners: the wall-clock SC-004 check failed once at 10.5 s on a runner
   about three times slower than usual (CI run 40023240169; a rerun passed). It now times the
   counting thread's CPU time (#202). Other wall-clock budgets (E4's Hard turn time, the launch
@@ -139,9 +139,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   largest text size are still open for the user (`specs/003-game-experience/checklists/validation.md`).
 - E7's VoiceOver game by hand (SC-001, quickstart §3) is open for the user: XCUITest cannot drive
   VoiceOver, so announcements and focus are tested through the `Announcer` seam and the session.
-- The accessibility audit allow-list has one entry: a Dynamic Type report on the setup row a
-  scrolling form cuts at the screen's edge (a line, or Start with Computer chosen); re-check it
-  with each new iOS and Xcode (`specs/004-accessibility/plan.md`, `specs/005-computer-opponent/plan.md`).
+- The accessibility audit allow-list has two entries, both Dynamic Type reports on system
+  components: the setup row a scrolling form cuts at the screen's edge (a line, or Start with
+  Computer chosen), and the texts of system alerts (the abandon question, the restore notices),
+  which do scale on screen. Re-check both with each new iOS and Xcode
+  (`specs/004-accessibility/plan.md`, `specs/006-saving-and-statistics/plan.md`).
 - Code CI runs now take 15–25 minutes with E3's UI tests, and a push cancels the running one;
   push once per story.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
@@ -396,7 +398,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
 - [x] #130 Statistics screen with empty state · M
 - [x] #202 Time the 6-turn reference count by its thread's CPU time, not the wall clock · S
-- [ ] #131 Accessibility pass: Statistics · S
+- [~] #131 Accessibility pass: Statistics · S
 - [~] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
 ### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 0/15 tasks
@@ -723,3 +725,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   the CPU-time version passes (6.92 s). Backlog: 152 tasks.
 - 2026-10-23: CI run 40031135343 green on `16ecf98` (US4 close-out and T030): 259 tests. #202
   moved to Done. E5: 16/18 tasks; Polish (#131, #201) is next.
+- 2026-10-23: E5 Polish (T023–T028; #131 In Progress): the audit covers six new states (Home
+  with and without Continue, Statistics with a record, the abandon alert, both restore alerts);
+  system alerts' texts are allow-listed (they scale on screen, the audit says otherwise); all 17
+  audits pass on the iPhone 17 and on the iPhone SE at the largest text in Dark Mode.
+  `scripts/test.sh` passes with 264 tests; the strength matches repeat E4's results; saving a
+  188-turn game takes 1.2 ms in Debug (SC-006); all 18 FRD IDs of the slice are named by tests.
+  `checkers/CLAUDE.md` describes saving and statistics. T029 (CI, close E5, `main`) is next.

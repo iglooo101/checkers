@@ -35,13 +35,30 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
 ## Architecture
 
 - App layout by feature (`checkers/`): `App/` (`RootView`: one `NavigationStack` over Home;
-  `AppRouter`: the path, the game in play, setup choices and the leave confirmation; `Route`),
-  `Features/Home`, `Features/Setup` (`GameSetup`, `SetupStore` with a `UserDefaults` store and an
-  in-memory one for tests and previews, `SetupView`), `Features/Game` (`GameSession`, the
-  `@Observable` model that turns taps and drags into engine steps; `GameText` for every game
-  sentence; `BoardLayout` for orientation; `GameView`, `BoardView`, `PieceView`, `ResultPanel`)
-  and `Features/Placeholders` (Statistics, Rules and Settings until E5 and E6). Behavior and
-  texts follow `../specs/003-game-experience/contracts/` (`game-session.md`, `screens.md`).
+  `AppRouter`: the path, the game in play, setup choices, the saved game and the record;
+  `Route`), `Features/Home` (Continue and the restore alerts), `Features/Setup` (`GameSetup`,
+  `SetupStore` with a `UserDefaults` store and an in-memory one for tests and previews,
+  `SetupView` with the abandon alert), `Features/Game` (`GameSession`, the `@Observable` model
+  that turns taps and drags into engine steps; `GameText` for every game sentence; `BoardLayout`
+  for orientation; `GameView`, `BoardView`, `PieceView`, `ResultPanel`), `Features/Saving`
+  (`SavedGame`, `SavedGameStore`, `RestoreNotice`), `Features/Statistics` (`Record`, `GameResult`,
+  `RecordStore`, `StatisticsText`, `StatisticsView`) and `Features/Placeholders` (Rules and
+  Settings until E6). Behavior and texts follow `../specs/003-game-experience/contracts/`
+  (`game-session.md`, `screens.md`) as changed by `../specs/006-saving-and-statistics/contracts/`.
+- Saving and statistics (E5, `../specs/006-saving-and-statistics/contracts/saved-game.md`): one
+  saved game and the record are versioned JSON (version 1) in `UserDefaults.standard` under
+  `savedGame` and `record`, behind `SavedGameStore` and `RecordStore` (in-memory stores, which
+  hold encoded bytes and accept damaged ones, for tests and previews; the router defaults to
+  them). The engine encodes `GameState` and rejects states the rules could not reach.
+  `GameSession` sends `saved` after every turn and undo and `ended` once when a game ends
+  (`onEvent`), and offers `snapshot` (the start of the computer's turn while that turn is under
+  way) and `result` (`GameSession+Saving.swift`); the router saves on `saved`, on Home and when
+  `CheckersApp` sees the scene go to the background, clears the save and records the result on
+  `ended`. Leaving a game returns Home at once and keeps it saved (E3's leave alert is gone);
+  Start asks "Abandon current game?" while a game is saved. At launch an unreadable save is
+  cleared and an unreadable record restarts from zero, each reported once on Home
+  (`restoreNotice`, shown one at a time from a `.task(id:)`). A new format needs a new version:
+  `StorageTests` keeps version 1 fixtures.
 - VoiceOver (E7, `../specs/004-accessibility/contracts/announcements.md`): each dark square is one
   element labelled by `GameSession.squareLabel(_:)` with its `SquareState` ("c3, Light man, can
   move"); double-tap uses the tap path. `GameSession` speaks through the `Announcer` seam
@@ -55,8 +72,9 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
 - Every screen passes `US5AccessibilityAuditUITests` (all audit types). The audit fails secondary
   text, system blue and text over translucent backgrounds: use primary text, the app's
   `AccentColor` and `OnAccent` (label of prominent buttons), and opaque panels. Exceptions only for
-  system components, in the audit's `isAllowed` and the allow-list in
-  `../specs/004-accessibility/plan.md`.
+  system components, in the audit's `isAllowed` and the allow-lists in
+  `../specs/004-accessibility/plan.md` and `../specs/006-saving-and-statistics/plan.md` (the
+  setup form's edge row; the texts of system alerts).
 - Confirmations are alerts: on iOS 26 a confirmation dialog opened from a toolbar item shows as a
   popover without Cancel.
 - `checkers/Support/Logging.swift`: `Log` with one `Logger` per feature category under the bundle
@@ -66,14 +84,16 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
   drifts (`scripts/check-string-catalog.sh`). Return optional strings from a `switch` with explicit
   `return`s: from a `switch` expression the compiler extracts only one literal.
 - `checkers/PrivacyInfo.xcprivacy`: no tracking and no collected data; declares the user-defaults
-  API (reason `CA92.1`) for the remembered setup choices. Add any new required-reason API in the
-  same change that starts using it.
+  API (reason `CA92.1`) for the remembered setup choices, the saved game and the record. Add any
+  new required-reason API in the same change that starts using it.
 - `CheckersEngine/`: UI-free Swift package (Swift 6, iOS 26.2 and macOS 15 for host tests); lint
   fails on UI imports in it. It holds the American checkers rules as `Sendable` value types:
   `Square` (a–h / 1–8 names), `Piece`, `Position` (three 32-bit sets), `Step` (from, to; two
   squares long is a jump) and `GameState`, whose `apply(_:)` returns a `StepResult`, plus
-  `resign(_:)`, `undo()` and the legal-step queries. Rejections throw `RuleError`. The public API
-  and its rules are in `../specs/002-rules-engine/contracts/engine-api.md`.
+  `resign(_:)`, `undo()` and the legal-step queries. Rejections throw `RuleError`. `GameState` is
+  `Codable` (`GameState+Coding.swift`: explicit keys; damaged data throws
+  `DecodingError.dataCorrupted`). The public API and its rules are in
+  `../specs/002-rules-engine/contracts/engine-api.md`.
 - The computer player (E4, `../specs/005-computer-opponent/contracts/computer-player.md`):
   `ComputerPlayer.chooseTurn(in:level:seed:shouldStop:)` searches complete turns with alpha-beta
   and iterative deepening (`Search`, `Evaluation`) over its own allocation-free `TurnGenerator`,
@@ -92,19 +112,29 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
 - Engine tests (`CheckersEngine/Tests/CheckersEngineTests/`): one suite per story
   (`US1StartAndMoveTests`…`US5UndoTests`) whose test names list the FRD IDs they prove; unit
   suites for squares, positions and steps; `ReferenceCountTests` (published move counts, depths
-  1–7) and `RandomGameTests` (1,000 seeded games with full undo). Helpers in `Support/` build
-  positions from square names, for example `GameState(["c3": .lightMan], toMove: .light)`. E4 adds
+  1–7; the 6-turn count's speed check times the counting thread's CPU time, so tests running in
+  parallel cannot fail it) and `RandomGameTests` (1,000 seeded games with full undo). Helpers in
+  `Support/` build positions from square names, for example
+  `GameState(["c3": .lightMan], toMove: .light)`. E4 adds
   `TurnGeneratorTests`, `US1ComputerPlayerTests` and `US2ComputerLevelTests` (shallow searches:
   these run in Debug in the blocking plan). `CheckersEngineStrengthTests` (Release only, not in
-  the Xcode test plan) plays 100-game matches between the levels and the counts to 9 turns.
+  the Xcode test plan) plays 100-game matches between the levels and the counts to 9 turns. E5
+  adds `GameStateCodingTests` (round trips, every validity rule, a version 1 fixture).
 - Targets: app `checkers`, `checkersTests` (Swift Testing, MainActor default isolation; suites
   `US1TwoPlayerMoveTests`…`US7NavigationTests` (E3), `US1SquareDescriptionTests`…
-  `US4ContrastTests` (E7), plus layout, palette, privacy and localization;
+  `US4ContrastTests` (E7), `US1ContinueTests`…`US4RestoreFailureTests` and `StorageTests` (E5),
+  plus layout, palette, privacy and localization;
   `Support/GamePositions.swift` builds positions through the engine's public API and
   `Support/ScriptedGames.swift` holds the scripted games the announcement tests replay; mark
   parameterized-test arguments `nonisolated`),
   `checkersUITests` (XCUITest, nonisolated default; mark tests `@MainActor`; one class per story;
-  `Support/AppScreens.swift` finds elements by the identifiers in `screens.md`). Acceptance tests
+  `Support/AppScreens.swift` finds elements by the identifiers in `screens.md`; alert buttons by
+  label, as XCUITest does not see their identifiers). Saved games and the record outlive each UI
+  test and cannot be reset: the start helpers and `tapStart()` answer "Abandon current game?",
+  tests compare counts before and after, and known data comes from `UserDefaults` launch
+  arguments: `launch(replacing:with:)` passes `-savedGame <hex>` or `-record <hex>` (JSON text as
+  bytes, for this launch only; `StoredValues` holds the records), and the plain argument
+  `-savedGame none` reads as no saved game. Acceptance tests
   name their story ID (`US1`…). Test plans: `checkers.xctestplan` (blocking) and
   `Performance.xctestplan` (launch timing).
 - The project uses **file-system synchronized groups** (`objectVersion = 77`): files dropped into a

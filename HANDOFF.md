@@ -32,10 +32,9 @@ Last updated: 2026-10-23
   `git fetch origin main:main` before comparing branches. `001-project-foundation` was merged and
   deleted; `002-rules-engine`, `003-game-experience`, `004-accessibility` and
   `005-computer-opponent` are merged into `main` and can be deleted (the auto-mode safety check
-  blocks the deletion; the command is in Next steps). E5 is on **`006-saving-and-statistics`**
-  (pushed through US3 at `3bc52eb` plus the close-out commit; US2 at `cab8db6` is green in CI,
-  and US3's run started at the close-out: see Next steps). `main` is not fast-forwarded yet (E4
-  landed on `main` at its close-out). The working tree is clean.
+  blocks the deletion; the command is in Next steps). E5 is on **`006-saving-and-statistics`**:
+  every story and Polish are committed and pushed; the final CI run decides the close-out of E5
+  and the fast-forward of `main` (see Next steps). `main` still holds E4's close-out.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.2 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -98,8 +97,9 @@ Last updated: 2026-10-23
 - **Backlog**: 8 epics, 41 features, 152 tasks (#1–#202; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) and F5.1 (#121) are done, all four user stories and T030 (#202) are done (T001–T022,
-  T030), and Polish (T023–T029) is next. Progress and the
+  (#115) and F5.1 (#121) are done, and every task of the slice but the last (T001–T028, T030);
+  T029 is the final CI run, closing #131, #201, F5.2 (#128) and E5, and fast-forwarding `main`.
+  Progress and the
   full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -115,7 +115,8 @@ Last updated: 2026-10-23
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
   analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks;
-  T001–T022 and T030 done, Polish next)**; results so far in `checklists/validation.md`. `.specify/feature.json`
+  plus T030 added for the timing check; T001–T028 and T030 done, T029 waits for CI)**; results,
+  measurements and the checks left for the user in `checklists/validation.md`. `.specify/feature.json`
   (local, git-ignored) points at it.
 
 ## Lessons learned
@@ -501,6 +502,23 @@ Last updated: 2026-10-23
   rerun counts for the branch protection. Use it only once the cause is known not to be the code.
 - **Do not push while a rerun runs**: a push to the branch cancels it like any other run.
 
+## Lessons learned (E5 Polish, 2026-10-23)
+
+- **`launch(replacing:with:)` always passes bytes**: `"none"` through it is four bytes of damaged
+  data, which shows the restore alert. A text value that reads as no data needs the plain
+  argument (`app.launchArguments = ["-savedGame", "none"]`).
+- **System alerts fail the Dynamic Type audit** ("partially unsupported" on their title, message
+  and unnamed elements), though their text grows several times at the largest size. Check on
+  screen first: `xcrun simctl launch <udid> Hussein-Helmy.checkers -savedGame "<6e6f6e65>"` sets
+  the same launch argument as a UI test, and `xcrun simctl ui <udid> content_size …` with
+  `xcrun simctl io <udid> screenshot` shows the result. The allow-list rule applies only while an
+  alert shows, to its static texts or to unnamed elements.
+- **`xcodebuild test` leaves the simulator shut down**: boot it (`xcrun simctl boot`, then
+  `bootstatus`) and install the built app before `simctl launch`.
+- **A throwaway probe can report numbers through a failing test**: `Issue.record("…")` puts them in
+  the log; copy the probe into the test folder only when no build is running, run it alone with
+  `-only-testing`, and delete it before committing (`git status` to confirm).
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -519,13 +537,17 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      and F5.1 (#121) Done.
    - **T030 done** (#202, `16ecf98`, CI run 40031135343, 259 tests): the engine's SC-004 check
      times the counting thread's CPU time.
-   - **Then Polish** (T023–T029; #131, #201): T023 audits Home with and without Continue,
-     Statistics with a record, the abandon alert and the two restore alerts (launch with
-     `-savedGame`/`-record` of damaged bytes, as `US4RestoreFailureUITests` does); T024 fixes what
-     they report and runs them on the iPhone SE at the largest text in Dark Mode; T025 the format,
-     script, catalog and strength checks; T026 `checkers/CLAUDE.md` (still E3's leave confirmation
-     and the Statistics placeholder) and the engine contract's pointer; T027 the quickstart; T028
-     and T029 the docs, the final CI run, closing E5 and fast-forwarding `main`.
+   - **Polish done** (T023–T028): the audits cover the new states and pass on the iPhone 17 and
+     on the iPhone SE at the largest text in Dark Mode (system alerts' texts allow-listed);
+     `scripts/test.sh` passes with 264 tests; the strength matches repeat E4's results; saving a
+     188-turn game takes 1.2 ms (SC-006); `checkers/CLAUDE.md` and the engine contract updated.
+   - **First, T029**: check the CI run of the Polish commit (`gh run list --branch
+     006-saving-and-statistics`, by `headSha`). If it is green: record it in
+     `checklists/validation.md` (section 7) and tick T029; comment on and close #131, #201, F5.2
+     (#128) and E5 (#114), moving each to Done and checking it closed; run
+     `scripts/project/update_plan.py`, update Next up and the change log; commit and push; once
+     that docs-only run is green (about 20 s), fast-forward `main` to it
+     (`git push origin <sha>:refs/heads/main`) and `git fetch origin main:main`.
    - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
      `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:
@@ -540,10 +562,12 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    - E4 quickstart §3, last step: press Home while the computer thinks and come back; it should
      make exactly one reply. UI tests cannot press Home inside the half-second thinking.
    - E4 quickstart §6: a few moves against the computer with VoiceOver on.
+   - E5 (`specs/006-saving-and-statistics/checklists/validation.md`): close the app from the app
+     switcher and Continue; press Home while the computer thinks, then Continue; finish games by
+     hand at Easy and Medium and check Statistics; VoiceOver reads each Statistics block as one
+     sentence.
    - Delete the merged branches:
      `git branch -d 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent`.
-3. Follow-ups: E5 replaced E3's leave confirmation with saving and Continue (US1) and the
-   Statistics placeholder with the record (US3); `checkers/CLAUDE.md` still describes both until
-   T026 updates it; E6 replaces the Settings and Rules placeholders; #192 (MetricKit) and #181
+3. Follow-ups: E6 replaces the Settings and Rules placeholders; #192 (MetricKit) and #181
    (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3) in step with the
    development Mac.
