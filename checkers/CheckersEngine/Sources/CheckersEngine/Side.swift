@@ -29,3 +29,23 @@ public enum Side: Sendable, CaseIterable {
         }
     }
 }
+
+/// A side is saved by name, "light" or "dark" (specs/006-saving-and-statistics/contracts/
+/// saved-game.md).
+extension Side: Codable {
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        switch try container.decode(String.self) {
+        case "light": self = .light
+        case "dark": self = .dark
+        case let name:
+            throw DecodingError.dataCorruptedError(
+                in: container, debugDescription: "Unknown side \(name)")
+        }
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.singleValueContainer()
+        try container.encode(self == .light ? "light" : "dark")
+    }
+}

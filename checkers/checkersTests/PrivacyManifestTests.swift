@@ -2,7 +2,7 @@ import Foundation
 import Testing
 
 struct PrivacyManifestTests {
-    @Test("US5: privacy manifest declares no tracking and no collected data")
+    @Test("US5 FR-PRIV-01: privacy manifest declares no tracking and no collected data")
     func manifestDeclaresNothingCollected() throws {
         let manifest = try Self.manifest()
         #expect(manifest["NSPrivacyTracking"] as? Bool == false)

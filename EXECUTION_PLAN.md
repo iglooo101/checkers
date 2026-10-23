@@ -50,6 +50,11 @@ Epics are listed in execution order.
 
 <!-- BEGIN GENERATED: in-progress -->
 - #114 E5: Saving and statistics
+- #121 F5.1: Auto-save and resume
+- #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters
+- #123 Saved-game store behind a protocol (live and in-memory fake)
+- #128 F5.2: Statistics
+- #201 Validate the E5 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -370,8 +375,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F5.1 Auto-save and resume** (#121) · FR-SAVE-01, FR-SAVE-02, FR-SAVE-03, FR-SAVE-04, FR-SAVE-05, FR-END-08, FR-NAV-02, FR-NAV-03, FR-SETUP-04
 
-- [ ] #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters · M
-- [ ] #123 Saved-game store behind a protocol (live and in-memory fake) · M
+- [~] #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters · M
+- [~] #123 Saved-game store behind a protocol (live and in-memory fake) · M
 - [ ] #124 Save after every turn and when the app goes to the background · S
 - [ ] #125 Continue restores the game exactly; computer resumes if it was its turn · M
 - [ ] #126 Unreadable save: discard, hide Continue, tell the player · S
@@ -384,7 +389,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
 - [ ] #130 Statistics screen with empty state · M
 - [ ] #131 Accessibility pass: Statistics · S
-- [ ] #201 Validate the E5 slice and update project docs · S · after #131
+- [~] #201 Validate the E5 slice and update project docs · S · after #131
 
 ### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 0/15 tasks
 

@@ -32,6 +32,20 @@ public struct GameState: Sendable, Equatable {
         }
     }
 
+    /// A game from its saved parts. Decoding checks that they describe a state the rules could
+    /// reach (specs/006-saving-and-statistics/contracts/saved-game.md, "Validity").
+    init(
+        position: Position, sideToMove: Side, chainSquare: Square?, outcome: Outcome,
+        noProgressCount: Int, history: [TurnRecord]
+    ) {
+        self.position = position
+        self.sideToMove = sideToMove
+        self.chainSquare = chainSquare
+        self.outcome = outcome
+        self.noProgressCount = noProgressCount
+        self.history = history
+    }
+
     /// Every legal single step for the side to move: during a chain only the chain piece's jumps
     /// (FR-010); empty once the game is over (FR-008).
     public var legalSteps: [Step] {

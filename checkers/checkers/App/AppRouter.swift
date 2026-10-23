@@ -26,16 +26,26 @@ final class AppRouter {
     @ObservationIgnored private let opponent: any ComputerOpponent
     /// Paces the computer's turns in the games this router starts.
     @ObservationIgnored private let pacer: any TurnPacer
+    /// Keeps the game in play (specs/006-saving-and-statistics/contracts/saved-game.md).
+    @ObservationIgnored private let games: any SavedGameStore
+    /// Keeps the record of games against the computer.
+    @ObservationIgnored private let records: any RecordStore
 
+    /// The stores default to in-memory ones, so previews and tests never touch the device's
+    /// storage (workflow gate 4); the app passes the `UserDefaults` stores.
     init(
         store: any SetupStore, drawSide: @escaping () -> Side = { Bool.random() ? .light : .dark },
         opponent: any ComputerOpponent = EngineComputerOpponent(),
-        pacer: any TurnPacer = SleepingPacer()
+        pacer: any TurnPacer = SleepingPacer(),
+        games: any SavedGameStore = InMemorySavedGameStore(),
+        records: any RecordStore = InMemoryRecordStore()
     ) {
         self.store = store
         self.drawSide = drawSide
         self.opponent = opponent
         self.pacer = pacer
+        self.games = games
+        self.records = records
         setup = store.load()
     }
 

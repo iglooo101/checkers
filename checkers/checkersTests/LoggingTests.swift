@@ -10,9 +10,12 @@ struct LoggingTests {
         #expect(Log.Category.app.rawValue == "app")
     }
 
-    @Test("Each feature logs under its own category: app, game, setup and computer")
+    @Test("Each feature logs under its own category: app, game, setup, computer and storage")
     func featureCategories() {
-        #expect(Log.Category.allCases.map(\.rawValue) == ["app", "game", "setup", "computer"])
-        _ = [Log.app, Log.game, Log.setup, Log.computer]
+        #expect(
+            Log.Category.allCases.map(\.rawValue) == [
+                "app", "game", "setup", "computer", "storage",
+            ])
+        _ = [Log.app, Log.game, Log.setup, Log.computer, Log.storage]
     }
 }

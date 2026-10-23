@@ -11,10 +11,12 @@ nonisolated enum Log {
         case game
         case setup
         case computer
+        case storage
     }
 
     static let app = Logger(subsystem: subsystem, category: Category.app.rawValue)
     static let game = Logger(subsystem: subsystem, category: Category.game.rawValue)
     static let setup = Logger(subsystem: subsystem, category: Category.setup.rawValue)
     static let computer = Logger(subsystem: subsystem, category: Category.computer.rawValue)
+    static let storage = Logger(subsystem: subsystem, category: Category.storage.rawValue)
 }
