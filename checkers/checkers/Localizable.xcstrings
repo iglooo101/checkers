@@ -56,6 +56,12 @@
     "A capture is required." : {
 
     },
+    "Abandon" : {
+
+    },
+    "Abandon current game?" : {
+
+    },
     "Board theme, sound effects and move hints will be set here." : {
 
     },
@@ -249,6 +255,9 @@
 
     },
     "Start" : {
+
+    },
+    "Starting a new game discards the game in progress." : {
 
     },
     "Statistics" : {

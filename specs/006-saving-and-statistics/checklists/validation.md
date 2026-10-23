@@ -37,6 +37,14 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   chosen). `GameSession.swift` reached SwiftLint's 400-line file limit, so saving lives in
   `GameSession+Saving.swift`, and every session that starts in the middle of a chain has the
   chain's piece selected.
+- US2 (T013–T015), 2026-10-23: before T015 the new tests failed to compile (seen with
+  `build-for-testing`); with it, US2's suites and the ones `tapStart()` changed pass
+  (`US2AbandonTests`, `US2AbandonUITests`, `US6SetupUITests`, `US7NavigationUITests`), and
+  `LocalizationTests` failed only on the alert's three texts until the catalog was synced.
+  `scripts/test.sh` passes on the iPhone 17 simulator: **243 tests** (122 app unit tests in 29
+  suites, 86 engine tests in 15 suites, 35 UI tests in 13 classes), 12 min 7 s. A finished game
+  is never the saved game: the session sends `ended` once, from either side's last step or a
+  resignation, and the router clears the save.
 
 ## 1. All blocking tests
 

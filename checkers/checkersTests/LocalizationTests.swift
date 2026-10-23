@@ -36,7 +36,8 @@ struct LocalizationTests {
         "Light wins: no moves left", "Dark wins: no moves left", "Light resigned", "Dark resigned",
         "Draw by repetition", "Draw by no progress", "Play again",
         // Saving and statistics (specs/006-saving-and-statistics/contracts/screens.md)
-        "Continue",
+        "Continue", "Abandon current game?", "Starting a new game discards the game in progress.",
+        "Abandon",
     ]
 
     /// Reads the source catalog rather than the compiled string table, which may omit untranslated

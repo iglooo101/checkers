@@ -17,9 +17,8 @@ final class US6SetupUITests: XCTestCase {
         app.scrolledTo(app.buttons["Hard"]).tap()
         app.scrolledTo(app.buttons["Dark"]).tap()
         XCTAssertFalse(app.element("setup.computerNote").exists)
-        let start = app.scrolledTo(app.element("setup.start"))
-        XCTAssertTrue(start.isEnabled)
-        start.tap()
+        XCTAssertTrue(app.scrolledTo(app.element("setup.start")).isEnabled)
+        app.tapStart()
         XCTAssertTrue(app.element("game.turn").waitForExistence(timeout: 5))
 
         app.terminate()

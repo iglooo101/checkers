@@ -18,6 +18,8 @@ final class AppRouter {
 
     /// Whether a saved game exists, so Home offers Continue (FR-NAV-02).
     private(set) var hasSavedGame = false
+    /// Whether Start is asking "Abandon current game?" (FR-SETUP-04).
+    private(set) var isConfirmingAbandon = false
 
     @ObservationIgnored private let store: any SetupStore
     /// Draws the player's side when the setup says Random (FR-034).
@@ -62,10 +64,27 @@ final class AppRouter {
     }
 
     /// Starts a game with the current choices, replacing setup in the path, and remembers them
-    /// (FR-SETUP-03).
+    /// (FR-SETUP-03). With a saved game it asks first, starting nothing (FR-SETUP-04).
     func startGame() {
+        guard !hasSavedGame else {
+            isConfirmingAbandon = true
+            return
+        }
         store.save(setup)
         open(gameWith: setup)
+    }
+
+    /// Discards the saved game and starts the new one; the record is unchanged (FR-SETUP-04,
+    /// FR-SETUP-05).
+    func confirmAbandon() {
+        isConfirmingAbandon = false
+        clearSavedGame()
+        startGame()
+    }
+
+    /// Keeps the saved game and the setup screen with its choices.
+    func cancelAbandon() {
+        isConfirmingAbandon = false
     }
 
     /// Opens a new game with these choices, in place of setup or of the current game. The computer
@@ -101,6 +120,7 @@ final class AppRouter {
             guard let self, let game else { return }
             switch event {
             case .saved: save(game)
+            case .ended: clearSavedGame()
             }
         }
         session = game
@@ -148,13 +168,18 @@ final class AppRouter {
     /// Keeps a game in progress as the saved game, replacing the previous one, and clears the
     /// saved game once the game is over (FR-SAVE-02, FR-END-08).
     private func save(_ game: GameSession) {
-        if let snapshot = game.snapshot {
-            games.save(snapshot)
-            hasSavedGame = true
-        } else {
-            games.clear()
-            hasSavedGame = false
+        guard let snapshot = game.snapshot else {
+            clearSavedGame()
+            return
         }
+        games.save(snapshot)
+        hasSavedGame = true
+    }
+
+    /// No game is saved any more: it ended or was abandoned (FR-END-08, FR-SETUP-04).
+    private func clearSavedGame() {
+        games.clear()
+        hasSavedGame = false
     }
 
     /// Opens a screen on top of the current one.

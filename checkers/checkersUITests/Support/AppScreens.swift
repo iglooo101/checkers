@@ -26,7 +26,7 @@ extension XCUIApplication {
         XCTAssertTrue(
             twoPlayers.waitForExistence(timeout: 5), "Setup did not appear", file: file, line: line)
         twoPlayers.tap()
-        element("setup.start").tap()
+        tapStart()
         XCTAssertTrue(
             element("game.turn").waitForExistence(timeout: 5), "The game did not start", file: file,
             line: line)
@@ -48,10 +48,22 @@ extension XCUIApplication {
         computer.tap()
         scrolledTo(buttons[difficulty]).tap()
         scrolledTo(buttons[side]).tap()
-        scrolledTo(element("setup.start")).tap()
+        tapStart()
         XCTAssertTrue(
             element("game.turn").waitForExistence(timeout: 5), "The game did not start", file: file,
             line: line)
+    }
+
+    /// Taps Start in Game setup and, if a saved game makes the app ask "Abandon current game?",
+    /// answers Abandon: earlier tests leave games saved
+    /// (specs/006-saving-and-statistics/research.md R10).
+    @MainActor
+    func tapStart() {
+        scrolledTo(element("setup.start")).tap()
+        let abandon = alerts.buttons["Abandon"].firstMatch
+        if abandon.waitForExistence(timeout: 1) {
+            abandon.tap()
+        }
     }
 
     /// Waits until the turn indicator's text starts with `prefix`.

@@ -96,17 +96,17 @@ description: "Task list for the saving and statistics slice (epic E5)"
 
 ### Tests for User Story 2 (MANDATORY - write first) ⚠️
 
-- [ ] T013 [P] [US2] Write `Unit/US2AbandonTests.swift` (`struct US2AbandonTests`), through `AppRouter` with in-memory stores:
+- [X] T013 [P] [US2] Write `Unit/US2AbandonTests.swift` (`struct US2AbandonTests`), through `AppRouter` with in-memory stores:
   - `US2 FR-SETUP-04`: with a saved game, `startGame()` sets `isConfirmingAbandon` and starts nothing; `cancelAbandon()` keeps the setup screen, its choices and the saved game; `startGame()` then `confirmAbandon()` clears the saved game and starts the new game, which is saved after its first turn.
   - `US2 FR-SETUP-04`: without a saved game Start starts at once, and so does Play again after a finished game.
   - `US2 FR-END-08` (FR-006): a game ending by the player's last step, by the computer's last step (scripted) or by resignation clears the saved game; `hasSavedGame` becomes false; the session sends `ended` exactly once.
   - `US2 FR-SETUP-05`: confirming Abandon on a computer game leaves the record unchanged.
   Fails until T015.
-- [ ] T014 [P] [US2] Write `UI/US2AbandonUITests.swift`: `testUS2_abandonQuestion`: a two-player game, move c3–d4, Home; New game → Two players → Start: the alert "Abandon current game?" appears; Cancel: setup stays; Start → Abandon: the game starts from the start position; Home: Continue leads to the new game. In `UI/Support/AppScreens.swift`, add `tapStart()`, which taps `setup.start` and answers Abandon whenever the question appears, and use it in the start helpers, in `testUS6_computerChoicesRemembered` (`UI/US6SetupUITests.swift`) and in `testUS7_largestTextSize` (`UI/US7NavigationUITests.swift`), which tap Start themselves; earlier tests leave games saved. Fails until T015.
+- [X] T014 [P] [US2] Write `UI/US2AbandonUITests.swift`: `testUS2_abandonQuestion`: a two-player game, move c3–d4, Home; New game → Two players → Start: the alert "Abandon current game?" appears; Cancel: setup stays; Start → Abandon: the game starts from the start position; Home: Continue leads to the new game. In `UI/Support/AppScreens.swift`, add `tapStart()`, which taps `setup.start` and answers Abandon whenever the question appears, and use it in the start helpers, in `testUS6_computerChoicesRemembered` (`UI/US6SetupUITests.swift`) and in `testUS7_largestTextSize` (`UI/US7NavigationUITests.swift`), which tap Start themselves; earlier tests leave games saved. Fails until T015.
 
 ### Implementation for User Story 2
 
-- [ ] T015 [US2] In `App/Features/Game/GameSession.swift` send `ended` once, from the player's last step, the computer's last step and resignation; in `App/App/AppRouter.swift` clear the saved game on `ended`, and in `startGame()` ask first when a saved game exists (`isConfirmingAbandon`, `confirmAbandon()`, `cancelAbandon()`); show the alert in `App/Features/Setup/SetupView.swift` per contracts/screens.md (`setup.abandon.confirm`, `setup.abandon.cancel`); add its texts to `Unit/LocalizationTests.swift`; sync the catalog. T013–T014 pass; all tests pass.
+- [X] T015 [US2] In `App/Features/Game/GameSession.swift` send `ended` once, from the player's last step, the computer's last step and resignation; in `App/App/AppRouter.swift` clear the saved game on `ended`, and in `startGame()` ask first when a saved game exists (`isConfirmingAbandon`, `confirmAbandon()`, `cancelAbandon()`); show the alert in `App/Features/Setup/SetupView.swift` per contracts/screens.md (`setup.abandon.confirm`, `setup.abandon.cancel`); add its texts to `Unit/LocalizationTests.swift`; sync the catalog. T013–T014 pass; all tests pass.
 
 **Checkpoint**: US2 complete.
 

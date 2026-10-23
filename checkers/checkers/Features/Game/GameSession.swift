@@ -24,6 +24,8 @@ enum GameSessionEvent: Equatable {
     /// A turn of either side ended with the game going on, or a turn was undone: the game to
     /// save has changed.
     case saved
+    /// The game ended, by the last step of either side or by a resignation; sent once.
+    case ended
 }
 
 /// One game on the game screen: the engine's rules state plus what the player has selected. It
@@ -57,7 +59,7 @@ final class GameSession {
     @ObservationIgnored let opponent: any ComputerOpponent
     /// Paces the computer's turn (research R8).
     @ObservationIgnored let pacer: any TurnPacer
-    /// Tells the owner when the game to save changes; the router sets it.
+    /// Tells the owner when the game to save changes or the game ends; the router sets it.
     @ObservationIgnored var onEvent: (GameSessionEvent) -> Void = { _ in }
     /// The state at the start of the computer's turn while that turn is unfinished, so a half-
     /// played turn is never saved (E5 FR-004).
@@ -182,6 +184,9 @@ final class GameSession {
         if let result = resultText {
             announcer.announce(result)
         }
+        if isOver {
+            onEvent(.ended)
+        }
     }
 
     /// Starts dragging the piece on a square, if it may move; otherwise answers as a tap would and
@@ -243,9 +248,7 @@ final class GameSession {
             announcer.announce(followUp.map { GameText.joined(sentence, $0) } ?? sentence)
             if !result.turnContinues {
                 computerTurnStart = nil
-                if !isOver {
-                    onEvent(.saved)
-                }
+                onEvent(isOver ? .ended : .saved)
             }
             return result
         } catch {

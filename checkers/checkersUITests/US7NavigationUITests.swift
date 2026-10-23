@@ -83,9 +83,8 @@ final class US7NavigationUITests: XCTestCase {
         app.swipeDown()
         app.element("home.newGame").tap()
         app.buttons["Two players"].tap()
-        let start = app.scrolledTo(app.element("setup.start"))
-        XCTAssertTrue(start.isHittable)
-        start.tap()
+        XCTAssertTrue(app.scrolledTo(app.element("setup.start")).isHittable)
+        app.tapStart()
 
         XCTAssertTrue(app.element("game.turn").waitForExistence(timeout: 5))
         XCTAssertTrue(app.element("game.menu").isHittable)

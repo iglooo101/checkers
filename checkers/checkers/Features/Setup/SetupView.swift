@@ -1,3 +1,4 @@
+import CheckersEngine
 import SwiftUI
 
 /// Game setup: the opponent and, against the computer, the difficulty and side, then Start
@@ -51,12 +52,45 @@ struct SetupView: View {
             }
         }
         .navigationTitle("New game")
+        .alert("Abandon current game?", isPresented: abandonBinding) {
+            Button("Abandon", role: .destructive) { router.confirmAbandon() }
+                .accessibilityIdentifier("setup.abandon.confirm")
+            Button("Cancel", role: .cancel) { router.cancelAbandon() }
+                .accessibilityIdentifier("setup.abandon.cancel")
+        } message: {
+            Text("Starting a new game discards the game in progress.")
+        }
+    }
+
+    /// Shows the abandon question while the router asks it; dismissing it cancels.
+    private var abandonBinding: Binding<Bool> {
+        Binding(
+            get: { router.isConfirmingAbandon },
+            set: { isShowing in
+                if !isShowing { router.cancelAbandon() }
+            })
     }
 }
 
 #Preview("Two players") {
     NavigationStack {
         SetupView(router: AppRouter(store: InMemorySetupStore()))
+    }
+}
+
+/// A router over an in-memory saved game that has just been asked to start, so setup shows
+/// "Abandon current game?".
+@MainActor
+private func routerAskingToAbandon() -> AppRouter {
+    let saved = SavedGame(setup: .defaults, playerSide: .light, state: GameState())
+    let router = AppRouter(store: InMemorySetupStore(), games: InMemorySavedGameStore(saved))
+    router.startGame()
+    return router
+}
+
+#Preview("Abandon current game?") {
+    NavigationStack {
+        SetupView(router: routerAskingToAbandon())
     }
 }
 
