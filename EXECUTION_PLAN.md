@@ -52,6 +52,8 @@ Epics are listed in execution order.
 - #114 E5: Saving and statistics
 - #121 F5.1: Auto-save and resume
 - #128 F5.2: Statistics
+- #129 Record model and recording rules (wins/losses/draws per difficulty)
+- #130 Statistics screen with empty state
 - #201 Validate the E5 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -387,8 +389,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08
 
-- [ ] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
-- [ ] #130 Statistics screen with empty state · M
+- [~] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
+- [~] #130 Statistics screen with empty state · M
 - [ ] #131 Accessibility pass: Statistics · S
 - [~] #201 Validate the E5 slice and update project docs · S · after #131
 
@@ -694,3 +696,4 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   a game is saved, and a finished game is no longer saved (the session sends `ended` once).
   `scripts/test.sh` passes locally (243 tests) and CI run 39949087079 is green; #127 and #72
   moved to Done. E5: 12/17 tasks; F5.1 stays open for #126 (US4).
+- 2026-10-23: E5 US3 started: #129 and #130 moved to In Progress.
