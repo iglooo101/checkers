@@ -176,7 +176,7 @@ description: "Task list for the saving and statistics slice (epic E5)"
 - [X] T026 [P] Update `checkers/CLAUDE.md` (the Saving and Statistics features, the stores and their keys, saving through `GameSession` events, launch arguments for UI tests, the removed leave alert) and add a pointer to `contracts/saved-game.md` in `specs/002-rules-engine/contracts/engine-api.md` ("How later epics use it", E5).
 - [X] T027 Run the quickstart (1 to 6) and record the results in `validation.md`, including the search for the slice's FRD IDs and the time to save the 220-turn game of research in a Debug build (SC-006); mark anything left for the user.
 - [X] T028 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
-- [ ] T029 Final verification: push the branch, confirm `CI gate` is green with both jobs on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
+- [X] T029 Final verification: push the branch, confirm `CI gate` is green with both jobs on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
 
 ---
 

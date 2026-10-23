@@ -30,11 +30,9 @@ Last updated: 2026-10-23
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
   branches). Because `main` moves on GitHub, the local `main` lags: run
   `git fetch origin main:main` before comparing branches. `001-project-foundation` was merged and
-  deleted; `002-rules-engine`, `003-game-experience`, `004-accessibility` and
-  `005-computer-opponent` are merged into `main` and can be deleted (the auto-mode safety check
-  blocks the deletion; the command is in Next steps). E5 is on **`006-saving-and-statistics`**:
-  every story and Polish are committed and pushed; the final CI run decides the close-out of E5
-  and the fast-forward of `main` (see Next steps). `main` still holds E4's close-out.
+  deleted; `002-rules-engine` to `006-saving-and-statistics` are merged into `main` and can be
+  deleted (the auto-mode safety check blocks the deletion; the command is in Next steps). `main`
+  holds E5's close-out commit. The working tree is clean; E6 starts on a new branch.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.2 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -96,10 +94,8 @@ Last updated: 2026-10-23
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
 - **Backlog**: 8 epics, 41 features, 152 tasks (#1–#202; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
-  opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) and F5.1 (#121) are done, and every task of the slice but the last (T001–T028, T030);
-  T029 is the final CI run, closing #131, #201, F5.2 (#128) and E5, and fast-forwarding `main`.
-  Progress and the
+  opponent and E5 Saving and statistics are done** (E5: #114, final CI run 40040004817, 264
+  tests); E6 and E8 are left (32/41 features, 122/152 tasks). Progress and the
   full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -115,8 +111,9 @@ Last updated: 2026-10-23
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
   analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks;
-  plus T030 added for the timing check; T001–T028 and T030 done, T029 waits for CI)**; results,
-  measurements and the checks left for the user in `checklists/validation.md`. `.specify/feature.json`
+  plus T030 added for the timing check; **all done**, final CI run 40040004817, landed on
+  `main`)**; results, measurements and the checks left for the user in
+  `checklists/validation.md`. `.specify/feature.json`
   (local, git-ignored) points at it.
 
 ## Lessons learned
@@ -526,30 +523,15 @@ Last updated: 2026-10-23
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E5 Saving and statistics (#114)**, branch `006-saving-and-statistics`,
-   `specs/006-saving-and-statistics/`:
-   - **Done**: F5.0 (#115); Setup and Foundational (T001–T007, #122, #123) and US1 (T008–T012,
-     #124, #125, #189) in commits `93df603` and `5018d46`, green in CI run 39895348869 and moved
-     to Done on 2026-10-23; US2 (T013–T015, #127, #72) in `cab8db6`, CI run 39949087079.
-     #201 is In Progress (T001 and T002 done).
-   - **US3 done** (T016–T019, `3bc52eb`, CI run 39954174275, 252 tests) and **US4 done**
-     (T020–T022, `216c170`, CI run 40023240169 on its second attempt, 259 tests): #126, #129, #130
-     and F5.1 (#121) Done.
-   - **T030 done** (#202, `16ecf98`, CI run 40031135343, 259 tests): the engine's SC-004 check
-     times the counting thread's CPU time.
-   - **Polish done** (T023–T028): the audits cover the new states and pass on the iPhone 17 and
-     on the iPhone SE at the largest text in Dark Mode (system alerts' texts allow-listed);
-     `scripts/test.sh` passes with 264 tests; the strength matches repeat E4's results; saving a
-     188-turn game takes 1.2 ms (SC-006); `checkers/CLAUDE.md` and the engine contract updated.
-   - **First, T029**: check the CI run of the Polish commit (`gh run list --branch
-     006-saving-and-statistics`, by `headSha`). If it is green: record it in
-     `checklists/validation.md` (section 7) and tick T029; comment on and close #131, #201, F5.2
-     (#128) and E5 (#114), moving each to Done and checking it closed; run
-     `scripts/project/update_plan.py`, update Next up and the change log; commit and push; once
-     that docs-only run is green (about 20 s), fast-forward `main` to it
-     (`git push origin <sha>:refs/heads/main`) and `git fetch origin main:main`.
-   - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
-     `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
+1. **E6 Settings, themes, sound and rules (#132)**: E5 is done (all 30 tasks, CI run
+   40040004817, `main` fast-forwarded). Start with F6.0 Specification: move #134 to In Progress,
+   run `/speckit-specify` with the scope of FRD §14–16 (settings, themes, sound, rules), then
+   clarify (#135), plan (#136), tasks and analyze (#137) and reconcile the board (#138). Create the
+   branch `007-…` by hand from an up-to-date `main` (`git fetch origin main:main && git checkout
+   main && git checkout -b 007-…`): Spec Kit makes no branch here. New screens join
+   `US5AccessibilityAuditUITests` (#142, #152); the themes must pass `US4ContrastTests` (#144); the
+   Settings and Rules screens replace their placeholders (tests that check those placeholders
+   change with them, as E5's did for Statistics). Then E8 (#169).
 2. Open for the user:
    - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
      §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
@@ -567,7 +549,7 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      hand at Easy and Medium and check Statistics; VoiceOver reads each Statistics block as one
      sentence.
    - Delete the merged branches:
-     `git branch -d 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent`.
+     `git branch -d 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent 006-saving-and-statistics && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent 006-saving-and-statistics`.
 3. Follow-ups: E6 replaces the Settings and Rules placeholders; #192 (MetricKit) and #181
    (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3) in step with the
    development Mac.

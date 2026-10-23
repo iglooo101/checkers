@@ -40,46 +40,39 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 2/3 | 16/18 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **31/41** | **120/152** | |
+| | **Total** | | | | **32/41** | **122/152** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-- #114 E5: Saving and statistics
-- #128 F5.2: Statistics
-- #131 Accessibility pass: Statistics
-- #201 Validate the E5 slice and update project docs
+Nothing in progress.
 <!-- END GENERATED: in-progress -->
 
 ## Next up
 
-E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
-opponent are done (slices `specs/001-project-foundation/` to `specs/005-computer-opponent/`,
-landed on `main`). The app is fully
-native SwiftUI: Home, setup, and a two-player game with tap and drag, hints, chains, crowning,
-undo, resign and a result panel, playable square by square with VoiceOver (square states,
-announcements, focus that follows each step), with non-color cues at 3:1 contrast and an
-accessibility audit of every screen. Games against the computer are playable at three levels
-(E4): Medium scores 90 of 100 against Easy and Hard 99 of 100 against Medium; the menu works
-while it thinks, Undo returns to the player's turn, and VoiceOver announces its moves.
-Rules and Settings are placeholders until E6.
+E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
+opponent and E5 Saving and statistics are done (slices `specs/001-project-foundation/` to
+`specs/006-saving-and-statistics/`, landed on `main`). The app is fully native SwiftUI: Home,
+setup, and a two-player game with tap and drag, hints, chains, crowning, undo, resign and a result
+panel, playable square by square with VoiceOver (square states, announcements, focus that follows
+each step), with non-color cues at 3:1 contrast and an accessibility audit of every screen. Games
+against the computer are playable at three levels (E4): Medium scores 90 of 100 against Easy and
+Hard 99 of 100 against Medium; the menu works while it thinks, Undo returns to the player's turn,
+and VoiceOver announces its moves. Games are saved after every turn, on Home and in the
+background, and Continue restores them; Start asks before abandoning a saved game; finished games
+against the computer count in the record that Statistics shows; an unreadable save or record is
+reported once (E5). Rules and Settings are placeholders until E6.
 
-1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
-   (`specs/006-saving-and-statistics/`): F5.0 and F5.1 are done, and all four user stories
-   (T001–T022; CI runs 39895348869, 39949087079, 39954174275 and 40023240169): games are saved
-   after every turn, on Home and in the background, and Continue restores them exactly; Start
-   asks "Abandon current game?" while a game is saved; finished games against the computer count
-   in the record, which Statistics shows; an unreadable save or record is reported once on Home.
-   T030 (#202, CI run 40031135343) is done: the engine's SC-004 timing check measures the
-   counting thread's CPU time. **Polish** (T023–T028) is done: audits of the new states pass on
-   the iPhone 17 and the iPhone SE at the largest text in Dark Mode, `scripts/test.sh` passes
-   with 264 tests, and the docs are updated. **Next: T029**, the final CI run, closing #131,
-   #201, F5.2 (#128) and E5 (#114), and fast-forwarding `main`.
-2. Then E6 (#132, starting with #134 Specify) → E8 (Order and dependencies).
+1. **E6 Settings, themes, sound and rules (#132)**: start with F6.0 Specification, #134
+   `/speckit-specify` from FRD §14–16, on a new branch `007-…` made from an up-to-date `main`
+   (Spec Kit makes no branch here). New screens join `US5AccessibilityAuditUITests` (#142, #152);
+   the themes must pass `US4ContrastTests` (#144); the Settings screen replaces the placeholder,
+   and so does Rules.
+2. Then E8 Release 1.0 (#169).
 
 ## Order and dependencies
 
@@ -372,7 +365,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 16/18 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 18/18 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
@@ -398,8 +391,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
 - [x] #130 Statistics screen with empty state · M
 - [x] #202 Time the 6-turn reference count by its thread's CPU time, not the wall clock · S
-- [~] #131 Accessibility pass: Statistics · S
-- [~] #201 Validate the E5 slice and update project docs · S · after #131, #202
+- [x] #131 Accessibility pass: Statistics · S
+- [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
 ### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 0/15 tasks
 
@@ -732,3 +725,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   `scripts/test.sh` passes with 264 tests; the strength matches repeat E4's results; saving a
   188-turn game takes 1.2 ms in Debug (SC-006); all 18 FRD IDs of the slice are named by tests.
   `checkers/CLAUDE.md` describes saving and statistics. T029 (CI, close E5, `main`) is next.
+- 2026-10-23: E5 Saving and statistics done. CI run 40040004817 green on `f5cbf26` (264 tests,
+  both jobs). #131, #201, F5.2 (#128) and E5 (#114) moved to Done (comments posted, closed); all
+  30 tasks of `specs/006-saving-and-statistics/tasks.md` checked off; `main` fast-forwarded to
+  the close-out commit. Backlog: 32/41 features, 122/152 tasks. Next is E6 (#134 Specify).

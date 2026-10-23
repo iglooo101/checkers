@@ -155,3 +155,9 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   simulator (the label is tested in `US3RecordTests`; XCUITest cannot drive VoiceOver).
 
 ## 7. CI
+
+- T029, 2026-10-23: CI run 40040004817 on `f5cbf26` (Polish) is green: `build-and-test` (22
+  minutes; 264 tests: 133 app unit tests, 86 engine tests, 45 UI tests) and `engine-strength`
+  (6.3 minutes), `CI gate` passed. The audits allowed only the system alerts' texts and the
+  setup form's edge row. #131, #201, F5.2 (#128) and E5 (#114) moved to Done; `main`
+  fast-forwarded to the close-out commit after its documentation-only run. **Pass.**
