@@ -76,9 +76,11 @@ Statistics, Rules and Settings are placeholders until E5 and E6.
    39949087079): games are saved after every turn, on Home and in the background, during the
    computer's turn as they were at its start, and Continue on Home restores them exactly;
    leaving a game no longer asks; a finished game is no longer saved, and Start asks "Abandon
-   current game?" while one is. Next: **US3** (T016–T019: the record and the Statistics screen;
-   #129, which stays open until US4, and #130), then US4 (the restore alerts, #126 and #129) and
-   Polish (#131, #201).
+   current game?" while one is. **US3** (T016–T019, #129 and #130 In Progress) is written and
+   committed (`3bc52eb`): finished games against the computer count in the record, and
+   Statistics shows it; its tests pass locally, and the full blocking plan runs in CI (pushed at
+   the 2026-10-23 close-out). Next: check that run, close #130 (#129 stays open until US4), then
+   US4 (the restore alerts, #126 and #129) and Polish (#131, #201).
 2. Then E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -129,7 +131,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
   Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
-  after adding or removing strings, or CI fails. Return optional strings from a `switch` with
+  after adding or removing strings, or CI fails. Plural variations (Statistics' counts) are
+  written by hand in the catalog's layout; `scripts/check-string-catalog.sh
+  checkers/checkers/Localizable.xcstrings .build/DerivedData` confirms a sync keeps them. Return optional strings from a `switch` with
   explicit `return`s, or the compiler extracts only one of them (HANDOFF.md, E3 lessons).
 - E3 was validated by automated tests; a full game played by hand and a visual review at the
   largest text size are still open for the user (`specs/003-game-experience/checklists/validation.md`).
@@ -697,3 +701,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   `scripts/test.sh` passes locally (243 tests) and CI run 39949087079 is green; #127 and #72
   moved to Done. E5: 12/17 tasks; F5.1 stays open for #126 (US4).
 - 2026-10-23: E5 US3 started: #129 and #130 moved to In Progress.
+- 2026-10-23: E5 US3 (T016–T019) written and committed (`3bc52eb`): the record counts each
+  finished game against the computer once at its difficulty, and Statistics replaces its
+  placeholder. US3's test set passes locally (24 unit and 8 UI tests); the full blocking plan
+  was left to CI. Session close-out: HANDOFF.md updated with the US2 and US3 lessons and next
+  steps; #129 and #130 stay In Progress until that run is green.

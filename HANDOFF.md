@@ -33,8 +33,9 @@ Last updated: 2026-10-23
   deleted; `002-rules-engine`, `003-game-experience`, `004-accessibility` and
   `005-computer-opponent` are merged into `main` and can be deleted (the auto-mode safety check
   blocks the deletion; the command is in Next steps). E5 is on **`006-saving-and-statistics`**
-  (pushed through US2 at `cab8db6`, green in CI; `main` is not fast-forwarded yet: E4 landed on
-  `main` at its close-out). The working tree is clean.
+  (pushed through US3 at `3bc52eb` plus the close-out commit; US2 at `cab8db6` is green in CI,
+  and US3's run started at the close-out: see Next steps). `main` is not fast-forwarded yet (E4
+  landed on `main` at its close-out). The working tree is clean.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.2 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -77,8 +78,13 @@ Last updated: 2026-10-23
   leaving a game no longer asks. **US2**: `GameSession` sends `ended` once (the last step of
   either side, or a resignation) and the router clears the saved game then; while a game is
   saved, Start in setup asks "Abandon current game?" (`isConfirmingAbandon`, `confirmAbandon()`,
-  `cancelAbandon()`; the alert in `SetupView`), and the UI tests' `tapStart()` answers it. The
-  record is stored but not yet counted or shown (US3).
+  `cancelAbandon()`; the alert in `SetupView`), and the UI tests' `tapStart()` answers it.
+  **US3** (committed, CI pending): `GameResult` (from the outcome, the player's side and the
+  difficulty; `nil` for two-player or unfinished games), `Record.adding(_:)`, `isEmpty` and
+  `tally(at:)` in `Record.swift`; `GameSession.result` in `GameSession+Saving.swift`; the router's
+  `record`, loaded at creation and updated and saved in `finish(_:)` on `ended`; `StatisticsView`
+  and `StatisticsText` (plural counts in the catalog, one VoiceOver sentence per difficulty,
+  `statistics.empty` and `statistics.easy`/`medium`/`hard`) replace the Statistics placeholder.
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
@@ -86,7 +92,8 @@ Last updated: 2026-10-23
 - **Backlog**: 8 epics, 41 features, 151 tasks (#1–#201; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) is done, and Setup, Foundational, US1 and US2 are done (T001–T015). Progress and the
+  (#115) is done, Setup, Foundational, US1 and US2 are done (T001–T015), and US3 (T016–T019) is
+  committed and waits for CI. Progress and the
   full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -102,7 +109,7 @@ Last updated: 2026-10-23
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
   analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks;
-  T001–T015 done)**; results so far in `checklists/validation.md`. `.specify/feature.json`
+  T001–T015 done, T016–T019 committed and waiting for CI)**; results so far in `checklists/validation.md`. `.specify/feature.json`
   (local, git-ignored) points at it.
 
 ## Lessons learned
@@ -442,7 +449,7 @@ Last updated: 2026-10-23
 - **`build-for-testing` lists only the first errors of a failing batch**; it is still the fastest
   way (about 2 minutes) to see new tests fail to compile before the implementation.
 
-## Lessons learned (E5 US2, 2026-10-23)
+## Lessons learned (E5 US2 and US3, 2026-10-23)
 
 - **A board move to Done does not always close the issue**: after `board_move.py Done 127 72`
   both issues were still open a few seconds later. Check each issue's state after the move and
@@ -452,9 +459,24 @@ Last updated: 2026-10-23
 - **swift-format flags a long string literal on the same line as `@Test(`**, not one on its own
   line: wrap long test names as `@Test(\n "…"\n)`, or run `xcrun swift-format format --in-place`
   on the file. `scripts/check-format.sh --strict` is what CI runs.
-- **`scripts/check-string-catalog.sh` takes arguments** (CI passes them); locally,
-  `LocalizationTests` and `scripts/sync-string-catalog.sh` cover a missing string: the test failed
-  on exactly the alert's three texts until the catalog was synced.
+- **`scripts/check-string-catalog.sh` takes the catalog and the derived data**:
+  `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData`
+  after a build. `LocalizationTests` catches a missing string too: it failed on exactly the
+  alert's three texts until the catalog was synced.
+- **Plural variations go into the catalog by hand** after a command-line sync, which adds the key
+  empty: an `en` entry with `variations.plural.one` and `other`, each a `stringUnit` with state
+  `translated`, in the catalog's two-space layout. The catalog check then confirms a sync keeps
+  them, and `String(localized:)` in a unit test reads "1 win" and "3 wins" from the app's compiled
+  catalog. Rewriting the file with a JSON library would reorder it; edit the text instead.
+- **CI's `changes` job compares the whole push** (`github.event.before` to `HEAD`), so a code
+  commit and a docs commit pushed together still run the full build and tests. At a close-out,
+  push both at once rather than pushing the docs after the code, which would cancel the run.
+- **The record cannot be reset in UI tests either**: `testUS3_finishedGameCounts` reads Easy's
+  losses before and after a resigned game, and the empty-state test and the Statistics audit
+  launch with `-record` holding an empty record (`StoredValues.emptyRecord` in
+  `checkersUITests/Support/AppScreens.swift`).
+- **SourceKit reports "No such module 'CheckersEngine'"** for new test files before the first
+  build; it is noise, the build compiles them.
 
 ## Next steps
 
@@ -469,13 +491,26 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      #124, #125, #189) in commits `93df603` and `5018d46`, green in CI run 39895348869 and moved
      to Done on 2026-10-23; US2 (T013–T015, #127, #72) in `cab8db6`, CI run 39949087079.
      #201 is In Progress (T001 and T002 done).
-   - **Next, US3** (T016–T019; move #129 and #130 to In Progress first, #128 already is):
-     the record's tests first (T016 `US3RecordTests`, T017 `US3StatisticsUITests`), then T018
-     (`GameResult`, `Record.adding(_:)`, `isEmpty`, `GameSession.result`, the router's `record`,
-     recording on `ended`) and T019 (`StatisticsView` and `StatisticsText`, replacing the
-     placeholder). The router's `.ended` case is where recording goes. #129 stays open until US4
-     (T020–T022, the unreadable record); #130 closes with US3.
-   - Then US4 (T020–T022: both restore alerts; #126, #129) and Polish (T023–T029; #131, #201).
+   - **First, check US3's CI run** (commit `3bc52eb`, pushed with the close-out commit at the
+     end of the 2026-10-23 session; find it with
+     `gh run list --branch 006-saving-and-statistics` and its `headSha`). The full blocking plan
+     was not run locally for US3; only its independent test set was (24 unit, 8 UI tests, all
+     passing). If the run is green: mark T016–T019 `[X]` in `tasks.md`, add the run and the
+     test count to `checklists/validation.md` (US3 line), comment on #130 and move it to Done
+     (check it closed), comment on #129 that its US3 part is done (it stays In Progress until
+     US4), run `scripts/project/update_plan.py`, add a change-log line, commit and push. If it
+     failed, fix US3 first.
+   - **Then US4** (T020–T022; move #126 to In Progress, #129 already is): tests first
+     (T020 `US4RestoreFailureTests` through the router with in-memory stores holding raw data;
+     T021 `US4RestoreFailureUITests` launching with `-savedGame`/`-record` of bytes that are not
+     JSON), then T022: `RestoreNotice` (`savedGame`, `record`), the router clears an unreadable
+     save and replaces an unreadable record with an empty one that it saves, each with a notice,
+     `restoreNotice` and `dismissRestoreNotice()`; the alerts on Home per `contracts/screens.md`
+     (`home.restoreFailure.ok`); both texts in `LocalizationTests`; sync the catalog. The router's
+     `init` already loads both stores in `do`/`catch` blocks, which is where the notices go.
+   - Then Polish (T023–T029; #131, #201): the audits of the new states, docs (`checkers/CLAUDE.md`
+     still describes E3's leave confirmation and the Statistics placeholder), and the slice's
+     validation; then close E5 and fast-forward `main`.
    - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
      `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:
@@ -492,7 +527,8 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    - E4 quickstart §6: a few moves against the computer with VoiceOver on.
    - Delete the merged branches:
      `git branch -d 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent`.
-3. Follow-ups: E5 replaced E3's leave confirmation with saving and Continue (US1), and its US3
-   replaces the Statistics placeholder; `checkers/CLAUDE.md` still describes the leave
-   confirmation until T026 updates it; E6 replaces the Settings and Rules placeholders; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in
-   E8; keep the CI Xcode pin (26.3) in step with the development Mac.
+3. Follow-ups: E5 replaced E3's leave confirmation with saving and Continue (US1) and the
+   Statistics placeholder with the record (US3); `checkers/CLAUDE.md` still describes both until
+   T026 updates it; E6 replaces the Settings and Rules placeholders; #192 (MetricKit) and #181
+   (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3) in step with the
+   development Mac.
