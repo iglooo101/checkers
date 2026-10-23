@@ -23,7 +23,7 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
 ## Implementation measurements
 
 - Setup and Foundational (T001–T007), 2026-10-22: engine tests (`swift test`) 89 pass in 22 s,
-  with no lint findings, including the three coding suites' tests. With the validity check turned
+  with no lint findings, including the three new coding tests. With the validity check turned
   off for a moment, exactly the eight state-level damaged cases (no-progress counts, chains, no
   step, a third repetition) failed; positions, turn records and unknown names are rejected by
   their own decoders. App unit tests: 110 pass.

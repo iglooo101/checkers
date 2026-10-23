@@ -33,7 +33,11 @@ Last updated: 2026-10-22
   deleted; `002-rules-engine`, `003-game-experience`, `004-accessibility` and
   `005-computer-opponent` are merged into `main` and can be deleted (the auto-mode safety check
   blocks the deletion; the command is in Next steps). E5 is on **`006-saving-and-statistics`**
-  (pushed; only Spec Kit documents so far).
+  (pushed through US1 at `5018d46`). **Uncommitted in the working tree**: US2's tests (T013
+  `checkersTests/US2AbandonTests.swift`; T014 `checkersUITests/US2AbandonUITests.swift`,
+  `tapStart()` in `checkersUITests/Support/AppScreens.swift` and its use in `US6SetupUITests` and
+  `US7NavigationUITests`). They were seen failing to compile and wait for T015; the app does
+  not build for testing until T015 is done.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.2 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -65,7 +69,15 @@ Last updated: 2026-10-22
   man, can move"), double-tap plays square by square, each step, undo and resignation is
   announced once through the `Announcer` seam, and focus follows each step. Pieces and marks
   keep 3:1 contrast with side-specific crowns, and an audit test checks every screen (allow-list
-  in `specs/004-accessibility/plan.md`).
+  in `specs/004-accessibility/plan.md`). **Saving** (E5 Setup to US1): `GameState` is `Codable`
+  with explicit keys and validation (`GameState+Coding.swift`; damaged data throws
+  `DecodingError.dataCorrupted`); the app keeps one saved game and the record as versioned JSON
+  in `UserDefaults` (`SavedGameStore` and `RecordStore`, keys `savedGame` and `record`, with
+  in-memory stores that hold encoded bytes); `GameSession` sends `saved` through `onEvent` after
+  every turn and undo and offers a `snapshot` (the start of the computer's turn while that turn is
+  unfinished; `GameSession+Saving.swift`); the router saves on those events, on Home and when the
+  scene moves to the background (`CheckersApp`); Home offers Continue while a game is saved;
+  leaving a game no longer asks. The record is stored but not yet counted or shown (US3).
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
   build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
@@ -73,7 +85,8 @@ Last updated: 2026-10-22
 - **Backlog**: 8 epics, 41 features, 151 tasks (#1–#201; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) is done, and implementation starts with Setup (T001). Progress and the full list are in `EXECUTION_PLAN.md`.
+  (#115) is done, Setup, Foundational and US1 are done (T001–T012), and US2 has its tests
+  written. Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -87,7 +100,9 @@ Last updated: 2026-10-22
   clarifications), plan with measured research R1–R14, data model, contracts `saved-game.md`
   (format version 1, validity, stores, save points, recording) and `screens.md` (Continue, the
   abandon and restore-failure alerts, Statistics, audit), quickstart and **`tasks.md` (29 tasks,
-  analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks)**. `.specify/feature.json` (local, git-ignored) points at it.
+  analyzed: 15 findings fixed, among them FR-STAT-06 and four existing tests the slice breaks;
+  T001–T012 done)**; results so far in `checklists/validation.md`. `.specify/feature.json`
+  (local, git-ignored) points at it.
 
 ## Lessons learned
 
@@ -401,6 +416,31 @@ Last updated: 2026-10-22
   snapshot before cancelling its turn, or the save holds a half-played computer chain that
   Continue cannot resume.
 
+## Lessons learned (E5 Setup to US1, 2026-10-22)
+
+- **Launch arguments work in the simulator** (checked first, T001): `-key <hex bytes>` makes
+  `data(forKey:)` return those bytes for the launch, writes during it still reach the stored
+  value, and a text value such as `-savedGame none` reads as no data. `launch(replacing:with:)` in
+  `AppScreens` builds the argument from JSON text.
+- **XCUITest sees the app in the background before SwiftUI does**: after
+  `XCUIDevice.shared.press(.home)` and `wait(for: .runningBackground)`, the scene phase has not
+  changed yet, so a test that terminates at once loses the background save. Wait about two
+  seconds first.
+- **Save order without order bugs**: `GameSession` keeps `computerTurnStart` from the start of the
+  computer's turn until its last step or an undo, not until a cancel, so the snapshot is right
+  whether the router saves before or after cancelling the computer's turn.
+- **SwiftLint's 400-line file limit** hit `GameSession.swift`; extensions that need no private
+  state go in their own file (`GameSession+Saving.swift`). A session that starts mid-chain now
+  selects the chain's piece in its initializer, which made that possible.
+- **Check that a damaged-data test rejects for the intended reason**: turning the validity check
+  off for one run made exactly the expected eight cases fail. `#expect(throws: DecodingError.self)`
+  returns the error, so the test can require `.dataCorrupted`.
+- **Do not write into a target's folder while `xcodebuild` builds**: with file-system
+  synchronized groups a new file joins the target. Wait until the log shows testing has started,
+  or keep drafts in the scratchpad; a throwaway probe test must be deleted before committing.
+- **`build-for-testing` lists only the first errors of a failing batch**; it is still the fastest
+  way (about 2 minutes) to see new tests fail to compile before the implementation.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -410,13 +450,27 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E5 Saving and statistics (#114)**, branch `006-saving-and-statistics`,
    `specs/006-saving-and-statistics/`:
-   - **F5.0 (#115) done**: `/speckit-analyze` fixed 15 findings (#119); #120 added the Spec Kit
-     task IDs to every board task and created #201 (T001, T002, T023–T029, after #131).
-   - Next `/speckit-implement`: Setup and Foundational (T001–T007; move #201, #122 and #123 to In
-     Progress first), then US1 (T008–T012) as the MVP, US2, US3, US4 and Polish. T001 checks in
-     the simulator that launch arguments set stored data (research R10, verified only on the Mac
-     so far) before any story relies on them; if they do not, revise R10 and T009, T017, T019,
-     T021 and T023 first.
+   - **First, finish the close-out**: US1's CI run 39895348869 (commit `5018d46`) was still
+     running when the session ended, so the close-out commit is **local, not pushed** (a push
+     would have cancelled the run). Check the run; if it is green, comment on and move #122,
+     #123, #124, #125 and #189 to Done, run `scripts/project/update_plan.py`, add the run to the
+     change log, commit, and push. If it failed, fix US1 first.
+   - **Done**: F5.0 (#115); Setup and Foundational (T001–T007, #122, #123) and US1 (T008–T012,
+     #124, #125, #189) in commits `93df603` and `5018d46`. #201 is In Progress (T001 and T002
+     done).
+   - **Next, US2** (#127 and #72 are In Progress): its tests are written but uncommitted (see
+     Current state). Do **T015**: `GameSessionEvent.ended`, sent once from the last step of
+     either side and from resignation (in `applyStep` and `resign()`); the router clears the
+     saved game on `ended`; `startGame()` asks first when `hasSavedGame` (`isConfirmingAbandon`,
+     `confirmAbandon()` clears the save and starts, `cancelAbandon()`); the alert in `SetupView`
+     per `contracts/screens.md` (identifiers `setup.abandon.confirm` and `setup.abandon.cancel`);
+     the alert's three texts in `LocalizationTests`; `scripts/sync-string-catalog.sh`. Then run
+     `-only-testing` for `US2AbandonTests`, `US2AbandonUITests`, `US6SetupUITests` and
+     `US7NavigationUITests`, the full `scripts/test.sh`, commit, push, wait for CI, and move #127
+     and #72 to Done.
+   - Then US3 (T016–T019: the record, `GameResult`, `Record.adding(_:)` and `isEmpty` with their
+     tests first, and the Statistics screen), US4 (T020–T022: both restore alerts) and Polish
+     (T023–T029, #201).
    - Epic order after E5: E6 → E8 (see `EXECUTION_PLAN.md`). New screens join
      `US5AccessibilityAuditUITests` (#142, #152); E6's themes must pass `US4ContrastTests` (#144).
 2. Open for the user:
@@ -433,6 +487,7 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    - E4 quickstart §6: a few moves against the computer with VoiceOver on.
    - Delete the merged branches:
      `git branch -d 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent`.
-3. Follow-ups: E5 replaces E3's leave confirmation with saving and Continue; E6 replaces the
-   Settings and Rules placeholders; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in
+3. Follow-ups: E5 replaced E3's leave confirmation with saving and Continue (US1), and its US3
+   replaces the Statistics placeholder; `checkers/CLAUDE.md` still describes the leave
+   confirmation until T026 updates it; E6 replaces the Settings and Rules placeholders; #192 (MetricKit) and #181 (400 ms on a real iPhone) are in
    E8; keep the CI Xcode pin (26.3) in step with the development Mac.

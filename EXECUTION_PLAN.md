@@ -49,12 +49,14 @@ Epics are listed in execution order.
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
+- #72 "Abandon current game?" confirmation when a saved game exists
 - #114 E5: Saving and statistics
 - #121 F5.1: Auto-save and resume
 - #122 Codable game snapshot: position, side, opponent, difficulty, undo history, counters
 - #123 Saved-game store behind a protocol (live and in-memory fake)
 - #124 Save after every turn and when the app goes to the background
 - #125 Continue restores the game exactly; computer resumes if it was its turn
+- #127 Clear the saved game on game end and on abandon
 - #128 F5.2: Statistics
 - #189 Show Continue on Home only when a saved game exists
 - #201 Validate the E5 slice and update project docs
@@ -74,12 +76,13 @@ while it thinks, Undo returns to the player's turn, and VoiceOver announces its 
 Statistics, Rules and Settings are placeholders until E5 and E6.
 
 1. **E5 Saving and statistics (#114)** on branch `006-saving-and-statistics`
-   (`specs/006-saving-and-statistics/`): F5.0 is done (#115: spec, clarify, plan, tasks with 29
-   tasks, `/speckit-analyze` with 15 findings fixed, and the board reconciled, adding #201). Next:
-   **`/speckit-implement`** from Setup and Foundational (T001–T007; T001 checks launch arguments
-   in the simulator first, and belongs to #201), then US1 (T008–T012) as the MVP. It saves the game in play
-   (Continue on Home, #189; "Abandon current game?", #72), including resuming during the
-   computer's turn, and keeps the record against the computer.
+   (`specs/006-saving-and-statistics/`): F5.0 is done (#115), and Setup, Foundational and US1
+   are done (T001–T012): games are saved after every turn, on Home and in the background,
+   during the computer's turn as they were at its start, and Continue on Home restores them
+   exactly; leaving a game no longer asks. Next: **US2**, whose tests are written but
+   uncommitted (`HANDOFF.md`, Current state): T015 adds "Abandon current game?" and clears
+   finished games (#72, #127). Then US3 (the record and Statistics), US4 (the restore alerts) and
+   Polish (#201).
 2. Then E6 → E8 (Order and dependencies).
 
 ## Order and dependencies
@@ -119,8 +122,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E5 makes app data outlive each UI test: saved games stay between tests and the record cannot be
   reset, so UI tests answer "Abandon current game?" in the start helpers and `tapStart()`, compare
   counts before and after, and set known states with `UserDefaults` launch arguments (research
-  R10, checked only on the Mac so far; T001 checks them in the simulator before any story relies
-  on them).
+  R10, confirmed in the simulator by T001).
+- Until T015 is done, the working tree holds US2's uncommitted tests, and the app does not build
+  for testing; `checkers/CLAUDE.md` still describes E3's leave confirmation until T026.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
 - E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
@@ -383,9 +387,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #124 Save after every turn and when the app goes to the background · S
 - [~] #125 Continue restores the game exactly; computer resumes if it was its turn · M
 - [ ] #126 Unreadable save: discard, hide Continue, tell the player · S
-- [ ] #127 Clear the saved game on game end and on abandon · S
+- [~] #127 Clear the saved game on game end and on abandon · S
 - [~] #189 Show Continue on Home only when a saved game exists · S · after #65, #123
-- [ ] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
+- [~] #72 "Abandon current game?" confirmation when a saved game exists · S · after #123
 
 **F5.2 Statistics** (#128) · FR-STAT-01, FR-STAT-02, FR-STAT-03, FR-STAT-04, FR-STAT-05, FR-STAT-06, FR-SETUP-05, FR-UNDO-08
 
@@ -682,3 +686,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-22: #120 and F5.0 (#115) done. Every E5 board task lists its Spec Kit task IDs; added
   #201 (validate the slice and update docs, F5.2, after #131); FR-STAT-06 added to #128 and #129,
   and FR-NAV-03 to #121 and #189. Backlog: 8 epics, 41 features, 151 tasks.
+- 2026-10-22: E5 Setup, Foundational and US1 done in code (T001–T012, commits `93df603` and
+  `5018d46`): `GameState` coding with validation, the saved-game and record stores, saving after
+  every turn, on Home and in the background, Continue on Home, and no leave question; the full
+  blocking plan passes locally (237 tests). Launch arguments confirmed in the simulator (T001).
+  #122–#125 and #189 move to Done once CI run 39895348869 is green (still running at the session
+  close-out). US2's tests are written but uncommitted until T015. Session close-out: HANDOFF.md
+  updated with the E5 implementation lessons and next steps.
