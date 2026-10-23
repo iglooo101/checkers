@@ -6,6 +6,10 @@ import SwiftUI
 struct HomeView: View {
     let router: AppRouter
 
+    /// The restore notice the alert shows, kept while the alert closes.
+    @State private var shownNotice: RestoreNotice?
+    @State private var isShowingNotice = false
+
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
@@ -24,6 +28,23 @@ struct HomeView: View {
             .padding()
         }
         .navigationTitle("Checkers")
+        .alert(restoreTitle, isPresented: $isShowingNotice) {
+            Button("OK") { router.dismissRestoreNotice() }
+                .accessibilityIdentifier("home.restoreFailure.ok")
+        }
+        // Shows each restore notice in turn, the saved game's first (FR-SAVE-05, FR-STAT-06).
+        // The task runs after the update that closed the previous alert; presenting the next one
+        // in that same update would leave it unshown.
+        .task(id: router.restoreNotice) {
+            guard let notice = router.restoreNotice else { return }
+            shownNotice = notice
+            isShowingNotice = true
+        }
+    }
+
+    private var restoreTitle: Text {
+        guard let shownNotice else { return Text(verbatim: "") }
+        return Text(shownNotice.title)
     }
 
     @ViewBuilder
@@ -77,6 +98,29 @@ private func routerWithSavedGame() -> AppRouter {
 #Preview("Home with a saved game, large text, dark") {
     NavigationStack {
         HomeView(router: routerWithSavedGame())
+    }
+    .environment(\.dynamicTypeSize, .accessibility5)
+    .preferredColorScheme(.dark)
+}
+
+/// A router over in-memory stores holding damaged bytes, so Home shows the restore alerts.
+@MainActor
+private func routerWithDamagedData(game: Bool, record: Bool) -> AppRouter {
+    let damaged = Data("damaged".utf8)
+    return AppRouter(
+        store: InMemorySetupStore(), games: InMemorySavedGameStore(data: game ? damaged : nil),
+        records: InMemoryRecordStore(data: record ? damaged : nil))
+}
+
+#Preview("Home, saved game unreadable") {
+    NavigationStack {
+        HomeView(router: routerWithDamagedData(game: true, record: false))
+    }
+}
+
+#Preview("Home, record unreadable, large text, dark") {
+    NavigationStack {
+        HomeView(router: routerWithDamagedData(game: false, record: true))
     }
     .environment(\.dynamicTypeSize, .accessibility5)
     .preferredColorScheme(.dark)

@@ -329,6 +329,9 @@
     "No games yet." : {
 
     },
+    "OK" : {
+
+    },
     "Opponent" : {
 
     },
@@ -369,6 +372,12 @@
 
     },
     "Undo" : {
+
+    },
+    "Your previous game couldn't be restored." : {
+
+    },
+    "Your record couldn't be restored and starts again from zero." : {
 
     }
   },

@@ -708,3 +708,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-23: CI run 39954174275 green on `68c58c6` (US3 at `3bc52eb` plus the close-out):
   252 tests in the blocking plan. T016–T019 checked off; #130 moved to Done, #129's US3 part
   noted (it stays open for US4). E5: 13/17 tasks. US4 started: #126 moved to In Progress.
+- 2026-10-23: E5 US4 (T020–T022) written and committed: an unreadable saved game is cleared and
+  an unreadable record restarts from zero and is saved, each reported once by an alert on Home,
+  the saved game's first. A third UI test (both damaged) found the second alert never showed when
+  presented in the update that closed the first; Home now presents each from a `.task(id:)`.
+  `scripts/test.sh` passes locally (259 tests); #126 and #129 move to Done once CI is green.

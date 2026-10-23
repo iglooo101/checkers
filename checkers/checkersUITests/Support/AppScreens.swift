@@ -139,8 +139,17 @@ extension XCUIApplication {
     /// next launch without the argument reads.
     @MainActor
     func launch(replacing key: String, with text: String) {
-        let hex = text.utf8.map { String(format: "%02x", $0) }.joined()
-        launchArguments = ["-\(key)", "<\(hex)>"]
+        launch(replacing: [key: text])
+    }
+
+    /// Launches the app with several stored values replaced for this launch only, as
+    /// `launch(replacing:with:)` does for one.
+    @MainActor
+    func launch(replacing values: KeyValuePairs<String, String>) {
+        launchArguments = values.flatMap { key, text in
+            let hex = text.utf8.map { String(format: "%02x", $0) }.joined()
+            return ["-\(key)", "<\(hex)>"]
+        }
         launch()
     }
 

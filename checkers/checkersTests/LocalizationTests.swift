@@ -38,7 +38,8 @@ struct LocalizationTests {
         "Continue", "Abandon current game?", "Starting a new game discards the game in progress.",
         "Abandon", "No games yet.", "Finish a game against the computer to start your record.",
         "%lld wins", "%lld losses", "%lld draws", "Easy: %@, %@, %@", "Medium: %@, %@, %@",
-        "Hard: %@, %@, %@",
+        "Hard: %@, %@, %@", "Your previous game couldn't be restored.",
+        "Your record couldn't be restored and starts again from zero.", "OK",
     ]
 
     /// Reads the source catalog rather than the compiled string table, which may omit untranslated

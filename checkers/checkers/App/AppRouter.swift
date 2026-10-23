@@ -1,4 +1,5 @@
 import CheckersEngine
+import OSLog
 import Observation
 
 /// Where the player is in the app: the navigation path above Home, the game being played and the
@@ -22,6 +23,11 @@ final class AppRouter {
     private(set) var isConfirmingAbandon = false
     /// The player's results against the computer, which Statistics shows (FR-STAT-01).
     private(set) var record = Record()
+    /// The restore alert Home shows, if any: the saved game's first, then the record's
+    /// (FR-SAVE-05, FR-STAT-06).
+    var restoreNotice: RestoreNotice? { restoreNotices.first }
+    /// The stored values found unreadable at launch, not yet reported.
+    private var restoreNotices: [RestoreNotice] = []
 
     @ObservationIgnored private let store: any SetupStore
     /// Draws the player's side when the setup says Random (FR-034).
@@ -54,15 +60,29 @@ final class AppRouter {
         do {
             hasSavedGame = try games.load() != nil
         } catch {
-            // The store has logged why; without a usable saved game Home offers no Continue.
+            // The store has logged why. The save is discarded, so Home offers no Continue and
+            // reports it only this once (FR-SAVE-05).
+            Log.storage.error("Discarding the saved game, which cannot be continued")
+            games.clear()
             hasSavedGame = false
+            restoreNotices.append(.savedGame)
         }
         do {
             record = try records.load()
         } catch {
-            // The store has logged why; the record starts again from zero (FR-STAT-06).
+            // The store has logged why. The record starts again from zero and is stored so, which
+            // Home reports only this once (FR-STAT-06).
+            Log.storage.error("Starting the record again from zero, as it cannot be read")
             record = Record()
+            records.save(record)
+            restoreNotices.append(.record)
         }
+    }
+
+    /// Closes the restore alert; the next one, if any, follows.
+    func dismissRestoreNotice() {
+        guard !restoreNotices.isEmpty else { return }
+        restoreNotices.removeFirst()
     }
 
     /// Opens Game setup with the remembered choices (FR-007, FR-009).

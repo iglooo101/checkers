@@ -148,19 +148,20 @@ description: "Task list for the saving and statistics slice (epic E5)"
 
 ### Tests for User Story 4 (MANDATORY - write first) ⚠️
 
-- [ ] T020 [P] [US4] Write `Unit/US4RestoreFailureTests.swift` (`struct US4RestoreFailureTests`), through `AppRouter` with in-memory stores holding raw data:
+- [X] T020 [P] [US4] Write `Unit/US4RestoreFailureTests.swift` (`struct US4RestoreFailureTests`), through `AppRouter` with in-memory stores holding raw data:
   - `US4 FR-SAVE-05`: for each case of SC-005, empty data, JSON cut short, random bytes and `"version": 2`, and for a finished state and a state failing validation, a new router clears the save, has `hasSavedGame` false and `restoreNotice == .savedGame`; `dismissRestoreNotice()` closes it; a new router over the same store shows nothing; Start does not ask.
   - `US4 FR-STAT-06` (FR-020): for bad JSON and `"version": 2` in the record store, a new router has an empty `record`, has saved the empty record, and has `restoreNotice == .record`; after `dismissRestoreNotice()` and a new router over the same store, nothing is shown.
   - `US4 FR-SAVE-05 FR-STAT-06`: with both unreadable, `restoreNotice` is `.savedGame`, then `.record` after one dismissal, then `nil`.
   Fails until T022.
-- [ ] T021 [P] [US4] Write `UI/US4RestoreFailureUITests.swift`:
+- [X] T021 [P] [US4] Write `UI/US4RestoreFailureUITests.swift`:
   - `testUS4_damagedSave`: launch with `-savedGame <hex>` of bytes that are not JSON: the alert "Your previous game couldn't be restored." appears; OK (`home.restoreFailure.ok`); no Continue; New game → Two players → Start starts the game without the abandon question.
   - `testUS4_damagedRecord`: launch with `-record <hex>` of bytes that are not JSON: the alert "Your record couldn't be restored and starts again from zero." appears; OK; Statistics shows `statistics.empty`.
+  - `testUS4_bothDamaged` (added during implementation): launch with both damaged: the saved game's alert, then the record's, each answered OK; no Continue. It found that a second alert presented in the update that closed the first never appeared.
   Fails until T022.
 
 ### Implementation for User Story 4
 
-- [ ] T022 [US4] Add `RestoreNotice` (`savedGame`, `record`) and, in `App/App/AppRouter.swift` at creation: an unreadable saved game is cleared, logged with `Log.storage` and adds the `savedGame` notice; an unreadable record is replaced by an empty record, which is saved, logged and adds the `record` notice; `restoreNotice` is the first pending notice and `dismissRestoreNotice()` moves to the next. Show the alert in `App/Features/Home/HomeView.swift` per contracts/screens.md, with previews of both alerts; add both texts to `Unit/LocalizationTests.swift`; sync the catalog. T020–T021 pass; all tests pass.
+- [X] T022 [US4] Add `RestoreNotice` (`savedGame`, `record`) and, in `App/App/AppRouter.swift` at creation: an unreadable saved game is cleared, logged with `Log.storage` and adds the `savedGame` notice; an unreadable record is replaced by an empty record, which is saved, logged and adds the `record` notice; `restoreNotice` is the first pending notice and `dismissRestoreNotice()` moves to the next. Show the alert in `App/Features/Home/HomeView.swift` per contracts/screens.md, with previews of both alerts; add both texts to `Unit/LocalizationTests.swift`; sync the catalog. T020–T021 pass; all tests pass.
 
 **Checkpoint**: US4 complete.
 

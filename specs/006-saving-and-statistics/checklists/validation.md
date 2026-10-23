@@ -57,6 +57,19 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   after `3bc52eb`) passed with **252 tests** (129 app unit tests in 30 suites, 86 engine tests
   in 15 suites, 37 UI tests in 14 classes); `build-and-test` took 26 minutes and
   `engine-strength` 5.
+- US4 (T020–T022), 2026-10-23: before T022 the new unit tests failed to compile
+  (`build-for-testing`: no `restoreNotice` or `dismissRestoreNotice`). With T022 the four unit
+  tests pass, over seven kinds of unreadable saved game (empty, cut short, bytes that are not
+  text, not JSON, version 2, a finished game, a game the rules could not reach) and both kinds of
+  unreadable record. Found in the UI tests: XCUITest does not see the identifier
+  `home.restoreFailure.ok` on the alert's button (it stays in the code, per contracts/screens.md),
+  so the tests find OK by label, taking the first match. A third UI test, `testUS4_bothDamaged`,
+  showed that with both values damaged the record's alert never appeared: the first design
+  presented it in the same update that closed the save's alert. Home now presents each notice from
+  a `.task(id:)`, which runs after that update, and the test passes. `scripts/test.sh` with
+  warnings as errors passes on the iPhone 17 simulator: **259 tests** (133 app unit tests in 31
+  suites, 86 engine tests in 15 suites, 40 UI tests in 15 classes); its one SwiftLint warning (a
+  test variable named `ok`) was fixed and US4's suites rerun; format and catalog checks pass.
 
 ## 1. All blocking tests
 
