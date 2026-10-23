@@ -40,10 +40,10 @@ Epics are listed in execution order.
 | 3 | E3 Game experience | #57 | M2 Playable two-player game | P0 | 8/8 | 29/29 | Done |
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
-| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 2/3 | 15/18 | In Progress |
+| 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 2/3 | 16/18 | In Progress |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 0/15 | Todo |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **31/41** | **119/152** | |
+| | **Total** | | | | **31/41** | **120/152** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -52,7 +52,6 @@ Epics are listed in execution order.
 - #114 E5: Saving and statistics
 - #128 F5.2: Statistics
 - #201 Validate the E5 slice and update project docs
-- #202 Time the 6-turn reference count by its thread's CPU time, not the wall clock
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -74,9 +73,9 @@ Rules and Settings are placeholders until E6.
    after every turn, on Home and in the background, and Continue restores them exactly; Start
    asks "Abandon current game?" while a game is saved; finished games against the computer count
    in the record, which Statistics shows; an unreadable save or record is reported once on Home.
-   **Now T030 (#202)**: the engine's SC-004 timing check measures the counting thread's CPU time,
-   so a slow CI runner cannot fail it (written and checked under load; its CI run comes with this
-   close-out). **Then Polish** (T023–T029; #131, #201): audits of the new screens and alerts,
+   T030 (#202, CI run 40031135343) is done: the engine's SC-004 timing check measures the
+   counting thread's CPU time, so a slow CI runner cannot fail it. **Next: Polish**
+   (T023–T029; #131, #201): audits of the new screens and alerts,
    `checkers/CLAUDE.md`, the quickstart, closing E5 and fast-forwarding `main`.
 2. Then E6 → E8 (Order and dependencies).
 
@@ -371,7 +370,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #113 Undo while the computer thinks cancels its turn · S
 - [x] #200 Validate the E4 slice and update project docs · S · after #113
 
-### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 15/18 tasks
+### E5 Saving and statistics (#114) · M4 Feature complete · P1 · 16/18 tasks
 
 **F5.0 Specification (Spec Kit)** (#115) · FRD §12, §13
 
@@ -396,7 +395,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [x] #129 Record model and recording rules (wins/losses/draws per difficulty) · M
 - [x] #130 Statistics screen with empty state · M
-- [~] #202 Time the 6-turn reference count by its thread's CPU time, not the wall clock · S
+- [x] #202 Time the 6-turn reference count by its thread's CPU time, not the wall clock · S
 - [ ] #131 Accessibility pass: Statistics · S
 - [~] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
@@ -722,3 +721,5 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   Added #202 (T030 in `tasks.md`, under F5.2, before #201): the check now times the counting
   thread's CPU time; locally, with every core busy, the wall-clock version failed at 10.02 s and
   the CPU-time version passes (6.92 s). Backlog: 152 tasks.
+- 2026-10-23: CI run 40031135343 green on `16ecf98` (US4 close-out and T030): 259 tests. #202
+  moved to Done. E5: 16/18 tasks; Polish (#131, #201) is next.

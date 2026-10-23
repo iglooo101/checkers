@@ -98,8 +98,8 @@ Last updated: 2026-10-23
 - **Backlog**: 8 epics, 41 features, 152 tasks (#1–#202; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent are done**; **E5 Saving and statistics** (#114) is in progress: F5.0 Specification
-  (#115) and F5.1 (#121) are done, all four user stories are done (T001–T022), T030 (#202) waits
-  for CI, and Polish (T023–T029) is next. Progress and the
+  (#115) and F5.1 (#121) are done, all four user stories and T030 (#202) are done (T001–T022,
+  T030), and Polish (T023–T029) is next. Progress and the
   full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -517,9 +517,8 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    - **US3 done** (T016–T019, `3bc52eb`, CI run 39954174275, 252 tests) and **US4 done**
      (T020–T022, `216c170`, CI run 40023240169 on its second attempt, 259 tests): #126, #129, #130
      and F5.1 (#121) Done.
-   - **First, check the CI run of T030 (#202)**, pushed with the US4 close-out: the engine's
-     SC-004 check now times the counting thread's CPU time. If it is green, move #202 to Done
-     (comment first, check it closed) and add the run to `checklists/validation.md`.
+   - **T030 done** (#202, `16ecf98`, CI run 40031135343, 259 tests): the engine's SC-004 check
+     times the counting thread's CPU time.
    - **Then Polish** (T023–T029; #131, #201): T023 audits Home with and without Continue,
      Statistics with a record, the abandon alert and the two restore alerts (launch with
      `-savedGame`/`-record` of damaged bytes, as `US4RestoreFailureUITests` does); T024 fixes what

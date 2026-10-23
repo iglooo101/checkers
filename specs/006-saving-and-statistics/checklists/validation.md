@@ -78,7 +78,8 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   processes on the Intel Mac's 16 logical cores): the wall-clock count took 10.02 s, against
   5.3 s unloaded. Timed by the counting thread's CPU time instead, the count takes 3.95 s
   unloaded and 6.92 s under that load (hyperthreads share a core), and the suite passes under
-  the same load. `swift test`: 89 engine tests pass, no lint findings.
+  the same load. `swift test`: 89 engine tests pass, no lint findings. CI run 40031135343 on
+  `16ecf98` passed with **259 tests** (133 app unit tests, 86 engine tests, 40 UI tests).
 
 ## 1. All blocking tests
 
