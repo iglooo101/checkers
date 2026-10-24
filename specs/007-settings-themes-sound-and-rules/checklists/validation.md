@@ -106,9 +106,31 @@ measurements below check the ones the code depends on.
 
 ## 1. All blocking tests (SC-001 to SC-003, SC-006, SC-007, SC-009)
 
+- 2026-10-24 (T031, T033), after Polish: `scripts/format.sh` changed nothing;
+  `scripts/check-format.sh --strict`, `scripts/tests/run.sh` (7 script tests, the sound recipe
+  check among them) and `scripts/check-string-catalog.sh` pass; `scripts/test.sh` with warnings
+  as errors passes on the iPhone 17 simulator: **313 tests** (168 app unit tests in 37 suites,
+  86 engine tests in 15 suites, 59 UI tests), zero warnings, zero SwiftLint errors.
+- SC-009: the quickstart's search finds all 22 of the slice's FRD IDs in the tests (FR-SET-01 to
+  04, FR-SND-01 to 05, FR-HELP-01 and 02, FR-GAME-07, FR-AID-01 to 04, FR-NAV-04, FR-A11Y-04 and
+  05, FR-PRIV-01 and 02, FR-PLAT-03).
+
 ## 2. Move hints (US1, SC-001)
 
+- Covered by the blocking tests: `US1SettingsUITests` (Settings from Home with Classic, sound and
+  hints as stored; hints off and on; kept after a relaunch; set by a launch argument),
+  `US1SettingsTests` (no rings or dots with hints off, the capture notice still shown, hints back
+  in the same position, a change mid-game) and `US7NavigationUITests` (Settings from the game
+  menu returns to the game).
+
 ## 3. Rules (US2, SC-006)
+
+- Covered by the blocking tests: `US2RulesUITests` (Rules from Home and from the game menu, its
+  first and last pictures), `US2RulesTests` (the seven sections, their pictures and every text
+  word for word against the contract, 364 words of text) and E4's cover tests (the computer's
+  next step waits while Rules covers the game).
+- **Left for the user**: VoiceOver through Rules, each heading read as a heading and the rotor
+  moving between sections (FR-025's header trait; XCUITest cannot read traits).
 
 ## 4. Themes, visual review (US3, FR-012, SC-002)
 
@@ -122,8 +144,11 @@ measurements below check the ones the code depends on.
 
 - 2026-10-24 (T028): the user listened to the four files on the Mac with `afplay` (move, capture,
   crowning, game end, in that order). **Approved as they are**; the recipes and files stand.
-- Left for the user on an iPhone: a sound's delay after a step (SC-004, within 0.1 s), silent
-  mode and the volume buttons, and other apps' music going on (FR-016).
+- **Left for the user on an iPhone** (quickstart §5): a sound's delay after a step (SC-004,
+  within 0.1 s), silent mode (SC-005, FR-016), the volume buttons (FR-016), other apps' music
+  going on (FR-016), and a second sound starting over the first (FR-019).
+- **Left for the user**: VoiceOver in Settings reads each theme row as its name, the chosen one
+  as selected, and nothing for the small boards or the checkmark (quickstart §4).
 
 ## 6. Largest text and Dark Mode (FR-026, SC-007)
 
@@ -149,3 +174,8 @@ measurements below check the ones the code depends on.
   sections on one screen); the largest-size test covers Settings there.
 
 ## 7. Launch time (SC-008)
+
+- 2026-10-24 (T033): `TEST_PLAN=Performance scripts/test.sh`: cold launch **2.085 s**, average of
+  5 runs on the iPhone 17 simulator (Intel Mac, Debug), against the 3.635 s local baseline
+  (−42.6%); the native app measured 2.1 s before E6, so preparing the sounds at launch, off the
+  main actor, costs nothing visible.

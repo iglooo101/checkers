@@ -70,33 +70,21 @@ Hard 99 of 100 against Medium; the menu works while it thinks, Undo returns to t
 and VoiceOver announces its moves. Games are saved after every turn, on Home and in the
 background, and Continue restores them; Start asks before abandoning a saved game; finished games
 against the computer count in the record that Statistics shows; an unreadable save or record is
-reported once (E5). On the E6 branch, Settings has the move hints switch and Rules explains the
-game in seven illustrated sections.
+reported once (E5). With E6, Settings chooses one of three board themes (Classic, Modern,
+Playful, with previews), turns the four original sounds and the move hints on and off, and Rules
+explains the game in seven illustrated sections.
 
 1. **E6 Settings, themes, sound and rules (#132)** on branch `007-settings-themes-sound-and-rules`
-   (`specs/007-settings-themes-sound-and-rules/`): the spec is written (#134: 4 user stories, 27
-   requirements), clarified (#135) and planned (#136: research R1–R13, three contracts);
-   `tasks.md` has 36 tasks (T036 added for #204), and the 12 `/speckit-analyze` findings are
-   applied (#137): a sound that cannot play now shows "Sound effects aren't available right
-   now." in Settings and the next sound tries again (`FRD.md` 1.3, FR-SND-05). The board is
-   reconciled (#138: task IDs on every board task, #203 added for setup and validation), so F6.0
-   (#133) is done. **Implementation** (`/speckit-implement`): Setup, Foundational (#140 Done)
-   and US1 (the move hints switch) landed on the branch with CI run 40069158202 green. US2 (the
-   Rules screen) passed every test but first reached `build-and-test`'s 30-minute limit; with
-   45 minutes (#204, T036) CI run 40116301945 passed, #150, #151 and #204 are Done, and `main`
-   is at `3b8ba4d`. US3 (T016–T020: three themes, chosen in Settings with previews) passed CI
-   run 40121012315 and #145 is Done; the theme rows became buttons, since
-   an inline picker's rows failed the contrast audit (research R11). US4 (T022–T027: four
-   generated sounds, the Sound section of Settings, the notice when sounds cannot play) passed CI
-   run 40124926324 (rerun), so #141, #147, #148 and F6.3 (#146) are Done and `main` is at
-   `646089b`. The user approved Modern and Playful as they are (T021), so F6.2 (#143) is
-   done. The user approved the four sounds as they are (T028). Polish: the audits (T029–T030)
-   are written and pass on the iPhone 17; Settings' navigation bar is now opaque. **Next**:
-   T031–T035 (checks, project guide, quickstart, handoff, final CI and `main`).
-   The plan measured the Modern and Playful
-   colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
-   0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
-   during implementation: approve the two themes (T021) and the four sounds (T028).
+   (`specs/007-settings-themes-sound-and-rules/`): spec, clarify, plan and tasks done (F6.0);
+   **all 36 tasks are done** but the last: Setup to US4 landed on `main` (`646089b`, CI run
+   40124926324), the user approved the Modern and Playful colors (T021) and the four sounds
+   (T028), and Polish (T029–T034) is on the branch: audits of Settings (also at the largest
+   size), Rules at its end and games in Modern and Playful; Settings' navigation bar made opaque;
+   313 tests pass locally; the project guide, quickstart results, handoff and this plan are
+   current. **Next**: T035, the final CI run on the branch, the fast-forward of `main`, then
+   closing #142, #152, #203, F6.1 (#139), F6.4 (#149) and the epic. Open for the user (recorded
+   in `validation.md`): on an iPhone, a sound's delay, silent mode, the volume buttons, other
+   apps' music and a sound over another (§5); VoiceOver through Rules and Settings (§3, §4).
 2. Then E8 Release 1.0 (#169).
 
 ## Order and dependencies
@@ -868,3 +856,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   (`build-and-test` 32 of 45 minutes): #141, #147, #148 and F6.3 (#146) Done, `main`
   fast-forwarded to `646089b`. The T021, T028 and T029–T030 commits pushed; #142 and #152 close
   once their run is green.
+- 2026-10-24: Polish T031–T034 done on the branch: format, script, catalog and the blocking
+  tests pass with zero warnings (313 tests); `checkers/CLAUDE.md` describes settings, themes,
+  sound and rules; the quickstart is recorded (all 22 FRD IDs in tests, cold launch 2.085 s
+  against the 3.635 s baseline; the iPhone and VoiceOver checks left for the user); HANDOFF.md
+  and this plan reviewed. Next: T035, the final CI run and `main`.

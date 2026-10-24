@@ -38,8 +38,10 @@ Last updated: 2026-10-24
   reconciled (#138; F6.0 done). **Implementation**: Setup, Foundational, US1 and US2
   (T001–T015) passed CI (run 40116301945 on `3b8ba4d`, after #204/T036 raised `build-and-test`'s
   limit from 30 to 45 minutes); US3 (T016–T020) passed CI run 40121012315 on `20096e7`; the
-  theme rows are buttons, not an inline picker (research R11, "Found in US3"). **US4
-  (T022–T027) is pushed, its CI to check.** The user approved Modern and Playful as they are
+  theme rows are buttons, not an inline picker (research R11, "Found in US3"). US4 (T022–T027)
+  passed CI run 40124926324 (rerun) and is on `main` (`646089b`). **Polish (T029–T034) is on the
+  branch; only T035 is left**: the final CI run and the fast-forward of `main`. Settings'
+  navigation bar is opaque since T030. The user approved Modern and Playful as they are
   (T021; F6.2 done) and deleted the local branch `wip/007-us3-themes`.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
@@ -663,6 +665,27 @@ Last updated: 2026-10-24
 - **Keep `GameSession.swift` under 400 lines**: it was at 388, so US4 added only the stored
   property, the parameter and two calls there, and the helper went to `GameSession+Sound.swift`.
 
+## Lessons learned (E6 Polish, 2026-10-24)
+
+- **A CI runner can start before its simulators are ready**: "Unable to find a device matching
+  the provided destination" two minutes in, with an empty list of destinations and nothing
+  built. The image looked new, but a rerun of the failed jobs on the same image passed; check
+  the log before blaming the code or the pins.
+- **Never let a docs-only push stand in for an untested code commit**: CI's `changes` job
+  compares the whole push, so pushing docs on top of a code commit whose run failed would turn
+  the gate green without testing that code. Get a green full run on the code commit first.
+- **Content scrolled under the navigation bar fails the contrast audit**: iOS 26's soft scroll
+  edge, and in Dark Mode even the hard one, lets large rows show through faintly; an opaque bar
+  (`toolbarBackgroundVisibility(.visible, for: .navigationBar)` with the form's background)
+  hides them, but the audit still measures text hidden under the bar, sometimes without naming
+  it. Allow it by frame (the text's `minY` above the bar's `maxY`); the unnamed case stays a
+  manual note.
+- **swift-format exempts test names only in the `XCTestCase` class body**: `testUS5_…` in an
+  extension fails `AlwaysUseLowerCamelCase`; keep UI tests in the class.
+- **Audits written for the default size cannot run at a system-wide largest size**: a test that
+  expects every section on one screen times out there; use a launch argument
+  (`-UIPreferredContentSizeCategoryName`) in its own test instead.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -670,16 +693,17 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6: check the CI run for the Polish audits** (T029–T030 and the approvals, pushed after
-   US4's run passed; `main` is at `646089b`, #141, #147, #148 and F6.3 Done). If it is green,
-   comment on and close #142 (T007, T008, T029, T030), #152 (T012, T029, T030) and F6.1 (#139),
-   and fast-forward `main`.
-2. **E6 Polish**: the user approved the themes (T021; #144 and F6.2 Done) and the sounds (T028;
-   #147 closes with #148 once US4's CI is green). Then Polish (T029–T035): #142 and #152 close after T029–T030, #203 and the
-   epic at the end. Board tasks per story are in `tasks.md` "Board Mapping".
-3. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
-   §4) and the four sounds (T028: `afplay` the files T025 generates). On an iPhone: a sound's delay,
-   silent mode and other apps' music (quickstart §5). Then E8 (#169).
+1. **E6 T035**: confirm `CI gate` is green on the branch's last commit (Polish T029–T034),
+   fast-forward `main` to it (`git push origin <sha>:refs/heads/main`), record the run in
+   `validation.md`, then comment on and close #142 (T007, T008, T029, T030), #152 (T012, T029,
+   T030), #203 (T001, T002, T029–T035), F6.1 (#139), F6.4 (#149) and the epic (#132); update
+   `EXECUTION_PLAN.md` (`update_plan.py`, Next up, change log). Delete the branch once E8's
+   branch exists (the user runs it).
+2. **E8 Release 1.0 (#169)** with Spec Kit, from `FRD.md` (E8's features and #192, #181).
+3. **Open for the user from E6** (`specs/007-…/checklists/validation.md`): on an iPhone, a
+   sound's delay, silent mode, the volume buttons, other apps' music and a sound over another
+   (quickstart §5); VoiceOver through Rules (headings) and Settings (theme rows) (§3, §4). The
+   Modern and Playful colors (T021) and the four sounds (T028) are approved.
 4. Open for the user:
    - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
      §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
