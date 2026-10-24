@@ -1,0 +1,356 @@
+# Feature Specification: Settings, Themes, Sound and Rules
+
+**Feature Branch**: `007-settings-themes-sound-and-rules`
+
+**Created**: 2026-10-23
+
+**Status**: Draft
+
+**Input**: User description: "E6 Settings, themes, sound and rules (board epic #132, F6.0 #133, step #134). Scope: FRD.md §14–16 (settings, board themes, sound effects, rules screen). Board tasks to trace: #140–#142 (F6.1 Settings), #144–#145 (F6.2 Board themes), #147–#148 (F6.3 Sound effects), #150–#152 (F6.4 Rules screen). Feature directory: specs/007-settings-themes-sound-and-rules (branch 007-settings-themes-sound-and-rules already created by hand from main)."
+
+## User Scenarios & Testing *(mandatory)*
+
+Users are players of either kind the app already serves: two people sharing the phone, and a
+single player against the computer, from beginners to experienced casual players, including
+VoiceOver users and players who cannot tell colors apart. This slice builds on the game screen
+(E3), the VoiceOver board and its contrast rules (E7), the computer opponent (E4) and saving (E5).
+It replaces the Rules and Settings placeholder screens E3 left on Home and in the game menu.
+
+### User Story 1 - Turn move hints off and on (Priority: P1)
+
+A player opens Settings, from Home or from the game menu, and turns move hints off or on. With
+hints off, the board no longer highlights the pieces that can move or the squares a selected
+piece can move to; the selected piece is still marked. The change shows at once, also in the game
+in progress, and is kept the next time the app opens. (#139: #140, #141, #142; FR-SET-01,
+FR-SET-03, FR-AID-01 to FR-AID-04, FR-NAV-04)
+
+**Why this priority**: Settings is the screen the other settings join, and hints are the only
+setting that changes how the game plays. Experienced players want to find their own moves; today
+they cannot turn the hints off, and Settings is an empty placeholder.
+
+**Independent Test**: Open Settings from Home, turn move hints off, start a game and check that
+no piece or target is highlighted while a selected piece is still marked; open Settings from the
+game menu, turn hints on, and check the highlights are back in the same position; close and reopen
+the app and check the setting is kept.
+
+**Acceptance Scenarios**:
+
+1. **Given** the app is used for the first time, **When** the player opens Settings, **Then**
+   move hints are on.
+2. **Given** a game in progress with hints on, **When** the player turns hints off in Settings
+   opened from the game menu and goes back, **Then** the game shows the same position with no
+   movable pieces or target squares highlighted.
+3. **Given** hints are off, **When** the player selects a piece, **Then** the selected piece is
+   still marked, and it can still move by tap or drag.
+4. **Given** hints are off and a capture is required, **When** the player taps a piece that cannot
+   capture, **Then** they are still told a capture is required, and the turn indicator still says
+   so.
+5. **Given** hints are off, **When** VoiceOver reads a square, **Then** it still says whether a
+   piece can move or a square is a legal target.
+6. **Given** hints were turned off, **When** the app is closed and opened again, **Then** hints are
+   still off, in new games and in a continued one.
+
+---
+
+### User Story 2 - Learn the rules in the app (Priority: P2)
+
+A player who does not know American checkers, or forgets a rule in the middle of a game, opens
+Rules from Home or from the game menu and reads a short explanation, with pictures of the board,
+of how the game is set up and played, how it is won and drawn, and how undo and resign work in
+this app. Going back from a game returns to the same position. (#149: #150, #151, #152;
+FR-HELP-01, FR-HELP-02, FR-NAV-04)
+
+**Why this priority**: Mandatory captures, chains and crowning surprise beginners, and Easy is
+meant for them. The game works without the Rules screen, but players have nowhere in the app to
+find out why a move was refused.
+
+**Independent Test**: Open Rules from Home and check it covers the seven topics, each with an
+illustration; open it from the game menu during a game and check the game comes back unchanged;
+read it with VoiceOver and at the largest text size.
+
+**Acceptance Scenarios**:
+
+1. **Given** Home, **When** the player chooses Rules, **Then** the Rules screen explains, in short
+   sections, the setup, moving, mandatory capture, capture chains, crowning, how a game is won and
+   drawn, and undo and resign, and each section has at least one picture of a board.
+2. **Given** a game in progress, **When** the player opens Rules from the game menu and goes back,
+   **Then** the game shows the same position, and against the computer its move waits until the
+   player is back (E4).
+3. **Given** VoiceOver is on, **When** it reaches a picture, **Then** it describes what the picture
+   shows, for example where the pieces are and which move it illustrates.
+4. **Given** the largest accessibility text size, **When** the player reads Rules, **Then** all the
+   text can be read without being cut off, and each picture is still shown.
+
+---
+
+### User Story 3 - Choose a board theme (Priority: P2)
+
+A player chooses how the board looks: Classic (the current wooden board), Modern (black and white,
+minimal) or Playful (bright colors). Settings shows each theme with a small preview of the board.
+The chosen theme draws the board in every game, at once and after the app reopens, in light and
+dark appearance, and in every theme the pieces, kings, selection and hints can be told apart
+without relying on color. (#143: #144, #145; FR-SET-02, FR-GAME-07, FR-A11Y-05)
+
+**Why this priority**: A board the player likes makes the game theirs, but it adds nothing to how
+the game plays.
+
+**Independent Test**: In Settings, check the three themes and their previews; choose each one and
+check the board in a game, in light and dark appearance; check every piece and mark against what
+it is drawn on in every theme and appearance.
+
+**Acceptance Scenarios**:
+
+1. **Given** the app is used for the first time, **When** the player opens Settings, **Then** the
+   board theme offers Classic, Modern and Playful, each with a small preview of the board, and
+   Classic is chosen.
+2. **Given** a game in progress, **When** the player chooses Modern in Settings opened from the
+   game menu and goes back, **Then** the board, its frame, the pieces and every mark are drawn in
+   Modern, and the position is unchanged.
+3. **Given** any theme, in light or dark appearance, **When** the board shows Light and Dark men
+   and kings, a selected piece, hinted pieces and target squares, **Then** each can be told apart
+   from the others and from its square without relying on color.
+4. **Given** a theme was chosen, **When** the app is reopened and the player continues the saved
+   game, **Then** the board appears in that theme from the first moment.
+
+---
+
+### User Story 4 - Hear the game (Priority: P3)
+
+With sound effects on, the default, the player hears a short sound for each move: one for a plain
+move, one for a capture, one for a crowning and one when the game ends, for the computer's moves
+as well as their own. Sounds follow the phone's silent mode and volume and do not stop the
+player's music. With sound effects off, the game is silent. (#146: #147, #148; FR-SET-04,
+FR-SND-01 to FR-SND-04)
+
+**Why this priority**: Sound makes moves easier to follow, the computer's especially, but the board
+already shows everything, and many players keep their phone silent.
+
+**Independent Test**: With sound on, play a scripted game against the computer with plain moves, a
+capture chain, a crowning and an ending, and check that each step plays the right sound once;
+turn sound off and check nothing plays; switch the phone to silent and check nothing is heard.
+
+**Acceptance Scenarios**:
+
+1. **Given** the app is used for the first time, **When** the player opens Settings, **Then** sound
+   effects are on.
+2. **Given** sound effects are on, **When** a piece moves without capturing, **Then** the move
+   sound plays; **When** a piece captures, **Then** the capture sound plays, once for each jump of
+   a chain; **When** a man is crowned, **Then** the crowning sound plays.
+3. **Given** sound effects are on, **When** a game ends, by no legal moves, a draw rule or
+   resignation, **Then** the game-end sound plays once.
+4. **Given** sound effects are on in a game against the computer, **When** the computer plays,
+   **Then** each of its steps plays the same sounds as the player's, as the step appears.
+5. **Given** sound effects are off, **When** any move is made or a game ends, **Then** no sound
+   plays.
+6. **Given** the phone is in silent mode, **When** a move is made, **Then** no sound is heard,
+   whatever the setting.
+7. **Given** music is playing from another app, **When** a game sound plays, **Then** the music
+   keeps playing.
+
+---
+
+### Edge Cases
+
+- **Settings opened while the computer thinks**: its move waits until the player is back, then
+  comes after the usual pause (E4); the board shows the new settings and, with sound on, its move
+  plays its sound.
+- **Hints turned off in the middle of a capture chain**: the chain goes on with the same piece
+  selected and marked; its next jumps are no longer highlighted, and only that piece can move, as
+  before.
+- **A step that captures and crowns, or ends the game**: one sound per step, the most important
+  one: the game end first, then crowning, then capture, then a plain move.
+- **Undo, selecting a piece, a refused tap, the capture-required notice, continuing a game and
+  opening screens**: no sound.
+- **Sound turned off while a sound plays**: that sound finishes (it is short); no further sounds
+  play.
+- **The app goes to the background**: no sound plays while it is there; the computer's turn
+  restarts on Continue (E5) and plays its sound then.
+- **VoiceOver on**: game sounds play as usual alongside VoiceOver's announcements.
+- **Device in Dark Mode**: each theme uses its dark appearance; Settings' previews show the theme as
+  it appears in the current mode.
+- **The largest accessibility text size**: Settings' rows and theme names wrap rather than being
+  cut off, and the previews stay visible; Rules' pictures stay visible alongside the larger text.
+- **A stored setting that cannot be read** (missing, damaged or from an unknown version): that
+  setting takes its default (Classic, sound on, hints on), the failure is logged, and the other
+  settings keep their values.
+- **Settings changed in a two-player game**: the same as against the computer; settings belong to
+  the app, not to a game, so they are not part of the saved game and do not change the record or
+  Game setup's remembered choices.
+
+## Requirements *(mandatory)*
+
+### Functional Requirements
+
+**Settings (#139: #140, #141)**
+
+- **FR-001**: Settings, opened from Home and from the game menu, MUST replace E3's placeholder and
+  contain three settings: board theme, sound effects on or off, and move hints on or off
+  (FR-SET-01).
+- **FR-002**: The defaults MUST be the Classic theme, sound effects on and move hints on
+  (FR-SET-02, FR-SET-04, FR-AID-04).
+- **FR-003**: A change MUST take effect immediately, including in a game in progress; going back
+  from Settings to the game MUST show the same position with the new settings applied (FR-SET-03,
+  FR-NAV-04).
+- **FR-004**: Settings MUST persist across launches and apply to every game, of both kinds. They
+  MUST NOT change the saved game, the record or the setup choices (FR-SET-03).
+- **FR-005**: A stored setting that is missing or cannot be read MUST take its default, with the
+  failure logged; the other settings keep their stored values.
+
+**Move hints (#139: #141)**
+
+- **FR-006**: With move hints on, the board MUST highlight the movable pieces and the selected
+  piece's targets as it does today (FR-AID-01, FR-AID-02). With move hints off, it MUST highlight
+  neither, in any game and during capture chains.
+- **FR-007**: Whatever the hints setting, the selected piece MUST stay marked (FR-AID-03), a
+  required capture MUST still be announced and stated in the turn indicator (FR-MOVE-05,
+  FR-GAME-02), and VoiceOver MUST still state each square's state (E7's Clarifications).
+
+**Board themes (#143: #144, #145)**
+
+- **FR-008**: The board theme MUST offer Classic, Modern and Playful (FR-SET-02). Classic is the
+  board as it is today.
+- **FR-009**: The game board (squares, frame, pieces, crowns, the selection mark, hints and
+  targets) MUST be drawn in the chosen theme (FR-GAME-07), from the moment a game screen appears.
+  The other screens keep the app's usual appearance.
+- **FR-010**: Each theme MUST have a light and a dark appearance and follow the device's setting.
+- **FR-011**: In every theme and appearance, Light and Dark pieces, kings, the selected piece,
+  hinted pieces and target squares MUST be distinguishable without relying on color alone, with
+  the same shapes as today (E7), and every piece, crown and mark MUST keep at least 3:1 contrast
+  with what it is drawn on (FR-A11Y-05).
+- **FR-012**: Modern and Playful MUST take their look from the prototype's board designs (Modern:
+  white and near-black squares, minimal; Playful: bright colors, illustrated), changing colors
+  only where the prototype's fail FR-011. The user approves each theme in a visual review.
+- **FR-013**: The theme choice MUST show each theme's name with a small preview of a board in that
+  theme, with pieces of both sides, and mark the chosen one (FR-SET-02).
+
+**Sound effects (#146: #147, #148)**
+
+- **FR-014**: With sound effects on, the app MUST play four distinct sounds: a move, a capture, a
+  crowning and the end of a game (FR-SND-01), for both sides' steps, including the computer's, as
+  each step appears. Each step plays one sound, the most important that applies: game end,
+  crowning, capture, then move. Each jump of a chain is a step.
+- **FR-015**: A game ending by resignation or a draw rule MUST also play the game-end sound once.
+- **FR-016**: Sounds MUST follow the device's silent mode and volume, and MUST NOT stop or
+  interrupt audio from other apps (FR-SND-02).
+- **FR-017**: With sound effects off, the app MUST play no sound.
+- **FR-018**: Nothing else MUST make a sound: undo, selecting, refused taps, notices, continuing a
+  game and navigation are silent. The app MUST have no haptic feedback and no music (FR-SND-03),
+  and pieces still move without animation (FR-SND-04).
+- **FR-019**: The move, capture and crowning sounds MUST each last at most 0.5 second, the pause
+  between the computer's jumps, and the game-end sound at most 2 seconds, so sounds keep pace with
+  the game. A step's sound MUST play even if the previous step's sound has not finished.
+
+**The Rules screen (#149: #150, #151)**
+
+- **FR-020**: Rules, opened from Home and from the game menu, MUST replace E3's placeholder and
+  explain briefly, in this order: the setup, moving, mandatory capture, capture chains, crowning,
+  how a game is won and drawn, and the app's undo and resign options (FR-HELP-01, FR-HELP-02).
+- **FR-021**: Each section MUST have at least one picture of a board position that shows what the
+  section explains, drawn like the game board in the chosen theme. The pictures are not
+  interactive (an interactive tutorial is out of scope, FRD §19).
+- **FR-022**: The rules MUST match the app exactly: kings move one square in any diagonal
+  direction (no flying kings); a capture must be made but need not be the longest; a chain goes
+  on while the piece can jump; crowning ends the turn; a side with no legal move loses; a draw
+  comes by the third repetition of a position or 40 moves by each side without a capture or a man
+  moving; there are no draw offers; undo takes back one turn in a two-player game and back to the
+  player's turn against the computer; resigning asks first.
+- **FR-023**: Going back from Rules opened from the game menu MUST return to the same game
+  position (FR-NAV-04).
+
+**Privacy**
+
+- **FR-024**: Settings MUST stay on the device, and playing sounds MUST NOT require any
+  permission (FR-PRIV-01, FR-PRIV-02).
+
+**Accessibility (#139: #142; #149: #152)**
+
+- **FR-025**: VoiceOver MUST read each setting's name and value (for example "Move hints, on"),
+  each theme choice's name and whether it is chosen, without reading its preview separately, and
+  each Rules picture's description of what it shows.
+- **FR-026**: Settings, Rules, and the game screen in each theme MUST support Dynamic Type up to
+  the largest accessibility size, render correctly in Dark Mode, and pass the automated
+  accessibility audit (FR-A11Y-04).
+- **FR-027**: All new text, including the rules and the theme names, MUST be localizable
+  (FR-PLAT-03).
+
+### Traceability
+
+| Board task | Requirements | FRD |
+|---|---|---|
+| #140 Settings store with defaults | FR-002, FR-004, FR-005, FR-024 | FR-SET-01, FR-SET-03, FR-SET-04, FR-AID-04 |
+| #141 Settings screen, changes apply immediately | FR-001, FR-003, FR-006, FR-007 | FR-SET-01, FR-SET-03, FR-AID-01 to 03, FR-NAV-04 |
+| #142 Accessibility pass: Settings | FR-025, FR-026, FR-027 | FR-A11Y-04, FR-PLAT-03 |
+| #144 Classic, Modern and Playful themes | FR-008 to FR-012 | FR-SET-02, FR-GAME-07, FR-A11Y-05 |
+| #145 Theme picker with board previews | FR-013 | FR-SET-02 |
+| #147 Sound assets | FR-014, FR-019 | FR-SND-01 |
+| #148 Sound service | FR-014 to FR-018 | FR-SND-01 to FR-SND-04, FR-PRIV-02 |
+| #150 Illustrated rules content | FR-020, FR-021, FR-022 | FR-HELP-01 |
+| #151 Rules from Home and the game menu | FR-020, FR-023 | FR-HELP-02, FR-NAV-04 |
+| #152 Accessibility pass: Rules | FR-025, FR-026, FR-027 | FR-A11Y-04, FR-PLAT-03 |
+
+Covered elsewhere: launch time on a real iPhone (E8, #181); verifying that the app makes no
+network requests and asks for no permissions (E8, #177).
+
+### Key Entities
+
+- **Settings**: the player's three choices, kept on the device: board theme (Classic, Modern or
+  Playful), sound effects (on or off) and move hints (on or off).
+- **Board theme**: a named look for the board: the colors of the light and dark squares, the
+  frame, both sides' pieces and crowns, the selection mark, hints and targets, each in a light and
+  a dark appearance.
+- **Sound effect**: one of four short sounds: move, capture, crowning and game end.
+- **Rules section**: a titled topic of the Rules screen with its text and one or more board
+  pictures, each with a description for VoiceOver.
+
+## Success Criteria *(mandatory)*
+
+### Measurable Outcomes
+
+- **SC-001**: For each setting, changed from Home and from the game menu in both kinds of game, the
+  board shows the change as soon as the player is back in the game, and the setting is kept after
+  the app is closed and reopened, in 100% of tested cases.
+- **SC-002**: In all three themes, in light and dark appearance, every piece, crown and mark keeps
+  at least 3:1 contrast with what it is drawn on (every pair measured).
+- **SC-003**: In scripted games covering plain moves, captures, chains, crowning by a move and by a
+  capture, and each kind of ending, each step plays exactly the one sound FR-014 names, for both
+  sides, and no sound plays with sound effects off (100% of steps).
+- **SC-004**: A step's sound is heard together with the step: within 0.1 second of the piece
+  appearing on its square.
+- **SC-005**: On a phone in silent mode, no game sound is heard; with music playing in another app,
+  the music continues through a game (checked by hand on a device).
+- **SC-006**: The Rules screen covers all seven FR-HELP-01 topics, each with at least one picture
+  and a VoiceOver description, in at most about 600 words, so a player can read it in a few
+  minutes.
+- **SC-007**: The automated accessibility audit passes on Settings, on Rules and on the game screen
+  in each theme, and these screens stay usable at the largest accessibility text size in Dark Mode.
+- **SC-008**: Opening the app takes no longer than before this slice: the launch test stays within
+  its baseline.
+- **SC-009**: Every FRD requirement ID of this slice is named by at least one automated test, or
+  by a recorded manual check where it cannot be automated (silent mode, other apps' audio).
+
+## Assumptions
+
+- **Where the theme applies**: only to the board (squares, frame, pieces and marks), in the game
+  and in the board pictures of Settings and Rules, as FR-GAME-07 says. Home, setup, Statistics
+  and the other screens keep the app's usual look; the prototype's colored page backgrounds are not
+  carried over.
+- **The prototype's designs**: the three board designs of the prototype that E3 replaced (still in
+  the repository's history) give each theme its character. Their colors are not used as they
+  are: on dark squares, Modern's dark pieces have 1.1:1 contrast and Playful's pieces 1.4:1 and
+  1.7:1, against FR-011's 3:1, so the plan chooses passing colors, as E7 did for Classic.
+- **Where the sounds come from**: four short original sounds made for the app, with no license
+  restrictions on App Store distribution. The prototype's move sound is not reused, since its
+  origin is unknown.
+- **How sounds behave with other audio**: game sounds mix with audio from other apps, are muted by
+  silent mode and follow the device volume, like most games' effects; the app never takes over
+  the audio.
+- **One sound per step**: a step that both captures and crowns, or ends the game, plays only its
+  most important sound (FR-014), so a single step never plays two sounds.
+- **A setting that cannot be read**: it falls back to its default and the failure is logged,
+  without an alert. Unlike a lost game or record, nothing is lost that the player cannot restore
+  in one tap, and Settings shows every value (Constitution IV.3: the recovery path is the Settings
+  screen itself).
+- **The Rules pictures**: still pictures of small board positions, drawn like the game board in the
+  chosen theme, not animations or interactive boards (FRD §19 excludes an interactive tutorial).
+- **No new settings**: Settings has exactly the three FRD settings; no reset button, no about
+  screen, no volume control of its own.

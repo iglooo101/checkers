@@ -29,9 +29,10 @@ Last updated: 2026-10-23
   exact commit (admins included, no pull requests). Work on a feature branch, push it, wait for
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
   branches). Because `main` moves on GitHub, the local `main` lags: run
-  `git fetch origin main:main` before comparing branches. `001-project-foundation` was merged and
-  deleted; `002-rules-engine` to `006-saving-and-statistics` are merged into `main` and can be
-  deleted (the auto-mode safety check blocks the deletion; the command is in Next steps). `main`
+  `git fetch origin main:main` before comparing branches. `001-project-foundation` to
+  `005-computer-opponent` were merged and deleted; `006-saving-and-statistics` is merged and is
+  deleted once E6's branch exists (the auto-mode safety check blocks the deletion; the command is
+  in Next steps). `main`
   holds E5's close-out commit. The working tree is clean; E6 starts on a new branch.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
@@ -548,8 +549,8 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      switcher and Continue; press Home while the computer thinks, then Continue; finish games by
      hand at Easy and Medium and check Statistics; VoiceOver reads each Statistics block as one
      sentence.
-   - Delete the merged branches:
-     `git branch -d 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent 006-saving-and-statistics && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 002-rules-engine 003-game-experience 004-accessibility 005-computer-opponent 006-saving-and-statistics`.
+   - Delete the merged branch once E6's branch is checked out:
+     `git branch -d 006-saving-and-statistics && GH_TOKEN="$(tr -d '[:space:]' < ../secrets/github.txt)" git push origin --delete 006-saving-and-statistics`.
 3. Follow-ups: E6 replaces the Settings and Rules placeholders; #192 (MetricKit) and #181
    (400 ms on a real iPhone) are in E8; keep the CI Xcode pin (26.3) in step with the
    development Mac.
