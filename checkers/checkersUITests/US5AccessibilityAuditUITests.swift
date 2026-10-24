@@ -251,11 +251,11 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         try audit(app)
     }
 
-    /// FR-A11Y-04: the Settings placeholder.
+    /// FR-A11Y-04: Settings (specs/007-settings-themes-sound-and-rules/contracts/screens.md).
     @MainActor
     func testUS5_auditSettings() throws {
         let app = launch()
-        open("home.settings", waitingFor: app.element("placeholder.message"))
+        open("home.settings", waitingFor: app.switches["settings.moveHints"].firstMatch)
         try audit(app)
     }
 }

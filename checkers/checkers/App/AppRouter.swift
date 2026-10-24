@@ -125,7 +125,8 @@ final class AppRouter {
     func open(gameWith setup: GameSetup) {
         show(
             GameSession(
-                setup: setup, playerSide: playerSide(for: setup), opponent: opponent, pacer: pacer))
+                setup: setup, playerSide: playerSide(for: setup), opponent: opponent, pacer: pacer,
+                settings: settings))
     }
 
     /// Opens the saved game as it was left (FR-SAVE-03); the computer moves if it is its turn
@@ -142,7 +143,7 @@ final class AppRouter {
             hasSavedGame = false
             return
         }
-        show(GameSession(saved: saved, opponent: opponent, pacer: pacer))
+        show(GameSession(saved: saved, opponent: opponent, pacer: pacer, settings: settings))
     }
 
     /// Shows a game in place of setup or of the current game, saving it at its save points, and

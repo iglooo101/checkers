@@ -153,6 +153,61 @@ extension XCUIApplication {
         launch()
     }
 
+    /// Launches the app with settings for this launch only, beside stored values replaced as
+    /// `launch(replacing:)` does: each setting is passed as `-key value` in its property-list
+    /// form, such as `modern` or `<false/>` (specs/007-settings-themes-sound-and-rules/
+    /// research.md R10; a plain `NO` would read as text).
+    @MainActor
+    func launch(
+        replacing values: KeyValuePairs<String, String> = [:],
+        settings: KeyValuePairs<String, String>
+    ) {
+        launchArguments =
+            values.flatMap { key, text in
+                let hex = text.utf8.map { String(format: "%02x", $0) }.joined()
+                return ["-\(key)", "<\(hex)>"]
+            } + settings.flatMap { key, value in ["-\(key)", value] }
+        launch()
+    }
+
+    /// Opens Settings from Home and waits for it.
+    @MainActor
+    func openSettingsFromHome(file: StaticString = #filePath, line: UInt = #line) {
+        let settings = element("home.settings")
+        XCTAssertTrue(
+            settings.waitForExistence(timeout: 10), "Home did not appear", file: file, line: line)
+        settings.tap()
+        XCTAssertTrue(
+            switches["settings.moveHints"].firstMatch.waitForExistence(timeout: 5),
+            "Settings did not open", file: file, line: line)
+    }
+
+    /// Whether the switch with this identifier is on.
+    @MainActor
+    func switchValue(_ identifier: String) -> Bool? {
+        switch scrolledTo(switches[identifier].firstMatch).value as? String {
+        case "1": true
+        case "0": false
+        default: nil
+        }
+    }
+
+    /// Turns the switch with this identifier on or off. A form's switch fills its row, whose
+    /// middle is the label, so the tap goes near the trailing edge, where the switch is.
+    @MainActor
+    func setSwitch(
+        _ identifier: String, isOn: Bool, file: StaticString = #filePath, line: UInt = #line
+    ) {
+        let control = scrolledTo(switches[identifier].firstMatch)
+        guard switchValue(identifier) != isOn else { return }
+        control.coordinate(withNormalizedOffset: CGVector(dx: 0.93, dy: 0.5)).tap()
+        let predicate = NSPredicate(format: "value == %@", isOn ? "1" : "0")
+        let expectation = XCTNSPredicateExpectation(predicate: predicate, object: control)
+        XCTAssertEqual(
+            XCTWaiter().wait(for: [expectation], timeout: 3), .completed,
+            "\(identifier) did not turn \(isOn ? "on" : "off")", file: file, line: line)
+    }
+
     /// Taps one square and then another.
     @MainActor
     func move(_ from: String, _ to: String) {

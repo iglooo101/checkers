@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// A screen whose content a later epic delivers: Rules and Settings (E6). It shows its title and
-/// one line saying what it will contain (FR-003).
+/// A screen whose content a later story delivers: Rules (E6 US2). It shows its title and one line
+/// saying what it will contain (FR-003).
 struct PlaceholderView: View {
     let title: LocalizedStringResource
     let message: LocalizedStringResource

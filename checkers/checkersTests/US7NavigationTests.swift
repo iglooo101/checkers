@@ -51,16 +51,14 @@ struct US7NavigationTests {
     }
 
     @Test(
-        "US7 FR-NAV-02: each placeholder screen says what it will contain; Statistics is no longer one"
+        "US7 FR-NAV-02: Rules says what it will contain; Statistics and Settings are no longer placeholders"
     )
     func placeholderMessages() {
         #expect(PlaceholderText.message(for: .statistics) == nil)
         #expect(
             PlaceholderText.message(for: .rules)?.key
                 == "How to play American checkers will be explained here.")
-        #expect(
-            PlaceholderText.message(for: .settings)?.key
-                == "Board theme, sound effects and move hints will be set here.")
+        #expect(PlaceholderText.message(for: .settings) == nil)
         #expect(PlaceholderText.message(for: .game) == nil)
     }
 }

@@ -27,7 +27,7 @@ struct RootView: View {
         case .rules:
             placeholder("Rules", for: route)
         case .settings:
-            placeholder("Settings", for: route)
+            SettingsView(router: router)
         }
     }
 

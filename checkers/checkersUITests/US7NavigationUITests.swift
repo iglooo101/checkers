@@ -26,9 +26,14 @@ final class US7NavigationUITests: XCTestCase {
         app.launch()
         app.startTwoPlayerGame()
         app.move("c3", "d4")
-        for item in ["Rules", "Settings"] {
+        // Rules is a placeholder until US2 of specs/007-settings-themes-sound-and-rules.
+        let screens = [
+            ("Rules", app.element("placeholder.message")),
+            ("Settings", app.switches["settings.moveHints"].firstMatch),
+        ]
+        for (item, content) in screens {
             app.chooseFromGameMenu(item)
-            XCTAssertTrue(app.element("placeholder.message").waitForExistence(timeout: 3))
+            XCTAssertTrue(content.waitForExistence(timeout: 3), "\(item) did not open")
             app.navigationBars.buttons.firstMatch.tap()
             XCTAssertTrue(app.element("game.turn").waitForExistence(timeout: 3))
             XCTAssertEqual(app.square("d4").label, "d4, Light man")

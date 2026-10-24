@@ -128,9 +128,6 @@
     "Abandon current game?" : {
 
     },
-    "Board theme, sound effects and move hints will be set here." : {
-
-    },
     "Cancel" : {
 
     },
@@ -223,6 +220,9 @@
       }
     },
     "Finish a game against the computer to start your record." : {
+
+    },
+    "Game" : {
 
     },
     "Game menu" : {
@@ -320,6 +320,9 @@
         }
       }
     },
+    "Move hints" : {
+
+    },
     "Move undone." : {
 
     },
@@ -348,6 +351,9 @@
 
     },
     "Resign as Light?" : {
+
+    },
+    "Rings the pieces that can move and dots the squares the selected piece can go to." : {
 
     },
     "Rules" : {

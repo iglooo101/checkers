@@ -6,11 +6,12 @@ extension GameSession {
     /// A session for a saved game, as it was left (FR-SAVE-03).
     convenience init(
         saved game: SavedGame, announcer: any Announcer = AccessibilityAnnouncer(),
-        opponent: any ComputerOpponent, pacer: any TurnPacer
+        opponent: any ComputerOpponent, pacer: any TurnPacer,
+        settings: AppSettings = AppSettings(store: InMemorySettingsStore())
     ) {
         self.init(
             setup: game.setup, playerSide: game.playerSide, state: game.state,
-            announcer: announcer, opponent: opponent, pacer: pacer)
+            announcer: announcer, opponent: opponent, pacer: pacer, settings: settings)
     }
 
     /// The game to save: the current state, or the state at the start of the computer's turn

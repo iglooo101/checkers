@@ -10,16 +10,18 @@ extension GameSession {
         BoardLayout(bottomSide: playerSide ?? .light)
     }
 
-    /// The pieces the board highlights: every movable piece of the side to move, which the
-    /// engine limits to capturing pieces when a capture is required (FR-025). Hints are always on
-    /// until Settings (E6) adds the switch.
+    /// The pieces the board highlights while move hints are on: every movable piece of the side
+    /// to move, which the engine limits to capturing pieces when a capture is required (FR-025;
+    /// E6 FR-006). None with hints off, during the computer's turn or after the game.
     var hintedPieces: Set<Square> {
-        isComputerTurn ? [] : Set(state.movablePieces)
+        guard settings.moveHints, !isComputerTurn else { return [] }
+        return Set(state.movablePieces)
     }
 
-    /// The selected piece's legal target squares (FR-026, FR-030).
+    /// The selected piece's legal target squares, while move hints are on (FR-026, FR-030;
+    /// E6 FR-006). The selection itself stays marked either way (FR-AID-03).
     var targets: Set<Square> {
-        guard let selection else { return [] }
+        guard settings.moveHints, let selection else { return [] }
         return Set(state.targets(from: selection))
     }
 

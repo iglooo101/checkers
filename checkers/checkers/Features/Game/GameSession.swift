@@ -59,6 +59,8 @@ final class GameSession {
     @ObservationIgnored let opponent: any ComputerOpponent
     /// Paces the computer's turn (research R8).
     @ObservationIgnored let pacer: any TurnPacer
+    /// The player's settings; move hints decide what the board highlights (E6 FR-006).
+    @ObservationIgnored let settings: AppSettings
     /// Tells the owner when the game to save changes or the game ends; the router sets it.
     @ObservationIgnored var onEvent: (GameSessionEvent) -> Void = { _ in }
     /// The state at the start of the computer's turn while that turn is unfinished, so a half-
@@ -69,7 +71,8 @@ final class GameSession {
         setup: GameSetup, playerSide: Side? = nil, state: GameState = GameState(),
         announcer: any Announcer = AccessibilityAnnouncer(),
         opponent: any ComputerOpponent = ScriptedComputerOpponent(),
-        pacer: any TurnPacer = SleepingPacer()
+        pacer: any TurnPacer = SleepingPacer(),
+        settings: AppSettings = AppSettings(store: InMemorySettingsStore())
     ) {
         self.setup = setup
         self.playerSide = playerSide
@@ -77,6 +80,7 @@ final class GameSession {
         self.announcer = announcer
         self.opponent = opponent
         self.pacer = pacer
+        self.settings = settings
         // A game that starts in the middle of a chain, such as a continued one, has the chain's
         // piece selected, as while the chain was played.
         selection = state.chainSquare

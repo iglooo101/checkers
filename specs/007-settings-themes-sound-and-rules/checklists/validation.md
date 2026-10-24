@@ -36,6 +36,23 @@ measurements below check the ones the code depends on.
 
 ## Implementation measurements
 
+- Setup and Foundational (T001–T005), 2026-10-24: before T004 the new tests failed to compile
+  (`build-for-testing`: no `Log.settings`, `Log.sound`). With it, `SettingsStoreTests`,
+  `LoggingTests` and `PrivacyManifestTests` pass (12 tests), and all 141 app unit tests ran.
+  Found on the way: `UserDefaults` skips a write that equals the stored value, and the number 0
+  equals `false`, so the unreadable-value test removes the key before storing the bad value. The
+  store reads only real booleans: 0, 1 and 3.5 are unreadable, though Foundation would convert
+  them.
+- US1 (T006–T010), 2026-10-24: before T009 the new tests failed to compile (no
+  `GameSession.settings`). With T009 and T010, US1's independent test set passes on the iPhone 17
+  simulator: 19 unit tests in 4 suites (`US1SettingsTests`, `US7NavigationTests`,
+  `LocalizationTests`, `US3HintsDragTests`, unchanged) and 9 UI tests (`US1SettingsUITests`,
+  `US7NavigationUITests`, `testUS5_auditSettings`). **Research R10 holds in the simulator**:
+  `testUS1_launchArgumentSetsHints` launches with `-moveHints <false/>` and Settings shows hints
+  off. A form's switch fills its row, so `setSwitch` taps near the trailing edge; `@Bindable`
+  cannot bind through the router's `let settings`, so `SettingsView` binds to the settings object
+  in its body.
+
 ## 1. All blocking tests (SC-001 to SC-003, SC-006, SC-007, SC-009)
 
 ## 2. Move hints (US1, SC-001)

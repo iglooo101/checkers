@@ -10,7 +10,6 @@ struct LocalizationTests {
         // Home and placeholders
         "Checkers", "New game", "Statistics", "Rules", "Settings",
         "How to play American checkers will be explained here.",
-        "Board theme, sound effects and move hints will be set here.",
         // Setup
         "Opponent", "Computer", "Two players", "Difficulty", "Easy", "Medium", "Hard", "Side",
         "Light", "Dark", "Random", "Start",
@@ -40,6 +39,9 @@ struct LocalizationTests {
         "%lld wins", "%lld losses", "%lld draws", "Easy: %@, %@, %@", "Medium: %@, %@, %@",
         "Hard: %@, %@, %@", "Your previous game couldn't be restored.",
         "Your record couldn't be restored and starts again from zero.", "OK",
+        // Settings (specs/007-settings-themes-sound-and-rules/contracts/screens.md)
+        "Game", "Move hints",
+        "Rings the pieces that can move and dots the squares the selected piece can go to.",
     ]
 
     /// Reads the source catalog rather than the compiled string table, which may omit untranslated
