@@ -100,6 +100,7 @@ script tests; nothing from it ships but the four WAV files it writes.
 | Game setup | A static text line, or Start (`setup.start`), that the scrolling form cuts at the screen's edge | Dynamic Type, "partially unsupported" only | Unchanged from E4. |
 | Setup and Home, while a system alert shows | A static text of the alert, or an element the audit does not name | Dynamic Type, "partially unsupported" only | Unchanged from E5. |
 | Settings | A static text that the scrolling form cuts at the screen's edge: since US4's Sound section, the Game section's header and footer | Dynamic Type, "partially unsupported" only | Added in US4: both scale (checked on screen at the largest size), and the report moves with the layout, as on setup. |
+| Any screen with a navigation bar (Settings at large sizes) | A static text that lies under the navigation bar, in full or in part | Contrast only | Added in Polish (T030): the audit measures the bar where the scrolled text is hidden; Settings' bar is opaque, so none of it shows. |
 
 New screens add no entries; if the Settings form's system toggles or picker are reported, the
 entry is added here with its reason, as for the setup form (US4 added the Settings row above). The theme rows needed none: they are

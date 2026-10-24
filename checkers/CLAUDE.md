@@ -75,7 +75,7 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
   system components, in the audit's `isAllowed` and the allow-lists in
   `../specs/004-accessibility/plan.md`, `../specs/006-saving-and-statistics/plan.md` and
   `../specs/007-settings-themes-sound-and-rules/plan.md` (the setup and Settings forms' edge
-  rows; the texts of system alerts).
+  rows; the texts of system alerts; text scrolled under the navigation bar).
 - Confirmations are alerts: on iOS 26 a confirmation dialog opened from a toolbar item shows as a
   popover without Cancel.
 - `checkers/Support/Logging.swift`: `Log` with one `Logger` per feature category under the bundle

@@ -51,6 +51,11 @@ struct SettingsView: View {
                 .foregroundStyle(Color.primary)
             }
         }
+        // An opaque navigation bar in the form's background: at large sizes the rows scrolled
+        // beneath a translucent one show through it faintly, which the contrast audit reads as
+        // text too faint to read (FR-026).
+        .toolbarBackgroundVisibility(.visible, for: .navigationBar)
+        .toolbarBackground(Color(uiColor: .systemGroupedBackground), for: .navigationBar)
         .navigationTitle("Settings")
     }
 }
