@@ -93,7 +93,9 @@ game in seven illustrated sections.
    an inline picker's rows failed the contrast audit (research R11). US4 (T022–T027: four
    generated sounds, the Sound section of Settings, the notice when sounds cannot play) is pushed,
    its CI to check. The user approved Modern and Playful as they are (T021), so F6.2 (#143) is
-   done. The user approved the four sounds as they are (T028). **Next**: Polish (T029–T035).
+   done. The user approved the four sounds as they are (T028). Polish: the audits (T029–T030)
+   are written and pass on the iPhone 17; Settings' navigation bar is now opaque. **Next**:
+   T031–T035 (checks, project guide, quickstart, handoff, final CI and `main`).
    The plan measured the Modern and Playful
    colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
    0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
@@ -177,6 +179,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   Computer chosen), and the texts of system alerts (the abandon question, the restore notices),
   which do scale on screen. Re-check both with each new iOS and Xcode
   (`specs/004-accessibility/plan.md`, `specs/006-saving-and-statistics/plan.md`).
+- GitHub's `macos-26-arm64` image 20261021 once found no iOS simulator for Xcode 26.3 (US4's
+  first run, 40124926324: "Unable to find a device", before any build); a rerun of the failed
+  jobs went past it. If it happens on every run, the pinned destination (iPhone 17, iOS 26.2) or
+  the Xcode pin must follow the image (`.github/workflows/ci.yml`).
+- On the iPhone SE at the largest text size in Dark Mode, the Settings audit scrolled to Move
+  hints reports one unnamed contrast problem: a header hidden under the opaque navigation bar,
+  which nothing on screen shows (E6 `validation.md` §6). Recheck in E8's accessibility pass with
+  a newer Xcode.
 - Code CI runs take 22–30 minutes since E5 (the UI tests alone about 17 minutes by E6 US2), and a
   push cancels the running one; push once per story. A slow runner took US2's run past the
   30-minute limit (CI run 40071432056), so `build-and-test` has 45 minutes since #204; if US3, US4
@@ -851,3 +861,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   E6: CI for US4, the listening review (T028), and Polish.
 - 2026-10-24: the user approved the four sounds as they are (T028, `validation.md` §5); #147
   closes with #148 and #141 once US4's CI is green. Next: Polish (T029–T035).
+- 2026-10-24: US4's CI run 40124926324 failed before building: the new runner image found no
+  iOS simulator; the failed jobs were rerun. Polish T029–T030 done locally: audits of Settings
+  (also at the largest size), Rules at its end and games in Modern and Playful; Settings'
+  navigation bar made opaque; the audit allow-list gained text hidden under the navigation bar.
+  One unnamed contrast report stays open on the iPhone SE at the largest size in Dark Mode.

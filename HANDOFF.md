@@ -670,8 +670,10 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6: check US4's CI** (the push of T022–T027). If it is green, comment on and close #148
-   (T023, T024, T026, T027) and #141 (T006–T010, T020, T027), and fast-forward `main`.
+1. **E6: check US4's CI** (run 40124926324, rerun after the runner found no simulator). If it is
+   green, comment on and close #147, #148 and #141 and F6.3 (#146), and fast-forward `main` to
+   `646089b`; then push the local commits (T021, T028, T029–T030) and, once their run is green,
+   close #142, #152 and F6.1 (#139).
 2. **E6 Polish**: the user approved the themes (T021; #144 and F6.2 Done) and the sounds (T028;
    #147 closes with #148 once US4's CI is green). Then Polish (T029–T035): #142 and #152 close after T029–T030, #203 and the
    epic at the end. Board tasks per story are in `tasks.md` "Board Mapping".
