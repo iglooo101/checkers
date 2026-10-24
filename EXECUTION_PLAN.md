@@ -155,7 +155,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
   limit there, and engine tests in the blocking plan must use small search limits.
 - The local `main` lags GitHub's (it moves by `git push origin <sha>:refs/heads/main`); run
-  `git fetch origin main:main` before comparing branches. The merged branches `002-…` to `005-…`
+  `git fetch origin main:main` before comparing branches. The merged branches `002-…` to `006-…`
   still exist; the command to delete them is in `HANDOFF.md`.
 
 ## Backlog
