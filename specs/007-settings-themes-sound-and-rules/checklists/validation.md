@@ -179,3 +179,12 @@ measurements below check the ones the code depends on.
   5 runs on the iPhone 17 simulator (Intel Mac, Debug), against the 3.635 s local baseline
   (−42.6%); the native app measured 2.1 s before E6, so preparing the sounds at launch, off the
   main actor, costs nothing visible.
+
+## Final verification (T035)
+
+- 2026-10-24: CI run 40130998987 on `d85df26` (the last code commit of the slice): `CI gate`
+  green with both jobs, `build-and-test` 32 minutes and `engine-strength` 5; `main`
+  fast-forwarded to `d85df26`. Earlier runs on the branch: 40069158202 (US1), 40116301945 (US2,
+  after #204), 40121012315 (US3), 40124926324 (US4, rerun after the runner found no simulator)
+  and 40128348379 (the scrolled audit that failed, see §6).
+

@@ -41,27 +41,23 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 3/5 | 14/17 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **35/41** | **136/154** | |
+| | **Total** | | | | **37/41** | **139/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-- #132 E6: Settings, themes, sound and rules
-- #139 F6.1: Settings
-- #142 Accessibility pass: Settings
-- #149 F6.4: Rules screen
-- #152 Accessibility pass: Rules
-- #203 Validate the E6 slice and update project docs
+Nothing in progress.
 <!-- END GENERATED: in-progress -->
 
 ## Next up
 
 E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
-opponent and E5 Saving and statistics are done (slices `specs/001-project-foundation/` to
-`specs/006-saving-and-statistics/`, landed on `main`). The app is fully native SwiftUI: Home,
+opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done (slices
+`specs/001-project-foundation/` to `specs/007-settings-themes-sound-and-rules/`, landed on
+`main`, which is at `d85df26`). The app is fully native SwiftUI: Home,
 setup, and a two-player game with tap and drag, hints, chains, crowning, undo, resign and a result
 panel, playable square by square with VoiceOver (square states, announcements, focus that follows
 each step), with non-color cues at 3:1 contrast and an accessibility audit of every screen. Games
@@ -74,17 +70,14 @@ reported once (E5). With E6, Settings chooses one of three board themes (Classic
 Playful, with previews), turns the four original sounds and the move hints on and off, and Rules
 explains the game in seven illustrated sections.
 
-1. **E6 Settings, themes, sound and rules (#132)** on branch `007-settings-themes-sound-and-rules`
-   (`specs/007-settings-themes-sound-and-rules/`): spec, clarify, plan and tasks done (F6.0);
-   **all 36 tasks are done** but the last: Setup to US4 landed on `main` (`646089b`, CI run
-   40124926324), the user approved the Modern and Playful colors (T021) and the four sounds
-   (T028), and Polish (T029–T034) is on the branch: audits of Settings (also at the largest
-   size), Rules at its end and games in Modern and Playful; 313 tests pass locally; the project guide, quickstart results, handoff and this plan are
-   current. **Next**: T035, the final CI run on the branch, the fast-forward of `main`, then
-   closing #142, #152, #203, F6.1 (#139), F6.4 (#149) and the epic. Open for the user (recorded
-   in `validation.md`): on an iPhone, a sound's delay, silent mode, the volume buttons, other
-   apps' music and a sound over another (§5); VoiceOver through Rules and Settings (§3, §4).
-2. Then E8 Release 1.0 (#169).
+1. **E8 Release 1.0 (#169)**, the last epic: open its Spec Kit slice (`/speckit-specify` from
+   `FRD.md`, on a new branch from `main`), with #192 (MetricKit, which can report E6's `sound`
+   and `settings` errors) and #181 (launch time on a real iPhone) among its tasks.
+2. Open for the user, from every epic (recorded in each slice's `checklists/validation.md`): E6's
+   iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
+   sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
+   VoiceOver moves; E5's app-switcher and background checks; E7's VoiceOver game; E3's
+   hand-played game and largest-text review.
 
 ## Order and dependencies
 
@@ -126,14 +119,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   R10, confirmed in the simulator by T001).
 - E6's settings outlive UI tests too: a test that changes a setting through the screen puts it
   back, and known values come from typed launch arguments (`-moveHints <false/>`; a plain `NO`
-  reads as text). The Mac confirmed it; T007 confirms it in the simulator first.
+  reads as text; confirmed in the simulator by T007).
 - E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); on the Mac each `play()`
   call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
   `AVAudioEngine` (E6 research R7). Silent mode and other apps' music are checked by hand too.
-- E6's sound tests prepare real `AVAudioPlayer`s in CI's simulator (T023: the bundled files, and
-  a bank over a directory with a file missing); if preparing fails on a runner without audio
-  output, the success case checks loading only. The "Sound effects aren't available right now."
-  notice cannot be caused in UI tests, so it is covered by unit tests and a preview, not the audit.
+- E6's sound tests prepare real `AVAudioPlayer`s in CI's simulator (the bundled files, and a bank
+  over a directory with a file missing); this passes on CI's runners. The "Sound effects aren't
+  available right now." notice cannot be caused in UI tests, so it is covered by unit tests and
+  a preview, not the audit.
 - E6's sounds and themes are approved (T021, T028). A later change to a sound must still pass
   its recipe check (`scripts/make-sounds.py --check`, which needs Python 3 on CI's runners) and
   the length tests; a changed color must pass `US4ContrastTests`.
@@ -158,11 +151,13 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   largest text size are still open for the user (`specs/003-game-experience/checklists/validation.md`).
 - E7's VoiceOver game by hand (SC-001, quickstart §3) is open for the user: XCUITest cannot drive
   VoiceOver, so announcements and focus are tested through the `Announcer` seam and the session.
-- The accessibility audit allow-list has two entries, both Dynamic Type reports on system
+- The accessibility audit allow-list has three entries, all Dynamic Type reports on system
   components: the setup row a scrolling form cuts at the screen's edge (a line, or Start with
-  Computer chosen), and the texts of system alerts (the abandon question, the restore notices),
-  which do scale on screen. Re-check both with each new iOS and Xcode
-  (`specs/004-accessibility/plan.md`, `specs/006-saving-and-statistics/plan.md`).
+  Computer chosen), the texts of system alerts (the abandon question, the restore notices), and
+  since E6 the Settings texts its form cuts at the bottom edge (the Game section's header and
+  footer); all scale on screen. Re-check them with each new iOS and Xcode
+  (`specs/004-accessibility/plan.md`, `specs/006-saving-and-statistics/plan.md`,
+  `specs/007-settings-themes-sound-and-rules/plan.md`).
 - A CI runner can start without its simulators ready: US4's first run (40124926324, image
   `macos-26-arm64` 20261021) failed with "Unable to find a device" before building, and a rerun
   of the failed jobs on the same image passed. Rerun when the log shows that; if it happens on
@@ -171,10 +166,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Audits at an arbitrary scroll position are not deterministic: text left under the navigation
   bar fails the contrast check wherever the swipe stops (E6 `validation.md` §6). Audit screens at
   their top or end.
-- Code CI runs take 22–30 minutes since E5 (the UI tests alone about 17 minutes by E6 US2), and a
-  push cancels the running one; push once per story. A slow runner took US2's run past the
-  30-minute limit (CI run 40071432056), so `build-and-test` has 45 minutes since #204; if US3, US4
-  and the Polish audits bring it near that, shorten the UI tests before raising it again.
+- Code CI runs take 24–32 minutes by the end of E6 (`build-and-test` within its 45-minute limit
+  since #204; the UI tests alone about 17 minutes), and a push cancels the running one; push once
+  per story. If E8's tests bring it near 45 minutes, shorten the UI tests before raising it.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
   and the development Mac are updated together.
 - The engine's move generation is only moderately fast in Debug builds: the 6-turn reference
@@ -431,7 +425,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 14/17 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 17/17 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
@@ -445,7 +439,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [x] #140 Settings store with defaults (Classic, sound on, hints on), persisted behind a protocol · S
 - [x] #141 Settings screen; changes apply immediately, including in a game in progress · M
-- [~] #142 Accessibility pass: Settings · S
+- [x] #142 Accessibility pass: Settings · S
 
 **F6.2 Board themes** (#143) · FR-SET-02, FR-GAME-07, FR-A11Y-05
 
@@ -461,8 +455,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [x] #150 Illustrated rules content: setup, moving, captures, chains, crowning, win/draw, undo/resign · M
 - [x] #151 Rules reachable from Home and the game menu · S
-- [~] #152 Accessibility pass: Rules · S
-- [~] #203 Validate the E6 slice and update project docs · S · after #142, #152
+- [x] #152 Accessibility pass: Rules · S
+- [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
 ### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 0/15 tasks
@@ -865,3 +859,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   default size covers the rest), and with it the opaque bar and the allow-list rule it had led
   to; all audits pass twice on the iPhone 17 and on the iPhone SE at the largest size in Dark
   Mode, so nothing stays open there.
+- 2026-10-24: **E6 done.** CI run 40130998987 green on `d85df26` (`build-and-test` 32 of 45
+  minutes); `main` fast-forwarded to `d85df26`; #142, #152, #203, F6.1 (#139), F6.4 (#149) and
+  the epic (#132) Done (T035). Progress: 37/41 features, 139/154 tasks; only E8 is left. Close-out
+  review: risks revised (E6's sound tests pass on CI, the allow-list has three entries, CI run
+  times); the user's open checks gathered under Next up. Next: E8 Release 1.0 (#169).
+- 2026-10-24: Session close-out: HANDOFF.md updated (current state with E6 done, lessons
+  learned from E6's CI and Polish, next steps: E8 with Spec Kit, the user's open checks); this
+  plan reviewed against the close-out checklist (board matches, nothing in progress, Next up,
+  risks and change log current).
+

@@ -181,7 +181,7 @@ description: "Task list for the settings, themes, sound and rules slice (epic E6
 - [X] T032 [P] Update `checkers/CLAUDE.md`: the Settings, Sound and Rules features; the three settings keys and their launch arguments for UI tests; `AppSettings` through the router to sessions; themes as namespaced asset folders and `Palette.color(in:)`; `BoardPicture`; the sound script and `--check`; the removed placeholders.
 - [X] T033 Run the quickstart (1 to 7) and record the results in `validation.md`, including the search for the slice's FRD IDs (SC-009) and the launch time against its baseline (SC-008); mark what is left for the user: the iPhone checks of §5 (delay, SC-004; silent mode and other apps' music, SC-005 and FR-016; the volume buttons, FR-016; a second sound over the first, FR-019) and the VoiceOver pass of §3 (headings, FR-025's header trait).
 - [X] T034 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
-- [ ] T035 Final verification: push the branch, confirm `CI gate` is green with both jobs on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
+- [X] T035 Final verification: push the branch, confirm `CI gate` is green with both jobs on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
 - [X] T036 Raise `build-and-test`'s `timeout-minutes` in `.github/workflows/ci.yml` from 30 to 45 (#204, added 2026-10-24 after CI run 40071432056 for US2 failed `CI gate` with every test passing: the job reached its limit during "Launch timing"; "Build and test" took 25 minutes against US1's 19, about 50 s of it US2's UI tests and the rest a slower runner). Done before US3's push; that push re-runs CI for US2's code.
 
 ---

@@ -32,16 +32,13 @@ Last updated: 2026-10-24
   `git fetch origin main:main` before comparing branches. `001-project-foundation` to
   `006-saving-and-statistics` were merged and deleted (the auto-mode safety check blocks branch
   deletion, so the user runs it once the next slice's branch exists). `main` (local and GitHub)
-  is at `646089b`: E6 Setup to US4 and the 45-minute CI limit. **E6 is under way on
-  `007-settings-themes-sound-and-rules`** (pushed): spec, clarify and plan done, `tasks.md`
-  written and analyzed, the 12 analysis findings applied (#137, 9b881b9) and the board
-  reconciled (#138; F6.0 done). **Implementation**: Setup, Foundational, US1 and US2
-  (T001–T015) passed CI (run 40116301945 on `3b8ba4d`, after #204/T036 raised `build-and-test`'s
-  limit from 30 to 45 minutes); US3 (T016–T020) passed CI run 40121012315 on `20096e7`; the
-  theme rows are buttons, not an inline picker (research R11, "Found in US3"). US4 (T022–T027)
-  passed CI run 40124926324 (rerun) and is on `main` (`646089b`). **Polish (T029–T034) is on the
-  branch; only T035 is left**: the final CI run and the fast-forward of `main`. The user approved Modern and Playful as they are
-  (T021; F6.2 done) and deleted the local branch `wip/007-us3-themes`.
+  is at `d85df26`: **E6 is done** (CI run 40130998987). Its branch
+  `007-settings-themes-sound-and-rules` is merged; the user deletes it once E8's branch exists.
+  E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
+  colors), sound effects (four original sounds; approved) and move hints; Rules in seven
+  illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
+  from 30 to 45 minutes, the theme rows became buttons instead of an inline picker (research
+  R11, "Found in US3"), and the largest-size Settings audit runs at rest (validation §6).
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -50,8 +47,8 @@ Last updated: 2026-10-24
   `FR-MOVE-03`; section 19 lists what is out of scope.
 - **App**: **fully native SwiftUI** (E3): Home, Game setup, a two-player game screen (tap and
   drag, hints, chains, crowning, undo, resign, result panel, Play again), Statistics (E5), and
-  since E6 Settings (board theme and move hints so far) and Rules (seven sections with
-  engine-built pictures); the placeholders and the web prototype are gone. **E6 so far**:
+  since E6 Settings (board theme, sound effects and move hints) and Rules (seven sections with
+  engine-built pictures); the placeholders and the web prototype are gone. **E6**:
   `SettingsValues` and `AppSettings` (`Features/Settings/`) in `UserDefaults` under
   `boardTheme`, `soundEffects` and
   `moveHints`, read per key (an unreadable one takes its default, logged); the router hands
@@ -117,15 +114,11 @@ Last updated: 2026-10-24
   (`build-and-test` has a 45-minute limit since #204). Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 8 epics, 41 features, 153 tasks (#1–#203; #188 is a PR) on the project board.
-  E6: #140 Done; #141, #142, #144, #145, #150–#152 and #203 In Progress, with F6.1, F6.2 and
-  F6.4.
-  **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
-  opponent and E5 Saving and statistics are done** (E5: #114, final CI run 40040004817, 264
-  tests). **E6 (#132) is in progress**: F6.0 (#133) is done (#134–#138); F6.1 to F6.4 are under
-  way, with #203 (validate the slice and update docs) under F6.4; E8 is left (33/41 features,
-  128/153 tasks). Progress and the full list are in
-  `EXECUTION_PLAN.md`.
+- **Backlog**: 8 epics, 41 features, 154 tasks (#1–#204; #188 is a PR) on the project board.
+  **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
+  opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
+  #132, final CI run 40130998987, 313 tests). Only **E8 Release 1.0 (#169)** is left (37/41
+  features, 139/154 tasks). Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -680,6 +673,12 @@ Last updated: 2026-10-24
   nothing text-like sits under the bar), and cover the rest at the default size. A CI screen
   recording settles such questions: `gh run download <id> -n test-results`, export the
   attachments, and take frames with `AVAssetImageGenerator` at the audit's timestamps.
+- **When a second app change is needed to quiet the same audit report, suspect the test**: the
+  hard scroll edge, then the opaque bar, then a frame rule each moved the report without ending
+  it; comparing with the audits that always passed (at rest) showed the scrolled position was
+  the problem. Revert the app changes such a chase added once the test is fixed.
+- **Check every coverage claim in the docs against the test names** before writing it: a quick
+  grep of `@Test` and `func test` names confirmed the quickstart's "covered by" lines.
 - **swift-format exempts test names only in the `XCTestCase` class body**: `testUS5_…` in an
   extension fails `AlwaysUseLowerCamelCase`; keep UI tests in the class.
 - **Audits written for the default size cannot run at a system-wide largest size**: a test that
@@ -693,18 +692,15 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6 T035**: confirm `CI gate` is green on the branch's last commit (Polish T029–T034),
-   fast-forward `main` to it (`git push origin <sha>:refs/heads/main`), record the run in
-   `validation.md`, then comment on and close #142 (T007, T008, T029, T030), #152 (T012, T029,
-   T030), #203 (T001, T002, T029–T035), F6.1 (#139), F6.4 (#149) and the epic (#132); update
-   `EXECUTION_PLAN.md` (`update_plan.py`, Next up, change log). Delete the branch once E8's
-   branch exists (the user runs it).
-2. **E8 Release 1.0 (#169)** with Spec Kit, from `FRD.md` (E8's features and #192, #181).
-3. **Open for the user from E6** (`specs/007-…/checklists/validation.md`): on an iPhone, a
+1. **E8 Release 1.0 (#169)** with Spec Kit: create `008-…` from an up-to-date `main` by hand
+   (Spec Kit makes no branch here), then `/speckit-specify` from `FRD.md` (E8's features, with
+   #192 MetricKit and #181 launch time on a real iPhone). Once that branch exists, the user
+   deletes `007-settings-themes-sound-and-rules`.
+2. **Open for the user from E6** (`specs/007-…/checklists/validation.md`): on an iPhone, a
    sound's delay, silent mode, the volume buttons, other apps' music and a sound over another
    (quickstart §5); VoiceOver through Rules (headings) and Settings (theme rows) (§3, §4). The
    Modern and Playful colors (T021) and the four sounds (T028) are approved.
-4. Open for the user:
+3. Open for the user:
    - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
      §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
      casual player. If Easy proves too strong, widen its margin, or revisit random blunders as
@@ -720,7 +716,7 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      switcher and Continue; press Home while the computer thinks, then Continue; finish games by
      hand at Easy and Medium and check Statistics; VoiceOver reads each Statistics block as one
      sentence.
-5. Follow-ups: #192 (MetricKit, which can report E6's `sound` and `settings` errors) and #181
+4. Follow-ups: #192 (MetricKit, which can report E6's `sound` and `settings` errors) and #181
    (400 ms on a real iPhone) are in E8; if the iPhone check of a sound's delay misses 0.1 s, move
    `SoundBank` to `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the
    development Mac.
