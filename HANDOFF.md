@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-10-23
+Last updated: 2026-10-24
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -34,12 +34,13 @@ Last updated: 2026-10-23
   deletion, so the user runs it once the next slice's branch exists). `main` (local and GitHub)
   is at `977f5e6`, E5's close-out plus a plan fix. **E6 is under way on
   `007-settings-themes-sound-and-rules`** (pushed, `CI gate` green on every commit): spec,
-  clarify and plan done, `tasks.md` written and analyzed, the analysis findings not yet applied.
-  No E6 code yet. The working tree is clean.
+  clarify and plan done, `tasks.md` written and analyzed, and the 12 analysis findings applied
+  (#137 Done, 9b881b9). No E6 code yet. The working tree is clean.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
-- **Functional requirements**: `FRD.md` v1.2 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
-  unreadable record is reported once). Requirement IDs such as
+- **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
+  unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
+  Settings and retried with the next sound). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
 - **App**: **fully native SwiftUI** (E3): Home, Game setup, a two-player game screen (tap and
   drag, hints, chains, crowning, undo, resign, result panel, Play again), Statistics (E5) and
@@ -98,8 +99,8 @@ Last updated: 2026-10-23
 - **Backlog**: 8 epics, 41 features, 152 tasks (#1–#202; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent and E5 Saving and statistics are done** (E5: #114, final CI run 40040004817, 264
-  tests). **E6 (#132) is in progress**: F6.0 (#133) has #134–#136 done and #137 In Progress;
-  E8 is left (32/41 features, 125/152 tasks). Progress and the full list are in
+  tests). **E6 (#132) is in progress**: F6.0 (#133) has #134–#137 done and #138 (reconcile) left;
+  E8 is left (32/41 features, 126/152 tasks). Progress and the full list are in
   `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -124,8 +125,10 @@ Last updated: 2026-10-23
   plan with measured research R1–R13, data model, contracts `settings-and-sound.md` (three
   `UserDefaults` keys, hints, the Modern and Playful colors, the sound rules and recipes),
   `screens.md` and `rules-content.md` (the seven sections, their engine-built pictures and
-  texts), quickstart, and **`tasks.md` (35 tasks, analyzed: 12 findings to apply, see Next
-  steps)**. `.specify/feature.json` (local, git-ignored) points at it.
+  texts), quickstart, and **`tasks.md` (35 tasks, analyzed: 12 findings applied: a sound that
+  cannot play shows "Sound effects aren't available right now." in Settings and the next sound
+  tries again, FR-SND-05 and spec FR-017; `BoardTheme`'s names move to US3; the Rules pictures
+  ring the other movable pieces)**. `.specify/feature.json` (local, git-ignored) points at it.
 
 ## Lessons learned
 
@@ -562,6 +565,19 @@ Last updated: 2026-10-23
 - **`cd` inside one shell command changes the session's directory**: later relative paths then
   point into the wrong folder. Use absolute paths, or a subshell `( cd … && … )`.
 
+## Lessons learned (E6 analysis fixes, 2026-10-24)
+
+- **Place a fix where the spec already talks about it**: the handoff put the sound-failure
+  sentence in FR-018 (what makes no sound), but FR-017 (when no sound plays) was its home; adding
+  it there kept the count at 27 requirements, while the FRD gained its own ID (FR-SND-05) for
+  traceability.
+- **A failure that cannot be caused in a UI test needs a testable rule**: the Settings notice
+  depends on `AppRouter.showsSoundNotice`, tested with a recording player whose `isAvailable` the
+  test sets, and the bank's file errors with a temporary directory; only the look is left to a
+  preview.
+- **`update_plan.py` sets the "Last updated" date** in `EXECUTION_PLAN.md`'s header itself, so a
+  hand edit of that line must start from the regenerated text.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -569,40 +585,14 @@ Last updated: 2026-10-23
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6 #137: apply the `/speckit-analyze` findings** to `specs/007-settings-themes-sound-and-rules/`
-   (the report was given in the session; 0 critical, 2 high, 4 medium, 6 low), then close #137:
-   - **C1 (high, the user decides)**: Constitution IV.3. A sound failure at run time (the audio
-     session fails, or the system resets its media services) leaves sound effects on but silent,
-     with nothing shown, and no test covers `SoundError`. Recommended: `SoundBank` prepares again
-     on the next play after a failure; Settings' Sound section shows "Sound effects aren't
-     available right now." while sounds cannot play; T023 tests a bank pointed at a missing file;
-     one sentence in spec FR-018 (and the FRD if it counts as product behavior). The alternative
-     is a written justification in the plan's IV row. Ask the user first.
-   - **O1 (high)**: move `BoardTheme.name` and its strings from T004 to US3 (test in T017,
-     implementation in T020); T003 keeps the cases and raw values.
-   - **M1**: add `App/Features/Game/ResultPanel.swift` (previews use `Palette.boardDarkSquare.color`)
-     to T019.
-   - **M2**: declare `BoardTheme`, `SettingsValues`, `SoundEffect` and `SoundError` `nonisolated`
-     and `Sendable` (data-model.md, T004, T026).
-   - **A1**: Rules pictures draw the game's marks as with hints on, including hint rings on the
-     side to move's other movable pieces; the Moving picture gets rings on a3, e3 and g3, and its
-     description adds "The other men that can move have a thin ring." (rules-content.md,
-     data-model.md, T011).
-   - **P1**: `init(saved:)` is in `GameSession+Saving.swift`; name it in T009 and T027.
-   - **Low**: align research R13 with T006 (hints-off cases in `US1SettingsTests`); add
-     `SettingsStoreTests`, `US4SoundUITests`, the `PrivacyManifestTests` change and
-     `GameSession+Saving.swift` to the plan's source tree; in T023 the restore plays nothing while
-     the computer's resumed steps play theirs; call T018's `testUS3_themedGame` a smoke test; record
-     SC-004, FR-016, FR-019's overlap and FR-025's header trait as checks by hand; drop the menu
-     half of T007's `testUS1_settingsFromHomeAndMenu`.
-2. **E6 #138 Reconcile**: add a "Validate the E6 slice and update project docs" issue under F6.4
-   (#149), the last feature (T001, T002, T029–T035, as #201 was for E5), list each board task's task IDs (tasks.md
-   "Board Mapping"), then close F6.0 (#133). Then implement with `/speckit-implement` from T001,
-   story by story, pushing once per story.
-3. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
+1. **E6 #138 Reconcile**: add a "Validate the E6 slice and update project docs" issue under F6.4
+   (#149), the last feature (T001, T002, T029–T035, as #201 was for E5), list each board task's
+   task IDs (tasks.md "Board Mapping"), then close F6.0 (#133). Then implement with
+   `/speckit-implement` from T001, story by story, pushing once per story.
+2. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
    §4) and the four sounds (T028: `afplay` the files T025 generates). On an iPhone: a sound's delay,
    silent mode and other apps' music (quickstart §5). Then E8 (#169).
-4. Open for the user:
+3. Open for the user:
    - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
      §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
      casual player. If Easy proves too strong, widen its margin, or revisit random blunders as
@@ -618,7 +608,7 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      switcher and Continue; press Home while the computer thinks, then Continue; finish games by
      hand at Easy and Medium and check Statistics; VoiceOver reads each Statistics block as one
      sentence.
-5. Follow-ups: #192 (MetricKit, which can report E6's `sound` and `settings` errors) and #181
+4. Follow-ups: #192 (MetricKit, which can report E6's `sound` and `settings` errors) and #181
    (400 ms on a real iPhone) are in E8; if the iPhone check of a sound's delay misses 0.1 s, move
    `SoundBank` to `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the
    development Mac.

@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-23 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.2, constitution v1.1.0
+Last updated: 2026-10-24 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.1.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -41,9 +41,9 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 3/15 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 4/15 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **32/41** | **125/152** | |
+| | **Total** | | | | **32/41** | **126/152** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,7 +51,6 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #132 E6: Settings, themes, sound and rules
 - #133 F6.0: Specification (Spec Kit)
-- #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -72,14 +71,14 @@ reported once (E5). Rules and Settings are placeholders until E6.
 1. **E6 Settings, themes, sound and rules (#132)** on branch `007-settings-themes-sound-and-rules`
    (`specs/007-settings-themes-sound-and-rules/`): the spec is written (#134: 4 user stories, 27
    requirements), clarified (#135) and planned (#136: research R1–R13, three contracts);
-   `tasks.md` has 35 tasks and `/speckit-analyze` ran (#137 In Progress): **apply its 12
-   findings** (0 critical, 2 high, 4 medium, 6 low; listed in `HANDOFF.md`, Next steps), the
-   first after the user decides how a sound failure is shown (Constitution IV.3); then close
-   #137, reconcile the board (#138, adding a validation issue as #201 was for E5) and implement
-   from T001. The plan measured the Modern and Playful colors (every contrast pair passes,
-   weakest 5.64:1 and 4.16:1), the sound script (four sounds, 0.12–1.2 s, reproducible) and the
-   Rules pictures (checked with the engine). Open for the user during implementation: approve the
-   two themes (T021) and the four sounds (T028).
+   `tasks.md` has 35 tasks, and the 12 `/speckit-analyze` findings are applied (#137 Done): a
+   sound that cannot play now shows "Sound effects aren't available right now." in Settings and
+   the next sound tries again (`FRD.md` 1.3, FR-SND-05). **Next: reconcile the board (#138)**,
+   adding a validation issue under F6.4 as #201 was for E5 and listing each board task's task
+   IDs, then close F6.0 (#133) and implement from T001. The plan measured the Modern and Playful
+   colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
+   0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
+   during implementation: approve the two themes (T021) and the four sounds (T028).
 2. Then E8 Release 1.0 (#169).
 
 ## Order and dependencies
@@ -126,6 +125,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); on the Mac each `play()`
   call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
   `AVAudioEngine` (E6 research R7). Silent mode and other apps' music are checked by hand too.
+- E6's sound tests prepare real `AVAudioPlayer`s in CI's simulator (T023: the bundled files, and
+  a bank over a directory with a file missing); if preparing fails on a runner without audio
+  output, the success case checks loading only. The "Sound effects aren't available right now."
+  notice cannot be caused in UI tests, so it is covered by unit tests and a preview, not the audit.
 - E6's themes and sounds need the user's approval (T021, T028); a changed color must still pass
   `US4ContrastTests`, and a changed sound its recipe check (`scripts/make-sounds.py --check`,
   which needs Python 3 on CI's runners).
@@ -413,14 +416,14 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 3/15 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 4/15 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
 - [x] #134 E6 Specify: write spec.md with /speckit-specify · S
 - [x] #135 E6 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #136 E6 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [~] #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [x] #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #138 E6 Reconcile this epic's board tasks with tasks.md · S
 
 **F6.1 Settings** (#139) · FR-SET-01, FR-SET-03, FR-SET-04, FR-AID-04
@@ -785,3 +788,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   test's pairs, typed launch arguments, audio setup cost, checking positions with the engine,
   strings in the story whose test changes, `nonisolated` value types) and next steps. Merged
   branches `002-…` to `006-…` deleted by the user.
+- 2026-10-24: #137 done: the 12 `/speckit-analyze` findings applied (9b881b9, CI run
+  40066363455). High: a sound failure at run time shows "Sound effects aren't available right
+  now." in Settings and the next sound tries again (the user's choice; `FRD.md` 1.3 adds
+  FR-SND-05, spec FR-017); `BoardTheme`'s names move to US3. Medium and low: `ResultPanel`'s
+  previews, `nonisolated` value types, hint rings in the Rules pictures, `init(saved:)`'s file,
+  the plan's source tree, research R13, and the checks by hand. Next: #138.
