@@ -34,8 +34,9 @@ Last updated: 2026-10-24
   deletion, so the user runs it once the next slice's branch exists). `main` (local and GitHub)
   is at `977f5e6`, E5's close-out plus a plan fix. **E6 is under way on
   `007-settings-themes-sound-and-rules`** (pushed, `CI gate` green on every commit): spec,
-  clarify and plan done, `tasks.md` written and analyzed, and the 12 analysis findings applied
-  (#137 Done, 9b881b9). No E6 code yet. The working tree is clean.
+  clarify and plan done, `tasks.md` written and analyzed, the 12 analysis findings applied
+  (#137, 9b881b9) and the board reconciled (#138; F6.0 done). No E6 code yet. The working tree
+  is clean.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -96,11 +97,12 @@ Last updated: 2026-10-24
   build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 8 epics, 41 features, 152 tasks (#1–#202; #188 is a PR) on the project board.
+- **Backlog**: 8 epics, 41 features, 153 tasks (#1–#203; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent and E5 Saving and statistics are done** (E5: #114, final CI run 40040004817, 264
-  tests). **E6 (#132) is in progress**: F6.0 (#133) has #134–#137 done and #138 (reconcile) left;
-  E8 is left (32/41 features, 126/152 tasks). Progress and the full list are in
+  tests). **E6 (#132) is in progress**: F6.0 (#133) is done (#134–#138); F6.1 to F6.4 are left,
+  with #203 (validate the slice and update docs) under F6.4; E8 is left (33/41 features, 127/153
+  tasks). Progress and the full list are in
   `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -585,10 +587,10 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6 #138 Reconcile**: add a "Validate the E6 slice and update project docs" issue under F6.4
-   (#149), the last feature (T001, T002, T029–T035, as #201 was for E5), list each board task's
-   task IDs (tasks.md "Board Mapping"), then close F6.0 (#133). Then implement with
-   `/speckit-implement` from T001, story by story, pushing once per story.
+1. **E6 implementation** with `/speckit-implement` from T001, story by story, pushing once per
+   story. Board tasks per story are in `tasks.md` "Board Mapping": Setup is #203 (T001, T002),
+   Foundational #140, US1 #141 and #142, US2 #150 to #152, US3 #144 and #145, US4 #147 and #148;
+   Polish is #203 again.
 2. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
    §4) and the four sounds (T028: `afplay` the files T025 generates). On an iPhone: a sound's delay,
    silent mode and other apps' music (quickstart §5). Then E8 (#169).

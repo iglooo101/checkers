@@ -245,7 +245,7 @@ description: "Task list for the settings, themes, sound and rules slice (epic E6
 
 ## Board Mapping
 
-Each board issue lists its task IDs; #138 Reconcile adds an issue for the slice's setup and validation (T001, T002, T029–T035), as #201 did for E5:
+Each board issue lists its task IDs and the FRD IDs of the spec's traceability table; #138 Reconcile added #203 for the slice's setup and validation (T001, T002, T029–T035), as #201 did for E5, blocked by the accessibility passes #142 and #152:
 
 | Board task | Tasks |
 |---|---|
@@ -259,7 +259,7 @@ Each board issue lists its task IDs; #138 Reconcile adds an issue for the slice'
 | #150 Illustrated rules content | T011, T014, T015 |
 | #151 Rules reachable from Home and the game menu | T012, T013, T015 |
 | #152 Accessibility pass: Rules | T012, T029, T030 |
-| *(new)* Validate the E6 slice and update project docs | T001, T002, T029–T035 |
+| #203 Validate the E6 slice and update project docs | T001, T002, T029–T035 |
 
 ## Notes
 
