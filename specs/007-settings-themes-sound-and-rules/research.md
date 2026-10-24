@@ -226,6 +226,14 @@ throwaway programs outside the repository.
 - **Rationale**: System controls bring their own labels, values and Dynamic Type; the board's
   colors are not text, so the audit's contrast check does not reach them, and `US4ContrastTests`
   covers them per theme.
+- **Found in US3 (2026-10-24)**: inside an inline picker row the check does reach them. The row
+  merges its label into one text element whose frame covers the preview and the name, and the
+  audit measured Classic's and Playful's squares as the name's colors ("Contrast failed" on the
+  Classic and Playful rows, whichever theme was chosen; Modern's squares passed). Containing the
+  row's children exposed the preview and its crowns as elements instead. The rows are now one
+  button per theme, with the selected trait and a checkmark hidden from VoiceOver, so the name is
+  a text element of its own; the row's element still has the theme's name as its label and the
+  selected trait (checked with XCUITest; hearing it with VoiceOver is in quickstart §4).
 - **Alternatives considered**: a custom grid of theme tiles (rejected: more code and its own
   selection semantics for VoiceOver).
 

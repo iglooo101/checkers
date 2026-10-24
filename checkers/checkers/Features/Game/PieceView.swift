@@ -9,6 +9,7 @@ struct PieceView: View {
     let isSelected: Bool
     var isHinted = false
     let size: CGFloat
+    @Environment(\.boardTheme) private var theme
 
     var body: some View {
         ZStack {
@@ -19,7 +20,7 @@ struct PieceView: View {
                 Image(systemName: "crown.fill")
                     .resizable()
                     .scaledToFit()
-                    .foregroundStyle(Palette.crown(for: piece.side).color)
+                    .foregroundStyle(Palette.crown(for: piece.side).color(in: theme))
                     .frame(width: size * 0.42)
             }
         }
@@ -27,11 +28,11 @@ struct PieceView: View {
         .overlay {
             if isSelected {
                 Circle()
-                    .stroke(Palette.selection.color, lineWidth: max(2, size * 0.09))
+                    .stroke(Palette.selection.color(in: theme), lineWidth: max(2, size * 0.09))
                     .padding(size * 0.05)
             } else if isHinted {
                 Circle()
-                    .stroke(Palette.hint.color, lineWidth: max(1.5, size * 0.04))
+                    .stroke(Palette.hint.color(in: theme), lineWidth: max(1.5, size * 0.04))
                     .padding(size * 0.06)
             }
         }
@@ -39,11 +40,13 @@ struct PieceView: View {
     }
 
     private var fill: Color {
-        piece.side == .light ? Palette.pieceLight.color : Palette.pieceDark.color
+        piece.side == .light
+            ? Palette.pieceLight.color(in: theme) : Palette.pieceDark.color(in: theme)
     }
 
     private var edge: Color {
-        piece.side == .light ? Palette.pieceLightEdge.color : Palette.pieceDarkEdge.color
+        piece.side == .light
+            ? Palette.pieceLightEdge.color(in: theme) : Palette.pieceDarkEdge.color(in: theme)
     }
 }
 
@@ -62,7 +65,7 @@ struct PieceView: View {
             }
         }
     }
-    .background(Palette.boardDarkSquare.color)
+    .background(Palette.boardDarkSquare.color(in: .classic))
 }
 
 #Preview("Pieces, dark") {
@@ -70,6 +73,6 @@ struct PieceView: View {
         PieceView(piece: Piece(side: .light, kind: .king), isSelected: true, size: 60)
         PieceView(piece: Piece(side: .dark, kind: .king), isSelected: false, size: 60)
     }
-    .background(Palette.boardDarkSquare.color)
+    .background(Palette.boardDarkSquare.color(in: .classic))
     .preferredColorScheme(.dark)
 }

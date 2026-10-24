@@ -16,6 +16,7 @@ struct BoardPicture: View {
     var targets: Set<Square> = []
     /// What VoiceOver says about the picture; `nil` hides it, for a decorative picture.
     var description: LocalizedStringResource?
+    @Environment(\.boardTheme) private var theme
 
     private static let layout = BoardLayout(bottomSide: .light)
     private static let frameWidth: CGFloat = 3
@@ -33,7 +34,7 @@ struct BoardPicture: View {
                 }
             }
             .padding(Self.frameWidth)
-            .background(Palette.boardFrame.color)
+            .background(Palette.boardFrame.color(in: theme))
         }
         .aspectRatio(aspectRatio, contentMode: .fit)
         .accessibilityElement(children: .ignore)
@@ -50,10 +51,10 @@ struct BoardPicture: View {
     private func cellView(row: Int, column: Int, size: CGFloat) -> some View {
         if let square = Self.layout.square(row: row, column: column) {
             ZStack {
-                Rectangle().fill(Palette.boardDarkSquare.color)
+                Rectangle().fill(Palette.boardDarkSquare.color(in: theme))
                 if targets.contains(square) {
                     Circle()
-                        .fill(Palette.target.color)
+                        .fill(Palette.target.color(in: theme))
                         .frame(width: size * 0.28, height: size * 0.28)
                 }
                 if let piece = position.piece(at: square) {
@@ -65,7 +66,7 @@ struct BoardPicture: View {
             .frame(width: size, height: size)
         } else {
             Rectangle()
-                .fill(Palette.boardLightSquare.color)
+                .fill(Palette.boardLightSquare.color(in: theme))
                 .frame(width: size, height: size)
         }
     }

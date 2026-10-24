@@ -41,9 +41,9 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 6/17 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 9/17 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **33/41** | **128/154** | |
+| | **Total** | | | | **33/41** | **131/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -57,11 +57,8 @@ Epics are listed in execution order.
 - #144 Classic, Modern and Playful themes as asset-catalog colors with dark variants
 - #145 Theme picker with board previews
 - #149 F6.4: Rules screen
-- #150 Illustrated rules content: setup, moving, captures, chains, crowning, win/draw, undo/resign
-- #151 Rules reachable from Home and the game menu
 - #152 Accessibility pass: Rules
 - #203 Validate the E6 slice and update project docs
-- #204 Give CI's build-and-test job a 45-minute time limit
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -89,13 +86,13 @@ game in seven illustrated sections.
    reconciled (#138: task IDs on every board task, #203 added for setup and validation), so F6.0
    (#133) is done. **Implementation** (`/speckit-implement`): Setup, Foundational (#140 Done)
    and US1 (the move hints switch) landed on the branch with CI run 40069158202 green. US2 (the
-   Rules screen) passed every test in CI run 40071432056, but `build-and-test` reached its
-   30-minute limit during "Launch timing", so `CI gate` failed; #204 (T036) raises the limit to
-   45 minutes, and its push re-runs CI for US2. #150 and #151 close once it is green. **Next:
-   US3** from the local branch `wip/007-us3-themes` (T016–T020 applied;
-   `testUS5_auditSettings` fails on the Classic theme row's contrast, to fix first), then the
-   visual review (T021), US4 from the drafts in that
-   branch's `specs/007-…/wip-drafts/`, and Polish. The plan measured the Modern and Playful
+   Rules screen) passed every test but first reached `build-and-test`'s 30-minute limit; with
+   45 minutes (#204, T036) CI run 40116301945 passed, #150, #151 and #204 are Done, and `main`
+   is at `3b8ba4d`. US3 (T016–T020: three themes, chosen in Settings with previews) is pushed,
+   its CI to check; the theme rows became buttons, since an inline picker's rows failed the
+   contrast audit (research R11). **Next**: the visual review (T021, with the user), US4 from
+   the drafts on the local branch `wip/007-us3-themes` (`specs/007-…/wip-drafts/`), and Polish.
+   The plan measured the Modern and Playful
    colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
    0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
    during implementation: approve the two themes (T021) and the four sounds (T028).
@@ -145,12 +142,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); on the Mac each `play()`
   call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
   `AVAudioEngine` (E6 research R7). Silent mode and other apps' music are checked by hand too.
-- E6 US3's Settings audit fails: the accessibility audit reports two contrast issues on the
-  Classic theme row (its frame covers the board preview and the name). Check whether the preview
-  next to the text causes it (move it out of the row's label, or keep it from the audit), and
-  only then consider an allow-list entry for the system picker row (plan, "Audit allow-list").
-- E6 US3 and the US4 drafts live only on the local branch `wip/007-us3-themes` (not pushed);
-  bring them onto the slice branch before more work there.
+- E6's US4 drafts live only on the local branch `wip/007-us3-themes` (not pushed;
+  `specs/007-…/wip-drafts/`); keep the branch until US4 has taken them, then the user deletes it.
 - E6's sound tests prepare real `AVAudioPlayer`s in CI's simulator (T023: the bundled files, and
   a bank over a directory with a file missing); if preparing fails on a runner without audio
   output, the success case checks loading only. The "Sound effects aren't available right now."
@@ -444,7 +437,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 6/17 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 9/17 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
@@ -472,11 +465,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F6.4 Rules screen** (#149) · FR-HELP-01, FR-HELP-02, FR-NAV-04, FR-A11Y-04, FR-PLAT-03
 
-- [~] #150 Illustrated rules content: setup, moving, captures, chains, crowning, win/draw, undo/resign · M
-- [~] #151 Rules reachable from Home and the game menu · S
+- [x] #150 Illustrated rules content: setup, moving, captures, chains, crowning, win/draw, undo/resign · M
+- [x] #151 Rules reachable from Home and the game menu · S
 - [~] #152 Accessibility pass: Rules · S
 - [~] #203 Validate the E6 slice and update project docs · S · after #142, #152
-- [~] #204 Give CI's build-and-test job a 45-minute time limit · S
+- [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
 ### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 0/15 tasks
 
@@ -839,3 +832,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   reached its 30-minute limit during "Launch timing" (US2's UI tests added about 50 s, and the
   runner was about 15% slower). #204 (T036) added under F6.4 and In Progress: the limit is now 45
   minutes, and its push re-runs CI for US2's code. Backlog now 154 tasks (#1–#204).
+- 2026-10-24: CI run 40116301945 green on `3b8ba4d` (`build-and-test` 24 of 45 minutes): #204,
+  #150 and #151 Done, `main` fast-forwarded to `3b8ba4d`. US3 (T016–T020) brought onto the
+  slice branch from `wip/007-us3-themes`; the Settings audit's contrast failures came from the
+  inline picker merging each row's preview and name into one text element, so the theme rows
+  are buttons with the selected trait (research R11, contract updated). 294 tests pass locally;
+  pushed, CI to check. #144 waits for T021, #145 closes once CI is green.

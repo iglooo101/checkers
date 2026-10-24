@@ -39,7 +39,7 @@ struct LocalizationTests {
         "Hard: %@, %@, %@", "Your previous game couldn't be restored.",
         "Your record couldn't be restored and starts again from zero.", "OK",
         // Settings (specs/007-settings-themes-sound-and-rules/contracts/screens.md)
-        "Game", "Move hints",
+        "Board theme", "Classic", "Modern", "Playful", "Game", "Move hints",
         "Rings the pieces that can move and dots the squares the selected piece can go to.",
         // Rules (specs/007-settings-themes-sound-and-rules/contracts/rules-content.md): the
         // menu illustration's items; the titles, texts and descriptions are `rulesStrings`.
@@ -74,8 +74,9 @@ struct LocalizationTests {
 
     @Test("US7 FR-006: the web prototype's strings are gone from the catalog")
     func prototypeStringsRemoved() throws {
-        let leftovers = try Self.catalogKeys().intersection(
-            ["Classic", "Modern", "Play", "Playful", "Screen"])
+        // "Classic", "Modern" and "Playful" are the board themes' names since
+        // specs/007-settings-themes-sound-and-rules (US3).
+        let leftovers = try Self.catalogKeys().intersection(["Play", "Screen"])
         #expect(leftovers.isEmpty, "Still in the catalog: \(leftovers.sorted())")
     }
 }

@@ -14,6 +14,7 @@ struct BoardView: View {
     }
 
     @State private var drag: Drag?
+    @Environment(\.boardTheme) private var theme
     /// The square VoiceOver focus is on, moved to each step's landing square (FR-A11Y-02).
     @AccessibilityFocusState private var focusedSquare: Square?
 
@@ -37,7 +38,7 @@ struct BoardView: View {
             .frame(width: side, height: side)
             .coordinateSpace(.named(Self.coordinateSpace))
             .padding(Self.frameWidth)
-            .background(Palette.boardFrame.color)
+            .background(Palette.boardFrame.color(in: theme))
             .accessibilityElement(children: .contain)
             .accessibilityIdentifier("board")
             .position(x: proxy.size.width / 2, y: proxy.size.height / 2)
@@ -54,10 +55,10 @@ struct BoardView: View {
             let piece = session.state.position.piece(at: square)
             let isSelected = session.selection == square
             ZStack {
-                Rectangle().fill(Palette.boardDarkSquare.color)
+                Rectangle().fill(Palette.boardDarkSquare.color(in: theme))
                 if session.targets.contains(square) {
                     Circle()
-                        .fill(Palette.target.color)
+                        .fill(Palette.target.color(in: theme))
                         .frame(width: size * 0.28, height: size * 0.28)
                 }
                 if let piece {
@@ -81,7 +82,7 @@ struct BoardView: View {
             .accessibilityFocused($focusedSquare, equals: square)
         } else {
             Rectangle()
-                .fill(Palette.boardLightSquare.color)
+                .fill(Palette.boardLightSquare.color(in: theme))
                 .frame(width: size, height: size)
                 .accessibilityHidden(true)
         }
@@ -163,5 +164,27 @@ private func everyMarkSession() -> GameSession {
 
 #Preview("Every mark, dark mode") {
     BoardView(session: everyMarkSession())
+        .preferredColorScheme(.dark)
+}
+
+#Preview("Every mark, Modern") {
+    BoardView(session: everyMarkSession())
+        .environment(\.boardTheme, .modern)
+}
+
+#Preview("Every mark, Modern, dark mode") {
+    BoardView(session: everyMarkSession())
+        .environment(\.boardTheme, .modern)
+        .preferredColorScheme(.dark)
+}
+
+#Preview("Every mark, Playful") {
+    BoardView(session: everyMarkSession())
+        .environment(\.boardTheme, .playful)
+}
+
+#Preview("Every mark, Playful, dark mode") {
+    BoardView(session: everyMarkSession())
+        .environment(\.boardTheme, .playful)
         .preferredColorScheme(.dark)
 }

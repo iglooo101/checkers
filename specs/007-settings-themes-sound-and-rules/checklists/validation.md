@@ -59,7 +59,25 @@ measurements below check the ones the code depends on.
   (`US2RulesUITests`, `US7NavigationUITests`, `testUS5_auditRules`). `US2RulesTests` reads
   contracts/rules-content.md itself and requires every title, text and picture description to
   match it word for word, so the contract stays the one source; `LocalizationTests` takes the
-  Rules strings from `RulesContent`. Section texts: 364 words; descriptions: 156.
+  Rules strings from `RulesContent`. Section texts: 364 words; descriptions: 156. CI run
+  40071432056 on `4abbe44` passed every test, but `build-and-test` reached its 30-minute limit
+  during "Launch timing" (25 minutes of build and tests against US1's 19: US2's UI tests added
+  about 50 s, and the runner was about 15% slower), so `CI gate` failed. With the limit at 45
+  minutes (#204, T036), CI run 40116301945 on `3b8ba4d` passed: `build-and-test` 24 minutes,
+  `engine-strength` 7.
+- US3 (T016–T020), 2026-10-24: written on a local work branch and brought onto the slice branch
+  in one commit. The three themes' colors are namespaced asset folders (`Classic/`, `Modern/`,
+  `Playful/`); `US4ContrastTests` passes its 8 pairs for every theme in light and dark, and
+  `US3ThemeTests` pins Classic to E7's values and Modern and Playful to research R4's table.
+  `testUS5_auditSettings` failed with the theme rows as an inline picker: "Contrast failed" on
+  the Classic and Playful rows whichever theme was chosen. A probe found each picker row's label
+  merged into one text element covering the preview and the name (142 × 72 points), so the
+  audit measured the board's squares as the name's colors; containing the row's children
+  exposed the preview and its crowns as elements and failed "Element has no description"
+  instead. As one button per theme (selected trait, checkmark hidden from VoiceOver) the name is
+  its own text element (54 × 20 points) and every audit type passes (research R11, "Found in
+  US3"). `scripts/test.sh` passes on the iPhone 17 simulator: **294 tests** (155 app unit tests
+  in 35 suites, 86 engine tests, 53 UI tests), formatting strict and the string catalog in sync.
 
 ## 1. All blocking tests (SC-001 to SC-003, SC-006, SC-007, SC-009)
 

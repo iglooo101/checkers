@@ -62,6 +62,8 @@ On the iPhone 17 simulator:
   still pass `US4ContrastTests`.
 - Continue a saved game after choosing Playful and relaunching: the board is Playful from the
   first moment.
+- VoiceOver on, in Settings: each theme row is read as its name, the chosen one as selected, and
+  nothing is read for the small boards or the checkmark.
 
 ## 5. Sounds, by ear and on a device (US4, FR-019, SC-003 to SC-005)
 

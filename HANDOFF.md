@@ -32,15 +32,15 @@ Last updated: 2026-10-24
   `git fetch origin main:main` before comparing branches. `001-project-foundation` to
   `006-saving-and-statistics` were merged and deleted (the auto-mode safety check blocks branch
   deletion, so the user runs it once the next slice's branch exists). `main` (local and GitHub)
-  is at `977f5e6`, E5's close-out plus a plan fix. **E6 is under way on
-  `007-settings-themes-sound-and-rules`** (pushed, `CI gate` green on every commit): spec,
-  clarify and plan done, `tasks.md` written and analyzed, the 12 analysis findings applied
-  (#137, 9b881b9) and the board reconciled (#138; F6.0 done). **Implementation**: Setup,
-  Foundational and US1 (T001–T010) are on the branch, CI run 40069158202 green; US2 (T011–T015)
-  passed every test in CI run 40071432056, but `build-and-test` reached its 30-minute limit, so
-  **#204 (T036) raises it to 45 minutes and re-runs CI for US2**. **US3 (T016–T020) and the
-  US4 drafts are only on the local branch `wip/007-us3-themes`** (commit `ca00675`, not pushed):
-  US3's tests pass except `testUS5_auditSettings`. The slice branch's working tree is clean.
+  is at `3b8ba4d`: E6 Setup to US2 and the 45-minute CI limit. **E6 is under way on
+  `007-settings-themes-sound-and-rules`** (pushed): spec, clarify and plan done, `tasks.md`
+  written and analyzed, the 12 analysis findings applied (#137, 9b881b9) and the board
+  reconciled (#138; F6.0 done). **Implementation**: Setup, Foundational, US1 and US2
+  (T001–T015) passed CI (run 40116301945 on `3b8ba4d`, after #204/T036 raised `build-and-test`'s
+  limit from 30 to 45 minutes); **US3 (T016–T020) is pushed, its CI to check**; the theme rows
+  are buttons, not an inline picker (research R11, "Found in US3"). **The US4 drafts are only on
+  the local branch `wip/007-us3-themes`** (commit `ca00675`, `specs/007-…/wip-drafts/`, not
+  pushed); keep it until US4 has taken them.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -49,15 +49,18 @@ Last updated: 2026-10-24
   `FR-MOVE-03`; section 19 lists what is out of scope.
 - **App**: **fully native SwiftUI** (E3): Home, Game setup, a two-player game screen (tap and
   drag, hints, chains, crowning, undo, resign, result panel, Play again), Statistics (E5), and
-  since E6 Settings (move hints so far) and Rules (seven sections with engine-built pictures);
-  the placeholders and the web prototype are gone. **E6 so far**: `SettingsValues` and
-  `AppSettings` (`Features/Settings/`) in `UserDefaults` under `boardTheme`, `soundEffects` and
+  since E6 Settings (board theme and move hints so far) and Rules (seven sections with
+  engine-built pictures); the placeholders and the web prototype are gone. **E6 so far**:
+  `SettingsValues` and `AppSettings` (`Features/Settings/`) in `UserDefaults` under
+  `boardTheme`, `soundEffects` and
   `moveHints`, read per key (an unreadable one takes its default, logged); the router hands
   `settings` to every session, and with hints off `hintedPieces` and `targets` are empty;
   `RulesContent` and `RulesView` (`Features/Rules/`), whose texts a test checks against
   `specs/007-…/contracts/rules-content.md`; `BoardPicture` (`Features/Game/`) draws still
-  boards; UI tests pass settings as typed launch arguments (`launch(settings:)`,
-  `setSwitch(_:isOn:)` in `AppScreens`). `GameSession` and
+  boards; board themes (US3) are namespaced asset folders (`Classic/`, `Modern/`, `Playful/`)
+  read through `Palette.color(in:)` and the `boardTheme` environment value set by `RootView`;
+  UI tests pass settings as typed launch arguments (`launch(settings:)`, `setSwitch(_:isOn:)` in
+  `AppScreens`). `GameSession` and
   `AppRouter` hold the interaction and navigation rules; setup choices are remembered in
   `UserDefaults` (declared in the privacy manifest). The **`CheckersEngine` package holds the
   rules engine** (E2); public API in `specs/002-rules-engine/contracts/engine-api.md`, whose
@@ -628,6 +631,25 @@ Last updated: 2026-10-24
 - **Foreground `sleep` is blocked**: wait for a run with `run_in_background` and its
   notification, or an `until` loop.
 
+## Lessons learned (E6 US2's CI and US3, 2026-10-24)
+
+- **A cancelled job can be a time limit, not a push**: US2's run showed "cancelled" on Launch
+  timing with every test passed; the job had reached `timeout-minutes`. Compare the job's start
+  and end with the limit before rerunning, and compare per-test durations between two runs'
+  `test-results` artifacts (`gh run download <id> -n test-results`, then
+  `xcrun xcresulttool get test-results tests`) to tell new tests from a slow runner.
+- **An inline picker row is one text element**: SwiftUI merges a picker row's label into a
+  static text whose frame covers everything in it, and ignores `accessibilityHidden` inside it.
+  With a picture beside the name, the contrast audit measured the picture's colors as the
+  text's. `.accessibilityElement(children: .contain)` exposed the picture's parts as elements
+  instead. A `Button` per row, with `.isSelected` and a hidden checkmark, keeps the name its own
+  element.
+- **Try layout variants in one build**: a temporary `UserDefaults` key read by the view (a launch
+  argument such as `-probeVariant A`) let one throwaway UI test audit three designs and print
+  their element trees (`app.debugDescription`) in a single run. Remove both before committing.
+- **`scripts/lib.sh` turns on `set -euo pipefail`**: after `source scripts/lib.sh` in a command,
+  a `grep` that finds nothing ends the shell silently; add `set +e` when the command goes on.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -635,20 +657,18 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6: check the CI run for #204** (the 45-minute limit, which also re-checks US2). If it is
-   green, comment on and close #204, #151 (T012, T013, T015 are all done) and #150 (T011, T014,
-   T015), and fast-forward `main`; #152 waits for T029–T030.
-2. **E6 US3** with `/speckit-implement`: bring `wip/007-us3-themes` onto the slice branch
-   (`git checkout 007-settings-themes-sound-and-rules && git merge --squash wip/007-us3-themes`,
-   then move `wip-drafts/` out of the commit), fix the Settings audit's contrast issues on the
-   Classic theme row (see Risks in `EXECUTION_PLAN.md`), mark T016–T020 done, push, and run T021
-   (the user's visual review of Modern and Playful, with screenshots). Then US4 (T022–T028) from
-   the drafts in `wip-drafts/` (`make-sounds.py` to `scripts/`, the three sound files to
-   `Features/Sound/`, the tests to their targets; then `GameSession`, the router, `CheckersApp`
-   and the Sound section of Settings per T027), the user's listening review (T028), and Polish
+1. **E6: check US3's CI** (the push of T016–T020). If it is green, comment on and close #145
+   (T018, T020) and fast-forward `main`; #144 waits for T021, #141 for T027, #152 for T029–T030.
+2. **E6 T021**: the user's visual review of Modern and Playful (screenshots in light and dark,
+   beside the prototype's designs; quickstart §4). Then US4 (T022–T028) from the drafts on the
+   local branch `wip/007-us3-themes`, read with `git show wip/007-us3-themes:<path>` where
+   `<path>` is `specs/007-settings-themes-sound-and-rules/wip-drafts/<file>` (or copied into the
+   scratchpad): `make-sounds.py` to `scripts/`, the three Swift files to `Features/Sound/`, the
+   tests to their targets, then `GameSession`, the router, `CheckersApp` and the Sound section of
+   Settings per T027. Then the user's listening review (T028), and Polish
    (T029–T035). Board tasks per story are in `tasks.md` "Board Mapping"; #141 closes after T020
-   and T027, #142 and #152 after T029–T030. Delete `wip/007-us3-themes` once merged (the user
-   runs `git branch -D`).
+   and T027, #142 and #152 after T029–T030. Delete `wip/007-us3-themes` once US4 has taken its
+   drafts (the user runs `git branch -D`).
 3. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
    §4) and the four sounds (T028: `afplay` the files T025 generates). On an iPhone: a sound's delay,
    silent mode and other apps' music (quickstart §5). Then E8 (#169).

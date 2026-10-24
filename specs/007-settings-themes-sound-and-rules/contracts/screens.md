@@ -18,7 +18,7 @@ A form, titled Settings, opened from Home (`home.settings`) and the game menu
 
 | Section | Element | Text | Identifier |
 |---|---|---|---|
-| Board theme | Inline picker, one row per theme: preview (hidden from VoiceOver) and name; the chosen row has a checkmark | Classic · Modern · Playful | `settings.theme.classic`, `settings.theme.modern`, `settings.theme.playful` |
+| Board theme | One button per theme: preview (hidden from VoiceOver) and name; the chosen row has a checkmark (hidden from VoiceOver) and the selected trait. Not an inline picker: its rows merge the label into one text element whose frame takes in the preview, which fails the contrast audit (found in US3) | Classic · Modern · Playful | `settings.theme.classic`, `settings.theme.modern`, `settings.theme.playful` |
 | Sound | Toggle | Sound effects | `settings.soundEffects` |
 | Sound | Footer, only while `AppRouter.showsSoundNotice` (sound effects on, sounds unable to play) | "Sound effects aren't available right now." | `settings.soundUnavailable` |
 | Game | Toggle, with footer | Move hints · "Rings the pieces that can move and dots the squares the selected piece can go to." | `settings.moveHints` |

@@ -55,12 +55,12 @@ struct ResultPanel: View {
             }
         }
     }
-    .background(Palette.boardDarkSquare.color)
+    .background(Palette.boardDarkSquare.color(in: .classic))
 }
 
 #Preview("Large text, dark") {
     ResultPanel(text: "Dark wins: no moves left", playAgain: {}, home: {})
-        .background(Palette.boardDarkSquare.color)
+        .background(Palette.boardDarkSquare.color(in: .classic))
         .environment(\.dynamicTypeSize, .accessibility5)
         .preferredColorScheme(.dark)
 }

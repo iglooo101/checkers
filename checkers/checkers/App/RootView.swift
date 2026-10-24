@@ -11,6 +11,7 @@ struct RootView: View {
                     destination(for: route)
                 }
         }
+        .environment(\.boardTheme, router.settings.boardTheme)
     }
 
     @ViewBuilder

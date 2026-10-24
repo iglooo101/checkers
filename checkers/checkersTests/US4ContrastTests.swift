@@ -24,17 +24,27 @@ struct US4ContrastTests {
         Pair(mark: .crownOnDark, background: .pieceDark),
     ]
 
+    /// A theme in one appearance (specs/007-settings-themes-sound-and-rules/research.md R4).
+    nonisolated struct Look: CustomTestStringConvertible, Sendable {
+        let theme: BoardTheme
+        let style: UIUserInterfaceStyle
+        var testDescription: String { "\(theme.rawValue), \(style == .light ? "light" : "dark")" }
+    }
+
+    nonisolated static let looks = BoardTheme.allCases.flatMap { theme in
+        [UIUserInterfaceStyle.light, .dark].map { Look(theme: theme, style: $0) }
+    }
+
     @Test(
-        "US4 FR-A11Y-05: every piece and mark has at least 3:1 contrast with what it is drawn on",
-        arguments: pairs, [UIUserInterfaceStyle.light, .dark])
-    func contrast(pair: Pair, style: UIUserInterfaceStyle) throws {
-        let traits = UITraitCollection(userInterfaceStyle: style)
-        let background = try Self.components(pair.background, traits)
-        let mark = Self.blend(try Self.components(pair.mark, traits), over: background)
+        "US4 FR-A11Y-05 FR-SET-02: every piece and mark has 3:1 contrast with what it is on, in every theme",
+        arguments: pairs, looks)
+    func contrast(pair: Pair, look: Look) throws {
+        let traits = UITraitCollection(userInterfaceStyle: look.style)
+        let background = try Self.components(pair.background, in: look.theme, traits)
+        let mark = Self.blend(
+            try Self.components(pair.mark, in: look.theme, traits), over: background)
         let ratio = Self.contrastRatio(mark, background)
-        #expect(
-            ratio >= 3, "\(pair.testDescription): \(ratio) in \(style == .light ? "light" : "dark")"
-        )
+        #expect(ratio >= 3, "\(pair.testDescription): \(ratio) in \(look.testDescription)")
     }
 
     @Test("US4 FR-A11Y-05: each side's king has its own crown color")
@@ -43,9 +53,12 @@ struct US4ContrastTests {
         #expect(Palette.crown(for: .dark) == .crownOnDark)
     }
 
-    /// sRGB components and alpha of an asset color in the given appearance.
-    static func components(_ color: Palette, _ traits: UITraitCollection) throws -> [Double] {
-        let named = try #require(UIColor(named: color.rawValue, in: .main, compatibleWith: traits))
+    /// sRGB components and alpha of a theme's asset color in the given appearance.
+    static func components(_ color: Palette, in theme: BoardTheme, _ traits: UITraitCollection)
+        throws -> [Double]
+    {
+        let named = try #require(
+            UIColor(named: color.assetName(in: theme), in: .main, compatibleWith: traits))
         var red: CGFloat = 0
         var green: CGFloat = 0
         var blue: CGFloat = 0

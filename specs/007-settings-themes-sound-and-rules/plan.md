@@ -101,7 +101,9 @@ script tests; nothing from it ships but the four WAV files it writes.
 | Setup and Home, while a system alert shows | A static text of the alert, or an element the audit does not name | Dynamic Type, "partially unsupported" only | Unchanged from E5. |
 
 New screens add no entries; if the Settings form's system toggles or picker are reported, the
-entry is added here with its reason, as for the setup form.
+entry is added here with its reason, as for the setup form. The theme rows needed none: they are
+buttons rather than an inline picker, whose merged rows failed the contrast audit (research R11,
+"Found in US3").
 
 ### Other recorded decisions
 

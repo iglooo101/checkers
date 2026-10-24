@@ -140,6 +140,9 @@
     "After a jump, if the same piece can jump again, it must go on jumping, one jump at a time. Your turn ends when it cannot jump any further." : {
 
     },
+    "Board theme" : {
+
+    },
     "Cancel" : {
 
     },
@@ -150,6 +153,9 @@
 
     },
     "Checkers is played on the dark squares of an 8 by 8 board. Each side starts with 12 men on the dark squares of the three rows nearest to it. Light moves first, then the sides take turns." : {
+
+    },
+    "Classic" : {
 
     },
     "Computer" : {
@@ -344,6 +350,9 @@
         }
       }
     },
+    "Modern" : {
+
+    },
     "Move hints" : {
 
     },
@@ -366,6 +375,9 @@
 
     },
     "Play again" : {
+
+    },
+    "Playful" : {
 
     },
     "Random" : {
