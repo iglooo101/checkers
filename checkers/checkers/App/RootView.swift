@@ -25,14 +25,10 @@ struct RootView: View {
         case .statistics:
             StatisticsView(record: router.record)
         case .rules:
-            placeholder("Rules", for: route)
+            RulesView()
         case .settings:
             SettingsView(router: router)
         }
-    }
-
-    private func placeholder(_ title: LocalizedStringResource, for route: Route) -> some View {
-        PlaceholderView(title: title, message: PlaceholderText.message(for: route) ?? title)
     }
 }
 

@@ -50,15 +50,4 @@ struct US7NavigationTests {
         #expect(try games.load()?.state == state)
     }
 
-    @Test(
-        "US7 FR-NAV-02: Rules says what it will contain; Statistics and Settings are no longer placeholders"
-    )
-    func placeholderMessages() {
-        #expect(PlaceholderText.message(for: .statistics) == nil)
-        #expect(
-            PlaceholderText.message(for: .rules)?.key
-                == "How to play American checkers will be explained here.")
-        #expect(PlaceholderText.message(for: .settings) == nil)
-        #expect(PlaceholderText.message(for: .game) == nil)
-    }
 }

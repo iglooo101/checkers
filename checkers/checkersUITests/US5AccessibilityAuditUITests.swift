@@ -243,11 +243,12 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         try audit(app)
     }
 
-    /// FR-A11Y-04: the Rules placeholder.
+    /// FR-A11Y-04: Rules at its top (specs/007-settings-themes-sound-and-rules/contracts/
+    /// screens.md).
     @MainActor
     func testUS5_auditRules() throws {
         let app = launch()
-        open("home.rules", waitingFor: app.element("placeholder.message"))
+        open("home.rules", waitingFor: app.element("rules.board.title"))
         try audit(app)
     }
 

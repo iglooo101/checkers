@@ -6,10 +6,9 @@ import Testing
 struct LocalizationTests {
     /// Every user-facing string in `specs/003-game-experience/contracts/screens.md` and the later
     /// slices' screen contracts.
-    static let screenStrings: Set<String> = [
-        // Home and placeholders
+    static let screenStrings: Set<String> = Set([
+        // Home
         "Checkers", "New game", "Statistics", "Rules", "Settings",
-        "How to play American checkers will be explained here.",
         // Setup
         "Opponent", "Computer", "Two players", "Difficulty", "Easy", "Medium", "Hard", "Side",
         "Light", "Dark", "Random", "Start",
@@ -42,7 +41,17 @@ struct LocalizationTests {
         // Settings (specs/007-settings-themes-sound-and-rules/contracts/screens.md)
         "Game", "Move hints",
         "Rings the pieces that can move and dots the squares the selected piece can go to.",
-    ]
+        // Rules (specs/007-settings-themes-sound-and-rules/contracts/rules-content.md): the
+        // menu illustration's items; the titles, texts and descriptions are `rulesStrings`.
+        "Undo", "Resign",
+    ]).union(rulesStrings)
+
+    /// The Rules screen's titles, texts and picture descriptions, which `US2RulesTests` checks
+    /// word for word against contracts/rules-content.md.
+    static let rulesStrings = Set(
+        RulesContent.sections.flatMap { section in
+            [section.title.key, section.text.key] + section.pictures.map(\.description.key)
+        })
 
     /// Reads the source catalog rather than the compiled string table, which may omit untranslated
     /// source-language keys. `scripts/check-string-catalog.sh` covers completeness in CI.

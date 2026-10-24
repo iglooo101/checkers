@@ -122,16 +122,34 @@
     "A capture is required." : {
 
     },
+    "A capture is required. The Light man on c3 must jump the Dark man on d4 and land on e5. The Light man on g3 cannot move." : {
+
+    },
+    "A man moves one square diagonally forward, onto an empty dark square. Tap a piece, then tap the square it should go to, or drag it there. With move hints on in Settings, the pieces that can move have a thin ring, and the squares the selected piece can go to have a dot." : {
+
+    },
+    "A man that reaches the far row is crowned and becomes a king, marked with a crown. Crowning ends the turn, even in the middle of a chain of jumps. A king moves and captures like a man, one square at a time, but in all four diagonal directions." : {
+
+    },
     "Abandon" : {
 
     },
     "Abandon current game?" : {
 
     },
+    "After a jump, if the same piece can jump again, it must go on jumping, one jump at a time. Your turn ends when it cannot jump any further." : {
+
+    },
     "Cancel" : {
 
     },
+    "Capturing" : {
+
+    },
     "Checkers" : {
+
+    },
+    "Checkers is played on the dark squares of an 8 by 8 board. Each side starts with 12 men on the dark squares of the three rows nearest to it. Light moves first, then the sides take turns." : {
 
     },
     "Computer" : {
@@ -197,6 +215,9 @@
     "Dark wins: no moves left" : {
 
     },
+    "Dark's only man, on h8, is blocked by the Light men on g7 and f6. Dark cannot move, so Light wins." : {
+
+    },
     "Difficulty" : {
 
     },
@@ -244,10 +265,13 @@
     "Home" : {
 
     },
-    "How to play American checkers will be explained here." : {
+    "Jump again." : {
 
     },
-    "Jump again." : {
+    "Jumping again" : {
+
+    },
+    "Kings" : {
 
     },
     "Light" : {
@@ -326,6 +350,9 @@
     "Move undone." : {
 
     },
+    "Moving" : {
+
+    },
     "New game" : {
 
     },
@@ -374,10 +401,46 @@
     "Statistics" : {
 
     },
+    "The Light king on d4 is selected. It can move to c5, e5, c3 or e3. A Dark king is on g7." : {
+
+    },
+    "The Light man now on e5 must jump again, over the Dark man on f6, to g7." : {
+
+    },
+    "The Light man on c3 is selected. It can move to b4 or d4. The other men that can move have a thin ring." : {
+
+    },
+    "The Light man on c3 jumps the Dark man on d4 and lands on e5." : {
+
+    },
+    "The board" : {
+
+    },
+    "The game menu's Undo and Resign." : {
+
+    },
+    "The starting position: 12 Light men on the dark squares of rows 1 to 3, and 12 Dark men on rows 6 to 8." : {
+
+    },
     "Two players" : {
 
     },
     "Undo" : {
+
+    },
+    "Undo and resign" : {
+
+    },
+    "Undo, in the game menu, takes back moves, as far as the start of the game. In a game for two players it takes back the last turn. Against the computer it takes back your last turn and the computer's reply. Resign, also in the game menu, ends the game once you confirm. Against the computer you resign; in a game for two players, the side whose turn it is resigns." : {
+
+    },
+    "When a man is diagonally next to an opposing piece and the square beyond it is empty, it can jump over that piece and capture it. Capturing is mandatory: if you can capture, you must. When there is more than one capture, you choose which one; it does not have to be the longest." : {
+
+    },
+    "Winning and drawing" : {
+
+    },
+    "You win when your opponent cannot move: they have no pieces left, or all their pieces are blocked. You also win when your opponent resigns. The game is a draw when the same position comes up for the third time with the same side to move, or when both sides have made 40 moves in a row without a capture or a man moving. There are no draw offers." : {
 
     },
     "Your previous game couldn't be restored." : {
