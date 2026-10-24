@@ -672,9 +672,8 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E6: check US4's CI** (the push of T022–T027). If it is green, comment on and close #148
    (T023, T024, T026, T027) and #141 (T006–T010, T020, T027), and fast-forward `main`.
-2. **E6 listening review with the user** (T028): the four sounds (`afplay
-   checkers/checkers/Features/Sound/Sounds/<name>.wav`); record the answer in `validation.md` §5,
-   then #147 closes (T021, the themes, was approved: #144 and F6.2 Done). Then Polish (T029–T035): #142 and #152 close after T029–T030, #203 and the
+2. **E6 Polish**: the user approved the themes (T021; #144 and F6.2 Done) and the sounds (T028;
+   #147 closes with #148 once US4's CI is green). Then Polish (T029–T035): #142 and #152 close after T029–T030, #203 and the
    epic at the end. Board tasks per story are in `tasks.md` "Board Mapping".
 3. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
    §4) and the four sounds (T028: `afplay` the files T025 generates). On an iPhone: a sound's delay,

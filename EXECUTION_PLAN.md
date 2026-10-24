@@ -93,7 +93,7 @@ game in seven illustrated sections.
    an inline picker's rows failed the contrast audit (research R11). US4 (T022–T027: four
    generated sounds, the Sound section of Settings, the notice when sounds cannot play) is pushed,
    its CI to check. The user approved Modern and Playful as they are (T021), so F6.2 (#143) is
-   done. **Next**: the user's listening review of the sounds (T028), then Polish (T029–T035).
+   done. The user approved the four sounds as they are (T028). **Next**: Polish (T029–T035).
    The plan measured the Modern and Playful
    colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
    0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
@@ -148,9 +148,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   a bank over a directory with a file missing); if preparing fails on a runner without audio
   output, the success case checks loading only. The "Sound effects aren't available right now."
   notice cannot be caused in UI tests, so it is covered by unit tests and a preview, not the audit.
-- E6's sounds need the user's approval (T028; the themes were approved, T021); a changed sound
-  must still pass its recipe check (`scripts/make-sounds.py --check`, which needs Python 3 on
-  CI's runners) and the length tests.
+- E6's sounds and themes are approved (T021, T028). A later change to a sound must still pass
+  its recipe check (`scripts/make-sounds.py --check`, which needs Python 3 on CI's runners) and
+  the length tests; a changed color must pass `US4ContrastTests`.
 - Timing checks on CI runners: the wall-clock SC-004 check failed once at 10.5 s on a runner
   about three times slower than usual (CI run 40023240169; a rerun passed). It now times the
   counting thread's CPU time (#202). Other wall-clock budgets (E4's Hard turn time, the launch
@@ -849,3 +849,5 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-24: the user approved Modern and Playful as they are (T021, `validation.md` §4): #144
   and F6.2 (#143) Done. The local branch `wip/007-us3-themes` was deleted by the user. Left in
   E6: CI for US4, the listening review (T028), and Polish.
+- 2026-10-24: the user approved the four sounds as they are (T028, `validation.md` §5); #147
+  closes with #148 and #141 once US4's CI is green. Next: Polish (T029–T035).

@@ -120,6 +120,11 @@ measurements below check the ones the code depends on.
 
 ## 5. Sounds, by ear and on a device (US4, FR-019, SC-003 to SC-005)
 
+- 2026-10-24 (T028): the user listened to the four files on the Mac with `afplay` (move, capture,
+  crowning, game end, in that order). **Approved as they are**; the recipes and files stand.
+- Left for the user on an iPhone: a sound's delay after a step (SC-004, within 0.1 s), silent
+  mode and the volume buttons, and other apps' music going on (FR-016).
+
 ## 6. Largest text and Dark Mode (FR-026, SC-007)
 
 ## 7. Launch time (SC-008)
