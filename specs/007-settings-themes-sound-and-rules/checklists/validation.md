@@ -154,24 +154,24 @@ measurements below check the ones the code depends on.
 
 - 2026-10-24 (T029–T030), audits on the iPhone 17 simulator, the blocking plan's device, each
   with all audit types: Settings with its three sections; Settings at the largest accessibility
-  size at its top and scrolled to Move hints; Rules at its top and at its end; a two-player game
-  with c3 selected in Modern and in Playful. **Reported and fixed**: at the largest size,
-  scrolled, "Contrast failed" on no element: rows scrolled under the navigation bar showed through
-  it faintly (iOS 26's scroll edge), and the audit read them as text too faint to read. Settings'
-  navigation bar is now opaque in the form's background (`toolbarBackground`), so nothing shows
-  through; a hard scroll edge was tried first and still let text show through in Dark Mode.
-  **Allowed** (plan, "Audit allow-list"): a contrast report on a static text that lies under the
-  navigation bar, which the audit measures although none of it shows; and, from US4, the Game
-  section's texts that the form cuts at the bottom edge (Dynamic Type). All six pass.
+  size; Rules at its top and at its end; a two-player game with c3 selected in Modern and in
+  Playful. All six pass (twice in a row after the change below); the only allowed report is
+  US4's, the Game section's texts that the form cuts at the bottom edge (Dynamic Type).
+- **A scrolled audit at the largest size is not deterministic, so it was dropped.** At first the
+  largest-size test also audited Settings scrolled to Move hints. That audit reported "Contrast
+  failed", sometimes on no element and sometimes naming the Sound header, whenever the swipe left
+  a large text under the navigation bar: the check measures the text there. A probe found the
+  header at y −13.5 to 70 under a bar ending at 74; CI run 40128348379's recording shows the
+  header cut by the bar, nothing faint on screen. An opaque bar and a hard scroll edge were tried
+  and did not stop it (the audit measures hidden text too), and the report passed or failed with
+  the swipe: twice locally, then on CI and on the iPhone SE. The audit at the top of Settings,
+  with nothing under the bar, passed in every run, so the test audits only the top (what T029
+  asks) and the default-size audit covers the lower sections; Settings keeps the system's bar and
+  the allow-list gained no entry for it.
 - iPhone SE (3rd generation), `accessibility-extra-extra-extra-large`, Dark Mode (the simulator
-  reset to `large` and light afterwards): Rules at its top and end and the Modern and Playful
-  games pass. Settings at its top passes. **Open**: scrolled to Move hints, the audit reports
-  "Contrast failed" on no element. A contrast-only probe at the same position names the Sound
-  header, which lies entirely under the opaque bar (y −13.5 to 70, the bar ending at 74), and a
-  screenshot shows nothing of it; the full audit reports it without the element, so the frame rule
-  cannot allow it. No text on screen is faint; left for the E8 accessibility pass to recheck with
-  a newer Xcode. `testUS5_auditSettings` cannot run at this system size (it expects all three
-  sections on one screen); the largest-size test covers Settings there.
+  reset to `large` and light afterwards): Settings at the largest size, Rules at its top and end,
+  and the Modern and Playful games pass. `testUS5_auditSettings` cannot run at this system size
+  (it expects all three sections on one screen); the largest-size test covers Settings there.
 
 ## 7. Launch time (SC-008)
 

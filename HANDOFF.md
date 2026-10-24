@@ -40,8 +40,7 @@ Last updated: 2026-10-24
   limit from 30 to 45 minutes); US3 (T016–T020) passed CI run 40121012315 on `20096e7`; the
   theme rows are buttons, not an inline picker (research R11, "Found in US3"). US4 (T022–T027)
   passed CI run 40124926324 (rerun) and is on `main` (`646089b`). **Polish (T029–T034) is on the
-  branch; only T035 is left**: the final CI run and the fast-forward of `main`. Settings'
-  navigation bar is opaque since T030. The user approved Modern and Playful as they are
+  branch; only T035 is left**: the final CI run and the fast-forward of `main`. The user approved Modern and Playful as they are
   (T021; F6.2 done) and deleted the local branch `wip/007-us3-themes`.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
@@ -674,12 +673,13 @@ Last updated: 2026-10-24
 - **Never let a docs-only push stand in for an untested code commit**: CI's `changes` job
   compares the whole push, so pushing docs on top of a code commit whose run failed would turn
   the gate green without testing that code. Get a green full run on the code commit first.
-- **Content scrolled under the navigation bar fails the contrast audit**: iOS 26's soft scroll
-  edge, and in Dark Mode even the hard one, lets large rows show through faintly; an opaque bar
-  (`toolbarBackgroundVisibility(.visible, for: .navigationBar)` with the form's background)
-  hides them, but the audit still measures text hidden under the bar, sometimes without naming
-  it. Allow it by frame (the text's `minY` above the bar's `maxY`); the unnamed case stays a
-  manual note.
+- **Do not audit at an arbitrary scroll position**: wherever a swipe stops, large text can lie
+  under the navigation bar, and the contrast check measures it there, sometimes without naming
+  it; an opaque bar or a hard scroll edge does not stop it, because hidden text is measured too.
+  It passed twice locally and failed on CI. Audit a screen at its top (or at its end, where
+  nothing text-like sits under the bar), and cover the rest at the default size. A CI screen
+  recording settles such questions: `gh run download <id> -n test-results`, export the
+  attachments, and take frames with `AVAssetImageGenerator` at the audit's timestamps.
 - **swift-format exempts test names only in the `XCTestCase` class body**: `testUS5_…` in an
   extension fails `AlwaysUseLowerCamelCase`; keep UI tests in the class.
 - **Audits written for the default size cannot run at a system-wide largest size**: a test that
