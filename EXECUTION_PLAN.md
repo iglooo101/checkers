@@ -41,9 +41,9 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 9/17 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 10/17 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **33/41** | **131/154** | |
+| | **Total** | | | | **33/41** | **132/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -55,7 +55,9 @@ Epics are listed in execution order.
 - #142 Accessibility pass: Settings
 - #143 F6.2: Board themes
 - #144 Classic, Modern and Playful themes as asset-catalog colors with dark variants
-- #145 Theme picker with board previews
+- #146 F6.3: Sound effects
+- #147 Sound assets: move, capture, crowning, game end
+- #148 Sound service behind a protocol that respects silent mode and volume
 - #149 F6.4: Rules screen
 - #152 Accessibility pass: Rules
 - #203 Validate the E6 slice and update project docs
@@ -88,10 +90,12 @@ game in seven illustrated sections.
    and US1 (the move hints switch) landed on the branch with CI run 40069158202 green. US2 (the
    Rules screen) passed every test but first reached `build-and-test`'s 30-minute limit; with
    45 minutes (#204, T036) CI run 40116301945 passed, #150, #151 and #204 are Done, and `main`
-   is at `3b8ba4d`. US3 (T016–T020: three themes, chosen in Settings with previews) is pushed,
-   its CI to check; the theme rows became buttons, since an inline picker's rows failed the
-   contrast audit (research R11). **Next**: the visual review (T021, with the user), US4 from
-   the drafts on the local branch `wip/007-us3-themes` (`specs/007-…/wip-drafts/`), and Polish.
+   is at `3b8ba4d`. US3 (T016–T020: three themes, chosen in Settings with previews) passed CI
+   run 40121012315, #145 is Done and `main` is at `20096e7`; the theme rows became buttons, since
+   an inline picker's rows failed the contrast audit (research R11). US4 (T022–T027: four
+   generated sounds, the Sound section of Settings, the notice when sounds cannot play) is pushed,
+   its CI to check. **Next**: the user's reviews of the themes (T021, review page sent) and the
+   sounds (T028), then Polish (T029–T035).
    The plan measured the Modern and Playful
    colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
    0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
@@ -142,8 +146,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); on the Mac each `play()`
   call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
   `AVAudioEngine` (E6 research R7). Silent mode and other apps' music are checked by hand too.
-- E6's US4 drafts live only on the local branch `wip/007-us3-themes` (not pushed;
-  `specs/007-…/wip-drafts/`); keep the branch until US4 has taken them, then the user deletes it.
+- The local branch `wip/007-us3-themes` is no longer needed (US3 and US4 have taken its work);
+  the user deletes it (`git branch -D wip/007-us3-themes`).
 - E6's sound tests prepare real `AVAudioPlayer`s in CI's simulator (T023: the bundled files, and
   a bank over a directory with a file missing); if preparing fails on a runner without audio
   output, the success case checks loading only. The "Sound effects aren't available right now."
@@ -437,7 +441,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 9/17 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 10/17 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
@@ -456,12 +460,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F6.2 Board themes** (#143) · FR-SET-02, FR-GAME-07, FR-A11Y-05
 
 - [~] #144 Classic, Modern and Playful themes as asset-catalog colors with dark variants · M
-- [~] #145 Theme picker with board previews · S
+- [x] #145 Theme picker with board previews · S
 
 **F6.3 Sound effects** (#146) · FR-SND-01, FR-SND-02, FR-SND-03, FR-SND-04, FR-SND-05, FR-PRIV-02
 
-- [ ] #147 Sound assets: move, capture, crowning, game end · S
-- [ ] #148 Sound service behind a protocol that respects silent mode and volume · M
+- [~] #147 Sound assets: move, capture, crowning, game end · S
+- [~] #148 Sound service behind a protocol that respects silent mode and volume · M
 
 **F6.4 Rules screen** (#149) · FR-HELP-01, FR-HELP-02, FR-NAV-04, FR-A11Y-04, FR-PLAT-03
 
@@ -838,3 +842,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   inline picker merging each row's preview and name into one text element, so the theme rows
   are buttons with the selected trait (research R11, contract updated). 294 tests pass locally;
   pushed, CI to check. #144 waits for T021, #145 closes once CI is green.
+- 2026-10-24: CI run 40121012315 green on `20096e7` (`build-and-test` 27 of 45 minutes): #145
+  Done, `main` fast-forwarded to `20096e7`. T021's review page sent to the user. US4 (T022–T027)
+  started (#146, #147, #148 In Progress) and pushed: `scripts/make-sounds.py` and the four sounds
+  (R6's sizes, byte-identical on a rerun), `SoundEffect`, `SoundBank`, `AudioSoundPlayer`, a sound
+  per step and resignation, the Sound section and its notice. E3's `NoWebContentTests` now allows
+  exactly the four sounds; the Settings audit's edge-cut report moved to the Game section and got
+  an allow-list row, as on setup. 309 tests pass locally; CI to check. #141 and #148 close once
+  it is green; #147 waits for T028, #144 for T021.

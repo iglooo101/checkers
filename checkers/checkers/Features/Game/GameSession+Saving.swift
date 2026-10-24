@@ -7,11 +7,13 @@ extension GameSession {
     convenience init(
         saved game: SavedGame, announcer: any Announcer = AccessibilityAnnouncer(),
         opponent: any ComputerOpponent, pacer: any TurnPacer,
-        settings: AppSettings = AppSettings(store: InMemorySettingsStore())
+        settings: AppSettings = AppSettings(store: InMemorySettingsStore()),
+        sounds: any SoundPlayer = RecordingSoundPlayer()
     ) {
         self.init(
             setup: game.setup, playerSide: game.playerSide, state: game.state,
-            announcer: announcer, opponent: opponent, pacer: pacer, settings: settings)
+            announcer: announcer, opponent: opponent, pacer: pacer, settings: settings,
+            sounds: sounds)
     }
 
     /// The game to save: the current state, or the state at the start of the computer's turn

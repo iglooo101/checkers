@@ -61,6 +61,8 @@ final class GameSession {
     @ObservationIgnored let pacer: any TurnPacer
     /// The player's settings; move hints decide what the board highlights (E6 FR-006).
     @ObservationIgnored let settings: AppSettings
+    /// Plays a sound for each step and ending while sound effects are on (E6 FR-014).
+    @ObservationIgnored let sounds: any SoundPlayer
     /// Tells the owner when the game to save changes or the game ends; the router sets it.
     @ObservationIgnored var onEvent: (GameSessionEvent) -> Void = { _ in }
     /// The state at the start of the computer's turn while that turn is unfinished, so a half-
@@ -72,7 +74,8 @@ final class GameSession {
         announcer: any Announcer = AccessibilityAnnouncer(),
         opponent: any ComputerOpponent = ScriptedComputerOpponent(),
         pacer: any TurnPacer = SleepingPacer(),
-        settings: AppSettings = AppSettings(store: InMemorySettingsStore())
+        settings: AppSettings = AppSettings(store: InMemorySettingsStore()),
+        sounds: any SoundPlayer = RecordingSoundPlayer()
     ) {
         self.setup = setup
         self.playerSide = playerSide
@@ -81,6 +84,7 @@ final class GameSession {
         self.opponent = opponent
         self.pacer = pacer
         self.settings = settings
+        self.sounds = sounds
         // A game that starts in the middle of a chain, such as a continued one, has the chain's
         // piece selected, as while the chain was played.
         selection = state.chainSquare
@@ -189,6 +193,7 @@ final class GameSession {
             announcer.announce(result)
         }
         if isOver {
+            playSound(.gameEnd)
             onEvent(.ended)
         }
     }
@@ -250,6 +255,7 @@ final class GameSession {
                 focusSquare = result.to
             }
             announcer.announce(followUp.map { GameText.joined(sentence, $0) } ?? sentence)
+            playSound(SoundEffect.of(result))
             if !result.turnContinues {
                 computerTurnStart = nil
                 onEvent(isOver ? .ended : .saved)

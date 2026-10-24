@@ -41,6 +41,7 @@ struct LocalizationTests {
         // Settings (specs/007-settings-themes-sound-and-rules/contracts/screens.md)
         "Board theme", "Classic", "Modern", "Playful", "Game", "Move hints",
         "Rings the pieces that can move and dots the squares the selected piece can go to.",
+        "Sound", "Sound effects", "Sound effects aren't available right now.",
         // Rules (specs/007-settings-themes-sound-and-rules/contracts/rules-content.md): the
         // menu illustration's items; the titles, texts and descriptions are `rulesStrings`.
         "Undo", "Resign",

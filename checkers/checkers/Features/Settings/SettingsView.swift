@@ -27,6 +27,19 @@ struct SettingsView: View {
                 Text("Board theme").foregroundStyle(Color.primary)
             }
             Section {
+                Toggle("Sound effects", isOn: $settings.soundEffects)
+                    .accessibilityIdentifier("settings.soundEffects")
+            } header: {
+                Text("Sound").foregroundStyle(Color.primary)
+            } footer: {
+                // Shown while sounds cannot play; it goes once one plays again (FR-SND-05).
+                if router.showsSoundNotice {
+                    Text("Sound effects aren't available right now.")
+                        .foregroundStyle(Color.primary)
+                        .accessibilityIdentifier("settings.soundUnavailable")
+                }
+            }
+            Section {
                 Toggle("Move hints", isOn: $settings.moveHints)
                     .accessibilityIdentifier("settings.moveHints")
             } header: {
@@ -103,18 +116,35 @@ private struct ThemeRow: View {
 
 /// A router over in-memory stores, so previews never touch the device's storage.
 @MainActor
-private func previewRouter(theme: BoardTheme = .classic, moveHints: Bool = true) -> AppRouter {
+private func previewRouter(
+    theme: BoardTheme = .classic, moveHints: Bool = true, soundsPlay: Bool = true
+) -> AppRouter {
     var values = SettingsValues.defaults
     values.boardTheme = theme
     values.moveHints = moveHints
     return AppRouter(
-        store: InMemorySetupStore(), settingsStore: InMemorySettingsStore(values))
+        store: InMemorySetupStore(), settingsStore: InMemorySettingsStore(values),
+        sounds: RecordingSoundPlayer(isAvailable: soundsPlay))
 }
 
 #Preview("Hints on") {
     NavigationStack {
         SettingsView(router: previewRouter())
     }
+}
+
+#Preview("Sounds unavailable") {
+    NavigationStack {
+        SettingsView(router: previewRouter(soundsPlay: false))
+    }
+}
+
+#Preview("Sounds unavailable, large text, dark") {
+    NavigationStack {
+        SettingsView(router: previewRouter(soundsPlay: false))
+    }
+    .environment(\.dynamicTypeSize, .accessibility5)
+    .preferredColorScheme(.dark)
 }
 
 #Preview("Modern, hints off, dark") {

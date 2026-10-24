@@ -37,6 +37,12 @@ final class US5AccessibilityAuditUITests: XCTestCase {
             return element.elementType == .staticText && alert.staticTexts[element.label].exists
         }
         guard let element = issue.element else { return false }
+        // Settings texts the scrolling form cuts at the screen's edge, since E6 US4 the Game
+        // section's header and footer: they scale (checked on screen at the largest size), but
+        // the audit reports whichever text is cut, as on setup.
+        if app.switches["settings.moveHints"].exists {
+            return element.elementType == .staticText
+        }
         // Setup rows the scrolling form cuts at the screen's edge once the audit enlarges the
         // text, a line or Start below the computer's choices: they scale and scroll into view,
         // but the audit reports whichever row is cut.

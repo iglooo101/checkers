@@ -26,6 +26,13 @@ final class AppRouter {
     /// The player's settings, shared with every game this router shows (FR-003; specs/
     /// 007-settings-themes-sound-and-rules/research.md R2).
     let settings: AppSettings
+    /// Plays the sounds of every game this router shows (E6 FR-014).
+    @ObservationIgnored let sounds: any SoundPlayer
+    /// Whether Settings says sound effects aren't available: they are on, and the last sound or
+    /// preparation failed (E6 FR-017, FR-SND-05).
+    var showsSoundNotice: Bool {
+        settings.soundEffects && !sounds.isAvailable
+    }
     /// The restore alert Home shows, if any: the saved game's first, then the record's
     /// (FR-SAVE-05, FR-STAT-06).
     var restoreNotice: RestoreNotice? { restoreNotices.first }
@@ -52,7 +59,8 @@ final class AppRouter {
         pacer: any TurnPacer = SleepingPacer(),
         games: any SavedGameStore = InMemorySavedGameStore(),
         records: any RecordStore = InMemoryRecordStore(),
-        settingsStore: any SettingsStore = InMemorySettingsStore()
+        settingsStore: any SettingsStore = InMemorySettingsStore(),
+        sounds: any SoundPlayer = RecordingSoundPlayer()
     ) {
         self.store = store
         self.drawSide = drawSide
@@ -61,6 +69,7 @@ final class AppRouter {
         self.games = games
         self.records = records
         settings = AppSettings(store: settingsStore)
+        self.sounds = sounds
         setup = store.load()
         do {
             hasSavedGame = try games.load() != nil
@@ -126,7 +135,7 @@ final class AppRouter {
         show(
             GameSession(
                 setup: setup, playerSide: playerSide(for: setup), opponent: opponent, pacer: pacer,
-                settings: settings))
+                settings: settings, sounds: sounds))
     }
 
     /// Opens the saved game as it was left (FR-SAVE-03); the computer moves if it is its turn
@@ -143,7 +152,9 @@ final class AppRouter {
             hasSavedGame = false
             return
         }
-        show(GameSession(saved: saved, opponent: opponent, pacer: pacer, settings: settings))
+        show(
+            GameSession(
+                saved: saved, opponent: opponent, pacer: pacer, settings: settings, sounds: sounds))
     }
 
     /// Shows a game in place of setup or of the current game, saving it at its save points, and

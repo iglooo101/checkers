@@ -78,6 +78,31 @@ measurements below check the ones the code depends on.
   its own text element (54 × 20 points) and every audit type passes (research R11, "Found in
   US3"). `scripts/test.sh` passes on the iPhone 17 simulator: **294 tests** (155 app unit tests
   in 35 suites, 86 engine tests, 53 UI tests), formatting strict and the string catalog in sync.
+  CI run 40121012315 on `20096e7` passed: `build-and-test` 27 minutes, `engine-strength` 5.
+- US4 (T022–T027), 2026-10-24: tests first. Before T025 `test-make-sounds.sh` failed (no script,
+  no files); before T026–T027 the unit tests failed to compile (no `SoundEffect`,
+  `RecordingSoundPlayer`). **The sounds** (`scripts/make-sounds.py`, 0.39 s; a second run writes
+  byte-identical files):
+
+  | File | Length | Size | Peak |
+  |---|---|---|---|
+  | `move.wav` | 0.120 s | 10,628 bytes | −3.0 dBFS |
+  | `capture.wav` | 0.220 s | 19,448 bytes | −3.0 dBFS |
+  | `crowning.wav` | 0.450 s | 39,734 bytes | −6.0 dBFS |
+  | `gameEnd.wav` | 1.200 s | 105,884 bytes | −6.0 dBFS |
+
+  Research R6's lengths and sizes, reproduced. The check names a file with one sample changed by
+  two steps, a missing file and a longer file. Found on the way: the drafted silent-actions test
+  tapped c3 after a refused drop, which deselects it (the drop leaves it selected), so it now taps
+  only the target; E3's `NoWebContentTests` allowed no `.wav` in the bundle (the prototype had a
+  `move.wav`), and now requires exactly the four `SoundEffect` files; the Sound section moved the
+  Game section's header and footer to the bottom edge, where the Settings audit reported them as
+  "partially unsupported" Dynamic Type, the edge-cut report known from setup. On screen at the
+  largest size both scale (the footer wraps over six lines), so the audit's allow-list gained a
+  Settings row (plan, "Audit allow-list"). Every `SoundBank` test passed in the simulator,
+  including preparing the four bundled files. `scripts/test.sh` with warnings as errors passes:
+  **309 tests** (168 app unit tests in 37 suites, 86 engine tests, 55 UI tests), the script tests,
+  formatting strict and the string catalog in sync.
 
 ## 1. All blocking tests (SC-001 to SC-003, SC-006, SC-007, SC-009)
 

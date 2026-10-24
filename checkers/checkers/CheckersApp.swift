@@ -6,7 +6,8 @@ struct CheckersApp: App {
         store: UserDefaultsSetupStore(defaults: .standard),
         games: UserDefaultsSavedGameStore(defaults: .standard),
         records: UserDefaultsRecordStore(defaults: .standard),
-        settingsStore: UserDefaultsSettingsStore(defaults: .standard))
+        settingsStore: UserDefaultsSettingsStore(defaults: .standard),
+        sounds: AudioSoundPlayer())
 
     @Environment(\.scenePhase) private var scenePhase
 
