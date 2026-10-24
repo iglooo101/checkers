@@ -28,6 +28,16 @@
   order, each with a heading, its text and its picture(s); VoiceOver users move between the
   sections by their headings.
 
+### Session 2026-10-24 (after `/speckit-analyze`)
+
+- Q: If sound effects are on but the sounds cannot play (the audio system fails or is reset by the
+  phone), what should the player see? → A: The game goes on without sound, the Sound section of
+  Settings says "Sound effects aren't available right now." while that lasts, and the app tries
+  again with the next sound, so sound comes back by itself once it can play. Only logging the
+  failure would leave the switch on with no sound and no explanation (Constitution IV.3); an
+  alert would interrupt the game for something that does not stop it. Added to the FRD as
+  FR-SND-05 (version 1.3).
+
 ## User Scenarios & Testing *(mandatory)*
 
 Users are players of either kind the app already serves: two people sharing the phone, and a
@@ -140,8 +150,9 @@ it is drawn on in every theme and appearance.
 With sound effects on, the default, the player hears a short sound for each move: one for a plain
 move, one for a capture, one for a crowning and one when the game ends, for the computer's moves
 as well as their own. Sounds follow the phone's silent mode and volume and do not stop the
-player's music. With sound effects off, the game is silent. (#146: #147, #148; FR-SET-04,
-FR-SND-01 to FR-SND-04)
+player's music. With sound effects off, the game is silent. If the sounds cannot play, Settings
+says so and the app tries again with the next sound. (#146: #147, #148; FR-SET-04, FR-SND-01 to
+FR-SND-05)
 
 **Why this priority**: Sound makes moves easier to follow, the computer's especially, but the board
 already shows everything, and many players keep their phone silent.
@@ -167,6 +178,10 @@ turn sound off and check nothing plays; switch the phone to silent and check not
    whatever the setting.
 7. **Given** music is playing from another app, **When** a game sound plays, **Then** the music
    keeps playing.
+8. **Given** sound effects are on but the sounds cannot play, **When** the player opens Settings,
+   **Then** the Sound section says sound effects aren't available right now, and the game goes on
+   without sound; **When** sounds can play again, **Then** the next step plays its sound and the
+   notice is gone.
 
 ---
 
@@ -187,6 +202,9 @@ turn sound off and check nothing plays; switch the phone to silent and check not
 - **The app goes to the background**: no sound plays while it is there; the computer's turn
   restarts on Continue (E5) and plays its sound then.
 - **VoiceOver on**: game sounds play as usual alongside VoiceOver's announcements.
+- **Sounds that cannot play** (the audio system fails, or the phone resets it, for example after
+  a call): the step goes on silently, the failure is logged, Settings shows the notice while sound
+  effects are on, and the next sound tries again (FR-017).
 - **Device in Dark Mode**: each theme uses its dark appearance; Settings' previews show the theme as
   it appears in the current mode.
 - **The largest accessibility text size**: Settings' rows and theme names wrap rather than being
@@ -255,7 +273,11 @@ turn sound off and check nothing plays; switch the phone to silent and check not
 - **FR-015**: A game ending by resignation or a draw rule MUST also play the game-end sound once.
 - **FR-016**: Sounds MUST follow the device's silent mode and volume, and MUST NOT stop or
   interrupt audio from other apps (FR-SND-02).
-- **FR-017**: With sound effects off, the app MUST play no sound.
+- **FR-017**: With sound effects off, the app MUST play no sound. With sound effects on but sounds
+  unable to play (the audio session or a sound fails, or the system resets its audio), the game
+  MUST go on without sound, the Sound section of Settings MUST say "Sound effects aren't available
+  right now." until sounds can play again, and the app MUST try again with the next sound (FR-SND-05;
+  Clarifications).
 - **FR-018**: Nothing else MUST make a sound: undo, selecting, refused taps, notices, continuing a
   game and navigation are silent. The app MUST have no haptic feedback and no music (FR-SND-03),
   and pieces still move without animation (FR-SND-04).
@@ -311,7 +333,7 @@ turn sound off and check nothing plays; switch the phone to silent and check not
 | #144 Classic, Modern and Playful themes | FR-008 to FR-012 | FR-SET-02, FR-GAME-07, FR-A11Y-05 |
 | #145 Theme picker with board previews | FR-013 | FR-SET-02 |
 | #147 Sound assets | FR-014, FR-019 | FR-SND-01 |
-| #148 Sound service | FR-014 to FR-018 | FR-SND-01 to FR-SND-04, FR-PRIV-02 |
+| #148 Sound service | FR-014 to FR-018 | FR-SND-01 to FR-SND-05, FR-PRIV-02 |
 | #150 Illustrated rules content | FR-020, FR-021, FR-022 | FR-HELP-01 |
 | #151 Rules from Home and the game menu | FR-020, FR-023 | FR-HELP-02, FR-NAV-04 |
 | #152 Accessibility pass: Rules | FR-025, FR-026, FR-027 | FR-A11Y-04, FR-PLAT-03 |

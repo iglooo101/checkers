@@ -11,7 +11,7 @@ play American checkers will be explained here.", "Board theme, sound effects and
 be set here."). Home's and the game menu's Rules and Settings entries keep their texts and
 identifiers and open the screens below.
 
-## Settings (FR-001 to FR-005, FR-013, FR-025)
+## Settings (FR-001 to FR-005, FR-013, FR-017, FR-025)
 
 A form, titled Settings, opened from Home (`home.settings`) and the game menu
 (`game.menu.settings`); the back button returns where it was opened from.
@@ -20,13 +20,16 @@ A form, titled Settings, opened from Home (`home.settings`) and the game menu
 |---|---|---|---|
 | Board theme | Inline picker, one row per theme: preview (hidden from VoiceOver) and name; the chosen row has a checkmark | Classic · Modern · Playful | `settings.theme.classic`, `settings.theme.modern`, `settings.theme.playful` |
 | Sound | Toggle | Sound effects | `settings.soundEffects` |
+| Sound | Footer, only while `AppRouter.showsSoundNotice` (sound effects on, sounds unable to play) | "Sound effects aren't available right now." | `settings.soundUnavailable` |
 | Game | Toggle, with footer | Move hints · "Rings the pieces that can move and dots the squares the selected piece can go to." | `settings.moveHints` |
 
 - Each preview is a `BoardPicture` of the top-left 4 × 4 squares from Light's side, in that theme
   and the current appearance: Dark men on b8 and d8, a Dark king on a7, a Light man on c5 and a
   Light king on b6 (decorative; no marks).
 - VoiceOver: "Modern, selected" (or not selected) for a theme row; "Sound effects, on"; "Move
-  hints, off".
+  hints, off". The Sound section's notice is read as text after the switch.
+- The notice appears and goes while Settings is shown, as `showsSoundNotice` changes
+  ([settings-and-sound.md](settings-and-sound.md), "When sounds cannot play").
 - At accessibility sizes the rows grow and wrap; the previews keep their size beside the name, or
   above it when the row is too narrow.
 
@@ -63,5 +66,7 @@ Section ids: `board`, `moving`, `capturing`, `chains`, `kings`, `ending`, `undoR
 Added to `US5AccessibilityAuditUITests`: Settings; Settings at the largest accessibility size;
 Rules at its top and scrolled to its end; a new two-player game in Modern and in Playful
 (`-boardTheme modern`, `-boardTheme playful`), with a piece selected. The Rules and Settings
-placeholder audits become the Rules and Settings audits. An issue on a system component (the
+placeholder audits become the Rules and Settings audits. Settings with the sound notice is not
+audited: UI tests cannot make sounds fail without test-only code; it is primary footer text like
+the Game section's, and its preview is checked at `accessibility5` and in Dark Mode. An issue on a system component (the
 form's toggles or picker) goes on the plan's audit allow-list with its reason.

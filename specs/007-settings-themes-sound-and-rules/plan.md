@@ -19,7 +19,8 @@ the Rules pictures with the game's own piece view. Four original sounds come fro
 with a fixed seed (0.12 s to 1.2 s, 176 KB, reproducible and checked in CI); the session picks one
 per step (game end, crowning, capture, move) and an actor plays it through prepared audio players
 in the `.ambient` category, off the main actor (loading 107 ms and each play call 11–69 ms on the
-Mac, *measured*). Rules is one scrolling page of seven sections whose pictures are engine positions,
+Mac, *measured*); if sounds cannot play, the game goes on silently, Settings says so, and the
+next sound prepares the players again (FR-SND-05). Rules is one scrolling page of seven sections whose pictures are engine positions,
 each claim checked against the engine. Research: [research.md](research.md).
 
 ## Technical Context
@@ -55,7 +56,7 @@ read in 2.4 µs, sounds prepared after launch off the main actor)
 whole sentences from the String Catalog; previews never touch storage or play sound (workflow
 gate 4); the Rules text at most about 600 words (364 drafted)
 
-**Scale/Scope**: about 13 new and 10 changed app files, 4 generated sound files, 24 new asset
+**Scale/Scope**: about 13 new and 12 changed app files, 4 generated sound files, 24 new asset
 colors (and Classic's 12 moved), 1 new script; 4 user stories, 27 functional requirements
 
 ## Constitution Check
@@ -67,7 +68,7 @@ colors (and Classic's 12 moved), 1 new script; 4 user stories, 27 functional req
 | I. Native & Modern Apple Stack | Pass | SwiftUI forms, toggles and picker; `@Observable` settings; AVFoundation for sound, in an actor; no Combine, Dispatch or threads. |
 | II. Feature-Based Architecture | Pass | New `Settings`, `Sound` and `Rules` feature folders; the hints and sound rules live in `GameSession`, the settings in `AppSettings`, the Rules pictures' marks come from the engine; views stay thin. The store and the sound player are injected protocols with live and fake conformances (II.3, exempt from II.5); `UserDefaults.standard` and `AVAudioSession.sharedInstance()` are used only inside the live conformances (II.3). Types are structs and enums except `AppSettings` (shared observed state), the stores and players (state), and the `SoundBank` actor. |
 | III. Test-First Quality | Pass | Each story's tests come first; the session is tested with the in-memory store and the recording player (III.4), the `UserDefaults` store against a temporary suite; acceptance tests name US1–US4; UI tests get settings through launch arguments (R10). |
-| IV. Safety & Correctness | Pass | Typed `SoundError` (IV.2), every failure logged and the game goes on; an unreadable setting falls back to its default, logged, with no alert, because Settings shows the value and one tap restores it, which is the clear state and recovery path IV.3 asks for (spec Clarifications); no force unwraps; no `@unchecked Sendable`. |
+| IV. Safety & Correctness | Pass | Typed `SoundError` (IV.2), every failure logged and the game goes on; while sounds cannot play, Settings shows "Sound effects aren't available right now." and the next sound tries again, the clear state and recovery IV.3 asks for (FR-SND-05, added after `/speckit-analyze` found the failure only logged); an unreadable setting falls back to its default, logged, with no alert, because Settings shows the value and one tap restores it, which is the clear state and recovery path IV.3 asks for (spec Clarifications); no force unwraps; no `@unchecked Sendable`. |
 | V. UX & Accessibility | Pass | System form controls; Rules headings with the header trait, pictures as labelled images; every mark keeps 3:1 contrast in every theme and appearance (R4, `US4ContrastTests`); theme colors are asset colors with light and dark variants (V.1); previews at accessibility5 and in Dark Mode; new audited states (contracts/screens.md); nothing animates. |
 | VI. Privacy & Security | Pass | Three settings on the device; `UserDefaults` already declared (CA92.1); sound needs no permission and no required-reason API, so the privacy manifest does not change (R12). |
 | VII. Performance | Pass | Measured first: settings read in 2.4 µs on the main actor; the sound files load (107 ms) and play calls run (11–69 ms on the Mac) in an actor, never on the main actor (VII.3); the iPhone's latency is checked by hand (quickstart §5). |
@@ -118,6 +119,12 @@ entry is added here with its reason, as for the setup form.
   values, so E7's measurements stay valid.
 - **The prototype stays deleted**: its designs are read from git history (`e3c0c2b^`) for the
   colors; nothing of it returns to the app.
+- **Analysis fixes** (2026-10-24, `/speckit-analyze` after tasks): a sound failure at run time
+  was only logged, leaving sound effects on and silent; it now shows a notice in Settings and the
+  next sound tries again (FRD 1.3, FR-SND-05; spec FR-017; contracts "When sounds cannot play").
+  `BoardTheme.name` moves to US3 with its strings; `ResultPanel`'s previews follow `Palette`'s
+  change; the new value types are `nonisolated` and `Sendable`; the Rules pictures ring the other
+  movable pieces as the game does; `init(saved:)` is named in its own file.
 
 ### Post-design re-check
 
@@ -160,7 +167,7 @@ checkers/checkers/
 │   ├── BoardTheme.swift                  # new: classic, modern, playful; names
 │   ├── SettingsStore.swift               # new: SettingsValues, protocol, UserDefaults and in-memory stores
 │   ├── AppSettings.swift                 # new: @Observable settings, saved on change
-│   └── SettingsView.swift                # new: theme picker with previews, two toggles
+│   └── SettingsView.swift                # new: theme picker with previews, two toggles, sound notice
 ├── Features/Sound/
 │   ├── SoundEffect.swift                 # new: the four effects, of(_:)
 │   ├── SoundPlayer.swift                 # new: protocol, AudioSoundPlayer, RecordingSoundPlayer
@@ -174,30 +181,35 @@ checkers/checkers/
 │   ├── BoardView.swift                   # theme from the environment
 │   ├── PieceView.swift                   # theme from the environment
 │   ├── GameSession.swift                 # settings and sounds; sound per step and on resign
-│   └── GameSession+Display.swift         # hints off empties hintedPieces and targets
+│   ├── GameSession+Display.swift         # hints off empties hintedPieces and targets
+│   ├── GameSession+Saving.swift          # init(saved:) takes settings and sounds
+│   └── ResultPanel.swift                 # previews: Palette.color(in:)
 ├── Features/Placeholders/                # deleted
 ├── Support/Palette.swift                 # color(in:); the boardTheme environment value
 ├── Support/Logging.swift                 # + settings, sound categories
-├── App/AppRouter.swift                   # settings store and sound player; AppSettings to sessions
+├── App/AppRouter.swift                   # settings store and sound player; AppSettings to sessions; showsSoundNotice
 ├── App/RootView.swift                    # Settings and Rules destinations; theme in the environment
 ├── CheckersApp.swift                     # live settings store and sound player
 ├── Assets.xcassets/                      # Classic/ (moved), Modern/, Playful/ (12 colors each)
 └── Localizable.xcstrings                 # + Settings and Rules texts, theme names; − placeholder lines
 checkers/checkersTests/
-├── US1SettingsTests.swift                # store, fallback, AppSettings, hints on and off
+├── SettingsStoreTests.swift              # store, per-key fallback, AppSettings saves each change
+├── US1SettingsTests.swift                # hints on and off in the session; settings reach every session
 ├── US2RulesTests.swift                   # section order, pictures checked by the engine, word count
 ├── US3ThemeTests.swift                   # theme names and stored values; every theme resolves
-├── US4SoundTests.swift                   # the sound per step and ending, sound off, files load
+├── US4SoundTests.swift                   # the sound per step and ending, sound off, files, failures, notice
 ├── US4ContrastTests.swift                # changed: every theme
 ├── PaletteTests.swift                    # changed: every theme
 ├── LocalizationTests.swift               # changed: new strings; theme names allowed again
 ├── LoggingTests.swift                    # changed: two categories
+├── PrivacyManifestTests.swift            # changed: no usage descriptions, so no permission
 └── US7NavigationTests.swift              # changed: placeholder test removed
 checkers/checkersUITests/
 ├── Support/AppScreens.swift              # launch helper with settings arguments
-├── US1SettingsUITests.swift              # from Home and the menu; hints kept after relaunch
+├── US1SettingsUITests.swift              # from Home; launch argument; hints kept after relaunch
 ├── US2RulesUITests.swift                 # from Home and the menu; back to the same game
 ├── US3ThemeUITests.swift                 # choose a theme; kept after relaunch
+├── US4SoundUITests.swift                 # the sound switch; kept after relaunch
 ├── US7NavigationUITests.swift            # changed: no placeholders
 └── US5AccessibilityAuditUITests.swift    # changed: Settings, Rules, themed boards
 ```

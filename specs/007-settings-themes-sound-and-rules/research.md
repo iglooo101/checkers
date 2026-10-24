@@ -139,8 +139,11 @@ throwaway programs outside the repository.
   use sets the audio session's category to `.ambient`, loads the four files into prepared
   `AVAudioPlayer`s, and then plays a sound by rewinding and starting its player. The app starts
   that preparation right after launch, off the main actor. Failures (a missing or unreadable
-  file, a session error) are a typed `SoundError`, logged under a new `sound` category; the game
-  goes on without that sound.
+  file, a session error, a player that does not start) are a typed `SoundError`, logged under a
+  new `sound` category; the game goes on without that sound, the bank prepares again before its
+  next sound, and while sounds cannot play Settings says "Sound effects aren't available right
+  now." (FR-017, FR-SND-05; added after `/speckit-analyze`). A media services reset discards the
+  players the same way.
 - **Measured** (on the Mac, the closest proxy): loading and preparing the four players takes
   107 ms the first time, so it must not run on the main actor (Constitution VII.3); each
   `play()` call takes 11–69 ms on macOS, so it runs in the actor too; the step itself never waits
@@ -149,11 +152,17 @@ throwaway programs outside the repository.
 - **Rationale**: `.ambient` is the category for sound effects: it follows the silent switch and
   the volume buttons and mixes with other apps' audio instead of stopping it (FR-016), and it
   needs no permission (FR-024). A player per sound lets a new step's sound start while the
-  previous one still plays (FR-019).
+  previous one still plays (FR-019). Retrying with the next sound costs nothing while sounds work
+  and recovers from a passing failure without the player doing anything; the Settings notice
+  gives the failure a clear state, as Constitution IV.3 requires for an error the player can
+  notice (the switch says on, the game is silent).
 - **Alternatives considered**: `AudioServicesPlaySystemSound` (rejected: follows the ringer
   volume instead of the media volume and is meant for alerts); `AVAudioEngine` with player nodes
   (kept in reserve: lower latency, more code; only if the iPhone check misses 0.1 s); playing on
-  the main actor (rejected: the measured call times would cause hitches).
+  the main actor (rejected: the measured call times would cause hitches); logging failures only
+  (rejected by `/speckit-analyze`: sound effects would read on and stay silent with nothing shown,
+  against Constitution IV.3); an alert on failure (rejected: it would interrupt a game that goes on
+  without sound, and could repeat with every step).
 
 ## R8. Which sound a step plays
 
@@ -179,8 +188,11 @@ throwaway programs outside the repository.
   cannot contradict the rules. The undo and resign section shows the game menu's two items with
   their symbols instead of a board (**spec alignment**: FR-021 said "a picture of a board
   position" for every section; a board says nothing about undo or resign). The texts are 364 words
-  (*measured* on the contract), plus 146 words of picture descriptions for VoiceOver; every
-  picture's claim was checked against the engine with a throwaway program (*measured*).
+  (*measured* on the contract), plus 156 words of picture descriptions for VoiceOver; every
+  picture's claim was checked against the engine with a throwaway program (*measured*). Pictures
+  with a selected piece draw the marks as the game does with hints on, so the Moving picture also
+  rings the other movable men (a3, e3, g3) that its text describes (added after
+  `/speckit-analyze`).
 - **Rationale**: Short enough to scroll through in a minute or two, and one screen to audit. Tests
   rebuild each picture's position and check its claim with the engine (for example that the Dark
   man on h8 has no legal step), and count the words (SC-006).
@@ -235,7 +247,8 @@ throwaway programs outside the repository.
   are gone); `LocalizationTests.prototypeStringsRemoved` keeps only "Play" and "Screen" (US3, as
   the theme names return); `screenStrings` loses the placeholder lines and gains the new texts;
   `PaletteTests` and `US4ContrastTests` run over every theme (US3); the hint tests in
-  `US3HintsDragTests` keep passing with hints on, the default, and gain hints-off cases (US1);
-  `LoggingTests` lists the two new categories.
+  `US3HintsDragTests` keep passing unchanged with hints on, the default, and the hints-off cases
+  are in the new `US1SettingsTests` (US1); `LoggingTests` lists the two new categories;
+  `PrivacyManifestTests` gains the no-permission check (Setup).
 - **Rationale**: Each change lands with the behavior that causes it, so the suite stays green
   after every task (workflow gate 3).

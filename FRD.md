@@ -1,6 +1,9 @@
 # Functional Requirements Document: Checkers
 
-Version 1.2 · 2026-10-22
+Version 1.3 · 2026-10-24
+
+Changes in 1.3: FR-SND-05 added: when sound effects are on but cannot be played, Settings
+says so and the app tries again with the next sound.
 
 Changes in 1.2: FR-STAT-06 added: an unreadable record starts again from zero and the player is
 told once.
@@ -229,6 +232,8 @@ Home
 - **FR-SND-03** The app has no haptic feedback and no music in this release.
 - **FR-SND-04** Pieces move without animation. A moved piece appears directly on its target square,
   and captured pieces disappear when they are jumped.
+- **FR-SND-05** If sound effects are on but sounds cannot be played, Settings MUST say so, and the
+  app MUST try again with the next sound. The game goes on without sound meanwhile.
 
 ## 16. Rules screen
 

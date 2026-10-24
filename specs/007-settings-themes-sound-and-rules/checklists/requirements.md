@@ -53,3 +53,8 @@
   section; the undo and resign section shows the game menu's Undo and Resign items instead, as a
   board says nothing about them (research R9). US2's first scenario and SC-006 follow. All items
   still pass.
+- Revised 2026-10-24 after `/speckit-analyze`: a sound failure at run time was only logged, so
+  sound effects could read on while nothing played, with nothing shown (Constitution IV.3). The
+  user chose a notice in Settings and a retry with the next sound: FRD 1.3 adds FR-SND-05, FR-017
+  says it, US4 gains scenario 8 and an edge case, and the Clarifications record it. All items
+  still pass.

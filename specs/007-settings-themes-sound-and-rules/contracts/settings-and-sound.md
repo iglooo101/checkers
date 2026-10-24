@@ -53,7 +53,7 @@ Three keys in `UserDefaults.standard`, each read and written on its own:
 - The theme is in the environment (`\.boardTheme`) from the first frame, so a continued game
   never shows Classic first.
 
-## Sounds (FR-014 to FR-019; research R6 to R8)
+## Sounds (FR-014 to FR-019, FR-SND-05; research R6 to R8)
 
 ### Which sound
 
@@ -78,10 +78,34 @@ Three keys in `UserDefaults.standard`, each read and written on its own:
   with other apps' audio (FR-016). No permission, no background audio (FR-024).
 - `SoundBank` (an actor) sets the category and loads the four prepared players on its first
   `prepare()`, started right after launch; `play` before that waits for the preparation.
-  Nothing about sound runs on the main actor except handing over the effect.
-- A `SoundError` (missing or unreadable file, session failure) is logged under `Log.sound`; the
-  game continues, without that sound. Unit tests check that all four files are in the bundle and
-  load, so these errors can only come from a broken build.
+  Nothing about sound runs on the main actor except handing over the effect and updating
+  `isAvailable`.
+
+### When sounds cannot play (FR-017, FR-SND-05; Constitution IV.3)
+
+| Failure | `SoundError` | Then |
+|---|---|---|
+| A file is missing from the bundle | `missingFile(effect)` | The bank stays unprepared |
+| A file does not load as audio | `unreadableFile(effect)` | The bank stays unprepared |
+| The audio session's category cannot be set | `audioSession` | The bank stays unprepared |
+| A player does not start (`play()` returns false) | `playback(effect)` | The bank discards its players |
+| The system resets its media services (`AVAudioSession.mediaServicesWereResetNotification`) | none | The bank discards its players |
+
+- Every `SoundError` is logged under `Log.sound` (the case, never a path); the step that wanted
+  the sound goes on without it, and nothing else waits for audio.
+- An unprepared bank prepares again before its next sound, so a passing failure ends by itself
+  with the next step. A media services reset is not an error: the old players no longer work, so
+  the bank prepares new ones before the next sound.
+- `SoundPlayer.isAvailable` is `true` at first and after every successful preparation and sound,
+  and `false` after any `SoundError`. While it is `false` and sound effects are on
+  (`AppRouter.showsSoundNotice`), Settings' Sound section shows "Sound effects aren't available
+  right now." under the switch ([screens.md](screens.md)); the notice goes once a sound plays
+  again. No alert: the game is not stopped, and the recovery is automatic (the next sound) or the
+  player's choice (sound effects off).
+- Unit tests check that all four bundled files load, so the file errors come only from a broken
+  build in the shipped app; they are tested with a bank pointed at a temporary directory. The
+  session and reset failures cannot be caused on purpose, so `showsSoundNotice` is tested with a
+  `RecordingSoundPlayer` whose `isAvailable` the test sets, and the notice's look in a preview.
 
 ### Files (FR-019; research R6)
 
@@ -107,6 +131,7 @@ Recipe details (research R6's prototype, which produced the measured lengths and
 | capture | Click(900, 2,300) at 0 s plus Click(1,100, 2,800) at 0.07 s, 0.22 s long |
 | crowning | Bell(1,046.5, 0.45 s, 0.16) at 0 s plus Bell(1,568, 0.39 s, 0.14) at 0.06 s |
 | gameEnd | Bell(784, 0.6 s, 0.25) at 0 s, Bell(1,046.5, 0.6 s, 0.25) at 0.18 s, Bell(1,318.5, 0.84 s, 0.32) at 0.36 s, 1.2 s long |
-| Finish | Scale to the peak level, then fade linearly to zero over the last 8 ms; samples rounded to 16 bits and clamped to ±32,767 | `scripts/make-sounds.py --check` fails
-when a committed file differs from its recipe by more than one sample step; `scripts/tests/run.sh`
+| Finish | Scale to the peak level, then fade linearly to zero over the last 8 ms; samples rounded to 16 bits and clamped to ±32,767 |
+
+`scripts/make-sounds.py --check` fails when a committed file differs from its recipe by more than one sample step; `scripts/tests/run.sh`
 runs it. To change a sound: change its recipe, run the script, listen, commit the files.

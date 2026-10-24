@@ -1,7 +1,10 @@
 # Data Model: Settings, Themes, Sound and Rules
 
 Types this feature adds or changes, all in the app target (the engine does not change). They
-follow E3 to E5 (`specs/006-saving-and-statistics/data-model.md`). Behavior is in
+follow E3 to E5 (`specs/006-saving-and-statistics/data-model.md`). The app target's default
+isolation is the main actor, so the value types that the nonisolated `Palette`, the `SoundBank`
+actor or parameterized tests use are declared `nonisolated` and `Sendable`: `BoardTheme`,
+`SettingsValues`, `SoundEffect` and `SoundError` (as `GameSetup`, `Record` and `Palette` are). Behavior is in
 [contracts/settings-and-sound.md](contracts/settings-and-sound.md); screens in
 [contracts/screens.md](contracts/screens.md); the Rules content in
 [contracts/rules-content.md](contracts/rules-content.md).
@@ -16,8 +19,9 @@ follow E3 to E5 (`specs/006-saving-and-statistics/data-model.md`). Behavior is i
 | `modern` | `"modern"` | Modern | `Modern/` |
 | `playful` | `"playful"` | Playful | `Playful/` |
 
-A `String`-backed, `CaseIterable` enum; `name` is a `LocalizedStringResource`. Unknown stored
-names read as unreadable (R1).
+A `String`-backed, `CaseIterable`, `nonisolated`, `Sendable` enum. Unknown stored names read as
+unreadable (R1). `name` is a `LocalizedStringResource`, added with US3: the names are catalog
+strings that E3's `prototypeStringsRemoved` forbids until US3 changes that test (research R13).
 
 ### SettingsValues (new, R1)
 
@@ -27,7 +31,7 @@ names read as unreadable (R1).
 | `soundEffects` | `Bool` | `true` | `soundEffects` (boolean) |
 | `moveHints` | `Bool` | `true` | `moveHints` (boolean) |
 
-A value type with `static let defaults` (FR-002).
+An `Equatable`, `nonisolated`, `Sendable` value type with `static let defaults` (FR-002).
 
 ### SettingsStore (new protocol, R1)
 
@@ -62,22 +66,32 @@ A class, as shared mutable state that the router, every session and the Settings
 | `gameEnd` | `gameEnd.wav` | A step that ends the game, or a resignation | 1.2 s |
 
 `static func of(_ result: StepResult) -> SoundEffect` picks by that order (game end, crowning,
-capture, move).
+capture, move). `nonisolated` and `Sendable`, since the `SoundBank` actor uses it.
 
 ### SoundPlayer (new protocol, R7)
 
 | Member | Meaning |
 |---|---|
 | `play(_ effect: SoundEffect)` | Plays a sound and returns at once; never fails for the caller |
+| `isAvailable: Bool` | Whether sounds can play: `true` at first and after a successful preparation or sound, `false` after a `SoundError` (FR-017, FR-SND-05); observed |
 
-Conformances: `AudioSoundPlayer` (the app: hands each sound to the `SoundBank` actor) and
-`RecordingSoundPlayer` (tests and previews: keeps the effects in order and plays nothing).
+Conformances: `AudioSoundPlayer` (the app: an `@Observable` class that starts the bank's
+preparation when created, hands each sound to the `SoundBank` actor, sets `isAvailable` from the
+outcome, logs each `SoundError` under `Log.sound`, and tells the bank when the system resets its
+media services) and `RecordingSoundPlayer` (tests and previews: keeps the effects in order, plays
+nothing, and has a settable `isAvailable`, `true` by default).
 
 ### SoundBank (new actor, R7)
 
-Owns the audio session's `.ambient` category and one prepared `AVAudioPlayer` per effect;
-`prepare()` loads them (started after launch), `play(_:)` rewinds and plays one. Failures are
-`SoundError` values, logged under `Log.sound`.
+Owns the audio session's `.ambient` category and one prepared `AVAudioPlayer` per effect.
+
+| Member | Meaning |
+|---|---|
+| `init(directory: URL)` | Where the four files are: the app bundle's resources in the app, a temporary directory in tests |
+| `isPrepared: Bool` | Whether its four players are ready |
+| `prepare() throws(SoundError)` | Sets the category and loads the four players; on failure the bank stays unprepared |
+| `play(_ effect:) throws(SoundError)` | Prepares first if unprepared, then rewinds and plays one; a player that does not start throws `playback` and discards the players |
+| `mediaServicesWereReset()` | Discards the players, so the next sound prepares new ones |
 
 ### SoundError (new, R7)
 
@@ -86,6 +100,10 @@ Owns the audio session's `.ambient` category and one prepared `AVAudioPlayer` pe
 | `missingFile(SoundEffect)` | The bundle has no file for the effect |
 | `unreadableFile(SoundEffect)` | The file does not load as audio |
 | `audioSession` | The session's category cannot be set |
+| `playback(SoundEffect)` | A prepared player does not start |
+
+`Equatable`, `nonisolated` and `Sendable`. What happens after each is in
+[contracts/settings-and-sound.md](contracts/settings-and-sound.md), "When sounds cannot play".
 
 ## Game (changed)
 
@@ -126,7 +144,7 @@ No input, no session; one accessibility element with the image trait.
 | Type | Fields |
 |---|---|
 | `RulesSection` | `id` (for identifiers), `title`, `text` (localized), `pictures` |
-| `RulesPicture` | `.board(state: GameState, selected: Square?, description:)`, whose marks come from the engine (the selected piece's targets; the movable pieces when a capture is required), or `.menu` (the Undo and Resign items) |
+| `RulesPicture` | `.board(state: GameState, selected: Square?, description:)`, whose marks come from the engine and are drawn as the game board draws them with hints on: with a selected piece, its selection ring, its targets (`targets(from:)`) as dots and the side to move's `movablePieces` as hint rings (the selected one shows its selection ring); with none, no marks. Or `.menu` (the Undo and Resign items) |
 
 `RulesContent.sections` lists the seven sections of [contracts/rules-content.md](contracts/rules-content.md).
 
@@ -134,7 +152,7 @@ No input, no session; one accessibility element with the image trait.
 
 | Type | Change |
 |---|---|
-| `AppRouter` | Takes a `SettingsStore` and a `SoundPlayer` (defaults: in-memory and recording); owns `settings: AppSettings`; passes both to every session it starts or continues |
+| `AppRouter` | Takes a `SettingsStore` and a `SoundPlayer` (defaults: in-memory and recording); owns `settings: AppSettings`; passes both to every session it starts or continues; `showsSoundNotice` is `settings.soundEffects && !sounds.isAvailable` (FR-017) |
 | `RootView` | Settings and Rules destinations replace the placeholders; sets `\.boardTheme` |
 | `CheckersApp` | Passes `UserDefaultsSettingsStore(defaults: .standard)` and an `AudioSoundPlayer`, whose sound bank starts preparing after launch |
 | `Log` | New categories `settings`, `sound` |

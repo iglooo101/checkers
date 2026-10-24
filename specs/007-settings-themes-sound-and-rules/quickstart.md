@@ -24,7 +24,7 @@ appearances, the sound choice tests, the Rules picture and word-count tests, the
 audit. Every FRD ID of the slice is named by a test or a manual check below:
 
 ```sh
-grep -rhoE 'FR-(SET-0[1-4]|SND-0[1-4]|HELP-0[12]|GAME-07|AID-0[1-4]|NAV-04|A11Y-0[45]|PRIV-0[12]|PLAT-03)' checkers/checkersTests checkers/checkersUITests | sort -u
+grep -rhoE 'FR-(SET-0[1-4]|SND-0[1-5]|HELP-0[12]|GAME-07|AID-0[1-4]|NAV-04|A11Y-0[45]|PRIV-0[12]|PLAT-03)' checkers/checkersTests checkers/checkersUITests | sort -u
 ```
 
 ## 2. Move hints (US1, SC-001)
@@ -47,7 +47,8 @@ On the iPhone 17 simulator:
 - In a game against the computer, play a move and open Rules from the game menu while it thinks;
   go back: the computer's move comes after the usual pause, in the same position.
 - VoiceOver on: swipe through Rules; each heading is read as a heading, each picture as its
-  description; the rotor's Headings moves between sections.
+  description; the rotor's Headings moves between sections (FR-025's header trait; XCUITest
+  cannot read traits, so this is checked by hand).
 
 ## 4. Themes, visual review (US3, FR-012, SC-002)
 
@@ -72,7 +73,13 @@ On the iPhone 17 simulator:
   moves sound too, each as its piece appears, with no noticeable delay (SC-004).
 - Turn on silent mode: nothing is heard. Silent mode off, start music in another app, return and
   play: the music keeps playing under the game's sounds (SC-005).
+- Play a double jump of your own as fast as you can tap: each jump plays its sound, the second
+  even if the first has not finished (FR-019); the volume buttons change the game's volume
+  (FR-016).
 - Settings → Sound effects off: the game is silent.
+- The "Sound effects aren't available right now." notice (FR-SND-05) cannot be caused on purpose;
+  `US4SoundTests` and its preview cover it. If it ever shows on the device, the next move should
+  play its sound and the notice should go.
 
 ## 6. Largest text and Dark Mode (FR-026, SC-007)
 

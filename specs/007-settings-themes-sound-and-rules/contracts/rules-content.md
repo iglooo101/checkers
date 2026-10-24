@@ -5,11 +5,13 @@ The seven sections of the Rules screen, in order (FR-020, Clarifications), with 
 Catalog; each section's text is one string. Identifiers are in [screens.md](screens.md).
 
 Pictures are full boards from Light's side (a1 bottom left), built through the engine's public API
-(`GameState(position:sideToMove:)`, `apply(_:)`). Marks come from the engine: a selected piece's
-targets are `targets(from:)`; nothing is drawn by hand. Tests rebuild every picture and check what
-its description claims (research R9).
+(`GameState(position:sideToMove:)`, `apply(_:)`). Marks come from the engine and look as on the
+game board with move hints on: in a picture with a selected piece, the piece has its selection
+ring, its targets (`targets(from:)`) have dots, and the side to move's other `movablePieces` have
+hint rings; a picture without a selected piece has no marks. Nothing is drawn by hand. Tests
+rebuild every picture and check what its description claims (research R9).
 
-Word count of the section texts: 364; of the picture descriptions: 146 (*measured* on this
+Word count of the section texts: 364; of the picture descriptions: 156 (*measured* on this
 contract; SC-006 allows about 600 for the texts).
 
 ## 1. The board (`board`)
@@ -27,9 +29,10 @@ men on rows 6 to 8."
 tap the square it should go to, or drag it there. With move hints on in Settings, the pieces that
 can move have a thin ring, and the squares the selected piece can go to have a dot.
 
-**Picture**: the starting position, c3 selected; targets b4, d4.
-*Description*: "The Light man on c3 is selected. It can move to b4 or d4."
-*Checked*: `targets(from: c3) == [b4, d4]`.
+**Picture**: the starting position, c3 selected; targets b4, d4; hint rings on a3, e3 and g3.
+*Description*: "The Light man on c3 is selected. It can move to b4 or d4. The other men that can
+move have a thin ring."
+*Checked*: `targets(from: c3) == [b4, d4]`; `movablePieces == [a3, c3, e3, g3]`.
 
 ## 3. Capturing (`capturing`)
 
