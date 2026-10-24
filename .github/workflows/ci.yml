@@ -57,7 +57,8 @@ jobs:
     needs: changes
     if: needs.changes.outputs.code == 'true'
     runs-on: macos-26
-    timeout-minutes: 30
+    # 22–30 minutes by E6 US2; a slow runner reached 30 (CI run 40071432056, #204).
+    timeout-minutes: 45
     env:
       DEVELOPER_DIR: /Applications/Xcode_26.3.app/Contents/Developer
       DESTINATION: platform=iOS Simulator,name=iPhone 17,OS=26.2

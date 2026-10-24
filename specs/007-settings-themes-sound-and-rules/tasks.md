@@ -181,6 +181,7 @@ description: "Task list for the settings, themes, sound and rules slice (epic E6
 - [ ] T033 Run the quickstart (1 to 7) and record the results in `validation.md`, including the search for the slice's FRD IDs (SC-009) and the launch time against its baseline (SC-008); mark what is left for the user: the iPhone checks of §5 (delay, SC-004; silent mode and other apps' music, SC-005 and FR-016; the volume buttons, FR-016; a second sound over the first, FR-019) and the VoiceOver pass of §3 (headings, FR-025's header trait).
 - [ ] T034 [P] Update `HANDOFF.md` (current state, lessons learned) and `EXECUTION_PLAN.md` (close-out checklist).
 - [ ] T035 Final verification: push the branch, confirm `CI gate` is green with both jobs on the last commit, fast-forward `main`, and record the CI run in `validation.md`.
+- [X] T036 Raise `build-and-test`'s `timeout-minutes` in `.github/workflows/ci.yml` from 30 to 45 (#204, added 2026-10-24 after CI run 40071432056 for US2 failed `CI gate` with every test passing: the job reached its limit during "Launch timing"; "Build and test" took 25 minutes against US1's 19, about 50 s of it US2's UI tests and the rest a slower runner). Done before US3's push; that push re-runs CI for US2's code.
 
 ---
 
@@ -188,7 +189,7 @@ description: "Task list for the settings, themes, sound and rules slice (epic E6
 
 - **Setup (Phase 1)** and **Foundational (Phase 2)** first; Phase 2 blocks all stories (the store and `AppSettings`).
 - **US1** next (P1, the MVP): the Settings screen and the hints switch. **US2** can follow US1 or run beside it (different files except `RootView.swift`, `LocalizationTests.swift` and the navigation UI tests, which both change). **US3** after US1 and US2: it adds the theme row to US1's Settings and themes US2's `BoardPicture`. **US4** after US1: it adds the sound row to Settings and the sound to `GameSession`; it does not need US2 or US3.
-- **Polish** last; T029 sees every story's screens.
+- **Polish** last; T029 sees every story's screens. T036 (the CI time limit) came first, before US3's push.
 - Within a story: tests first and seen failing; implementation tasks in order. T021 and T028 wait for the user and do not block the next story.
 
 ### Parallel Opportunities
@@ -260,6 +261,7 @@ Each board issue lists its task IDs and the FRD IDs of the spec's traceability t
 | #151 Rules reachable from Home and the game menu | T012, T013, T015 |
 | #152 Accessibility pass: Rules | T012, T029, T030 |
 | #203 Validate the E6 slice and update project docs | T001, T002, T029–T035 |
+| #204 Give CI's build-and-test job a 45-minute time limit (added 2026-10-24) | T036 |
 
 ## Notes
 

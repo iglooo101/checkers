@@ -41,9 +41,9 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 6/16 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 6/17 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **33/41** | **128/153** | |
+| | **Total** | | | | **33/41** | **128/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -61,6 +61,7 @@ Epics are listed in execution order.
 - #151 Rules reachable from Home and the game menu
 - #152 Accessibility pass: Rules
 - #203 Validate the E6 slice and update project docs
+- #204 Give CI's build-and-test job a 45-minute time limit
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -76,20 +77,24 @@ Hard 99 of 100 against Medium; the menu works while it thinks, Undo returns to t
 and VoiceOver announces its moves. Games are saved after every turn, on Home and in the
 background, and Continue restores them; Start asks before abandoning a saved game; finished games
 against the computer count in the record that Statistics shows; an unreadable save or record is
-reported once (E5). Rules and Settings are placeholders until E6.
+reported once (E5). On the E6 branch, Settings has the move hints switch and Rules explains the
+game in seven illustrated sections.
 
 1. **E6 Settings, themes, sound and rules (#132)** on branch `007-settings-themes-sound-and-rules`
    (`specs/007-settings-themes-sound-and-rules/`): the spec is written (#134: 4 user stories, 27
    requirements), clarified (#135) and planned (#136: research R1–R13, three contracts);
-   `tasks.md` has 35 tasks, and the 12 `/speckit-analyze` findings are applied (#137): a sound
-   that cannot play now shows "Sound effects aren't available right now." in Settings and the
-   next sound tries again (`FRD.md` 1.3, FR-SND-05). The board is reconciled (#138: task IDs on
-   every board task, #203 added for setup and validation), so F6.0 (#133) is done.
-   **Implementation** (`/speckit-implement`): Setup, Foundational (#140 Done) and US1 (the move
-   hints switch) landed on the branch with CI run 40069158202 green; US2 (the Rules screen) is
-   pushed with this close-out, its CI to check. **Next: US3** from the local branch
-   `wip/007-us3-themes` (T016–T020 applied; `testUS5_auditSettings` fails on the Classic theme
-   row's contrast, to fix first), then the visual review (T021), US4 from the drafts in that
+   `tasks.md` has 36 tasks (T036 added for #204), and the 12 `/speckit-analyze` findings are
+   applied (#137): a sound that cannot play now shows "Sound effects aren't available right
+   now." in Settings and the next sound tries again (`FRD.md` 1.3, FR-SND-05). The board is
+   reconciled (#138: task IDs on every board task, #203 added for setup and validation), so F6.0
+   (#133) is done. **Implementation** (`/speckit-implement`): Setup, Foundational (#140 Done)
+   and US1 (the move hints switch) landed on the branch with CI run 40069158202 green. US2 (the
+   Rules screen) passed every test in CI run 40071432056, but `build-and-test` reached its
+   30-minute limit during "Launch timing", so `CI gate` failed; #204 (T036) raises the limit to
+   45 minutes, and its push re-runs CI for US2. #150 and #151 close once it is green. **Next:
+   US3** from the local branch `wip/007-us3-themes` (T016–T020 applied;
+   `testUS5_auditSettings` fails on the Classic theme row's contrast, to fix first), then the
+   visual review (T021), US4 from the drafts in that
    branch's `specs/007-…/wip-drafts/`, and Polish. The plan measured the Modern and Playful
    colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
    0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
@@ -179,8 +184,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   Computer chosen), and the texts of system alerts (the abandon question, the restore notices),
   which do scale on screen. Re-check both with each new iOS and Xcode
   (`specs/004-accessibility/plan.md`, `specs/006-saving-and-statistics/plan.md`).
-- Code CI runs now take 15–25 minutes with E3's UI tests, and a push cancels the running one;
-  push once per story.
+- Code CI runs take 22–30 minutes since E5 (the UI tests alone about 17 minutes by E6 US2), and a
+  push cancels the running one; push once per story. A slow runner took US2's run past the
+  30-minute limit (CI run 40071432056), so `build-and-test` has 45 minutes since #204; if US3, US4
+  and the Polish audits bring it near that, shorten the UI tests before raising it again.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
   and the development Mac are updated together.
 - The engine's move generation is only moderately fast in Debug builds: the 6-turn reference
@@ -437,7 +444,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 6/16 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 6/17 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
@@ -469,6 +476,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #151 Rules reachable from Home and the game menu · S
 - [~] #152 Accessibility pass: Rules · S
 - [~] #203 Validate the E6 slice and update project docs · S · after #142, #152
+- [~] #204 Give CI's build-and-test job a 45-minute time limit · S
 
 ### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 0/15 tasks
 
@@ -827,3 +835,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   pushed at the session's close-out. US3 (T016–T020) is on the local branch
   `wip/007-us3-themes` with the US4 drafts; its Settings audit fails on the Classic theme row.
   Session close-out: HANDOFF.md updated.
+- 2026-10-24: US2's CI run 40071432056 passed every test but failed `CI gate`: `build-and-test`
+  reached its 30-minute limit during "Launch timing" (US2's UI tests added about 50 s, and the
+  runner was about 15% slower). #204 (T036) added under F6.4 and In Progress: the limit is now 45
+  minutes, and its push re-runs CI for US2's code. Backlog now 154 tasks (#1–#204).

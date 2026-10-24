@@ -37,7 +37,8 @@ Last updated: 2026-10-24
   clarify and plan done, `tasks.md` written and analyzed, the 12 analysis findings applied
   (#137, 9b881b9) and the board reconciled (#138; F6.0 done). **Implementation**: Setup,
   Foundational and US1 (T001–T010) are on the branch, CI run 40069158202 green; US2 (T011–T015)
-  was pushed at the 2026-10-24 close-out, **its CI not yet checked**. **US3 (T016–T020) and the
+  passed every test in CI run 40071432056, but `build-and-test` reached its 30-minute limit, so
+  **#204 (T036) raises it to 45 minutes and re-runs CI for US2**. **US3 (T016–T020) and the
   US4 drafts are only on the local branch `wip/007-us3-themes`** (commit `ca00675`, not pushed):
   US3's tests pass except `testUS5_auditSettings`. The slice branch's working tree is clean.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
@@ -105,7 +106,8 @@ Last updated: 2026-10-24
   engine's SC-004 check times the counting thread's CPU time (`clock_gettime_nsec_np`), not the
   wall clock.
 - **CI**: `.github/workflows/ci.yml` on every push except to `main`; Markdown-only pushes skip the
-  build (about 20 s); code pushes take 15–30 minutes with the UI tests and audits. Since E4 US2 a
+  build (about 20 s); code pushes take 22–30 minutes with the UI tests and audits
+  (`build-and-test` has a 45-minute limit since #204). Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
 - **Backlog**: 8 epics, 41 features, 153 tasks (#1–#203; #188 is a PR) on the project board.
@@ -633,9 +635,9 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6: check US2's CI** (the run for the close-out commit on
-   `007-settings-themes-sound-and-rules`). If it is green, comment on and close #151 (T012, T013,
-   T015 are all done) and #150 (T011, T014, T015); #152 waits for T029–T030.
+1. **E6: check the CI run for #204** (the 45-minute limit, which also re-checks US2). If it is
+   green, comment on and close #204, #151 (T012, T013, T015 are all done) and #150 (T011, T014,
+   T015), and fast-forward `main`; #152 waits for T029–T030.
 2. **E6 US3** with `/speckit-implement`: bring `wip/007-us3-themes` onto the slice branch
    (`git checkout 007-settings-themes-sound-and-rules && git merge --squash wip/007-us3-themes`,
    then move `wip-drafts/` out of the commit), fix the Settings audit's contrast issues on the
