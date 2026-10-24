@@ -41,9 +41,9 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 1/15 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 2/15 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **32/41** | **123/152** | |
+| | **Total** | | | | **32/41** | **124/152** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -70,12 +70,12 @@ reported once (E5). Rules and Settings are placeholders until E6.
 
 1. **E6 Settings, themes, sound and rules (#132)** on branch `007-settings-themes-sound-and-rules`
    (`specs/007-settings-themes-sound-and-rules/`): the spec is written (#134: 4 user stories, 27
-   requirements); **clarify (#135)** is next, then plan, tasks and reconcile. Three assumptions
-   go to Clarify: the theme colors only the board; the sounds are original sounds made for the
-   app; a setting that cannot be read falls back to its default without an alert. New screens join
-   `US5AccessibilityAuditUITests` (#142, #152); the themes must pass `US4ContrastTests` (#144),
-   which the prototype's Modern and Playful colors fail (1.1:1 to 1.7:1 for pieces on dark
-   squares); the Settings and Rules screens replace their placeholders.
+   requirements) and clarified (#135); **plan (#136)** is next, then tasks and reconcile. The
+   plan chooses the Modern and Playful colors, the script that generates the four sounds, and
+   the seven Rules pictures. New screens join `US5AccessibilityAuditUITests` (#142, #152); the
+   themes must pass `US4ContrastTests` (#144), which the prototype's Modern and Playful colors
+   fail (1.1:1 to 1.7:1 for pieces on dark squares); the Settings and Rules screens replace their
+   placeholders.
 2. Then E8 Release 1.0 (#169).
 
 ## Order and dependencies
@@ -159,9 +159,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
   limit there, and engine tests in the blocking plan must use small search limits.
 - The local `main` lags GitHub's (it moves by `git push origin <sha>:refs/heads/main`); run
-  `git fetch origin main:main` before comparing branches. The merged branches `002-…` to `005-…`
-  are deleted; `006-saving-and-statistics` is deleted once E6's branch exists (command in
-  `HANDOFF.md`).
+  `git fetch origin main:main` before comparing branches. Merged slice branches (`001-…` to
+  `006-…`) are deleted once the next slice's branch exists; the auto-mode safety check blocks
+  deleting them, so the user runs it.
 
 ## Backlog
 
@@ -399,12 +399,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 1/15 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 2/15 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
 - [x] #134 E6 Specify: write spec.md with /speckit-specify · S
-- [ ] #135 E6 Clarify: resolve open questions with /speckit-clarify · S
+- [x] #135 E6 Clarify: resolve open questions with /speckit-clarify · S
 - [ ] #136 E6 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #138 E6 Reconcile this epic's board tasks with tasks.md · S
@@ -734,11 +734,15 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   both jobs). #131, #201, F5.2 (#128) and E5 (#114) moved to Done (comments posted, closed); all
   30 tasks of `specs/006-saving-and-statistics/tasks.md` checked off; `main` fast-forwarded to
   the close-out commit. Backlog: 32/41 features, 122/152 tasks. Next is E6 (#134 Specify).
-- 2026-10-23: Merged branches `002-rules-engine` to `005-computer-opponent` deleted, locally and
-  on GitHub; `006-saving-and-statistics` follows once E6's branch exists.
+- 2026-10-23: Merged branches `002-rules-engine` to `006-saving-and-statistics` deleted, locally
+  and on GitHub (`006-…` once E6's branch existed).
 - 2026-10-23: E6 started on branch `007-settings-themes-sound-and-rules` (#132, F6.0 #133 In
   Progress). #134 done: `specs/007-settings-themes-sound-and-rules/spec.md`, 4 user stories (move
   hints, Rules, board themes, sound), 27 requirements traced to #140–#142, #144, #145, #147, #148
   and #150–#152, 9 success criteria, checklist 16/16. Measured: the prototype's Modern and Playful
   boards fail E7's 3:1 contrast, so the themes keep only their look. Three assumptions go to #135
   Clarify.
+- 2026-10-23: #135 done. Four clarifications: the four sounds are original, generated by a script
+  kept with the app and approved by ear; a theme changes only the board (also in the Settings and
+  Rules pictures); a setting that cannot be read takes its default, logged, without an alert;
+  Rules is one scrolling page of seven headed sections. Next is #136 Plan.
