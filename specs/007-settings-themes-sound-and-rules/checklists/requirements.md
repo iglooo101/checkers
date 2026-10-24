@@ -49,3 +49,7 @@
   FR-NAV-04, FR-A11Y-04, FR-A11Y-05, FR-PRIV-01, FR-PRIV-02 and FR-PLAT-03, traced to board tasks
   #140 to #142, #144, #145, #147, #148 and #150 to #152. E3's Rules and Settings placeholders (its
   FR-003) are replaced; E3's FR-028 (hints always on) is replaced by FR-006.
+- Revised 2026-10-23 during `/speckit-plan`: FR-021 asked for a board picture in every Rules
+  section; the undo and resign section shows the game menu's Undo and Resign items instead, as a
+  board says nothing about them (research R9). US2's first scenario and SC-006 follow. All items
+  still pass.

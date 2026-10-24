@@ -41,9 +41,9 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 2/15 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 0/5 | 3/15 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **32/41** | **124/152** | |
+| | **Total** | | | | **32/41** | **125/152** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -70,12 +70,13 @@ reported once (E5). Rules and Settings are placeholders until E6.
 
 1. **E6 Settings, themes, sound and rules (#132)** on branch `007-settings-themes-sound-and-rules`
    (`specs/007-settings-themes-sound-and-rules/`): the spec is written (#134: 4 user stories, 27
-   requirements) and clarified (#135); **plan (#136)** is next, then tasks and reconcile. The
-   plan chooses the Modern and Playful colors, the script that generates the four sounds, and
-   the seven Rules pictures. New screens join `US5AccessibilityAuditUITests` (#142, #152); the
-   themes must pass `US4ContrastTests` (#144), which the prototype's Modern and Playful colors
-   fail (1.1:1 to 1.7:1 for pieces on dark squares); the Settings and Rules screens replace their
-   placeholders.
+   requirements), clarified (#135) and planned (#136: research R1–R13, three contracts);
+   **tasks and analyze (#137)** are next, then reconcile (#138). The plan measured the Modern and
+   Playful colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script
+   (four sounds, 0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). New
+   screens join `US5AccessibilityAuditUITests` (#142, #152); the themes run through
+   `US4ContrastTests` (#144); the Settings and Rules screens replace their placeholders. Open for
+   the user during implementation: approve the two themes and the four sounds.
 2. Then E8 Release 1.0 (#169).
 
 ## Order and dependencies
@@ -399,13 +400,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 2/15 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 3/15 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
 - [x] #134 E6 Specify: write spec.md with /speckit-specify · S
 - [x] #135 E6 Clarify: resolve open questions with /speckit-clarify · S
-- [ ] #136 E6 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
+- [x] #136 E6 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #138 E6 Reconcile this epic's board tasks with tasks.md · S
 
@@ -746,3 +747,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   kept with the app and approved by ear; a theme changes only the board (also in the Settings and
   Rules pictures); a setting that cannot be read takes its default, logged, without an alert;
   Rules is one scrolling page of seven headed sections. Next is #136 Plan.
+- 2026-10-23: #136 done. `specs/007-settings-themes-sound-and-rules/plan.md` with research
+  R1–R13, data model, contracts (`settings-and-sound.md`, `screens.md`, `rules-content.md`) and
+  quickstart; Constitution Check passes before and after design. Measured first: three
+  `UserDefaults` keys read in 2.4 µs, set in UI tests by typed launch arguments (`<false/>`);
+  Modern and Playful palettes that pass every contrast pair in light and dark; a Python script
+  that writes four original sounds (0.12–1.2 s, 176 KB, byte-identical on repeat, checked in CI);
+  audio players load in 107 ms and play calls take 11–69 ms on the Mac, so playback runs in an
+  actor in the `.ambient` category. Every Rules picture is an engine position, its claim checked
+  with the engine; the text is 364 words. Spec aligned: Rules' undo and resign section shows the
+  game menu's items instead of a board (FR-021). Next is #137 Tasks.

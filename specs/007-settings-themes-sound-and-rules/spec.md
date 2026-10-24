@@ -92,7 +92,8 @@ read it with VoiceOver and at the largest text size.
 
 1. **Given** Home, **When** the player chooses Rules, **Then** one scrolling page explains, in short
    headed sections, the setup, moving, mandatory capture, capture chains, crowning, how a game is
-   won and drawn, and undo and resign, and each section has at least one picture of a board.
+   won and drawn, and undo and resign; each rules section has at least one picture of a board,
+   and the undo and resign section shows the game menu's two items.
 2. **Given** a game in progress, **When** the player opens Rules from the game menu and goes back,
    **Then** the game shows the same position, and against the computer its move waits until the
    player is back (E4).
@@ -271,8 +272,9 @@ turn sound off and check nothing plays; switch the phone to silent and check not
   one scrolling page that explains briefly, in seven headed sections in this order: the setup,
   moving, mandatory capture, capture chains, crowning, how a game is won and drawn, and the app's
   undo and resign options (FR-HELP-01, FR-HELP-02; Clarifications).
-- **FR-021**: Each section MUST have at least one picture of a board position that shows what the
-  section explains, drawn like the game board in the chosen theme. The pictures are not
+- **FR-021**: Each of the six rules sections MUST have at least one picture of a board position
+  that shows what the section explains, drawn like the game board in the chosen theme; the undo
+  and resign section MUST show the game menu's Undo and Resign items instead. The pictures are not
   interactive (an interactive tutorial is out of scope, FRD §19).
 - **FR-022**: The rules MUST match the app exactly: kings move one square in any diagonal
   direction (no flying kings); a capture must be made but need not be the longest; a chain goes
@@ -345,8 +347,8 @@ network requests and asks for no permissions (E8, #177).
 - **SC-005**: On a phone in silent mode, no game sound is heard; with music playing in another app,
   the music continues through a game (checked by hand on a device).
 - **SC-006**: The Rules screen covers all seven FR-HELP-01 topics, each with at least one picture
-  and a VoiceOver description, in at most about 600 words, so a player can read it in a few
-  minutes.
+  (a board, or for undo and resign the menu's two items) and a VoiceOver description, in at most
+  about 600 words, so a player can read it in a few minutes.
 - **SC-007**: The automated accessibility audit passes on Settings, on Rules and on the game screen
   in each theme, and these screens stay usable at the largest accessibility text size in Dark Mode.
 - **SC-008**: Opening the app takes no longer than before this slice: the launch test stays within
