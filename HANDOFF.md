@@ -39,8 +39,8 @@ Last updated: 2026-10-24
   (T001–T015) passed CI (run 40116301945 on `3b8ba4d`, after #204/T036 raised `build-and-test`'s
   limit from 30 to 45 minutes); US3 (T016–T020) passed CI run 40121012315 on `20096e7`; the
   theme rows are buttons, not an inline picker (research R11, "Found in US3"). **US4
-  (T022–T027) is pushed, its CI to check.** The local branch `wip/007-us3-themes` is no longer
-  needed; the user deletes it.
+  (T022–T027) is pushed, its CI to check.** The user approved Modern and Playful as they are
+  (T021; F6.2 done) and deleted the local branch `wip/007-us3-themes`.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -672,11 +672,9 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **E6: check US4's CI** (the push of T022–T027). If it is green, comment on and close #148
    (T023, T024, T026, T027) and #141 (T006–T010, T020, T027), and fast-forward `main`.
-2. **E6 reviews with the user**: T021, the visual review of Modern and Playful (the private
-   review page https://claude.ai/artifact/58DtEpu6hHzAvZMMeo9PBG, quickstart §4; then #144
-   closes), and T028, the listening review of the four sounds (`afplay
-   checkers/checkers/Features/Sound/Sounds/<name>.wav`; then #147 closes). Record each answer in
-   `validation.md`. Then Polish (T029–T035): #142 and #152 close after T029–T030, #203 and the
+2. **E6 listening review with the user** (T028): the four sounds (`afplay
+   checkers/checkers/Features/Sound/Sounds/<name>.wav`); record the answer in `validation.md` §5,
+   then #147 closes (T021, the themes, was approved: #144 and F6.2 Done). Then Polish (T029–T035): #142 and #152 close after T029–T030, #203 and the
    epic at the end. Board tasks per story are in `tasks.md` "Board Mapping".
 3. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
    §4) and the four sounds (T028: `afplay` the files T025 generates). On an iPhone: a sound's delay,

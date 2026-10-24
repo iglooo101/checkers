@@ -112,6 +112,12 @@ measurements below check the ones the code depends on.
 
 ## 4. Themes, visual review (US3, FR-012, SC-002)
 
+- 2026-10-24 (T021): the user reviewed simulator screenshots of a new two-player game with c3
+  selected in Classic, Modern and Playful, light and dark, and Settings' previews, beside the
+  prototype's `Classic.html`, `Modern.html` and `Playful.html` (rendered from `e3c0c2b^`), with
+  research R4's colors and where they differ from the prototype. **Approved: Modern and Playful as
+  they are**; no color changes, so R4's table, the asset catalog and `US3ThemeTests` stand.
+
 ## 5. Sounds, by ear and on a device (US4, FR-019, SC-003 to SC-005)
 
 ## 6. Largest text and Dark Mode (FR-026, SC-007)
