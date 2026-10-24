@@ -35,8 +35,11 @@ Last updated: 2026-10-24
   is at `977f5e6`, E5's close-out plus a plan fix. **E6 is under way on
   `007-settings-themes-sound-and-rules`** (pushed, `CI gate` green on every commit): spec,
   clarify and plan done, `tasks.md` written and analyzed, the 12 analysis findings applied
-  (#137, 9b881b9) and the board reconciled (#138; F6.0 done). No E6 code yet. The working tree
-  is clean.
+  (#137, 9b881b9) and the board reconciled (#138; F6.0 done). **Implementation**: Setup,
+  Foundational and US1 (T001–T010) are on the branch, CI run 40069158202 green; US2 (T011–T015)
+  was pushed at the 2026-10-24 close-out, **its CI not yet checked**. **US3 (T016–T020) and the
+  US4 drafts are only on the local branch `wip/007-us3-themes`** (commit `ca00675`, not pushed):
+  US3's tests pass except `testUS5_auditSettings`. The slice branch's working tree is clean.
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
@@ -44,8 +47,16 @@ Last updated: 2026-10-24
   Settings and retried with the next sound). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
 - **App**: **fully native SwiftUI** (E3): Home, Game setup, a two-player game screen (tap and
-  drag, hints, chains, crowning, undo, resign, result panel, Play again), Statistics (E5) and
-  placeholder Rules and Settings screens, which E6 replaces; the web prototype is gone. `GameSession` and
+  drag, hints, chains, crowning, undo, resign, result panel, Play again), Statistics (E5), and
+  since E6 Settings (move hints so far) and Rules (seven sections with engine-built pictures);
+  the placeholders and the web prototype are gone. **E6 so far**: `SettingsValues` and
+  `AppSettings` (`Features/Settings/`) in `UserDefaults` under `boardTheme`, `soundEffects` and
+  `moveHints`, read per key (an unreadable one takes its default, logged); the router hands
+  `settings` to every session, and with hints off `hintedPieces` and `targets` are empty;
+  `RulesContent` and `RulesView` (`Features/Rules/`), whose texts a test checks against
+  `specs/007-…/contracts/rules-content.md`; `BoardPicture` (`Features/Game/`) draws still
+  boards; UI tests pass settings as typed launch arguments (`launch(settings:)`,
+  `setSwitch(_:isOn:)` in `AppScreens`). `GameSession` and
   `AppRouter` hold the interaction and navigation rules; setup choices are remembered in
   `UserDefaults` (declared in the privacy manifest). The **`CheckersEngine` package holds the
   rules engine** (E2); public API in `specs/002-rules-engine/contracts/engine-api.md`, whose
@@ -98,11 +109,13 @@ Last updated: 2026-10-24
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
 - **Backlog**: 8 epics, 41 features, 153 tasks (#1–#203; #188 is a PR) on the project board.
+  E6: #140 Done; #141, #142, #144, #145, #150–#152 and #203 In Progress, with F6.1, F6.2 and
+  F6.4.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility and E4 Computer
   opponent and E5 Saving and statistics are done** (E5: #114, final CI run 40040004817, 264
-  tests). **E6 (#132) is in progress**: F6.0 (#133) is done (#134–#138); F6.1 to F6.4 are left,
-  with #203 (validate the slice and update docs) under F6.4; E8 is left (33/41 features, 127/153
-  tasks). Progress and the full list are in
+  tests). **E6 (#132) is in progress**: F6.0 (#133) is done (#134–#138); F6.1 to F6.4 are under
+  way, with #203 (validate the slice and update docs) under F6.4; E8 is left (33/41 features,
+  128/153 tasks). Progress and the full list are in
   `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -580,6 +593,39 @@ Last updated: 2026-10-24
 - **`update_plan.py` sets the "Last updated" date** in `EXECUTION_PLAN.md`'s header itself, so a
   hand edit of that line must start from the regenerated text.
 
+## Lessons learned (E6 implementation, 2026-10-24)
+
+- **Draft in the scratchpad while a build runs, copy in once it ends**: a whole story's tests
+  and code were written while the 15-minute baseline ran, then copied in, seen failing with
+  `build-for-testing` and completed. Scratchpad files do not outlive the session, so drafts
+  that are not yet in the targets go into the repository before a close-out (the WIP branch's
+  `wip-drafts/`).
+- **Commit the next story while CI runs, push after it finishes**: US2 was implemented and
+  committed while US1's 40-minute CI run went on, and pushed only once it passed.
+- **`UserDefaults` skips a write equal to the stored value**, and the number 0 equals `false`:
+  a test that stores an unreadable 0 over `false` must remove the key first.
+- **Booleans in `UserDefaults`**: `as? Bool` accepts the numbers 0 and 1; the store checks
+  `CFGetTypeID(number) == CFBooleanGetTypeID()`, so only real booleans (including `<true/>` and
+  `<false/>` launch arguments) count.
+- **XCUITest and form switches**: a toggle in a `Form` fills its row, so tapping its middle hits
+  the label; `setSwitch(_:isOn:)` taps near the trailing edge and waits for the value ("1"/"0").
+  Inline picker rows expose `isSelected`, found by their identifiers.
+- **`@Bindable` cannot bind through a `let`** of another observed object (`$router.settings.x`
+  fails); bind in the body with `@Bindable var settings = router.settings`.
+- **Contract texts can be the test's source**: `US2RulesTests` parses the Rules contract and
+  compares every string, so the 364 words are not typed twice; `LocalizationTests` derives the
+  Rules strings from `RulesContent`.
+- **Preview strings go into the catalog too**: a preview's own description added a key; reuse a
+  real string. A catalog diff can look like a removal when two keys swap lines; check the file.
+- **The audit can flag a picker row with a picture in it**: the Classic theme row (preview and
+  name in one frame) fails the contrast audit with no named element. A throwaway UI test with a
+  screenshot attachment and the issue's `element?.frame` found it (exported with `xcrun
+  xcresulttool export attachments`).
+- **The sound recipe in the contract is complete**: a fresh `make-sounds.py` written from it
+  reproduced research R6's lengths, sizes and RMS levels exactly.
+- **Foreground `sleep` is blocked**: wait for a run with `run_in_background` and its
+  notification, or an `until` loop.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
@@ -587,14 +633,24 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6 implementation** with `/speckit-implement` from T001, story by story, pushing once per
-   story. Board tasks per story are in `tasks.md` "Board Mapping": Setup is #203 (T001, T002),
-   Foundational #140, US1 #141 and #142, US2 #150 to #152, US3 #144 and #145, US4 #147 and #148;
-   Polish is #203 again.
-2. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
+1. **E6: check US2's CI** (the run for the close-out commit on
+   `007-settings-themes-sound-and-rules`). If it is green, comment on and close #151 (T012, T013,
+   T015 are all done) and #150 (T011, T014, T015); #152 waits for T029–T030.
+2. **E6 US3** with `/speckit-implement`: bring `wip/007-us3-themes` onto the slice branch
+   (`git checkout 007-settings-themes-sound-and-rules && git merge --squash wip/007-us3-themes`,
+   then move `wip-drafts/` out of the commit), fix the Settings audit's contrast issues on the
+   Classic theme row (see Risks in `EXECUTION_PLAN.md`), mark T016–T020 done, push, and run T021
+   (the user's visual review of Modern and Playful, with screenshots). Then US4 (T022–T028) from
+   the drafts in `wip-drafts/` (`make-sounds.py` to `scripts/`, the three sound files to
+   `Features/Sound/`, the tests to their targets; then `GameSession`, the router, `CheckersApp`
+   and the Sound section of Settings per T027), the user's listening review (T028), and Polish
+   (T029–T035). Board tasks per story are in `tasks.md` "Board Mapping"; #141 closes after T020
+   and T027, #142 and #152 after T029–T030. Delete `wip/007-us3-themes` once merged (the user
+   runs `git branch -D`).
+3. **During E6 implementation the user approves** the Modern and Playful colors (T021, quickstart
    §4) and the four sounds (T028: `afplay` the files T025 generates). On an iPhone: a sound's delay,
    silent mode and other apps' music (quickstart §5). Then E8 (#169).
-3. Open for the user:
+4. Open for the user:
    - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
      §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
      casual player. If Easy proves too strong, widen its margin, or revisit random blunders as
@@ -610,7 +666,7 @@ it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
      switcher and Continue; press Home while the computer thinks, then Continue; finish games by
      hand at Easy and Medium and check Statistics; VoiceOver reads each Statistics block as one
      sentence.
-4. Follow-ups: #192 (MetricKit, which can report E6's `sound` and `settings` errors) and #181
+5. Follow-ups: #192 (MetricKit, which can report E6's `sound` and `settings` errors) and #181
    (400 ms on a real iPhone) are in E8; if the iPhone check of a sound's delay misses 0.1 s, move
    `SoundBank` to `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the
    development Mac.

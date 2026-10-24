@@ -41,15 +41,26 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 5/16 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 1/5 | 6/16 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **33/41** | **127/153** | |
+| | **Total** | | | | **33/41** | **128/153** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #132 E6: Settings, themes, sound and rules
+- #139 F6.1: Settings
+- #141 Settings screen; changes apply immediately, including in a game in progress
+- #142 Accessibility pass: Settings
+- #143 F6.2: Board themes
+- #144 Classic, Modern and Playful themes as asset-catalog colors with dark variants
+- #145 Theme picker with board previews
+- #149 F6.4: Rules screen
+- #150 Illustrated rules content: setup, moving, captures, chains, crowning, win/draw, undo/resign
+- #151 Rules reachable from Home and the game menu
+- #152 Accessibility pass: Rules
+- #203 Validate the E6 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -73,9 +84,13 @@ reported once (E5). Rules and Settings are placeholders until E6.
    `tasks.md` has 35 tasks, and the 12 `/speckit-analyze` findings are applied (#137): a sound
    that cannot play now shows "Sound effects aren't available right now." in Settings and the
    next sound tries again (`FRD.md` 1.3, FR-SND-05). The board is reconciled (#138: task IDs on
-   every board task, #203 added for setup and validation), so F6.0 (#133) is done. **Next:
-   implement from T001 with `/speckit-implement`**, story by story (Setup and Foundational, then
-   US1 hints, US2 Rules, US3 themes, US4 sound), pushing once per story. The plan measured the Modern and Playful
+   every board task, #203 added for setup and validation), so F6.0 (#133) is done.
+   **Implementation** (`/speckit-implement`): Setup, Foundational (#140 Done) and US1 (the move
+   hints switch) landed on the branch with CI run 40069158202 green; US2 (the Rules screen) is
+   pushed with this close-out, its CI to check. **Next: US3** from the local branch
+   `wip/007-us3-themes` (T016–T020 applied; `testUS5_auditSettings` fails on the Classic theme
+   row's contrast, to fix first), then the visual review (T021), US4 from the drafts in that
+   branch's `specs/007-…/wip-drafts/`, and Polish. The plan measured the Modern and Playful
    colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script (four sounds,
    0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). Open for the user
    during implementation: approve the two themes (T021) and the four sounds (T028).
@@ -125,6 +140,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); on the Mac each `play()`
   call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
   `AVAudioEngine` (E6 research R7). Silent mode and other apps' music are checked by hand too.
+- E6 US3's Settings audit fails: the accessibility audit reports two contrast issues on the
+  Classic theme row (its frame covers the board preview and the name). Check whether the preview
+  next to the text causes it (move it out of the row's label, or keep it from the audit), and
+  only then consider an allow-list entry for the system picker row (plan, "Audit allow-list").
+- E6 US3 and the US4 drafts live only on the local branch `wip/007-us3-themes` (not pushed);
+  bring them onto the slice branch before more work there.
 - E6's sound tests prepare real `AVAudioPlayer`s in CI's simulator (T023: the bundled files, and
   a bank over a directory with a file missing); if preparing fails on a runner without audio
   output, the success case checks loading only. The "Sound effects aren't available right now."
@@ -416,7 +437,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 5/16 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 6/16 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
@@ -428,14 +449,14 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F6.1 Settings** (#139) · FR-SET-01, FR-SET-03, FR-SET-04, FR-AID-01, FR-AID-02, FR-AID-03, FR-AID-04, FR-NAV-04, FR-A11Y-04, FR-PLAT-03
 
-- [ ] #140 Settings store with defaults (Classic, sound on, hints on), persisted behind a protocol · S
-- [ ] #141 Settings screen; changes apply immediately, including in a game in progress · M
-- [ ] #142 Accessibility pass: Settings · S
+- [x] #140 Settings store with defaults (Classic, sound on, hints on), persisted behind a protocol · S
+- [~] #141 Settings screen; changes apply immediately, including in a game in progress · M
+- [~] #142 Accessibility pass: Settings · S
 
 **F6.2 Board themes** (#143) · FR-SET-02, FR-GAME-07, FR-A11Y-05
 
-- [ ] #144 Classic, Modern and Playful themes as asset-catalog colors with dark variants · M
-- [ ] #145 Theme picker with board previews · S
+- [~] #144 Classic, Modern and Playful themes as asset-catalog colors with dark variants · M
+- [~] #145 Theme picker with board previews · S
 
 **F6.3 Sound effects** (#146) · FR-SND-01, FR-SND-02, FR-SND-03, FR-SND-04, FR-SND-05, FR-PRIV-02
 
@@ -444,10 +465,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F6.4 Rules screen** (#149) · FR-HELP-01, FR-HELP-02, FR-NAV-04, FR-A11Y-04, FR-PLAT-03
 
-- [ ] #150 Illustrated rules content: setup, moving, captures, chains, crowning, win/draw, undo/resign · M
-- [ ] #151 Rules reachable from Home and the game menu · S
-- [ ] #152 Accessibility pass: Rules · S
-- [ ] #203 Validate the E6 slice and update project docs · S · after #142, #152
+- [~] #150 Illustrated rules content: setup, moving, captures, chains, crowning, win/draw, undo/resign · M
+- [~] #151 Rules reachable from Home and the game menu · S
+- [~] #152 Accessibility pass: Rules · S
+- [~] #203 Validate the E6 slice and update project docs · S · after #142, #152
 
 ### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 0/15 tasks
 
@@ -799,3 +820,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   the requirement lines gained the spec's traceability IDs (FR-SND-05 on #146 and #148). #203
   added under F6.4 for setup and validation (T001, T002, T029–T035), after #142 and #152. Backlog
   now 153 tasks (#1–#203). Next: E6 implementation from T001.
+- 2026-10-24: E6 implementation started. Setup and Foundational (T001–T005: baseline 264 tests,
+  logging categories, the no-permission test, the settings store and `AppSettings`; #140 Done)
+  and US1 (T006–T010: Settings with the move hints switch) on the branch, CI run 40069158202
+  green. US2 (T011–T015: the Rules screen, its texts checked word for word against the contract)
+  pushed at the session's close-out. US3 (T016–T020) is on the local branch
+  `wip/007-us3-themes` with the US4 drafts; its Settings audit fails on the Classic theme row.
+  Session close-out: HANDOFF.md updated.

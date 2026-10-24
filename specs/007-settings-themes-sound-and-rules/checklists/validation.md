@@ -51,7 +51,8 @@ measurements below check the ones the code depends on.
   `testUS1_launchArgumentSetsHints` launches with `-moveHints <false/>` and Settings shows hints
   off. A form's switch fills its row, so `setSwitch` taps near the trailing edge; `@Bindable`
   cannot bind through the router's `let settings`, so `SettingsView` binds to the settings object
-  in its body.
+  in its body. CI run 40069158202 on `5ee5297` (Setup, Foundational and US1) passed: `CI gate`
+  green with both jobs.
 - US2 (T011–T015), 2026-10-24: before T015 the new tests failed to compile (no `RulesContent`).
   With T014 and T015, US2's independent test set passes on the iPhone 17 simulator: 9 unit tests
   in 3 suites (`US2RulesTests`, `US7NavigationTests`, `LocalizationTests`) and 8 UI tests
