@@ -21,6 +21,13 @@ struct PrivacyManifestTests {
         #expect(apis.first?["NSPrivacyAccessedAPITypeReasons"] as? [String] == ["CA92.1"])
     }
 
+    @Test("US4 FR-PRIV-02: the app asks for no permission")
+    func noPermissionAsked() throws {
+        let info = try #require(Bundle.main.infoDictionary)
+        let usages = info.keys.filter { $0.hasSuffix("UsageDescription") }
+        #expect(usages.isEmpty, "Usage descriptions: \(usages.sorted())")
+    }
+
     private static func manifest() throws -> [String: Any] {
         let url = try #require(
             Bundle.main.url(forResource: "PrivacyInfo", withExtension: "xcprivacy")

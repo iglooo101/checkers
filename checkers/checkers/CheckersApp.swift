@@ -5,7 +5,8 @@ struct CheckersApp: App {
     @State private var router = AppRouter(
         store: UserDefaultsSetupStore(defaults: .standard),
         games: UserDefaultsSavedGameStore(defaults: .standard),
-        records: UserDefaultsRecordStore(defaults: .standard))
+        records: UserDefaultsRecordStore(defaults: .standard),
+        settingsStore: UserDefaultsSettingsStore(defaults: .standard))
 
     @Environment(\.scenePhase) private var scenePhase
 

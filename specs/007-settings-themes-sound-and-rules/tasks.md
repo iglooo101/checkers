@@ -30,8 +30,8 @@ description: "Task list for the settings, themes, sound and rules slice (epic E6
 
 ## Phase 1: Setup (Shared Infrastructure)
 
-- [ ] T001 Create `specs/007-settings-themes-sound-and-rules/checklists/validation.md` with one section per quickstart scenario (1–7), a "Baseline" section (`scripts/test.sh` passes before any slice code: record the count) and the measurements of research "Environment facts", R4 (contrast), R6 (sounds) and R7 (players), with the date and the Mac.
-- [ ] T002 [P] Add the `settings` and `sound` categories to `App/Support/Logging.swift` (`Log.settings`, `Log.sound`) and to `Unit/LoggingTests.swift` (categories `["app", "game", "setup", "computer", "storage", "settings", "sound"]`), test first. Add `@Test("US4 FR-PRIV-02: the app asks for no permission")` to `Unit/PrivacyManifestTests.swift`: the app bundle's `Info.plist` has no key ending in `UsageDescription` (sound playback needs none, FR-024), so every FRD ID of the slice is named by a test (SC-009).
+- [X] T001 Create `specs/007-settings-themes-sound-and-rules/checklists/validation.md` with one section per quickstart scenario (1–7), a "Baseline" section (`scripts/test.sh` passes before any slice code: record the count) and the measurements of research "Environment facts", R4 (contrast), R6 (sounds) and R7 (players), with the date and the Mac.
+- [X] T002 [P] Add the `settings` and `sound` categories to `App/Support/Logging.swift` (`Log.settings`, `Log.sound`) and to `Unit/LoggingTests.swift` (categories `["app", "game", "setup", "computer", "storage", "settings", "sound"]`), test first. Add `@Test("US4 FR-PRIV-02: the app asks for no permission")` to `Unit/PrivacyManifestTests.swift`: the app bundle's `Info.plist` has no key ending in `UsageDescription` (sound playback needs none, FR-024), so every FRD ID of the slice is named by a test (SC-009).
 
 ---
 
@@ -39,7 +39,7 @@ description: "Task list for the settings, themes, sound and rules slice (epic E6
 
 **Purpose**: The stored settings and the observed settings object, used by every story (#140).
 
-- [ ] T003 [P] Write `Unit/SettingsStoreTests.swift` (`struct SettingsStoreTests`), each `UserDefaults` test on its own `UserDefaults(suiteName:)`, removed afterwards:
+- [X] T003 [P] Write `Unit/SettingsStoreTests.swift` (`struct SettingsStoreTests`), each `UserDefaults` test on its own `UserDefaults(suiteName:)`, removed afterwards:
   - `FR-SET-02 FR-SET-04 FR-AID-04` (FR-002): nothing stored → `SettingsValues.defaults`, which is `.classic`, sound effects on, move hints on.
   - `FR-SET-03` (FR-004): `UserDefaultsSettingsStore` save then load gives equal values for every combination of theme, sound and hints; the keys are exactly `boardTheme` (a string `"classic"`, `"modern"` or `"playful"`), `soundEffects` and `moveHints` (booleans).
   - FR-005: each key on its own: `boardTheme` set to `"wooden"`, to `42` or to a boolean, `soundEffects` set to `"NO"` or to `3.5`, `moveHints` set to a string, each give that setting's default while the other two keep their stored values; missing keys give their defaults.
@@ -47,8 +47,8 @@ description: "Task list for the settings, themes, sound and rules slice (epic E6
   - `FR-SET-03` (FR-003, FR-004): `AppSettings(store:)` starts with the stored values; setting `boardTheme`, `soundEffects` or `moveHints` saves it through the store at once (a new `AppSettings` over the same store reads it).
   - `BoardTheme.allCases == [.classic, .modern, .playful]`, raw values `"classic"`, `"modern"`, `"playful"`.
   Fails to compile until T004.
-- [ ] T004 Create, per data-model.md, `App/Features/Settings/BoardTheme.swift` (`String`-backed, `CaseIterable`, `nonisolated`, `Sendable`; the three cases only: its `name` and their catalog strings come with US3 in T020, since E3's `prototypeStringsRemoved` forbids them until T017 changes it), `App/Features/Settings/SettingsStore.swift` (`SettingsValues`, `Equatable`, `nonisolated` and `Sendable`, with `static let defaults`; protocol `SettingsStore` with `load() -> SettingsValues` and `save(_:)`; `UserDefaultsSettingsStore(defaults:)` reading each key with `object(forKey:)`, logging an unreadable value with `Log.settings` without the value, writing only changed keys; `InMemorySettingsStore`, which can hold raw objects) and `App/Features/Settings/AppSettings.swift` (`@Observable final class`, saving each change). T003 passes.
-- [ ] T005 Add `settingsStore: any SettingsStore = InMemorySettingsStore()` to `AppRouter.init` in `App/App/AppRouter.swift`, which builds `settings: AppSettings` from it; pass `UserDefaultsSettingsStore(defaults: .standard)` in `App/CheckersApp.swift`; unused so far.
+- [X] T004 Create, per data-model.md, `App/Features/Settings/BoardTheme.swift` (`String`-backed, `CaseIterable`, `nonisolated`, `Sendable`; the three cases only: its `name` and their catalog strings come with US3 in T020, since E3's `prototypeStringsRemoved` forbids them until T017 changes it), `App/Features/Settings/SettingsStore.swift` (`SettingsValues`, `Equatable`, `nonisolated` and `Sendable`, with `static let defaults`; protocol `SettingsStore` with `load() -> SettingsValues` and `save(_:)`; `UserDefaultsSettingsStore(defaults:)` reading each key with `object(forKey:)`, logging an unreadable value with `Log.settings` without the value, writing only changed keys; `InMemorySettingsStore`, which can hold raw objects) and `App/Features/Settings/AppSettings.swift` (`@Observable final class`, saving each change). T003 passes.
+- [X] T005 Add `settingsStore: any SettingsStore = InMemorySettingsStore()` to `AppRouter.init` in `App/App/AppRouter.swift`, which builds `settings: AppSettings` from it; pass `UserDefaultsSettingsStore(defaults: .standard)` in `App/CheckersApp.swift`; unused so far.
 
 **Checkpoint**: `scripts/test.sh` passes; nothing user-visible has changed.
 

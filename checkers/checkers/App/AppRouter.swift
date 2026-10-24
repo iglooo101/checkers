@@ -23,6 +23,9 @@ final class AppRouter {
     private(set) var isConfirmingAbandon = false
     /// The player's results against the computer, which Statistics shows (FR-STAT-01).
     private(set) var record = Record()
+    /// The player's settings, shared with every game this router shows (FR-003; specs/
+    /// 007-settings-themes-sound-and-rules/research.md R2).
+    let settings: AppSettings
     /// The restore alert Home shows, if any: the saved game's first, then the record's
     /// (FR-SAVE-05, FR-STAT-06).
     var restoreNotice: RestoreNotice? { restoreNotices.first }
@@ -48,7 +51,8 @@ final class AppRouter {
         opponent: any ComputerOpponent = EngineComputerOpponent(),
         pacer: any TurnPacer = SleepingPacer(),
         games: any SavedGameStore = InMemorySavedGameStore(),
-        records: any RecordStore = InMemoryRecordStore()
+        records: any RecordStore = InMemoryRecordStore(),
+        settingsStore: any SettingsStore = InMemorySettingsStore()
     ) {
         self.store = store
         self.drawSide = drawSide
@@ -56,6 +60,7 @@ final class AppRouter {
         self.pacer = pacer
         self.games = games
         self.records = records
+        settings = AppSettings(store: settingsStore)
         setup = store.load()
         do {
             hasSavedGame = try games.load() != nil
