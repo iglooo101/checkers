@@ -51,6 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #132 E6: Settings, themes, sound and rules
 - #133 F6.0: Specification (Spec Kit)
+- #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -71,12 +72,14 @@ reported once (E5). Rules and Settings are placeholders until E6.
 1. **E6 Settings, themes, sound and rules (#132)** on branch `007-settings-themes-sound-and-rules`
    (`specs/007-settings-themes-sound-and-rules/`): the spec is written (#134: 4 user stories, 27
    requirements), clarified (#135) and planned (#136: research R1–R13, three contracts);
-   **tasks and analyze (#137)** are next, then reconcile (#138). The plan measured the Modern and
-   Playful colors (every contrast pair passes, weakest 5.64:1 and 4.16:1), the sound script
-   (four sounds, 0.12–1.2 s, reproducible) and the Rules pictures (checked with the engine). New
-   screens join `US5AccessibilityAuditUITests` (#142, #152); the themes run through
-   `US4ContrastTests` (#144); the Settings and Rules screens replace their placeholders. Open for
-   the user during implementation: approve the two themes and the four sounds.
+   `tasks.md` has 35 tasks and `/speckit-analyze` ran (#137 In Progress): **apply its 12
+   findings** (0 critical, 2 high, 4 medium, 6 low; listed in `HANDOFF.md`, Next steps), the
+   first after the user decides how a sound failure is shown (Constitution IV.3); then close
+   #137, reconcile the board (#138, adding a validation issue as #201 was for E5) and implement
+   from T001. The plan measured the Modern and Playful colors (every contrast pair passes,
+   weakest 5.64:1 and 4.16:1), the sound script (four sounds, 0.12–1.2 s, reproducible) and the
+   Rules pictures (checked with the engine). Open for the user during implementation: approve the
+   two themes (T021) and the four sounds (T028).
 2. Then E8 Release 1.0 (#169).
 
 ## Order and dependencies
@@ -117,6 +120,15 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   reset, so UI tests answer "Abandon current game?" in the start helpers and `tapStart()`, compare
   counts before and after, and set known states with `UserDefaults` launch arguments (research
   R10, confirmed in the simulator by T001).
+- E6's settings outlive UI tests too: a test that changes a setting through the screen puts it
+  back, and known values come from typed launch arguments (`-moveHints <false/>`; a plain `NO`
+  reads as text). The Mac confirmed it; T007 confirms it in the simulator first.
+- E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); on the Mac each `play()`
+  call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
+  `AVAudioEngine` (E6 research R7). Silent mode and other apps' music are checked by hand too.
+- E6's themes and sounds need the user's approval (T021, T028); a changed color must still pass
+  `US4ContrastTests`, and a changed sound its recipe check (`scripts/make-sounds.py --check`,
+  which needs Python 3 on CI's runners).
 - Timing checks on CI runners: the wall-clock SC-004 check failed once at 10.5 s on a runner
   about three times slower than usual (CI run 40023240169; a rerun passed). It now times the
   counting thread's CPU time (#202). Other wall-clock budgets (E4's Hard turn time, the launch
@@ -131,8 +143,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
   after adding or removing strings, or CI fails. Plural variations (Statistics' counts) are
   written by hand in the catalog's layout; `scripts/check-string-catalog.sh
-  checkers/checkers/Localizable.xcstrings .build/DerivedData` confirms a sync keeps them. Return optional strings from a `switch` with
-  explicit `return`s, or the compiler extracts only one of them (HANDOFF.md, E3 lessons).
+  checkers/checkers/Localizable.xcstrings .build/DerivedData` confirms a sync keeps them. Return
+  optional strings from a `switch` with explicit `return`s, or the compiler extracts only one of
+  them (HANDOFF.md, E3 lessons).
 - E3 was validated by automated tests; a full game played by hand and a visual review at the
   largest text size are still open for the user (`specs/003-game-experience/checklists/validation.md`).
 - E7's VoiceOver game by hand (SC-001, quickstart §3) is open for the user: XCUITest cannot drive
@@ -407,7 +420,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #134 E6 Specify: write spec.md with /speckit-specify · S
 - [x] #135 E6 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #136 E6 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [ ] #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [~] #137 E6 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #138 E6 Reconcile this epic's board tasks with tasks.md · S
 
 **F6.1 Settings** (#139) · FR-SET-01, FR-SET-03, FR-SET-04, FR-AID-04
@@ -757,3 +770,18 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   actor in the `.ambient` category. Every Rules picture is an engine position, its claim checked
   with the engine; the text is 364 words. Spec aligned: Rules' undo and resign section shows the
   game menu's items instead of a board (FR-021). Next is #137 Tasks.
+- 2026-10-23: #137 in progress. `specs/007-settings-themes-sound-and-rules/tasks.md`: 35 tasks,
+  test-first, by story (Setup and Foundational T001–T005, US1 T006–T010, US2 T011–T015, US3
+  T016–T021, US4 T022–T028, Polish T029–T035); the sound recipes went into the contract so the
+  script can be rebuilt. `/speckit-analyze` found 12 problems, none critical, not yet applied.
+  High: a sound failure at run time is only logged (Constitution IV.3; the user decides how it is
+  shown); `BoardTheme`'s names in Foundational would add catalog keys that E3's
+  `prototypeStringsRemoved` forbids until US3. Medium: `ResultPanel`'s previews use
+  `Palette.….color`; new value types need `nonisolated`; whether Rules pictures show hint rings;
+  `init(saved:)` lives in `GameSession+Saving.swift`.
+- 2026-10-23: Session close-out. E6 specified, clarified, planned and tasked on
+  `007-settings-themes-sound-and-rules`; #137 stays In Progress until the analysis findings are
+  applied. HANDOFF.md updated with the E6 lessons (deleted designs in git history, contrast by the
+  test's pairs, typed launch arguments, audio setup cost, checking positions with the engine,
+  strings in the story whose test changes, `nonisolated` value types) and next steps. Merged
+  branches `002-…` to `006-…` deleted by the user.
