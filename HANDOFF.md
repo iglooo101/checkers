@@ -32,7 +32,7 @@ Last updated: 2026-10-24
   `git fetch origin main:main` before comparing branches. `001-project-foundation` to
   `006-saving-and-statistics` were merged and deleted (the auto-mode safety check blocks branch
   deletion, so the user runs it once the next slice's branch exists). `main` (local and GitHub)
-  is at `20096e7`: E6 Setup to US3 and the 45-minute CI limit. **E6 is under way on
+  is at `646089b`: E6 Setup to US4 and the 45-minute CI limit. **E6 is under way on
   `007-settings-themes-sound-and-rules`** (pushed): spec, clarify and plan done, `tasks.md`
   written and analyzed, the 12 analysis findings applied (#137, 9b881b9) and the board
   reconciled (#138; F6.0 done). **Implementation**: Setup, Foundational, US1 and US2
@@ -670,10 +670,10 @@ Last updated: 2026-10-24
 in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
 it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E6: check US4's CI** (run 40124926324, rerun after the runner found no simulator). If it is
-   green, comment on and close #147, #148 and #141 and F6.3 (#146), and fast-forward `main` to
-   `646089b`; then push the local commits (T021, T028, T029–T030) and, once their run is green,
-   close #142, #152 and F6.1 (#139).
+1. **E6: check the CI run for the Polish audits** (T029–T030 and the approvals, pushed after
+   US4's run passed; `main` is at `646089b`, #141, #147, #148 and F6.3 Done). If it is green,
+   comment on and close #142 (T007, T008, T029, T030), #152 (T012, T029, T030) and F6.1 (#139),
+   and fast-forward `main`.
 2. **E6 Polish**: the user approved the themes (T021; #144 and F6.2 Done) and the sounds (T028;
    #147 closes with #148 once US4's CI is green). Then Polish (T029–T035): #142 and #152 close after T029–T030, #203 and the
    epic at the end. Board tasks per story are in `tasks.md` "Board Mapping".

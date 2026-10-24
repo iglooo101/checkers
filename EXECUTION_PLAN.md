@@ -41,9 +41,9 @@ Epics are listed in execution order.
 | 4 | E7 Accessibility | #153 | M2 Playable two-player game | P0 | 5/5 | 11/11 | Done |
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
-| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 2/5 | 11/17 | In Progress |
+| 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 3/5 | 14/17 | In Progress |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
-| | **Total** | | | | **34/41** | **133/154** | |
+| | **Total** | | | | **35/41** | **136/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,11 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #132 E6: Settings, themes, sound and rules
 - #139 F6.1: Settings
-- #141 Settings screen; changes apply immediately, including in a game in progress
 - #142 Accessibility pass: Settings
-- #146 F6.3: Sound effects
-- #147 Sound assets: move, capture, crowning, game end
-- #148 Sound service behind a protocol that respects silent mode and volume
 - #149 F6.4: Rules screen
 - #152 Accessibility pass: Rules
 - #203 Validate the E6 slice and update project docs
@@ -89,10 +85,11 @@ game in seven illustrated sections.
    Rules screen) passed every test but first reached `build-and-test`'s 30-minute limit; with
    45 minutes (#204, T036) CI run 40116301945 passed, #150, #151 and #204 are Done, and `main`
    is at `3b8ba4d`. US3 (T016–T020: three themes, chosen in Settings with previews) passed CI
-   run 40121012315, #145 is Done and `main` is at `20096e7`; the theme rows became buttons, since
+   run 40121012315 and #145 is Done; the theme rows became buttons, since
    an inline picker's rows failed the contrast audit (research R11). US4 (T022–T027: four
-   generated sounds, the Sound section of Settings, the notice when sounds cannot play) is pushed,
-   its CI to check. The user approved Modern and Playful as they are (T021), so F6.2 (#143) is
+   generated sounds, the Sound section of Settings, the notice when sounds cannot play) passed CI
+   run 40124926324 (rerun), so #141, #147, #148 and F6.3 (#146) are Done and `main` is at
+   `646089b`. The user approved Modern and Playful as they are (T021), so F6.2 (#143) is
    done. The user approved the four sounds as they are (T028). Polish: the audits (T029–T030)
    are written and pass on the iPhone 17; Settings' navigation bar is now opaque. **Next**:
    T031–T035 (checks, project guide, quickstart, handoff, final CI and `main`).
@@ -179,10 +176,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   Computer chosen), and the texts of system alerts (the abandon question, the restore notices),
   which do scale on screen. Re-check both with each new iOS and Xcode
   (`specs/004-accessibility/plan.md`, `specs/006-saving-and-statistics/plan.md`).
-- GitHub's `macos-26-arm64` image 20261021 once found no iOS simulator for Xcode 26.3 (US4's
-  first run, 40124926324: "Unable to find a device", before any build); a rerun of the failed
-  jobs went past it. If it happens on every run, the pinned destination (iPhone 17, iOS 26.2) or
-  the Xcode pin must follow the image (`.github/workflows/ci.yml`).
+- A CI runner can start without its simulators ready: US4's first run (40124926324, image
+  `macos-26-arm64` 20261021) failed with "Unable to find a device" before building, and a rerun
+  of the failed jobs on the same image passed. Rerun when the log shows that; if it happens on
+  every run, the pinned destination (iPhone 17, iOS 26.2) or the Xcode pin must follow the image
+  (`.github/workflows/ci.yml`).
 - On the iPhone SE at the largest text size in Dark Mode, the Settings audit scrolled to Move
   hints reports one unnamed contrast problem: a header hidden under the opaque navigation bar,
   which nothing on screen shows (E6 `validation.md` §6). Recheck in E8's accessibility pass with
@@ -447,7 +445,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #131 Accessibility pass: Statistics · S
 - [x] #201 Validate the E5 slice and update project docs · S · after #131, #202
 
-### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 11/17 tasks
+### E6 Settings, themes, sound and rules (#132) · M4 Feature complete · P1 · 14/17 tasks
 
 **F6.0 Specification (Spec Kit)** (#133) · FRD §14, §15, §16
 
@@ -460,7 +458,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F6.1 Settings** (#139) · FR-SET-01, FR-SET-03, FR-SET-04, FR-AID-01, FR-AID-02, FR-AID-03, FR-AID-04, FR-NAV-04, FR-A11Y-04, FR-PLAT-03
 
 - [x] #140 Settings store with defaults (Classic, sound on, hints on), persisted behind a protocol · S
-- [~] #141 Settings screen; changes apply immediately, including in a game in progress · M
+- [x] #141 Settings screen; changes apply immediately, including in a game in progress · M
 - [~] #142 Accessibility pass: Settings · S
 
 **F6.2 Board themes** (#143) · FR-SET-02, FR-GAME-07, FR-A11Y-05
@@ -470,8 +468,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F6.3 Sound effects** (#146) · FR-SND-01, FR-SND-02, FR-SND-03, FR-SND-04, FR-SND-05, FR-PRIV-02
 
-- [~] #147 Sound assets: move, capture, crowning, game end · S
-- [~] #148 Sound service behind a protocol that respects silent mode and volume · M
+- [x] #147 Sound assets: move, capture, crowning, game end · S
+- [x] #148 Sound service behind a protocol that respects silent mode and volume · M
 
 **F6.4 Rules screen** (#149) · FR-HELP-01, FR-HELP-02, FR-NAV-04, FR-A11Y-04, FR-PLAT-03
 
@@ -866,3 +864,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   (also at the largest size), Rules at its end and games in Modern and Playful; Settings'
   navigation bar made opaque; the audit allow-list gained text hidden under the navigation bar.
   One unnamed contrast report stays open on the iPhone SE at the largest size in Dark Mode.
+- 2026-10-24: US4's rerun (40124926324, attempt 2) green on the same runner image
+  (`build-and-test` 32 of 45 minutes): #141, #147, #148 and F6.3 (#146) Done, `main`
+  fast-forwarded to `646089b`. The T021, T028 and T029–T030 commits pushed; #142 and #152 close
+  once their run is green.
