@@ -1,0 +1,28 @@
+{
+  "info": {
+    "outcome": "success"
+  },
+  "result": {
+    "devices": [
+      {
+        "connectionProperties": {
+          "pairingState": "paired",
+          "transportType": "wired",
+          "tunnelState": "connected"
+        },
+        "deviceProperties": {
+          "ddiServicesAvailable": false,
+          "developerModeStatus": "disabled",
+          "name": "HKH16",
+          "osVersionNumber": "27.0.1"
+        },
+        "hardwareProperties": {
+          "marketingName": "iPhone 16",
+          "productType": "iPhone17,3",
+          "udid": "00000000-0000000000000F1A"
+        },
+        "identifier": "00000000-0000-4000-8000-00000000F1A7"
+      }
+    ]
+  }
+}

@@ -33,9 +33,11 @@ Last updated: 2026-10-25
   `007-settings-themes-sound-and-rules` were merged and deleted (the auto-mode safety check blocks branch
   deletion, so the user runs it once the next slice's branch exists). **E6 is done** (last code
   CI run 40130998987 on `d85df26`); its branch `007-settings-themes-sound-and-rules` was merged
-  and deleted. **E8 is in progress on `008-release-1-0`** (spec, clarify, constitution v1.2.0
-  and plan done, documentation only so far); `main` follows the branch head by fast-forward after
-  each green `CI gate`.
+  and deleted. **E8 is in progress on `008-release-1-0`**: F8.0 (spec, clarify, constitution
+  v1.2.0, plan, tasks, board) is done and implementation has started (T001–T011 batch, see
+  below). `main` follows the branch head by fast-forward after each green `CI gate`; the last
+  session ended with the batch's first code commit pushed and its CI run not yet checked, so
+  `main` may lag the branch by that commit.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -47,6 +49,15 @@ Last updated: 2026-10-25
   the same Xcode). Nine principles plus workflow and governance gates. That Xcode is 26.3 for
   good: 26.4.1 to 26.6 need macOS Tahoe 26.2, Xcode 27 Tahoe 26.6 on Apple silicon, and Tahoe
   does not support the MacBook Pro (15-inch, 2019).
+- **E8 implementation so far** (2026-10-25): `scripts/device.sh` (`status`, `launch`),
+  `scripts/traceability.py` (writes `specs/008-release-1-0/traceability.md`: 84 FRD IDs covered,
+  FR-PLAT-02 removed, none missing), `scripts/release.sh` (`archive`, `check`), the
+  `checkers-device` scheme and `checkers/Device.xctestplan`, the pre-push hook
+  `scripts/hooks/pre-push` (this clone has `git config core.hooksPath scripts/hooks`; a new clone
+  must set it), `*.p8` in `.gitignore`, and five script tests (`test-no-secrets`, `test-device`,
+  `test-no-network`, `test-traceability`, `test-release-check`); all 12 script tests pass. Done in
+  `tasks.md`: T002–T004, T006–T009; started: T001, T005, T010; open: T011. No app code has
+  changed yet.
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -742,6 +753,31 @@ Last updated: 2026-10-25
   local processes (only the session's XcodeBuildMCP server, which is long-lived and normal) and
   saying so was the right answer.
 
+## Lessons learned (E8 implementation, first batch, 2026-10-25)
+
+- **Never send dependent steps in one batch of tool calls**: a file write and the command that
+  ran it went out together twice, and the command ran before the file existed ("No such file or
+  directory"). Write, then run, in separate steps.
+- **A guard test can prove itself on every run**: `test-no-secrets.sh` and `test-no-network.sh`
+  check the real repository, then plant each problem in a temporary directory and expect all of
+  them to be found; that replaces a one-off mutation and keeps proving the check in CI.
+- **`git grep` reads a pattern that starts with dashes as an option**: pass it with `-e`
+  (`git grep -E -e "$HEADER"`); a key header begins with `-----BEGIN`.
+- **Build the key pattern from parts**: a guard that searches for `PRIVATE KEY` matches its own
+  source and every document that mentions it; matching the whole header line, assembled at run
+  time, does not.
+- **`devicectl list devices --json-output` is enough for a status check**: it carries the name,
+  model, iOS version, `tunnelState` and `developerModeStatus`. A disconnected phone reports a
+  stale Developer Mode ("disabled"), so check the tunnel first.
+- **Regenerate the plan after every board move**: six items moved to In Progress without
+  `update_plan.py`, and the user's "is the execution plan up to date?" caught it. Run it in the
+  same step as `board_move.py`.
+- **Look for an existing test before writing one**: T011 assumed `BoardLayoutTests` should check
+  the board's fit, but that is a UI fact, and `testUS1_boardFitsAndShowsOnlyTheIndicator`
+  already asserts it on whatever device it runs.
+- **FRD IDs are named per test**: in `@Test` display names (app and engine) and in `///` comments
+  above `func test…` (UI tests); parsing them per test gives the same 84 of 85 as a file grep.
+
 ## Lessons learned (E8 plan research on the iPhone, 2026-10-25)
 
 - **Use `xcodebuild test` on the phone, never `test-without-building`**: with an `.xctestrun`
@@ -794,21 +830,35 @@ Last updated: 2026-10-25
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. ~~Amend the constitution~~: done 2026-10-25 (v1.2.0).
-2. ~~`/speckit-plan` for E8 (#173)~~: done 2026-10-25 (`specs/008-release-1-0/plan.md`, research
-   R1–R17); `tasks.md` (57 tasks) written and analyzed, 15 findings applied (#174); board
-   reconciled (#175, #205 added), F8.0 done. Next: `/speckit-implement` from Setup and US1.
-3. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
+1. **Finish the first implementation batch** (`/speckit-implement`, `specs/008-release-1-0/tasks.md`):
+   check the pushed commit's CI run (`gh run list --branch 008-release-1-0`) and fast-forward
+   `main` if `CI gate` passed; T001: run `scripts/test.sh` and record the baseline counts in
+   `checklists/validation.md`; T005: `xcodebuild build-for-testing -scheme checkers-device
+   -configuration Release -destination generic/platform=iOS` builds without the engine's tests;
+   T010: `scripts/release.sh archive 0` (build 0 is never uploaded) and record the check; T011:
+   run `testUS1_boardFitsAndShowsOnlyTheIndicator` with `-only-testing` on the iPhone SE (3rd
+   generation) and iPhone 17 Pro Max simulators, then `LocalizationTests` and
+   `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData`.
+   Mark them done, push, CI, fast-forward `main`, and close #178 and #179 if their tasks are done.
+2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
+   Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the
+   T010 archive in Xcode and Generate Privacy Report; T014, the iPad smoke check on the "iPad
+   (A16) E8" simulator. Then #177 can close.
+3. **Next stories while the user's checks wait**: US3 (diagnostics, T023–T028), then US4 (icon,
+   name, screenshots, pages, listing, T029–T040), then US2's code (T015–T020) and its phone
+   measurements (T021) after US3 and US4's app changes.
+4. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
    Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
    600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract
    `release-tooling.md`); create the app record in App Store Connect with a unique store name and the
    bundle ID `Hussein-Helmy.checkers`; recruit two to five external testers, at least one new to
    checkers for the Easy playtest.
-4. **The open hand checks of E3–E7** (E3's hand-played game and largest-text review, E7's
+5. **The open hand checks of E3–E7** (E3's hand-played game and largest-text review, E7's
    VoiceOver game, E4's playtest, Home while the computer thinks and VoiceOver moves, E5's
    app-switcher, background and Statistics checks, E6's iPhone sound checks and VoiceOver through
    Rules and Settings) are now items of E8's release checklist (spec FR-026), run on the
    TestFlight build; each must pass or be accepted in writing before submission.
-5. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
+6. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
    `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
-   Mac; any update after April 2027 needs an Apple silicon Mac and Xcode 27.
+   Mac; any update after Apple requires the iOS 27 SDK (expected around April 2027) needs an Apple
+   silicon Mac and Xcode 27.

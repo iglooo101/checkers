@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Refuses a push while key material is tracked (FR-024): this repository is public, and CI only
+# sees a push after it happened. Turn it on in a clone with: git config core.hooksPath scripts/hooks
+
+set -uo pipefail
+REPO="$(git rev-parse --show-toplevel)"
+
+if ! output="$(bash "$REPO/scripts/tests/test-no-secrets.sh" 2>&1)"; then
+  echo "Push refused: key material is tracked." >&2
+  echo "$output" >&2
+  exit 1
+fi

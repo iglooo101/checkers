@@ -50,6 +50,12 @@ Epics are listed in execution order.
 
 <!-- BEGIN GENERATED: in-progress -->
 - #169 E8: Release 1.0
+- #177 Verify no network requests, no permission prompts, no account or analytics
+- #178 Verify iPhone portrait-only on devices
+- #179 FRD traceability check: every FR ID covered by a test or a manual check
+- #181 Cold launch under 400 ms on a recent iPhone (release build)
+- #186 TestFlight build and beta round
+- #205 Validate the E8 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -74,9 +80,11 @@ explains the game in seven illustrated sections.
    clarified (#171, #172), the constitution's toolchain line amended (v1.2.0, FR-032) and the
    plan written (#173: `plan.md`, research R1–R17 measured on the phone, data model, three
    contracts, quickstart), `tasks.md` generated and analyzed (#174: 57 tasks; 15 findings
-   applied), and the board reconciled (#175, adding #205), which completes F8.0 (#170). Next:
-   `/speckit-implement`, starting with Setup (T001, T002), Foundational (T003–T005) and US1
-   (#177–#179).
+   applied), and the board reconciled (#175, adding #205), which completes F8.0 (#170).
+   Implementation has started: T002–T004 and T006–T009 are done (secrets guard and pre-push hook,
+   `device.sh`, network guard, traceability matrix, archive privacy check); T001, T005 and T010
+   are started and T011 is open (see `HANDOFF.md`, Next steps 1). Then the user's US1 checks on
+   the phone (T012–T014), and US3, US4 and US2's code meanwhile.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -161,6 +169,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   crashes on iOS 27 traces, so numbers come from XCTest metrics and the app's log through
   `devicectl --console`, and traces are read in the Instruments app. Developer Mode was found
   off once mid-session; `scripts/device.sh status` checks it before every device run.
+- The pre-push hook that refuses a push while key material is tracked works only where it is
+  switched on (`git config core.hooksPath scripts/hooks`, set in this clone on 2026-10-25); CI runs
+  the same check after each push. A new clone must set it before the API key exists.
 - E8 depends on the user and on Apple: the API key, the App Store Connect record and a unique
   store name, the external testers, Beta App Review (about a day) and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
@@ -502,23 +513,23 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F8.1 Platform and privacy verification** (#176) · FR-PLAT-01, FR-PLAT-03, FR-PRIV-01, FR-PRIV-02
 
-- [ ] #177 Verify no network requests, no permission prompts, no account or analytics · S
-- [ ] #178 Verify iPhone portrait-only on devices · S
-- [ ] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
+- [~] #177 Verify no network requests, no permission prompts, no account or analytics · S
+- [~] #178 Verify iPhone portrait-only on devices · S
+- [~] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
 - [ ] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
 
 **F8.2 Performance** (#180) · Constitution VII
 
-- [ ] #181 Cold launch under 400 ms on a recent iPhone (release build) · S
+- [~] #181 Cold launch under 400 ms on a recent iPhone (release build) · S
 - [ ] #182 Hitch-ratio check during play and AI turns · S
 
 **F8.3 App Store delivery** (#183)
 
 - [ ] #184 App icon and launch screen · M
 - [ ] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
-- [ ] #186 TestFlight build and beta round · S
+- [~] #186 TestFlight build and beta round · S
 - [ ] #187 Submit for App Store review · S
-- [ ] #205 Validate the E8 slice and update project docs · S
+- [~] #205 Validate the E8 slice and update project docs · S
 <!-- END GENERATED: backlog -->
 
 ## Change log
@@ -954,3 +965,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   owner's approvals where needed. Added #205 (validate the slice and update docs: T001,
   T053–T057) under F8.3 (#183). Progress: 38/41 features, 144/155 tasks. Risks: the
   "first cut" note replaced (every slice is reconciled). Next: implementation (Setup, US1).
+- 2026-10-25: E8 implementation started (`/speckit-implement`, Setup, Foundational and US1's code
+  tasks T001–T011): #177, #178, #179, #181, #186 (for T002) and #205 (for T001) In Progress.
+- 2026-10-25: Session close-out: first E8 implementation batch committed and pushed (T002–T004,
+  T006–T009 done; T001, T005, T010 started; T011 open): `device.sh`, `traceability.py` (84 FRD IDs
+  covered, FR-PLAT-02 removed), `release.sh` archive check, the `checkers-device` scheme and
+  Device plan, the pre-push hook and five script tests (12 pass). HANDOFF.md updated (current
+  state, lessons learned from the batch, next steps); this plan reviewed against the close-out
+  checklist (board matches; Next up revised; a risk for the per-clone hook).

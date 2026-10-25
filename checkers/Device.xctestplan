@@ -1,0 +1,23 @@
+{
+  "configurations" : [
+    {
+      "id" : "5E63A2DE-71AA-4549-9A31-418B05D53CAC",
+      "name" : "Configuration 1",
+      "options" : {}
+    }
+  ],
+  "defaultOptions" : {},
+  "testTargets" : [
+    {
+      "selectedTests" : [
+        "LaunchPerformanceTests"
+      ],
+      "target" : {
+        "containerPath" : "container:checkers.xcodeproj",
+        "identifier" : "7E570013307AC4A2001AE686",
+        "name" : "checkersUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

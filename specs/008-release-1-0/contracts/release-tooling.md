@@ -27,7 +27,7 @@ file.
 
 | Command | Does | Prints | Fails when |
 |---|---|---|---|
-| `status` | reads `devicectl device info details` | name, model, iOS version, `tunnelState`, `developerModeStatus` | the phone is missing, not connected, or Developer Mode is off ("Turn on Developer Mode: Settings › Privacy & Security › Developer Mode") |
+| `status` | reads `xcrun devicectl list devices --json-output` (it carries the name, model, iOS version, tunnel state and Developer Mode) | name, model, iOS version, `tunnelState`, `developerModeStatus` | the phone is missing, not connected, or Developer Mode is off ("Turn on Developer Mode: Settings › Privacy & Security › Developer Mode") |
 | `launch` | `status`, then `xcodebuild test -scheme checkers-device -configuration Release -destination id=<udid> -only-testing:checkersUITests/LaunchPerformanceTests -test-iterations 2` | the ten launch times, their median, and pass or miss against 0.4 s | `status` fails, the test fails, or fewer than ten values |
 | `session` | `status`; launches the installed Release app with `devicectl device process launch --console --terminate-existing --environment-variables '{"OS_ACTIVITY_DT_MODE":"YES"}'` and `-savedGame` holding the bytes of `scripts/device-session-game.json` (a launch argument holds for the whole launch, so every iteration continues the same position), capturing its output to `.build/DeviceSession/console.txt`; runs `DeviceSessionUITests`; stops the capture | the three hitch metrics, then `device-timings.py`'s report | `status` fails, the test fails, a hitch metric is absent, or a target misses |
 
