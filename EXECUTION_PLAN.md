@@ -81,8 +81,7 @@ explains the game in seven illustrated sections.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
-   least one new to checkers. And now: delete the merged branch
-   `007-settings-themes-sound-and-rules`.
+   least one new to checkers.
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -209,9 +208,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
   limit there, and engine tests in the blocking plan must use small search limits.
 - The local `main` lags GitHub's (it moves by `git push origin <sha>:refs/heads/main`); run
-  `git fetch origin main:main` before comparing branches. Merged slice branches (`001-…` to
-  `006-…`) are deleted once the next slice's branch exists; the auto-mode safety check blocks
-  deleting them, so the user runs it.
+  `git fetch origin main:main` before comparing branches. Merged slice branches are deleted
+  once the next slice's branch exists (`001-…` to `007-…` so far); the auto-mode safety check
+  blocks deleting them, so the user runs it.
 
 ## Backlog
 
@@ -914,3 +913,4 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   reviewed against the close-out checklist (board matches; Next up gains the user's preparation
   and moves the open hand checks into E8's release checklist; a risk for E8's outside
   dependencies).
+- 2026-10-24: The user deleted the merged branch `007-settings-themes-sound-and-rules`.

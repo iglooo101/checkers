@@ -30,10 +30,10 @@ Last updated: 2026-10-24
   CI, then fast-forward `main` (`git push origin <sha>:refs/heads/main` works without switching
   branches). Because `main` moves on GitHub, the local `main` lags: run
   `git fetch origin main:main` before comparing branches. `001-project-foundation` to
-  `006-saving-and-statistics` were merged and deleted (the auto-mode safety check blocks branch
+  `007-settings-themes-sound-and-rules` were merged and deleted (the auto-mode safety check blocks branch
   deletion, so the user runs it once the next slice's branch exists). **E6 is done** (last code
-  CI run 40130998987 on `d85df26`); its branch `007-settings-themes-sound-and-rules` is merged
-  and the user can delete it now. **E8 is in progress on `008-release-1-0`** (spec and clarify
+  CI run 40130998987 on `d85df26`); its branch `007-settings-themes-sound-and-rules` was merged
+  and deleted. **E8 is in progress on `008-release-1-0`** (spec and clarify
   done, documentation only so far); `main` was fast-forwarded to this session's close-out commit,
   the head of `008-release-1-0`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -750,13 +750,11 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    `../secrets`; create the app record in App Store Connect with a unique store name and the
    bundle ID `Hussein-Helmy.checkers`; recruit two to five external testers, at least one new to
    checkers for the Easy playtest.
-4. **For the user, now**: delete the merged E6 branch:
-   `git branch -d 007-settings-themes-sound-and-rules && git push origin --delete 007-settings-themes-sound-and-rules`.
-5. **The open hand checks of E3–E7** (E3's hand-played game and largest-text review, E7's
+4. **The open hand checks of E3–E7** (E3's hand-played game and largest-text review, E7's
    VoiceOver game, E4's playtest, Home while the computer thinks and VoiceOver moves, E5's
    app-switcher, background and Statistics checks, E6's iPhone sound checks and VoiceOver through
    Rules and Settings) are now items of E8's release checklist (spec FR-026), run on the
    TestFlight build; each must pass or be accepted in writing before submission.
-6. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
+5. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
    `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
    Mac; any update after April 2027 needs an Apple silicon Mac and Xcode 27.
