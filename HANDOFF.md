@@ -41,13 +41,12 @@ Last updated: 2026-10-25
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
   from 30 to 45 minutes, the theme rows became buttons instead of an inline picker (research
   R11, "Found in US3"), and the largest-size Settings audit runs at rest (validation §6).
-- **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
-  2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates. **An
-  amendment is due before E8's plan** (spec FR-032): its toolchain line says "the latest stable
-  Xcode", now Xcode 27, which this Mac cannot run; it becomes "the latest Xcode the development
-  Mac runs, never below the App Store's minimum SDK" (v1.2.0, with a rationale). That Xcode is
-  26.3 for good: 26.4.1 to 26.6 need macOS Tahoe 26.2, Xcode 27 Tahoe 26.6 on Apple silicon, and
-  Tahoe does not support the MacBook Pro (15-inch, 2019).
+- **Constitution**: `.specify/memory/constitution.md`, v1.2.0 (ratified 2026-10-15; amended
+  2026-10-16: iPhone only, portrait; amended 2026-10-25, spec FR-032: the toolchain is "the
+  latest Xcode the development Mac runs, never below the App Store's minimum SDK", and CI uses
+  the same Xcode). Nine principles plus workflow and governance gates. That Xcode is 26.3 for
+  good: 26.4.1 to 26.6 need macOS Tahoe 26.2, Xcode 27 Tahoe 26.6 on Apple silicon, and Tahoe
+  does not support the MacBook Pro (15-inch, 2019).
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -759,10 +758,7 @@ Last updated: 2026-10-25
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Amend the constitution** with `/speckit-constitution` (part of #173, before the plan): the
-   toolchain line becomes "the latest Xcode the development Mac runs, never below the App Store's
-   minimum SDK", v1.1.0 → v1.2.0, with the rationale (Xcode 27 needs Apple silicon; this Mac is a
-   2019 Intel MacBook Pro) and the template sync check (spec FR-032).
+1. ~~Amend the constitution~~: done 2026-10-25 (v1.2.0).
 2. **`/speckit-plan` for E8 (#173)** on `008-release-1-0`. Research to measure, not assume:
    whether Xcode 26.3 debugs and runs Instruments on the iPhone's iOS 27.0.1 (installing and
    launching works, 2026-10-25; fallback: TestFlight builds and the phone's own measurements);

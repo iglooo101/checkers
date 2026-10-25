@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-25 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.1.0
+Last updated: 2026-10-25 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -73,9 +73,8 @@ Playful, with previews), turns the four original sounds and the move hints on an
 explains the game in seven illustrated sections.
 
 1. **E8 Release 1.0 (#169)**, the last epic, on branch `008-release-1-0`: spec written and
-   clarified (`specs/008-release-1-0/spec.md`, #171 and #172 done). Next, within the plan step
-   (#173): amend the constitution's toolchain line with `/speckit-constitution` (spec FR-032:
-   "the latest Xcode the development Mac runs, never below the App Store's minimum SDK"), then
+   clarified (`specs/008-release-1-0/spec.md`, #171 and #172 done), and the constitution's
+   toolchain line amended (v1.2.0, spec FR-032). Next, within the plan step (#173):
    `/speckit-plan`, which must settle whether Xcode 26.3 can debug and measure on the phone's
    iOS 27.0.1 (building, installing and launching a Debug build there works, 2026-10-25).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
@@ -164,8 +163,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - The development Mac (2019 Intel MacBook Pro, macOS 15.8.1) cannot run Xcode 27 (Apple silicon
   and macOS Tahoe 26.6 required), nor Xcode 26.4.1 to 26.6 (macOS Tahoe 26.2), and Tahoe does not
   support the MacBook Pro (15-inch, 2019); so Xcode 26.3 is its last Xcode, the project stays on
-  it and the constitution's toolchain line is amended (E8 clarify, spec FR-032). App Store Connect requires the iOS 27 SDK from April
-  2027: if 1.0 is not submitted by then, or for any later update, an Apple silicon Mac is needed.
+  it; the constitution's toolchain line was amended to match (v1.2.0, spec FR-032). App Store
+  Connect requires the iOS 27 SDK from April 2027: if 1.0 is not submitted by then, or for any
+  later update, an Apple silicon Mac is needed.
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
   after adding or removing strings, or CI fails. Plural variations (Statistics' counts) are
   written by hand in the catalog's layout; `scripts/check-string-catalog.sh
@@ -921,3 +921,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   confirm Xcode 26.3 is the last Xcode this Mac runs (26.4.1 and later need macOS Tahoe, which
   does not support it). Next up and two risks revised; debugger and Instruments left to the
   E8 plan's research.
+- 2026-10-25: Constitution v1.2.0 (part of #173, spec FR-032): the toolchain is "the latest Xcode
+  the development Mac runs, never below the App Store's minimum SDK", and CI uses the same Xcode,
+  with a rationale; MINOR bump, no principle changed. Template sync check: the spec, plan, tasks
+  and checklist templates need no change; CI already pins Xcode 26.3. Next: `/speckit-plan`.

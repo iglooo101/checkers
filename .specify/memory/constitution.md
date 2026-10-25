@@ -184,12 +184,18 @@ data.
   difficulty levels, or two players on one device.
 - **Platform**: iPhone only, in portrait orientation. iPad is not supported in the first release.
   The minimum deployment target is iOS 26.2.
-- **Toolchain**: The latest stable Xcode, Swift 6 language mode (`SWIFT_VERSION = 6`) and complete
-  strict concurrency checking.
+- **Toolchain**: The latest Xcode the development Mac runs, never below the App Store's minimum
+  SDK; CI MUST use the same Xcode version. Swift 6 language mode (`SWIFT_VERSION = 6`) and
+  complete strict concurrency checking.
 - **Distribution**: App Store, through TestFlight. Every App Store build MUST first be distributed
   through TestFlight.
 - **Style**: SwiftLint and swift-format MUST run on every build and in CI. Code MUST follow the
   Swift API Design Guidelines.
+
+**Rationale** (toolchain): A new Xcode can require hardware or a macOS version the development
+Mac does not have. Tying the toolchain to that Mac keeps local builds and CI identical, and the
+SDK floor keeps every build accepted by App Store Connect; when the floor passes the Mac's last
+Xcode, a newer Mac is needed before the next upload.
 
 ## Development Workflow & Quality Gates
 
@@ -218,4 +224,4 @@ data.
    the merge.
 4. Dates use ISO format (YYYY-MM-DD). "Last Amended" MUST be updated with every amendment.
 
-**Version**: 1.1.0 | **Ratified**: 2026-10-15 | **Last Amended**: 2026-10-16
+**Version**: 1.2.0 | **Ratified**: 2026-10-15 | **Last Amended**: 2026-10-25
