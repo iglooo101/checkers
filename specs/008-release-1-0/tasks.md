@@ -284,7 +284,7 @@ description: "Task list for the Release 1.0 slice (epic E8)"
 
 ## Board Mapping
 
-Each board issue lists its task IDs and the FRD IDs of the spec's traceability table. #175 Reconcile decides whether the slice's setup and validation (T001, T053–T057) get an issue of their own, as #201 and #203 did for E5 and E6:
+Each board issue lists its task IDs and the requirements of the spec's traceability table (#175, 2026-10-25). #175 added #205 for the slice's setup and validation (T001, T053–T057) under F8.3 (#183), as #201 and #203 did for E5 and E6:
 
 | Board task | Tasks |
 |---|---|
@@ -298,6 +298,7 @@ Each board issue lists its task IDs and the FRD IDs of the spec's traceability t
 | #185 Store metadata, screenshots, privacy label | T031, T032, T036–T040 |
 | #186 TestFlight build and beta round | T002, T041–T048 |
 | #187 Submit for App Store review | T049–T052 |
+| #205 Validate the E8 slice and update project docs | T001, T053–T057 |
 
 ## Notes
 

@@ -125,13 +125,13 @@ Last updated: 2026-10-25
   (`build-and-test` has a 45-minute limit since #204). Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 8 epics, 41 features, 154 tasks (#1–#204; #188 is a PR) on the project board.
+- **Backlog**: 8 epics, 41 features, 155 tasks (#1–#205; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
-  in progress: #171 (specify) and #172 (clarify) are done, #173 (plan) is In Progress with F8.0
-  (#170) and the epic (37/41 features, 141/154 tasks). Progress and the full list are in
-  `EXECUTION_PLAN.md`.
+  in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done; the implementation
+  features F8.1–F8.3 come next (38/41 features, 144/155 tasks; #205 added for validation).
+  Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -796,8 +796,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. ~~Amend the constitution~~: done 2026-10-25 (v1.2.0).
 2. ~~`/speckit-plan` for E8 (#173)~~: done 2026-10-25 (`specs/008-release-1-0/plan.md`, research
-   R1–R17); `tasks.md` (57 tasks) written and analyzed, 15 findings applied (#174). Next: the
-   board reconciliation (#175), then `/speckit-implement` from Setup and US1.
+   R1–R17); `tasks.md` (57 tasks) written and analyzed, 15 findings applied (#174); board
+   reconciled (#175, #205 added), F8.0 done. Next: `/speckit-implement` from Setup and US1.
 3. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
    Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
    600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract

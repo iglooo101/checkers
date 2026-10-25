@@ -42,15 +42,14 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 4/15 | In Progress |
-| | **Total** | | | | **37/41** | **143/154** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 5/16 | In Progress |
+| | **Total** | | | | **38/41** | **144/155** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
 - #169 E8: Release 1.0
-- #170 F8.0: Specification (Spec Kit)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -74,9 +73,10 @@ explains the game in seven illustrated sections.
 1. **E8 Release 1.0 (#169)**, the last epic, on branch `008-release-1-0`: spec written and
    clarified (#171, #172), the constitution's toolchain line amended (v1.2.0, FR-032) and the
    plan written (#173: `plan.md`, research R1–R17 measured on the phone, data model, three
-   contracts, quickstart), and `tasks.md` generated and analyzed (#174: 57 tasks; 15 findings
-   applied). Next: the board reconciliation (#175), then `/speckit-implement`, starting with
-   Setup and US1.
+   contracts, quickstart), `tasks.md` generated and analyzed (#174: 57 tasks; 15 findings
+   applied), and the board reconciled (#175, adding #205), which completes F8.0 (#170). Next:
+   `/speckit-implement`, starting with Setup (T001, T002), Foundational (T003–T005) and US1
+   (#177–#179).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -116,8 +116,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 
 ## Risks and open items
 
-- Board tasks are a first cut from the FRD; each slice's `tasks.md` will add, split or close
-  tasks during reconciliation.
+- Every slice's board tasks are reconciled with its `tasks.md` (E8 on 2026-10-25, #175, adding
+  #205); later changes to a slice's tasks need the board changed in the same step.
 - FR-AI-02 (noticeable strength gaps) is partly subjective. The matches (SC-003) pass by a wide
   margin (Medium 90, Hard 99 of 100); the playtest by the user (SC-004, E4 quickstart §4) is
   still open: a beginner must be able to beat Easy, which plays any turn within 40 points of its
@@ -490,7 +490,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 4/15 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 5/16 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -498,7 +498,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [x] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
-- [ ] #175 E8 Reconcile this epic's board tasks with tasks.md · S
+- [x] #175 E8 Reconcile this epic's board tasks with tasks.md · S
 
 **F8.1 Platform and privacy verification** (#176) · FR-PLAT-01, FR-PLAT-03, FR-PRIV-01, FR-PRIV-02
 
@@ -518,6 +518,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [ ] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
 - [ ] #186 TestFlight build and beta round · S
 - [ ] #187 Submit for App Store review · S
+- [ ] #205 Validate the E8 slice and update project docs · S
 <!-- END GENERATED: backlog -->
 
 ## Change log
@@ -947,3 +948,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   screenshots with the computer come only from saved games; the diagnostics subscriber is
   `nonisolated` and starts after the first frame; and smaller fixes. Next: #175 (reconcile the
   board), then implementation.
+- 2026-10-25: E8 board reconciled (#175 Done, F8.0 #170 Done): every E8 task issue lists its
+  Spec Kit task IDs, and its requirements line follows the spec's traceability table (#177–#179
+  had all carried the same four FRD IDs); "Done when" lists gained recorded results and the
+  owner's approvals where needed. Added #205 (validate the slice and update docs: T001,
+  T053–T057) under F8.3 (#183). Progress: 38/41 features, 144/155 tasks. Risks: the
+  "first cut" note replaced (every slice is reconciled). Next: implementation (Setup, US1).
