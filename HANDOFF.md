@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-10-24
+Last updated: 2026-10-25
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -45,7 +45,13 @@ Last updated: 2026-10-24
   2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates. **An
   amendment is due before E8's plan** (spec FR-032): its toolchain line says "the latest stable
   Xcode", now Xcode 27, which this Mac cannot run; it becomes "the latest Xcode the development
-  Mac runs, never below the App Store's minimum SDK" (v1.2.0, with a rationale).
+  Mac runs, never below the App Store's minimum SDK" (v1.2.0, with a rationale). That Xcode is
+  26.3 for good: 26.4.1 to 26.6 need macOS Tahoe 26.2, Xcode 27 Tahoe 26.6 on Apple silicon, and
+  Tahoe does not support the MacBook Pro (15-inch, 2019).
+- **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
+  to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
+  5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
+  Whether the debugger and Instruments work on iOS 27.0.1 is still open (E8 plan research).
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
@@ -727,6 +733,26 @@ Last updated: 2026-10-24
   local processes (only the session's XcodeBuildMCP server, which is long-lived and normal) and
   saying so was the right answer.
 
+## Lessons learned (first run on the iPhone, 2026-10-25)
+
+- **"The latest Xcode" means the latest this Mac runs**: the user expected an update; Apple's
+  table at developer.apple.com/support/xcode lists each release's minimum macOS, and
+  support.apple.com/122867 lists the Macs Tahoe supports. Check both before promising an update.
+  Xcode is an App Store install here (`Contents/_MASReceipt`), so the App Store offers only what
+  the Mac can run.
+- **Running on the phone from the command line**: `xcodebuild build -project
+  checkers/checkers.xcodeproj -scheme checkers -configuration Debug -destination id=<udid>
+  -derivedDataPath .build/DerivedData -skipPackagePluginValidation -allowProvisioningUpdates`,
+  then `xcrun devicectl device install app --device <identifier>
+  .build/DerivedData/Build/Products/Debug-iphoneos/checkers.app` and `xcrun devicectl device
+  process launch --device <identifier> Hussein-Helmy.checkers`. `xcodebuild` takes the hardware
+  UDID (`udid` in `xcrun devicectl device info details`), `devicectl` the CoreDevice identifier
+  from `xcrun devicectl list devices`. Keep both out of the repository.
+- **Check the phone before building**: `devicectl device info details` shows `tunnelState`,
+  `developerModeStatus` and `ddiServicesAvailable`; all three were good on iOS 27.0.1.
+- **A paid team's development profile lasts a year**, not seven days (that is the free tier):
+  `security cms -D -i <app>/embedded.mobileprovision` shows its `ExpirationDate`.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
@@ -738,9 +764,10 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    minimum SDK", v1.1.0 → v1.2.0, with the rationale (Xcode 27 needs Apple silicon; this Mac is a
    2019 Intel MacBook Pro) and the template sync check (spec FR-032).
 2. **`/speckit-plan` for E8 (#173)** on `008-release-1-0`. Research to measure, not assume:
-   whether Xcode 26.3 installs, debugs and runs Instruments on the iPhone's iOS 27.0.1 (connect
-   HKH16 and try; fallback: TestFlight builds and the phone's own measurements); Apple's current
-   minimum SDK and the April 2027 change, from Apple's notes; Apple's privacy label guidance for
+   whether Xcode 26.3 debugs and runs Instruments on the iPhone's iOS 27.0.1 (installing and
+   launching works, 2026-10-25; fallback: TestFlight builds and the phone's own measurements);
+   Apple's current minimum SDK and the April 2027 change, from Apple's notes; Apple's privacy
+   label guidance for
    locally logged diagnostics and Organizer crash reports; the required screenshot size; how the
    icon script writes the default, dark and tinted variants; GitHub Pages from this repo; the
    API-key upload path; how ten cold launches and the hitch session are measured. Then

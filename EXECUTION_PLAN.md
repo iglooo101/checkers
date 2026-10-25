@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-24 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.1.0
+Last updated: 2026-10-25 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.1.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -76,8 +76,8 @@ explains the game in seven illustrated sections.
    clarified (`specs/008-release-1-0/spec.md`, #171 and #172 done). Next, within the plan step
    (#173): amend the constitution's toolchain line with `/speckit-constitution` (spec FR-032:
    "the latest Xcode the development Mac runs, never below the App Store's minimum SDK"), then
-   `/speckit-plan`, which must settle whether Xcode 26.3 can install and measure on the phone's
-   iOS 27.0.1.
+   `/speckit-plan`, which must settle whether Xcode 26.3 can debug and measure on the phone's
+   iOS 27.0.1 (building, installing and launching a Debug build there works, 2026-10-25).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -153,16 +153,18 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
 - E8's device is the owner's iPhone 16 (2024, iPhone17,3), older than Constitution VII.1's "last
   two hardware generations"; a pass on it counts (newer models are faster), and a miss that
-  remains after profiling is decided on a newer iPhone (E8 clarify). The phone runs iOS 27.0.1;
-  whether Xcode 26.3 can install and measure on it is for the E8 plan, with TestFlight builds and
-  the phone's own measurements as the fallback.
+  remains after profiling is decided on a newer iPhone (E8 clarify). The phone runs iOS 27.0.1:
+  Xcode 26.3 builds, signs, installs and launches the app there (2026-10-25; the development
+  profile is valid until 2027-10-15); whether the debugger and Instruments work is for the E8
+  plan, with TestFlight builds and the phone's own measurements as the fallback.
 - E8 depends on the user and on Apple: the API key, the App Store Connect record and a unique
   store name, the external testers, Beta App Review (about a day) and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
   texts, screenshots, pages) does not wait.
 - The development Mac (2019 Intel MacBook Pro, macOS 15.8.1) cannot run Xcode 27 (Apple silicon
-  and macOS Tahoe required), so the project stays on Xcode 26.3 and the constitution's toolchain
-  line is amended (E8 clarify, spec FR-032). App Store Connect requires the iOS 27 SDK from April
+  and macOS Tahoe 26.6 required), nor Xcode 26.4.1 to 26.6 (macOS Tahoe 26.2), and Tahoe does not
+  support the MacBook Pro (15-inch, 2019); so Xcode 26.3 is its last Xcode, the project stays on
+  it and the constitution's toolchain line is amended (E8 clarify, spec FR-032). App Store Connect requires the iOS 27 SDK from April
   2027: if 1.0 is not submitted by then, or for any later update, an Apple silicon Mac is needed.
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
   after adding or removing strings, or CI fails. Plural variations (Statistics' counts) are
@@ -914,3 +916,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   and moves the open hand checks into E8's release checklist; a risk for E8's outside
   dependencies).
 - 2026-10-24: The user deleted the merged branch `007-settings-themes-sound-and-rules`.
+- 2026-10-25: First run on the owner's iPhone: a Debug build from Xcode 26.3, signed
+  automatically for the team, installed and launched on HKH16 (iOS 27.0.1). Apple's tables
+  confirm Xcode 26.3 is the last Xcode this Mac runs (26.4.1 and later need macOS Tahoe, which
+  does not support it). Next up and two risks revised; debugger and Instruments left to the
+  E8 plan's research.
