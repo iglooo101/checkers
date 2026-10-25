@@ -36,8 +36,9 @@
   no hang of 250 ms or more").
 - Delivery names stay on purpose: App Store Connect, TestFlight, App Review and GitHub Pages are
   the channels the user chose for this release, not implementation choices, as the earlier slices
-  named VoiceOver and Dynamic Type. Tools (Instruments, MetricKit, Xcode) appear only in the input,
-  the board task titles of the traceability table and the Assumptions.
+  named VoiceOver and Dynamic Type. Tools (Instruments, MetricKit) appear only in the input, the
+  board task titles of the traceability table and the Assumptions; Xcode 26.3 is named in FR-032
+  and the Clarifications because the user set it as a constraint (clarify, 2026-10-24).
 - No [NEEDS CLARIFICATION] markers: the user settled eleven scope decisions before specifying
   (developer account, device, icon, public pages, store name, bundle ID, beta group, price,
   uploads, the release checklist, manual release). Informed defaults are recorded in Assumptions

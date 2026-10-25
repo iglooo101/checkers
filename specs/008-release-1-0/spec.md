@@ -20,6 +20,32 @@ TestFlight with the user and a few external testers; one release checklist that 
 hand check and gates submission; manual release after approval. Branch 008-release-1-0 already
 created by hand from main."
 
+## Clarifications
+
+### Session 2026-10-24
+
+- Q: Which Xcode should build and ship version 1.0, given the constitution says "latest stable
+  Xcode" (Xcode 27 since 2026-09-14) but the development Mac, a 2019 Intel MacBook Pro on macOS
+  15.8.1, can only run Xcode 26.3? → A: Xcode 26.3, on the development Mac and on CI. App Store
+  Connect accepts builds made with the iOS 26 SDK until April 2027. The constitution's toolchain
+  line is amended, with a rationale, to "the latest Xcode the development Mac runs, never below the
+  App Store's minimum SDK"; moving to Xcode 27 waits for an Apple silicon Mac.
+- Q: Should the launch budget and the smoothness checks be judged on the owner's iPhone 16 alone,
+  although Constitution VII.1 names "an iPhone from the last two hardware generations"? → A: Yes,
+  as evidence: newer iPhones are faster, so a pass on the iPhone 16 counts as a pass. A miss is
+  profiled and fixed; only if it still misses after that does a newer iPhone (for example an
+  external tester's) decide. The constitution is not changed for this.
+- Q: How should the slice check that the app works when App Review opens it on an iPad, where the
+  system runs iPhone-only apps in an iPhone-sized window? → A: One recorded smoke check per
+  release build on an iPad simulator (launch, a few moves against the computer and in a
+  two-player game, every screen, rotation), as a release checklist item; no new automated tests,
+  CI time unchanged.
+- Q: Should crash and hang reports only be written to the phone's log, or should players also be
+  able to send them to the owner? → A: Only logged on the phone, with private values redacted.
+  The owner's view of field problems is Xcode Organizer (reports from players who share analytics
+  with developers) and TestFlight's crash feedback; no share option, no new control, and the FRD
+  stays at 1.3.
+
 ## User Scenarios & Testing *(mandatory)*
 
 Two kinds of people are served. **Players** get the app the FRD describes, from the App Store,
@@ -233,10 +259,15 @@ rejection to a resubmission, recording every round.
 
 - **The iPhone runs a newer iOS than the tests**: the phone is on iOS 27.0.1 while CI tests on iOS
   26.2, the minimum the app supports. The device checks therefore also check the current iOS; any
-  difference found there is a beta finding. If the development tools cannot install, debug or
-  measure on that iOS version, they are updated, together with CI's pinned version.
-- **The iPhone is one generation older than "recent"**: it is an iPhone 16 (2024); see
-  Assumptions for how its measurements count against Constitution VII.1.
+  difference found there is a beta finding. The development tools stay at Xcode 26.3
+  (Clarifications); if they cannot install, debug or measure on iOS 27, the device checks use
+  builds installed from TestFlight and measurements the phone itself records.
+- **Version 1.0 slips past April 2027**: App Store Connect then requires the iOS 27 SDK, which this
+  Mac cannot build with; submission waits for an Apple silicon Mac and a move to Xcode 27, with a
+  full retest.
+- **The iPhone is older than "recent"**: it is an iPhone 16 (2024), and Constitution VII.1 names
+  the last two hardware generations. A pass on it counts as a pass; a miss is profiled and fixed,
+  and only a miss that remains after that is decided on a newer iPhone (Clarifications, FR-014).
 - **Measurements are noisy**: the first launch after an install or a reboot is not a cold launch of
   the installed app and is not counted; all measured values are recorded, not only the median.
 - **The phone is not connected or locked**: device steps wait for the owner; nothing is recorded
@@ -245,7 +276,8 @@ rejection to a resubmission, recording every round.
   Home Screen name stays "Checkers".
 - **App Review runs the app on an iPad**: an iPhone-only app runs on iPad in the system's iPhone
   compatibility mode, and reviewers may use it there. It must work there in portrait as on an
-  iPhone, although iPad is otherwise out of scope (FRD §19).
+  iPhone, although iPad is otherwise out of scope (FRD §19); a smoke check per release build
+  covers it (FR-005, Clarifications).
 - **Macs and Apple Vision Pro**: an iPhone app is offered on Apple silicon Macs and on Apple Vision
   Pro unless the owner turns that off; it is turned off, since the app is neither designed nor
   tested for them.
@@ -285,7 +317,11 @@ rejection to a resubmission, recording every round.
   tracking and no tracking domains, and the reasons it declares for required-reason interfaces
   MUST match the app's use of them (Constitution VI; moved here from E1 SC-008).
 - **FR-005**: The app MUST stay in portrait on every screen when the iPhone is turned, and the board
-  MUST fit the smallest and the largest supported iPhone screens (FR-PLAT-01).
+  MUST fit the smallest and the largest supported iPhone screens (FR-PLAT-01). On an iPad, in the
+  system's iPhone compatibility window, it MUST launch, play and show every screen as on an
+  iPhone, checked once per release build on an iPad simulator (launch, a few moves against the
+  computer and in a two-player game, every screen, rotation) and recorded in the release
+  checklist (Clarifications).
 - **FR-006**: Every user-facing text MUST be English and localizable, with none left out of the
   app's localizable texts (FR-PLAT-03).
 
@@ -304,8 +340,9 @@ rejection to a resubmission, recording every round.
   (Constitution IX.1, IX.2).
 - **FR-009**: Values in a logged diagnostic that could identify the player MUST be redacted by
   default (Constitution IX.3). Reports MUST stay on the device: the app MUST NOT send, store beyond
-  the system log, or show them, and receiving them MUST NOT need a permission or change the privacy
-  report.
+  the system log, show or offer to share them, and receiving them MUST NOT need a permission or
+  change the privacy report. The owner sees field problems through Xcode Organizer and TestFlight's
+  crash feedback (Clarifications).
 - **FR-010**: Receiving a report MUST NOT interrupt or slow play; a report that cannot be read MUST
   be logged as a failure and otherwise ignored.
 
@@ -319,9 +356,12 @@ rejection to a resubmission, recording every round.
   no hang of 250 ms or more (Constitution VII.2, VII.3).
 - **FR-013**: The computer's timing (E4 SC-005) and the sound delay (E6 SC-004) MUST be measured on
   the iPhone with a release build, closing those slices' open device checks.
-- **FR-014**: A measurement that misses its target MUST be followed by a profile of the slow case
-  before any optimization, and repeated after the fix (Constitution VII.4). The launch test that
-  guards against regressions on CI MUST keep passing.
+- **FR-014**: The owner's iPhone 16 is the measuring device; since newer iPhones are faster, a pass
+  on it counts as a pass under Constitution VII.1. A measurement that misses its target MUST be
+  followed by a profile of the slow case before any optimization, and repeated after the fix
+  (Constitution VII.4); a miss that remains after that is measured on a newer iPhone, which then
+  decides (Clarifications). The launch test that guards against regressions on CI MUST keep
+  passing.
 
 **App icon and launch screen (#183: #184)**
 
@@ -371,8 +411,8 @@ rejection to a resubmission, recording every round.
   computer thinks, and VoiceOver moves against the computer; E5's closing from the app switcher and
   Continue, Home while the computer thinks then Continue, finished games at Easy and Medium in
   Statistics, and VoiceOver reading Statistics; E6's sound delay, silent mode, volume buttons,
-  other apps' music, a sound over another, and VoiceOver through Rules and Settings. Each item MUST
-  record its result (passed, failed, or accepted by the owner in writing with the reason) and the
+  other apps' music, a sound over another, and VoiceOver through Rules and Settings; and the iPad
+  compatibility smoke check (FR-005). Each item MUST record its result (passed, failed, or accepted by the owner in writing with the reason) and the
   build it was run on.
 - **FR-027**: A problem found in the beta MUST be fixed through the usual flow (a behavior change in
   the FRD first; tests and CI for every code change) and shipped in a new TestFlight build, and every
@@ -392,6 +432,14 @@ rejection to a resubmission, recording every round.
 - **FR-031**: The slice MUST NOT change game behavior, screens or texts, except to fix a problem
   found by its checks or the beta round (FR-027). All existing tests MUST keep passing.
 
+**Toolchain**
+
+- **FR-032**: Version 1.0 MUST be built, tested and uploaded with Xcode 26.3, the latest Xcode the
+  development Mac runs, on the Mac and on CI alike, and submitted while App Store Connect still
+  accepts the iOS 26 SDK (until April 2027). Before the plan, the constitution's toolchain
+  constraint MUST be amended to "the latest Xcode the development Mac runs, never below the App
+  Store's minimum SDK", with a rationale and a version bump (Clarifications).
+
 ### Traceability
 
 | Board task | Requirements | FRD / Constitution |
@@ -407,7 +455,7 @@ rejection to a resubmission, recording every round.
 | #186 TestFlight build and beta round | FR-023 to FR-027 | Distribution; every hand check of E3 to E7 |
 | #187 Submit for App Store review | FR-028 to FR-030 | Distribution |
 
-FR-031 applies to every task.
+FR-031 and FR-032 apply to every task.
 
 ### Key Entities
 
@@ -455,17 +503,11 @@ FR-031 applies to every task.
 
 ## Assumptions
 
-- **The iPhone's generation**: Constitution VII.1 sets the launch budget on "an iPhone from the last
-  two hardware generations"; in October 2026 the owner's iPhone 16 (2024) is older than that. Its
-  measurements count as passing evidence, since newer models are faster: a pass on it implies a
-  pass on a recent iPhone. If a target is missed on it, the slow case is profiled and improved;
-  only if it then still misses is a recent iPhone (for example an external tester's) used to
-  decide. To confirm in `/speckit-clarify`.
 - **iOS versions**: the app's minimum stays iOS 26.2 and CI keeps testing there; the device checks
-  run on the phone's current iOS (27.0.1). Whether the development tools (Xcode 26.3, also pinned on
-  CI) can install, debug and measure on iOS 27 is settled in the plan; if not, the development Mac
-  and the CI pin are updated together. The plan also confirms the minimum SDK App Store Connect
-  currently accepts.
+  run on the phone's current iOS (27.0.1). Whether Xcode 26.3 can install, debug and measure on iOS
+  27 is settled in the plan; if not, the device checks use TestFlight builds and the phone's own
+  measurements (FR-032 keeps the toolchain). The plan also confirms, from Apple's own notes, the
+  minimum SDK App Store Connect accepts and its April 2027 change.
 - **Diagnostics and the privacy label**: the app reads the system's diagnostic reports on the phone
   and only logs them, so it collects no data and "Data Not Collected" stays true. Crash reports
   that players choose to share with developers are gathered by Apple, not by the app; the plan

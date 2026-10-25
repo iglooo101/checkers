@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 1/15 | In Progress |
-| | **Total** | | | | **37/41** | **140/154** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 2/15 | In Progress |
+| | **Total** | | | | **37/41** | **141/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,7 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #169 E8: Release 1.0
 - #170 F8.0: Specification (Spec Kit)
-- #172 E8 Clarify: resolve open questions with /speckit-clarify
+- #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -72,10 +72,11 @@ reported once (E5). With E6, Settings chooses one of three board themes (Classic
 Playful, with previews), turns the four original sounds and the move hints on and off, and Rules
 explains the game in seven illustrated sections.
 
-1. **E8 Release 1.0 (#169)**, the last epic, on branch `008-release-1-0`: spec written
-   (`specs/008-release-1-0/spec.md`, #171 done); next `/speckit-clarify` (#172), which should
-   confirm that the owner's iPhone 16 counts for Constitution VII.1's launch budget, then the
-   plan (#173), which must settle whether Xcode 26.3 can install and measure on the phone's
+1. **E8 Release 1.0 (#169)**, the last epic, on branch `008-release-1-0`: spec written and
+   clarified (`specs/008-release-1-0/spec.md`, #171 and #172 done). Next, within the plan step
+   (#173): amend the constitution's toolchain line with `/speckit-constitution` (spec FR-032:
+   "the latest Xcode the development Mac runs, never below the App Store's minimum SDK"), then
+   `/speckit-plan`, which must settle whether Xcode 26.3 can install and measure on the phone's
    iOS 27.0.1.
 2. Open for the user, from every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
@@ -146,9 +147,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
   Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
 - E8's device is the owner's iPhone 16 (2024, iPhone17,3), older than Constitution VII.1's "last
-  two hardware generations"; the spec counts a pass on it as evidence (newer models are faster),
-  to be confirmed in clarify. The phone runs iOS 27.0.1 while development and CI use Xcode 26.3;
-  if that Xcode cannot install or measure on iOS 27, both are updated together (E8 plan).
+  two hardware generations"; a pass on it counts (newer models are faster), and a miss that
+  remains after profiling is decided on a newer iPhone (E8 clarify). The phone runs iOS 27.0.1;
+  whether Xcode 26.3 can install and measure on it is for the E8 plan, with TestFlight builds and
+  the phone's own measurements as the fallback.
+- The development Mac (2019 Intel MacBook Pro, macOS 15.8.1) cannot run Xcode 27 (Apple silicon
+  and macOS Tahoe required), so the project stays on Xcode 26.3 and the constitution's toolchain
+  line is amended (E8 clarify, spec FR-032). App Store Connect requires the iOS 27 SDK from April
+  2027: if 1.0 is not submitted by then, or for any later update, an Apple silicon Mac is needed.
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
   after adding or removing strings, or CI fails. Plural variations (Statistics' counts) are
   written by hand in the catalog's layout; `scripts/check-string-catalog.sh
@@ -467,13 +473,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 1/15 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 2/15 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
 - [x] #171 E8 Specify: write spec.md with /speckit-specify · S
-- [~] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
-- [ ] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
+- [x] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
+- [~] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #175 E8 Reconcile this epic's board tasks with tasks.md · S
 
@@ -887,3 +893,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   the repository, TestFlight with a few external testers, one release checklist gathering every
   open hand check, manual release; E8 ends at approval. Found while writing: the iPhone is an
   iPhone 16 on iOS 27.0.1, and the Home Screen name is the lowercase "checkers".
+- 2026-10-24: E8 spec clarified (#172 Done, #173 In Progress), 4 questions: 1.0 is built with
+  Xcode 26.3, the latest the development Mac runs, and the constitution's toolchain line is
+  amended before the plan (FR-032; Xcode 27 shipped 2026-09-14 but needs Apple silicon); the
+  owner's iPhone 16 counts as evidence for VII.1 (FR-014); iPad compatibility mode gets one smoke
+  check per release build (FR-005); diagnostic reports are only logged on the phone (FR-009).
