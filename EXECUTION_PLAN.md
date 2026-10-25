@@ -42,14 +42,16 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | Todo |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | In Progress |
 | | **Total** | | | | **37/41** | **139/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
 
 <!-- BEGIN GENERATED: in-progress -->
-Nothing in progress.
+- #169 E8: Release 1.0
+- #170 F8.0: Specification (Spec Kit)
+- #171 E8 Specify: write spec.md with /speckit-specify
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -57,7 +59,7 @@ Nothing in progress.
 E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
 opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done (slices
 `specs/001-project-foundation/` to `specs/007-settings-themes-sound-and-rules/`, landed on
-`main`, which is at `d85df26`). The app is fully native SwiftUI: Home,
+`main`, which is at `0109e93`). The app is fully native SwiftUI: Home,
 setup, and a two-player game with tap and drag, hints, chains, crowning, undo, resign and a result
 panel, playable square by square with VoiceOver (square states, announcements, focus that follows
 each step), with non-color cues at 3:1 contrast and an accessibility audit of every screen. Games
@@ -70,9 +72,10 @@ reported once (E5). With E6, Settings chooses one of three board themes (Classic
 Playful, with previews), turns the four original sounds and the move hints on and off, and Rules
 explains the game in seven illustrated sections.
 
-1. **E8 Release 1.0 (#169)**, the last epic: open its Spec Kit slice (`/speckit-specify` from
-   `FRD.md`, on a new branch from `main`), with #192 (MetricKit, which can report E6's `sound`
-   and `settings` errors) and #181 (launch time on a real iPhone) among its tasks.
+1. **E8 Release 1.0 (#169)**, the last epic, started on branch `008-release-1-0`: settle what
+   needs an Apple Developer Program membership or a real iPhone (#178, #181, #182, #185–#187),
+   then `/speckit-specify` from `FRD.md` (#171), with #192 (MetricKit, which can report E6's
+   `sound` and `settings` errors) and #181 (launch time on a real iPhone) among its tasks.
 2. Open for the user, from every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -463,7 +466,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
-- [ ] #171 E8 Specify: write spec.md with /speckit-specify · S
+- [~] #171 E8 Specify: write spec.md with /speckit-specify · S
 - [ ] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
 - [ ] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
@@ -868,4 +871,5 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   learned from E6's CI and Polish, next steps: E8 with Spec Kit, the user's open checks); this
   plan reviewed against the close-out checklist (board matches, nothing in progress, Next up,
   risks and change log current).
-
+- 2026-10-24: E8 started on branch `008-release-1-0` (#169, F8.0 #170 and #171 In Progress).
+  Next up notes that `main` is at `0109e93` (the E6 close-out commit landed after `d85df26`).

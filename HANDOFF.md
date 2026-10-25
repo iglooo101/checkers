@@ -32,8 +32,9 @@ Last updated: 2026-10-24
   `git fetch origin main:main` before comparing branches. `001-project-foundation` to
   `006-saving-and-statistics` were merged and deleted (the auto-mode safety check blocks branch
   deletion, so the user runs it once the next slice's branch exists). `main` (local and GitHub)
-  is at `d85df26`: **E6 is done** (CI run 40130998987). Its branch
-  `007-settings-themes-sound-and-rules` is merged; the user deletes it once E8's branch exists.
+  is at `0109e93`: **E6 is done** (CI run 40130998987; `0109e93` is its docs-only close-out on
+  top of `d85df26`). Its branch `007-settings-themes-sound-and-rules` is merged; E8's branch
+  `008-release-1-0` exists, so the user can delete it now.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
