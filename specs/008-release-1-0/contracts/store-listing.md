@@ -21,6 +21,7 @@ contract fixes their fields, limits and sources.
 | Copyright | "YYYY Owner" | Year and the owner's name as the owner gives it |
 | App Review notes | ≤ 4,000 bytes | No account or sign-in; works offline; nothing to configure; how to see each feature (two-player game, the three difficulties, Rules, Settings) |
 | Privacy label | — | "Data Not Collected" (FR-020), consistent with R13's quotes |
+| What to Test (TestFlight) | ≤ 4,000 characters | For the external testers (FR-025): play both kinds of game, try Rules and Settings; the tester new to checkers plays three games against Easy (E4 playtest: at least one win); how to send feedback from TestFlight |
 | Version | — | 1.0, released manually after approval (FR-028) |
 
 The owner enters these in App Store Connect; the file stays the source when a field changes.
@@ -39,8 +40,10 @@ theme, hints on, sound irrelevant), status bar 9:41 with full battery and signal
 | `05-rules.png` | Rules | the top of the page |
 | `06-statistics.png` | Statistics | a record with games at each difficulty |
 
-States come from moves the test plays and from `-savedGame` and `-record` launch arguments (E5),
-so every image is a real screen of the app. The owner approves them (or asks for other states)
+States come from `-savedGame` and `-record` launch arguments (E5), or from moves the test plays
+in a two-player game, so every image is a real screen of the app. Every state that involves the
+computer comes from `-savedGame` with the player to move: the computer draws each turn with a
+fresh random seed, so a game played against it would differ between runs (FR-019). The owner approves them (or asks for other states)
 before the first submission.
 
 ## Public pages (FR-021, R13)

@@ -59,9 +59,10 @@ Xcode 26.3 on the Mac and CI (FR-032; submission before Apple requires the iOS 2
 never in the repository or a log; Markdown-only changes run no CI; `GameSession.swift` stays under
 400 lines (394 now)
 
-**Scale/Scope**: about 4 new and 6 changed app files (one a string catalog), 3 icon images; 4 new
-and 2 changed test files; 1 new scheme, 2 new test plans; 7 new scripts and 7 script tests; 2 public
-pages; 4 release record files and 6 screenshots; 6 user stories, 32 functional requirements
+**Scale/Scope**: about 5 new and 7 changed app files (one a string catalog), 3 icon images; 4 new
+and 3 changed test files; 1 new scheme, 2 new test plans; 7 new scripts (one a git hook), 1
+session position file and 9 script tests; 2 public pages; 4 release record files and 6
+screenshots; 6 user stories, 32 functional requirements
 
 ## Constitution Check
 
@@ -75,7 +76,7 @@ pages; 4 release record files and 6 screenshots; 6 user stories, 32 functional r
 | IV. Safety & Correctness | Pass | Typed `DiagnosticError`; every unreadable payload is logged and the next handled (IV.2); nothing user-visible can fail, so IV.3 adds nothing; no force unwraps; the subscriber is `Sendable` without `@unchecked`. |
 | V. UX & Accessibility | Pass | No screen changes. The one new user-facing text, the Home Screen name, is in `InfoPlist.xcstrings` (V.4). The icon keeps the board's Classic colors; the launch screen stays the system background, as Home's. |
 | VI. Privacy & Security | Pass | Diagnostics stay in the phone's log; MetricKit needs no permission and no required-reason API, so `PrivacyInfo.xcprivacy` is unchanged; the privacy report of each signed archive is generated (Organizer) and its facts checked by `release.sh check` (VI verification). The upload key is a developer credential kept outside the repository with owner-only permissions (spec assumption; VI.2 governs what the app stores, and it stores none). |
-| VII. Performance | Pass | Measured on the phone before designing: launch median 231 ms, no hitches in a Rules scroll (R4, R5). Every target is measured on the phone (`device.sh`); a miss is profiled in Instruments before any change (VII.4, FR-014). Registering the subscriber adds one call at launch; the launch measurements cover it. |
+| VII. Performance | Pass | Measured on the phone before designing: launch median 231 ms, no hitches in a Rules scroll (R4, R5). Every target is measured on the phone (`device.sh`); a miss is profiled in Instruments before any change (VII.4, FR-014). The subscriber is registered from a `.task` after the first frame, so MetricKit's first use never delays launch; the launch measurements confirm it. |
 | VIII. Simplicity & Dependencies | Pass | No dependencies; Python standard library and bash; no fastlane, no crash-reporting SDK, no Icon Composer file. Each script maps to a requirement. |
 | IX. Observability | Pass | New `diagnostics` category (IX.1); diagnostics through MetricKit and Organizer (IX.2); kinds, times and timings are public, diagnostic details keep the default private redaction (IX.3). |
 | Platform constraints | Pass | Toolchain: Xcode 26.3, the latest this Mac runs, on the Mac and CI (v1.2.0); iPhone only, portrait, iOS 26.2; every App Store build through TestFlight first (US5, FR-025). |
@@ -117,11 +118,23 @@ No change: the slice adds no screen. The three entries of E4 to E6 stand
 - **No new automated iPad tests** (spec clarification): one recorded smoke check per release build
   on the iPad simulator (R17).
 - **Earlier tests that change**: `LoggingTests` (eight categories), `PlatformSettingsTests`
-  (display name, encryption key, launch screen), and the blocking plan's skip list
+  (display name, encryption key, launch screen), `StorageTests` (the device session's saved
+  game), and the blocking plan's skip list
   (`DeviceSessionUITests`, `ScreenshotUITests`). `LaunchPerformanceTests` is unchanged.
-- **`GameSession.swift` is at 394 of 400 lines**: the computer's timing is a local clock reading in
-  its turn function; if the line limit is still reached, the computer's turn moves to
+- **`GameSession.swift` is at 394 of 400 lines**: the computer's timing adds two lines to its
+  turn function (a clock reading and a call), and the logging lives in a new
+  `GameSession+Timing.swift`; if the limit is still reached, the computer's turn moves to
   `GameSession+Computer.swift` first, as a refactor with its tests green.
+- **Analysis fixes** (2026-10-25, `/speckit-analyze` after tasks, 15 findings applied): the
+  secrets guard matches a key's header line built at run time (it matched its own text before)
+  and also runs as a pre-push hook, since the repository is public; the device session reaches its
+  chain and crowning from a saved two-player position passed at launch
+  (`scripts/device-session-game.json`, checked by a unit test); screenshots with the computer come
+  only from saved games, since its turns are random; the diagnostics subscriber is a
+  `nonisolated` class started after the first frame, and the recording log uses a `Mutex`; the
+  release guards are tested against a temporary repository; the traceability matrix must be
+  regenerated with any test that names an FRD ID; the hitch metric on an attached app is checked
+  on the first session, with a fallback; plus wording and inventory fixes.
 
 ### Post-design re-check
 
@@ -163,8 +176,10 @@ checkers/checkers/
 │   ├── DiagnosticReport.swift            # new: DiagnosticKind, DiagnosticReport, DiagnosticError
 │   ├── DiagnosticsLog.swift              # new: protocol, OSLogDiagnosticsLog, RecordingDiagnosticsLog
 │   └── DiagnosticsSubscriber.swift       # new: MXMetricManagerSubscriber adapter
-├── Features/Game/GameSession.swift       # the computer's first-step timing line
+├── Features/Game/GameSession.swift       # two lines: the computer's turn start, the timing call
+├── Features/Game/GameSession+Timing.swift # new: the computer's first-step timing line
 ├── Features/Sound/SoundBank.swift        # sound start and output latency lines
+├── Features/Sound/SoundPlayer.swift      # passes the moment the step asked for the sound
 ├── Support/Logging.swift                 # + diagnostics category
 ├── CheckersApp.swift                     # starts the diagnostics subscriber
 ├── InfoPlist.xcstrings                   # new: CFBundleDisplayName "Checkers"
@@ -181,6 +196,7 @@ checkers/checkersTests/
 ├── US3DiagnosticsTests.swift             # new: every kind, order, damaged payloads, details
 ├── Support/DiagnosticFixtures.swift      # new: payload JSON per kind
 ├── PlatformSettingsTests.swift           # changed: name, encryption, launch screen
+├── StorageTests.swift                    # changed: the device session's saved game is valid
 └── LoggingTests.swift                    # changed: eight categories
 checkers/checkersUITests/
 ├── DeviceSessionUITests.swift            # new: the scripted session, XCTHitchMetric (phone only)
@@ -192,13 +208,17 @@ scripts/
 ├── device-timings.py                     # new: SC-005 report from the console capture
 ├── traceability.py                       # new: the FRD matrix; --check
 ├── release.sh                            # new: archive, check, upload, record, submit-check
+├── device-session-game.json              # new: the session's saved two-player position
+├── hooks/pre-push                        # new: the secrets check before every push
 └── tests/
-    ├── test-make-icon.sh                 # new
-    ├── test-traceability.sh              # new
-    ├── test-device-timings.sh            # new (+ fixture captures)
-    ├── test-no-network.sh                # new
     ├── test-no-secrets.sh                # new
-    ├── test-store-listing.sh             # new
+    ├── test-device.sh                    # new (+ fixture devicectl output)
+    ├── test-no-network.sh                # new
+    ├── test-traceability.sh              # new (+ fixture FRD and tests)
+    ├── test-release-check.sh             # new (+ fixture archives)
+    ├── test-device-timings.sh            # new (+ fixture captures)
+    ├── test-make-icon.sh                 # new
+    ├── test-store-listing.sh             # new (+ fixture listings)
     └── test-release-guards.sh            # new (+ fixture records)
 release/
 ├── ExportOptions.plist                   # new: App Store Connect upload options

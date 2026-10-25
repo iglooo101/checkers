@@ -95,7 +95,9 @@ that date.
 - **Rationale**: *Measured*: five launches took 0.240, 0.237, 0.230, 0.230 and 0.231 s (median
   231 ms, against the 400 ms budget). XCTest terminates the app between iterations and leaves out
   its warm-up launch, which matches the spec's rule that the first launch after an install is not
-  counted.
+  counted. "Cold launch" in this slice therefore means `XCTApplicationLaunchMetric`'s launch from
+  a terminated process to the first frame, the measure Constitution VII names in its
+  verification; a launch after a reboot (when even the system's caches are cold) is not measured.
 - **Alternatives considered**: Instruments' App Launch template (it records on the phone, but its
   tables cannot be exported, R1); MetricKit's launch histogram (arrives a day later, from players).
 
@@ -105,7 +107,11 @@ that date.
   (new in the iOS 26 SDK) over the whole session (one iteration, started and stopped by hand
   around the session). It covers selecting, tapping and dragging moves, a capture chain, crowning,
   undo, a game against the computer at each difficulty, and scrolling Rules, Statistics, Settings
-  and setup; set positions come from launch arguments, as in the UI tests. The pass rule:
+  and setup. The chain and the crowning come from a saved two-player position passed as
+  `-savedGame` when the app is launched (`scripts/device-session-game.json`, checked against the
+  engine by a unit test): the opening cannot reach them in a few moves, and a launch argument holds
+  for the whole launch, so every iteration continues the same position (E5 research R10). The
+  pass rule:
   "Hitch Time Ratio" under 5 ms/s, and "Hitches Total Duration" under 0.25 s, which rules out any
   single hang of 250 ms or more. If either misses, the same session is recorded with Instruments
   (Animation Hitches and Hangs) and read in the Instruments app (Constitution VII.4).
@@ -120,8 +126,8 @@ that date.
 
 - **Decision**: Two log lines at notice level with public numbers only: when the computer's first
   step of a turn appears, `GameSession` logs the time since its turn started (`computer`); when a
-  sound starts, `SoundBank` logs the time since the step asked for it, and once per audio session
-  the system's output latency (`sound`). The session of R5 runs against the app launched by
+  sound starts, `SoundBank` logs the time since the step asked for it, and each time the bank is
+  prepared the system's output latency (`sound`). The session of R5 runs against the app launched by
   `xcrun devicectl device process launch --console` with `OS_ACTIVITY_DT_MODE=YES`, which mirrors
   the app's log to the Mac; the UI test attaches to that running app with
   `XCUIApplication.activate()` instead of launching it. A script reads the captured log and checks
@@ -134,6 +140,11 @@ that date.
   do not contain the app's log (*measured*), and trace tables cannot be exported (R1), so the log
   is the only text path. The lines are diagnostics in the sense of Constitution IX and change no
   behavior (FR-031).
+- **Not yet measured together**: the hitch metric was measured on an app the test launched (R5),
+  and `activate()` with the console capture without the metric. The first `device.sh session`
+  run checks that the result bundle holds the three hitch metrics when the test attached to the
+  app; if not, the session runs twice, hitches with the test launching the app (same
+  `-savedGame` bytes) and timings through the console (tasks T020).
 - **Alternatives considered**: signposts read by Instruments (no export, R1); timing in the UI test
   (XCUITest polls about once a second, too coarse for a 0.5–1 s window); recording the screen with
   sound and reading frames (kept as the owner's ear check in the release checklist, not as the
@@ -195,8 +206,8 @@ that date.
 
 - **Decision**: `scripts/make-icon.py` (Python standard library only, like `make-sounds.py`) draws
   three 1024 × 1024 PNG files into `AppIcon.appiconset` and names them in its `Contents.json`:
-  default (opaque, no alpha channel), dark (the same artwork on a transparent background) and
-  tinted (grayscale). The artwork is one light king, a cream piece with its crown, centered on a
+  default (opaque, no alpha channel), dark (the piece and its crown on a transparent background,
+  where the system puts its own dark background) and tinted (grayscale). The artwork is one light king, a cream piece with its crown, centered on a
   two-by-two corner of Classic board squares (colors from the Classic theme: squares `#F1DFB9` and
   `#7A4A24`, piece `#FFFAF0` with edge `#A88F5F`, crown `#6B4426`), with no text and no thin lines,
   drawn as filled shapes with 4 × 4 supersampling for smooth edges. `--check` redraws in memory and
@@ -285,7 +296,8 @@ that date.
   number is higher than every recorded one. After the upload it appends the build number, commit,
   date and state to `release/builds.md` (FR-023). The approved build's commit gets the tag `v1.0`
   (FR-030). A script test fails if any tracked file contains private-key material or a `.p8` file,
-  and `*.p8` is ignored by git (FR-024).
+  and `*.p8` is ignored by git (FR-024); a pre-push hook runs the same test, because this
+  repository is public and CI only sees a push after it has happened.
 - **Rationale**: `xcodebuild -help` lists the authentication-key options and the export options
   `destination`, `method`, `manageAppVersionAndBuildNumber`, `testFlightInternalTestingOnly` and
   `uploadSymbols` (*measured*); App Store Connect accepts uploads from Xcode, altool, Transporter

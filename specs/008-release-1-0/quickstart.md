@@ -19,11 +19,12 @@ measurement") and `checklists/release.md` (the release checklist). Tooling detai
 ## 1. Automated checks (SC-001, SC-006, SC-007; every push)
 
 ```sh
-scripts/tests/run.sh      # icon, traceability, timings parser, no network, no secrets, listing, release guards
+scripts/tests/run.sh      # secrets, device status, network, traceability, archive check, timings, icon, listing, release guards
 scripts/test.sh           # blocking plan: diagnostics parser and log, Info.plist values, all earlier tests
 ```
 
-Expected: every script test passes; `traceability.py --check` reports every FRD ID covered and
+Expected: every script test passes (and `git push` runs the secrets check first, through the
+pre-push hook); `traceability.py --check` reports every FRD ID covered and
 FR-PLAT-02 removed; the diagnostics tests log exactly one entry per diagnostic and one failure
 per damaged payload; `PlatformSettingsTests` reads "Checkers", the encryption key and the plain
 launch screen.
@@ -38,7 +39,8 @@ launch screen.
    stays in portrait.
 3. App Privacy Report › Checkers. Expected: no network activity, no data or sensor access.
 4. Archive and check: `scripts/release.sh archive <build>` (runs `check`). Expected: the check
-   passes. In Xcode's Organizer, Generate Privacy Report for that archive. Expected: no collected
+   passes. Open the archive (`open .build/Release/Checkers-1.0-<build>.xcarchive`, which adds it
+   to Xcode's Organizer), then Generate Privacy Report for it. Expected: no collected
    data, no tracking, no tracking domains; `UserDefaults` with CA92.1 only.
 5. iPad smoke check (FR-005): on the "iPad (A16) E8" simulator, install the same build's app,
    launch it, play a few moves against the computer and in a two-player game, open every screen,

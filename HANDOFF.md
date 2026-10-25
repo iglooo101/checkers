@@ -178,7 +178,9 @@ Last updated: 2026-10-25
   and time, two timing log lines read through `devicectl --console`, the name "Checkers" and the
   encryption key, a scripted icon in three variants, and scripts for the device checks,
   screenshots, traceability and releases (contracts `diagnostics.md`, `release-tooling.md`,
-  `store-listing.md`). `.specify/feature.json` (local, git-ignored) points at it.
+  `store-listing.md`). **Tasks** (#174): 57, tests first; tasks for the owner, Apple and the
+  phone are marked **Owner:**, **Apple:**, **Phone:**. `.specify/feature.json` (local,
+  git-ignored) points at it.
 
 ## Lessons learned
 
@@ -794,8 +796,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. ~~Amend the constitution~~: done 2026-10-25 (v1.2.0).
 2. ~~`/speckit-plan` for E8 (#173)~~: done 2026-10-25 (`specs/008-release-1-0/plan.md`, research
-   R1–R17). Next: `/speckit-tasks` and `/speckit-analyze` (#174), then the board reconciliation
-   (#175).
+   R1–R17); `tasks.md` (57 tasks) written and analyzed, 15 findings applied (#174). Next: the
+   board reconciliation (#175), then `/speckit-implement` from Setup and US1.
 3. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
    Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
    600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract

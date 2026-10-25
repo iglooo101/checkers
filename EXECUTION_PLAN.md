@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 3/15 | In Progress |
-| | **Total** | | | | **37/41** | **142/154** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 4/15 | In Progress |
+| | **Total** | | | | **37/41** | **143/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -74,8 +74,9 @@ explains the game in seven illustrated sections.
 1. **E8 Release 1.0 (#169)**, the last epic, on branch `008-release-1-0`: spec written and
    clarified (#171, #172), the constitution's toolchain line amended (v1.2.0, FR-032) and the
    plan written (#173: `plan.md`, research R1–R17 measured on the phone, data model, three
-   contracts, quickstart). Next: `/speckit-tasks` and `/speckit-analyze` (#174), then the board
-   reconciliation (#175) and implementation.
+   contracts, quickstart), and `tasks.md` generated and analyzed (#174: 57 tasks; 15 findings
+   applied). Next: the board reconciliation (#175), then `/speckit-implement`, starting with
+   Setup and US1.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -489,14 +490,14 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 3/15 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 4/15 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
 - [x] #171 E8 Specify: write spec.md with /speckit-specify · S
 - [x] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
 - [x] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
-- [ ] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [x] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #175 E8 Reconcile this epic's board tasks with tasks.md · S
 
 **F8.1 Platform and privacy verification** (#176) · FR-PLAT-01, FR-PLAT-03, FR-PRIV-01, FR-PRIV-02
@@ -937,3 +938,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   listing) and quickstart; Constitution Check passes before and after design. The spec now says
   "until Apple requires the iOS 27 SDK" (no date announced) instead of April 2027. Risks revised
   (device tooling, launch time, SDK date, E4's timing check). Next: `/speckit-tasks` (#174).
+- 2026-10-25: E8 tasks written and analyzed (#174 Done): `specs/008-release-1-0/tasks.md`, 57
+  tasks (Setup 2, Foundational 3, US1 9, US2 8, US3 6, US4 12, US5 8, US6 4, Polish 5), tests
+  first, with tasks for the owner, Apple and the phone marked. `/speckit-analyze` found no
+  constitution violations and 15 findings, all applied: the secrets guard matched its own text
+  (now a key header built at run time, plus a pre-push hook, as the repository is public); the
+  device session reaches its chain and crowning from a saved position passed at launch;
+  screenshots with the computer come only from saved games; the diagnostics subscriber is
+  `nonisolated` and starts after the first frame; and smaller fixes. Next: #175 (reconcile the
+  board), then implementation.

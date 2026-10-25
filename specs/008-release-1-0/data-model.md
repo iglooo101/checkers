@@ -19,13 +19,20 @@ repository. Contracts: [diagnostics.md](contracts/diagnostics.md),
 
 `nonisolated`, `Sendable`, `CaseIterable`; the order above is the order a report logs them in.
 
+### Diagnostic (new struct)
+
+| Field | Type | Rule |
+|---|---|---|
+| `kind` | `DiagnosticKind` | the array it came from |
+| `detail` | `String?` | its `diagnosticMetaData` re-encoded as JSON with sorted keys; nil without one (logged as "none") |
+
 ### DiagnosticReport (new struct)
 
 | Field | Type | Rule |
 |---|---|---|
 | `begin` | `String` | the payload's `timeStampBegin`, as written |
 | `end` | `String` | the payload's `timeStampEnd`, as written |
-| `diagnostics` | `[DiagnosticKind]` | one element per item of the five arrays, in kind order |
+| `diagnostics` | `[Diagnostic]` | one element per item of the five arrays, in kind order |
 
 - `init(json: Data) throws(DiagnosticError)`: the bytes must be a JSON object with non-empty
   string time stamps; each of the five arrays may be missing (none of that kind) but, when
@@ -49,17 +56,22 @@ repository. Contracts: [diagnostics.md](contracts/diagnostics.md),
 
 - `OSLogDiagnosticsLog` (live): writes to `Log.diagnostics` in the format of
   [diagnostics.md](contracts/diagnostics.md).
-- `RecordingDiagnosticsLog` (tests): keeps the entries it would write, in order.
-- Both `nonisolated` and `Sendable`, since the system calls from a background queue.
+- `RecordingDiagnosticsLog` (tests): keeps the reports and failures it would write, in order, in
+  a `Mutex` (Synchronization).
+- Both `nonisolated` and `Sendable` without `@unchecked` (Constitution IV.4), since the system
+  calls from a background queue.
 
 ### DiagnosticsSubscriber (new class)
 
-- `final class DiagnosticsSubscriber: NSObject, MXMetricManagerSubscriber, Sendable`, holding a
-  `DiagnosticsLog`. `didReceive(_ payloads: [MXDiagnosticPayload])` (nonisolated, background
+- `nonisolated final class DiagnosticsSubscriber: NSObject, MXMetricManagerSubscriber, Sendable`
+  (the app target's default isolation is the main actor), holding `let log: any DiagnosticsLog`. `didReceive(_ payloads: [MXDiagnosticPayload])` (nonisolated, background
   queue) reads each payload's `jsonRepresentation()` into a `DiagnosticReport` and records it, or
   records the failure; one payload's failure does not stop the others (FR-010).
 - `start()` adds it to `MXMetricManager.shared`; the system singleton is used only here (II.3).
-- Created and started once by `CheckersApp`, which keeps it for the app's lifetime.
+- Created once by `CheckersApp`, which keeps it for the app's lifetime and starts it from a
+  `.task` on the root view, after the first frame (Constitution VII.1).
+- `static func handle(_ payloads: [Data], log:)` does the work for each payload's JSON, so tests
+  call it without `MXDiagnosticPayload`, which cannot be created in tests.
 
 ### Log (changed, `Support/Logging.swift`)
 
@@ -69,9 +81,9 @@ repository. Contracts: [diagnostics.md](contracts/diagnostics.md),
 
 | Where | Category | When | Values (public) |
 |---|---|---|---|
-| `GameSession`, the computer's turn | `computer` | its first step appears | difficulty, milliseconds since the turn started |
+| `GameSession`, the computer's turn (helper in `GameSession+Timing.swift`) | `computer` | its first step appears | difficulty, milliseconds since the turn started |
 | `SoundBank` | `sound` | a sound starts playing | effect, milliseconds since the step asked for it |
-| `SoundBank` | `sound` | its audio session becomes active | the session's output latency in milliseconds |
+| `SoundBank` | `sound` | each time it is prepared | the audio session's output latency in milliseconds |
 
 Exact texts are in [release-tooling.md](contracts/release-tooling.md) ("Device logs"), because
 `scripts/device-timings.py` parses them. Notice level, so they appear in the console capture.

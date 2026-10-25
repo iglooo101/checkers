@@ -29,7 +29,11 @@ file.
 |---|---|---|---|
 | `status` | reads `devicectl device info details` | name, model, iOS version, `tunnelState`, `developerModeStatus` | the phone is missing, not connected, or Developer Mode is off ("Turn on Developer Mode: Settings › Privacy & Security › Developer Mode") |
 | `launch` | `status`, then `xcodebuild test -scheme checkers-device -configuration Release -destination id=<udid> -only-testing:checkersUITests/LaunchPerformanceTests -test-iterations 2` | the ten launch times, their median, and pass or miss against 0.4 s | `status` fails, the test fails, or fewer than ten values |
-| `session` | `status`; launches the installed Release app with `devicectl device process launch --console --terminate-existing --environment-variables '{"OS_ACTIVITY_DT_MODE":"YES"}'` and the session's launch arguments, capturing its output to `.build/DeviceSession/console.txt`; runs `DeviceSessionUITests`; stops the capture | the three hitch metrics, then `device-timings.py`'s report | `status` fails, the test fails, or a target misses |
+| `session` | `status`; launches the installed Release app with `devicectl device process launch --console --terminate-existing --environment-variables '{"OS_ACTIVITY_DT_MODE":"YES"}'` and `-savedGame` holding the bytes of `scripts/device-session-game.json` (a launch argument holds for the whole launch, so every iteration continues the same position), capturing its output to `.build/DeviceSession/console.txt`; runs `DeviceSessionUITests`; stops the capture | the three hitch metrics, then `device-timings.py`'s report | `status` fails, the test fails, a hitch metric is absent, or a target misses |
+
+The hitch metric on an app the test attached to (instead of launching) is checked on the first
+run; if XCTest reports no hitch metrics then, `session` runs twice: hitches with the test
+launching the app itself with the same `-savedGame` bytes, timings with the console (tasks T020).
 
 Result bundles go to `.build/TestResults/Device*.xcresult`; numbers are copied by hand into
 `checklists/validation.md` with the build, device and iOS version (data model, "Device
@@ -48,8 +52,8 @@ Exact texts, at notice level, all values `privacy: .public` (they cannot identif
 - The computer's line is written when the first step of its turn is applied, measured from the
   moment its turn started (`computerPhase` became thinking) with `ContinuousClock`.
 - The sound line is written by `SoundBank` when `play()` returns true, measured from the moment
-  the session asked for the sound; the latency line once each time the audio session becomes
-  active, from `AVAudioSession.outputLatency`.
+  the session asked for the sound; the latency line each time the bank is prepared (after it sets
+  the audio session's category), from `AVAudioSession.outputLatency`.
 - Nothing else in the app's behavior changes (FR-031). The lines are checked on the phone by
   `device.sh session`, whose report fails when a difficulty has no computer lines or no sound
   line appears; they add no behavior for unit tests to check.
@@ -65,7 +69,8 @@ sound).
 
 ## `scripts/make-icon.py [--check]` (R10)
 
-Writes `AppIcon.png` (RGB, opaque), `AppIcon-Dark.png` (RGBA, transparent background) and
+Writes `AppIcon.png` (RGB, opaque), `AppIcon-Dark.png` (RGBA, the piece and crown on a
+transparent background) and
 `AppIcon-Tinted.png` (grayscale) at 1024 × 1024 into
 `checkers/checkers/Assets.xcassets/AppIcon.appiconset/` and sets their file names in its
 `Contents.json`. Same output on every run on one machine; `--check` redraws in memory and allows a
@@ -112,7 +117,10 @@ cannot create the App Store profile, the profile comes from the Xcode account al
 
 The guards are tested by `scripts/tests/test-release-guards.sh` with fixture `builds.md` and
 `release.md` files (build order, backward states, an open checklist item, an accepted item
-without a reason).
+without a reason). Two variables exist for those tests: `RELEASE_REPO` (the git repository the
+clean-tree and CI checks look at; default the repository root; the tests point it at a temporary
+repository) and `RELEASE_DRY_RUN=1` (print the `xcodebuild` command instead of running it).
+`check` is tested by `scripts/tests/test-release-check.sh` with fixture archives.
 
 ## `release/builds.md`
 
@@ -129,10 +137,18 @@ Build numbers start at 1 and each upload takes the next. The approved build's co
 
 | Test | Requirement |
 |---|---|
-| `test-make-icon.sh` | FR-015, SC-007 (same images) |
-| `test-traceability.sh` | FR-007, SC-001 |
-| `test-device-timings.sh` | FR-013, SC-005 (the check itself) |
+| `test-no-secrets.sh` | FR-024: no tracked file holds a private key's header line or ends in `.p8`; `.gitignore` lists `*.p8`. The pattern is built at run time, so the script and documents that name it do not match |
+| `test-device.sh` | FR-011: `device.sh status` finds the phone and reports Developer Mode (fixture `devicectl` output) |
 | `test-no-network.sh` | FR-001, FR-003: no networking, web, account, analytics or advertising API in `checkers/checkers` or `checkers/CheckersEngine/Sources` |
-| `test-no-secrets.sh` | FR-024: no tracked file contains `PRIVATE KEY` or ends in `.p8`; `.gitignore` lists `*.p8` |
+| `test-traceability.sh` | FR-007, SC-001 |
+| `test-release-check.sh` | FR-002, FR-004, FR-016, FR-022: the archive check (fixture archives) |
+| `test-device-timings.sh` | FR-013, SC-005 (the check itself) |
+| `test-make-icon.sh` | FR-015, SC-007 (same images) |
 | `test-store-listing.sh` | FR-018: the limits in [store-listing.md](store-listing.md) |
 | `test-release-guards.sh` | FR-023, FR-028 |
+
+## The pre-push hook (FR-024)
+
+`scripts/hooks/pre-push` runs `scripts/tests/test-no-secrets.sh` and refuses the push when it
+fails, so a key is stopped before it reaches the public repository; CI runs the same test after
+the push. It is turned on per clone with `git config core.hooksPath scripts/hooks`.

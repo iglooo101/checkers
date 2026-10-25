@@ -5,10 +5,15 @@ Implements spec FR-008 to FR-010 and SC-006 (research R9). Types are in
 
 ## Receiving reports
 
-- At launch, `CheckersApp` creates one `DiagnosticsSubscriber` with an `OSLogDiagnosticsLog` and
-  calls `start()`, which adds it to `MXMetricManager.shared`. The app keeps it until it ends.
-  Starting it must not delay the first frame: the launch test (R4) and the CI launch report stay
-  within their budgets.
+- `CheckersApp` creates one `DiagnosticsSubscriber` with an `OSLogDiagnosticsLog`, keeps it for
+  the app's lifetime, and calls `start()` (which adds it to `MXMetricManager.shared`) from a
+  `.task` on the root view, after the first frame: the first use of MetricKit never delays launch
+  (Constitution VII.1), and the system delivers diagnostics whenever the app is running with a
+  subscriber. The launch test (R4) and the CI launch report confirm the budget.
+- `DiagnosticsSubscriber` is a `nonisolated final class` (the app target's default isolation is the
+  main actor; MetricKit calls on its own queue) whose only stored property is the `Sendable` log;
+  `RecordingDiagnosticsLog` keeps its entries in a `Mutex`. No `@unchecked Sendable`
+  (Constitution IV.4).
 - The system calls `didReceive(_:)` on a background queue, at most about once a day, with the
   diagnostics of earlier sessions. Each payload is handled on its own: its
   `jsonRepresentation()` becomes a `DiagnosticReport`, which the log records; if the bytes cannot
