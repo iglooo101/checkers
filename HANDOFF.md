@@ -31,17 +31,21 @@ Last updated: 2026-10-24
   branches). Because `main` moves on GitHub, the local `main` lags: run
   `git fetch origin main:main` before comparing branches. `001-project-foundation` to
   `006-saving-and-statistics` were merged and deleted (the auto-mode safety check blocks branch
-  deletion, so the user runs it once the next slice's branch exists). `main` (local and GitHub)
-  is at `0109e93`: **E6 is done** (CI run 40130998987; `0109e93` is its docs-only close-out on
-  top of `d85df26`). Its branch `007-settings-themes-sound-and-rules` is merged; E8's branch
-  `008-release-1-0` exists, so the user can delete it now.
+  deletion, so the user runs it once the next slice's branch exists). **E6 is done** (last code
+  CI run 40130998987 on `d85df26`); its branch `007-settings-themes-sound-and-rules` is merged
+  and the user can delete it now. **E8 is in progress on `008-release-1-0`** (spec and clarify
+  done, documentation only so far); `main` was fast-forwarded to this session's close-out commit,
+  the head of `008-release-1-0`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
   from 30 to 45 minutes, the theme rows became buttons instead of an inline picker (research
   R11, "Found in US3"), and the largest-size Settings audit runs at rest (validation §6).
 - **Constitution**: `.specify/memory/constitution.md`, v1.1.0 (ratified 2026-10-15, amended
-  2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates.
+  2026-10-16: iPhone only, portrait). Nine principles plus workflow and governance gates. **An
+  amendment is due before E8's plan** (spec FR-032): its toolchain line says "the latest stable
+  Xcode", now Xcode 27, which this Mac cannot run; it becomes "the latest Xcode the development
+  Mac runs, never below the App Store's minimum SDK" (v1.2.0, with a rationale).
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
@@ -118,8 +122,10 @@ Last updated: 2026-10-24
 - **Backlog**: 8 epics, 41 features, 154 tasks (#1–#204; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
-  #132, final CI run 40130998987, 313 tests). Only **E8 Release 1.0 (#169)** is left (37/41
-  features, 139/154 tasks). Progress and the full list are in `EXECUTION_PLAN.md`.
+  #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
+  in progress: #171 (specify) and #172 (clarify) are done, #173 (plan) is In Progress with F8.0
+  (#170) and the epic (37/41 features, 141/154 tasks). Progress and the full list are in
+  `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
   `specs/003-game-experience/` (60 tasks, validation in `checklists/validation.md`; a hand-played
@@ -146,7 +152,20 @@ Last updated: 2026-10-24
   texts), quickstart, and **`tasks.md` (35 tasks, analyzed: 12 findings applied: a sound that
   cannot play shows "Sound effects aren't available right now." in Settings and the next sound
   tries again, FR-SND-05 and spec FR-017; `BoardTheme`'s names move to US3; the Rules pictures
-  ring the other movable pieces)**. `.specify/feature.json` (local, git-ignored) points at it.
+  ring the other movable pieces)**. **E8's slice is `specs/008-release-1-0/`**: spec (6 user
+  stories: every promise verified, fast and smooth on a real iPhone, diagnostics after release,
+  icon and store page, TestFlight beta round, submitted and approved; 32 requirements traced to
+  #177–#179, #192, #181, #182, #184–#187; 10 success criteria) and its quality checklist. Settled
+  with the user before specifying: paid developer account (team 5RH237UKVE); device checks on
+  their iPhone "HKH16"; an original icon drawn by a script; privacy and support pages on GitHub
+  Pages (`iglooo101.github.io/checkers`, support through GitHub Issues); the store name chosen in
+  App Store Connect, "Checkers" on the Home Screen; bundle ID `Hussein-Helmy.checkers` kept; free
+  everywhere; uploads with an App Store Connect API key kept in `../secrets`; TestFlight with a
+  few external testers; one release checklist that gathers every open hand check of E3–E7 and
+  gates submission; manual release, E8 done at approval. Clarified: Xcode 26.3 builds 1.0 and the
+  constitution is amended (FR-032); the iPhone 16 counts as evidence for VII.1 (FR-014); one iPad
+  compatibility smoke check per release build (FR-005); diagnostics only logged on the phone
+  (FR-009). `.specify/feature.json` (local, git-ignored) points at it.
 
 ## Lessons learned
 
@@ -686,38 +705,58 @@ Last updated: 2026-10-24
   expects every section on one screen times out there; use a launch argument
   (`-UIPreferredContentSizeCategoryName`) in its own test instead.
 
+## Lessons learned (E8 specification and clarify, 2026-10-24)
+
+- **Ask what a release slice depends on outside the repository before specifying**: a paid
+  developer account, a device, credentials, public web pages and a store name decide which tasks
+  can be closed at all. Eleven picker questions settled them, then specify and clarify needed only
+  four more.
+- **`xcrun xctrace list devices` can show a stale paired device**: it listed "HKH16" as offline on
+  iOS 26.3.1. `xcrun devicectl list devices` and `xcrun devicectl device info details --device
+  <id>` gave the truth: available, `iPhone17,3` (an iPhone 16, not a Pro), iOS 27.0.1.
+- **Check the toolchain against the constitution at the start of a slice**: Xcode 27 shipped on
+  2026-09-14 and needs Apple silicon and macOS Tahoe; this Mac is a 2019 Intel MacBook Pro
+  (`MacBookPro15,3`) on macOS 15.8.1 and cannot run it, so "the latest stable Xcode" had been
+  unmet for weeks. App Store Connect accepts iOS 26 SDK builds until April 2027
+  (`sw_vers`, `sysctl -n machdep.cpu.brand_string`, `system_profiler SPHardwareDataType`).
+- **The Home Screen name was the lowercase target name**: `PRODUCT_NAME = $(TARGET_NAME)` and no
+  `CFBundleDisplayName`, so the icon would read "checkers" (spec FR-016).
+- **Store defaults to turn off or plan for**: an iPhone app is offered on Apple silicon Macs and
+  Apple Vision Pro unless turned off, and App Review may run it on an iPad in compatibility mode.
+- **"Still running" from the user**: twice nothing was running; checking `gh run list` and the
+  local processes (only the session's XcodeBuildMCP server, which is long-lived and normal) and
+  saying so was the right answer.
+
 ## Next steps
 
-`EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. Every
-`/speckit-specify` takes its scope from `FRD.md` and lists the requirement IDs it covers. A change
-in product behavior is made in `FRD.md` first. Move each board item to In Progress before starting
-it and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
+`EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
+product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
+and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **E8 Release 1.0 (#169)** with Spec Kit: create `008-…` from an up-to-date `main` by hand
-   (Spec Kit makes no branch here), then `/speckit-specify` from `FRD.md` (E8's features, with
-   #192 MetricKit and #181 launch time on a real iPhone). Once that branch exists, the user
-   deletes `007-settings-themes-sound-and-rules`.
-2. **Open for the user from E6** (`specs/007-…/checklists/validation.md`): on an iPhone, a
-   sound's delay, silent mode, the volume buttons, other apps' music and a sound over another
-   (quickstart §5); VoiceOver through Rules (headings) and Settings (theme rows) (§3, §4). The
-   Modern and Playful colors (T021) and the four sounds (T028) are approved.
-3. Open for the user:
-   - Play the computer at each level: the playtest (`specs/005-computer-opponent/quickstart.md`
-     §4, SC-004) checks that a beginner can beat Easy and that Hard challenges an experienced
-     casual player. If Easy proves too strong, widen its margin, or revisit random blunders as
-     research R4 notes.
-   - A VoiceOver game by hand (`specs/004-accessibility/quickstart.md` §3), and from E3 a
-     hand-played game and a visual review at the largest text size.
-   - E4's SC-005 needs a recent iPhone with a Release build; without one, the Mac measurement is
-     recorded as the closest proxy (Hard's slowest turn 419 ms in Release).
-   - E4 quickstart §3, last step: press Home while the computer thinks and come back; it should
-     make exactly one reply. UI tests cannot press Home inside the half-second thinking.
-   - E4 quickstart §6: a few moves against the computer with VoiceOver on.
-   - E5 (`specs/006-saving-and-statistics/checklists/validation.md`): close the app from the app
-     switcher and Continue; press Home while the computer thinks, then Continue; finish games by
-     hand at Easy and Medium and check Statistics; VoiceOver reads each Statistics block as one
-     sentence.
-4. Follow-ups: #192 (MetricKit, which can report E6's `sound` and `settings` errors) and #181
-   (400 ms on a real iPhone) are in E8; if the iPhone check of a sound's delay misses 0.1 s, move
-   `SoundBank` to `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the
-   development Mac.
+1. **Amend the constitution** with `/speckit-constitution` (part of #173, before the plan): the
+   toolchain line becomes "the latest Xcode the development Mac runs, never below the App Store's
+   minimum SDK", v1.1.0 → v1.2.0, with the rationale (Xcode 27 needs Apple silicon; this Mac is a
+   2019 Intel MacBook Pro) and the template sync check (spec FR-032).
+2. **`/speckit-plan` for E8 (#173)** on `008-release-1-0`. Research to measure, not assume:
+   whether Xcode 26.3 installs, debugs and runs Instruments on the iPhone's iOS 27.0.1 (connect
+   HKH16 and try; fallback: TestFlight builds and the phone's own measurements); Apple's current
+   minimum SDK and the April 2027 change, from Apple's notes; Apple's privacy label guidance for
+   locally logged diagnostics and Organizer crash reports; the required screenshot size; how the
+   icon script writes the default, dark and tinted variants; GitHub Pages from this repo; the
+   API-key upload path; how ten cold launches and the hitch session are measured. Then
+   `/speckit-tasks` and `/speckit-analyze` (#174) and the board reconciliation (#175).
+3. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
+   Manager role) and save the `.p8` file with its key ID and issuer ID next to `github.txt` in
+   `../secrets`; create the app record in App Store Connect with a unique store name and the
+   bundle ID `Hussein-Helmy.checkers`; recruit two to five external testers, at least one new to
+   checkers for the Easy playtest.
+4. **For the user, now**: delete the merged E6 branch:
+   `git branch -d 007-settings-themes-sound-and-rules && git push origin --delete 007-settings-themes-sound-and-rules`.
+5. **The open hand checks of E3–E7** (E3's hand-played game and largest-text review, E7's
+   VoiceOver game, E4's playtest, Home while the computer thinks and VoiceOver moves, E5's
+   app-switcher, background and Statistics checks, E6's iPhone sound checks and VoiceOver through
+   Rules and Settings) are now items of E8's release checklist (spec FR-026), run on the
+   TestFlight build; each must pass or be accepted in writing before submission.
+6. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
+   `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
+   Mac; any update after April 2027 needs an Apple silicon Mac and Xcode 27.

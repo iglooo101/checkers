@@ -59,7 +59,7 @@ Epics are listed in execution order.
 E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
 opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done (slices
 `specs/001-project-foundation/` to `specs/007-settings-themes-sound-and-rules/`, landed on
-`main`, which is at `0109e93`). The app is fully native SwiftUI: Home,
+`main`; E6's last code commit is `d85df26`). The app is fully native SwiftUI: Home,
 setup, and a two-player game with tap and drag, hints, chains, crowning, undo, resign and a result
 panel, playable square by square with VoiceOver (square states, announcements, focus that follows
 each step), with non-color cues at 3:1 contrast and an accessibility audit of every screen. Games
@@ -78,11 +78,17 @@ explains the game in seven illustrated sections.
    "the latest Xcode the development Mac runs, never below the App Store's minimum SDK"), then
    `/speckit-plan`, which must settle whether Xcode 26.3 can install and measure on the phone's
    iOS 27.0.1.
-2. Open for the user, from every epic (recorded in each slice's `checklists/validation.md`): E6's
+2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
+   with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
+   unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
+   least one new to checkers. And now: delete the merged branch
+   `007-settings-themes-sound-and-rules`.
+3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
    VoiceOver moves; E5's app-switcher and background checks; E7's VoiceOver game; E3's
-   hand-played game and largest-text review.
+   hand-played game and largest-text review. They are now items of E8's release checklist (spec
+   FR-026), run on the TestFlight build before submission.
 
 ## Order and dependencies
 
@@ -151,6 +157,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   remains after profiling is decided on a newer iPhone (E8 clarify). The phone runs iOS 27.0.1;
   whether Xcode 26.3 can install and measure on it is for the E8 plan, with TestFlight builds and
   the phone's own measurements as the fallback.
+- E8 depends on the user and on Apple: the API key, the App Store Connect record and a unique
+  store name, the external testers, Beta App Review (about a day) and App Review. Tasks that wait
+  on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
+  texts, screenshots, pages) does not wait.
 - The development Mac (2019 Intel MacBook Pro, macOS 15.8.1) cannot run Xcode 27 (Apple silicon
   and macOS Tahoe required), so the project stays on Xcode 26.3 and the constitution's toolchain
   line is amended (E8 clarify, spec FR-032). App Store Connect requires the iOS 27 SDK from April
@@ -898,3 +908,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   amended before the plan (FR-032; Xcode 27 shipped 2026-09-14 but needs Apple silicon); the
   owner's iPhone 16 counts as evidence for VII.1 (FR-014); iPad compatibility mode gets one smoke
   check per release build (FR-005); diagnostic reports are only logged on the phone (FR-009).
+- 2026-10-24: Session close-out: HANDOFF.md updated (current state with E8 specified and
+  clarified, the constitution amendment due before the plan, lessons learned from E8's
+  specification, next steps: amendment, plan, the user's App Store Connect preparation); this plan
+  reviewed against the close-out checklist (board matches; Next up gains the user's preparation
+  and moves the open hand checks into E8's release checklist; a risk for E8's outside
+  dependencies).
