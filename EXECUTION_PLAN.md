@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 2/15 | In Progress |
-| | **Total** | | | | **37/41** | **141/154** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 3/15 | In Progress |
+| | **Total** | | | | **37/41** | **142/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,7 +51,6 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #169 E8: Release 1.0
 - #170 F8.0: Specification (Spec Kit)
-- #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -73,10 +72,10 @@ Playful, with previews), turns the four original sounds and the move hints on an
 explains the game in seven illustrated sections.
 
 1. **E8 Release 1.0 (#169)**, the last epic, on branch `008-release-1-0`: spec written and
-   clarified (`specs/008-release-1-0/spec.md`, #171 and #172 done), and the constitution's
-   toolchain line amended (v1.2.0, spec FR-032). Next, within the plan step (#173):
-   `/speckit-plan`, which must settle whether Xcode 26.3 can debug and measure on the phone's
-   iOS 27.0.1 (building, installing and launching a Debug build there works, 2026-10-25).
+   clarified (#171, #172), the constitution's toolchain line amended (v1.2.0, FR-032) and the
+   plan written (#173: `plan.md`, research R1–R17 measured on the phone, data model, three
+   contracts, quickstart). Next: `/speckit-tasks` and `/speckit-analyze` (#174), then the board
+   reconciliation (#175) and implementation.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -129,8 +128,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E6's settings outlive UI tests too: a test that changes a setting through the screen puts it
   back, and known values come from typed launch arguments (`-moveHints <false/>`; a plain `NO`
   reads as text; confirmed in the simulator by T007).
-- E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); on the Mac each `play()`
-  call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
+- E6's sound delay on an iPhone is unmeasured (SC-004: within 0.1 s); E8 measures it on the
+  phone from a log line per sound plus the output latency (E8 research R6). On the Mac each
+  `play()` call takes 11–69 ms, so playback runs in an actor. If the iPhone check misses, move to
   `AVAudioEngine` (E6 research R7). Silent mode and other apps' music are checked by hand too.
 - E6's sound tests prepare real `AVAudioPlayer`s in CI's simulator (the bundled files, and a bank
   over a directory with a file missing); this passes on CI's runners. The "Sound effects aren't
@@ -148,14 +148,18 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
   Mac proxy is 419 ms), a VoiceOver game (§6), and pressing Home while the computer thinks (§3),
   which UI tests cannot do inside the half-second thinking.
-- Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
-  Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
+- Launch time on the iPhone: a first Release measurement gave a median of 231 ms over five cold
+  launches (E8 research R4); #181 records ten. The local baseline (Intel simulator, Debug build)
+  is 3.6 s and only guards against regressions.
 - E8's device is the owner's iPhone 16 (2024, iPhone17,3), older than Constitution VII.1's "last
   two hardware generations"; a pass on it counts (newer models are faster), and a miss that
   remains after profiling is decided on a newer iPhone (E8 clarify). The phone runs iOS 27.0.1:
-  Xcode 26.3 builds, signs, installs and launches the app there (2026-10-25; the development
-  profile is valid until 2027-10-15); whether the debugger and Instruments work is for the E8
-  plan, with TestFlight builds and the phone's own measurements as the fallback.
+  Xcode 26.3 builds, installs, debugs, runs UI tests and records Instruments traces there (E8
+  research R1; the development profile is valid until 2027-10-15). Two limits: device runs must
+  use `xcodebuild test` (`test-without-building` cannot launch the app), and `xctrace export`
+  crashes on iOS 27 traces, so numbers come from XCTest metrics and the app's log through
+  `devicectl --console`, and traces are read in the Instruments app. Developer Mode was found
+  off once mid-session; `scripts/device.sh status` checks it before every device run.
 - E8 depends on the user and on Apple: the API key, the App Store Connect record and a unique
   store name, the external testers, Beta App Review (about a day) and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
@@ -164,7 +168,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   and macOS Tahoe 26.6 required), nor Xcode 26.4.1 to 26.6 (macOS Tahoe 26.2), and Tahoe does not
   support the MacBook Pro (15-inch, 2019); so Xcode 26.3 is its last Xcode, the project stays on
   it; the constitution's toolchain line was amended to match (v1.2.0, spec FR-032). App Store
-  Connect requires the iOS 27 SDK from April 2027: if 1.0 is not submitted by then, or for any
+  Connect requires the iOS 26 SDK since 2026-04-28 and has announced no iOS 27 SDK date yet
+  (expected around April 2027, E8 research R2): if 1.0 is not submitted by then, or for any
   later update, an Apple silicon Mac is needed.
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
   after adding or removing strings, or CI fails. Plural variations (Statistics' counts) are
@@ -205,8 +210,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   `build-and-test`, and `CI gate` requires both (US2). The job takes 4.5 minutes on CI (budget
   15). Hard's slowest turn is 419 ms against a 0.5 s budget on this Mac, so a slower search would
   need a lower node limit.
-- SC-005 (the computer's timing) is defined on a recent iPhone; without one, the Mac measurement
-  is recorded as the closest proxy and the check stays open for the user.
+- SC-005 (the computer's timing) is defined on a recent iPhone; E8 measures it on the owner's
+  iPhone 16 from a log line per computer turn (E8 research R6), closing E4's open timing check.
 - Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
   limit there, and engine tests in the blocking plan must use small search limits.
 - The local `main` lags GitHub's (it moves by `git push origin <sha>:refs/heads/main`); run
@@ -484,13 +489,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 2/15 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 3/15 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
 - [x] #171 E8 Specify: write spec.md with /speckit-specify · S
 - [x] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
-- [~] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
+- [x] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #175 E8 Reconcile this epic's board tasks with tasks.md · S
 
@@ -925,3 +930,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   the development Mac runs, never below the App Store's minimum SDK", and CI uses the same Xcode,
   with a rationale; MINOR bump, no principle changed. Template sync check: the spec, plan, tasks
   and checklist templates need no change; CI already pins Xcode 26.3. Next: `/speckit-plan`.
+- 2026-10-25: E8 plan written (#173 Done): `specs/008-release-1-0/plan.md`, research R1–R17
+  measured on the iPhone (Xcode 26.3 debugs, tests and records Instruments on iOS 27.0.1; Release
+  cold launch median 231 ms over five; no hitches in a Rules scroll; the app's log reaches the Mac
+  through `devicectl --console`), data model, contracts (diagnostics, release tooling, store
+  listing) and quickstart; Constitution Check passes before and after design. The spec now says
+  "until Apple requires the iOS 27 SDK" (no date announced) instead of April 2027. Risks revised
+  (device tooling, launch time, SDK date, E4's timing check). Next: `/speckit-tasks` (#174).

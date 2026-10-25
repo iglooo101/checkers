@@ -33,9 +33,9 @@ Last updated: 2026-10-25
   `007-settings-themes-sound-and-rules` were merged and deleted (the auto-mode safety check blocks branch
   deletion, so the user runs it once the next slice's branch exists). **E6 is done** (last code
   CI run 40130998987 on `d85df26`); its branch `007-settings-themes-sound-and-rules` was merged
-  and deleted. **E8 is in progress on `008-release-1-0`** (spec and clarify
-  done, documentation only so far); `main` was fast-forwarded to this session's close-out commit,
-  the head of `008-release-1-0`.
+  and deleted. **E8 is in progress on `008-release-1-0`** (spec, clarify, constitution v1.2.0
+  and plan done, documentation only so far); `main` follows the branch head by fast-forward after
+  each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -50,7 +50,8 @@ Last updated: 2026-10-25
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
-  Whether the debugger and Instruments work on iOS 27.0.1 is still open (E8 plan research).
+  The debugger, UI tests (through `xcodebuild test`) and Instruments recording work there too;
+  `xctrace export` does not (E8 research R1).
 - **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
@@ -170,7 +171,14 @@ Last updated: 2026-10-25
   gates submission; manual release, E8 done at approval. Clarified: Xcode 26.3 builds 1.0 and the
   constitution is amended (FR-032); the iPhone 16 counts as evidence for VII.1 (FR-014); one iPad
   compatibility smoke check per release build (FR-005); diagnostics only logged on the phone
-  (FR-009). `.specify/feature.json` (local, git-ignored) points at it.
+  (FR-009). **Plan** (2026-10-25): research R1–R17 measured on the phone (Xcode 26.3 debugs,
+  runs UI tests and records Instruments on iOS 27.0.1; Release cold launch median 231 ms over
+  five; no hitches in a Rules scroll), a new `checkers-device` scheme and `Device` and
+  `Screenshots` test plans, a MetricKit `DiagnosticsSubscriber` that logs each diagnostic's kind
+  and time, two timing log lines read through `devicectl --console`, the name "Checkers" and the
+  encryption key, a scripted icon in three variants, and scripts for the device checks,
+  screenshots, traceability and releases (contracts `diagnostics.md`, `release-tooling.md`,
+  `store-listing.md`). `.specify/feature.json` (local, git-ignored) points at it.
 
 ## Lessons learned
 
@@ -732,6 +740,32 @@ Last updated: 2026-10-25
   local processes (only the session's XcodeBuildMCP server, which is long-lived and normal) and
   saying so was the right answer.
 
+## Lessons learned (E8 plan research on the iPhone, 2026-10-25)
+
+- **Use `xcodebuild test` on the phone, never `test-without-building`**: with an `.xctestrun`
+  file the runner starts but every `XCUIApplication().launch()` fails ("The process identifier of
+  the launched application could not be determined"); the same tests pass through the scheme.
+- **A Release test build of the `checkers` scheme fails** on the engine's `@testable` tests, and
+  `-only-testing` does not narrow what gets built; a scheme whose build action leaves out
+  `CheckersEngineTests` works (E8 plan: `checkers-device`). A throwaway user scheme in
+  `xcuserdata/` (git-ignored) is a safe way to probe this.
+- **`xctrace export` crashes on traces recorded on iOS 27** (segmentation fault on every table)
+  while simulator traces export; read phone traces in the Instruments app.
+- **The app's log reaches the Mac**: `xcrun devicectl device process launch --console
+  --environment-variables '{"OS_ACTIVITY_DT_MODE":"YES"}' <bundle id> -- <app arguments>` prints
+  its `Logger` lines with microsecond times (the `--` keeps `devicectl` from parsing the app's
+  arguments). A UI test can then drive that same process with `XCUIApplication().activate()`;
+  UI test result bundles do not contain the app's log.
+- **`XCTHitchMetric(application:)`** (iOS 26 SDK) gives the hitch-time ratio, hitch count and
+  total hitch time on the phone; a total under 0.25 s also rules out a 250 ms hang.
+- **The first debugger attach to a new iOS copies its symbols** (6.6 GB, several minutes) and
+  looks like a silent failure meanwhile; retry after it finishes.
+- **Developer Mode can be off without warning** (`devicectl` error 10005; Instruments says "The
+  device is missing the required developer tools"); check `developerModeStatus` first.
+- **Apple's dates are announcements, not patterns**: the April 2027 iOS 27 SDK cut-off in the spec
+  had been inferred; Apple's upcoming-requirements page lists only the iOS 26 SDK (since
+  2026-04-28). Quote the page before writing a date.
+
 ## Lessons learned (first run on the iPhone, 2026-10-25)
 
 - **"The latest Xcode" means the latest this Mac runs**: the user expected an update; Apple's
@@ -759,18 +793,13 @@ product behavior is made in `FRD.md` first. Move each board item to In Progress 
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. ~~Amend the constitution~~: done 2026-10-25 (v1.2.0).
-2. **`/speckit-plan` for E8 (#173)** on `008-release-1-0`. Research to measure, not assume:
-   whether Xcode 26.3 debugs and runs Instruments on the iPhone's iOS 27.0.1 (installing and
-   launching works, 2026-10-25; fallback: TestFlight builds and the phone's own measurements);
-   Apple's current minimum SDK and the April 2027 change, from Apple's notes; Apple's privacy
-   label guidance for
-   locally logged diagnostics and Organizer crash reports; the required screenshot size; how the
-   icon script writes the default, dark and tinted variants; GitHub Pages from this repo; the
-   API-key upload path; how ten cold launches and the hitch session are measured. Then
-   `/speckit-tasks` and `/speckit-analyze` (#174) and the board reconciliation (#175).
+2. ~~`/speckit-plan` for E8 (#173)~~: done 2026-10-25 (`specs/008-release-1-0/plan.md`, research
+   R1–R17). Next: `/speckit-tasks` and `/speckit-analyze` (#174), then the board reconciliation
+   (#175).
 3. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
-   Manager role) and save the `.p8` file with its key ID and issuer ID next to `github.txt` in
-   `../secrets`; create the app record in App Store Connect with a unique store name and the
+   Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
+   600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract
+   `release-tooling.md`); create the app record in App Store Connect with a unique store name and the
    bundle ID `Hussein-Helmy.checkers`; recruit two to five external testers, at least one new to
    checkers for the Easy playtest.
 4. **The open hand checks of E3–E7** (E3's hand-played game and largest-text review, E7's

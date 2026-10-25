@@ -27,7 +27,8 @@ created by hand from main."
 - Q: Which Xcode should build and ship version 1.0, given the constitution says "latest stable
   Xcode" (Xcode 27 since 2026-09-14) but the development Mac, a 2019 Intel MacBook Pro on macOS
   15.8.1, can only run Xcode 26.3? → A: Xcode 26.3, on the development Mac and on CI. App Store
-  Connect accepts builds made with the iOS 26 SDK until April 2027. The constitution's toolchain
+  Connect accepts builds made with the iOS 26 SDK until Apple requires the iOS 27 SDK (not yet
+  announced; expected around April 2027, plan research R2). The constitution's toolchain
   line is amended, with a rationale, to "the latest Xcode the development Mac runs, never below the
   App Store's minimum SDK"; moving to Xcode 27 waits for an Apple silicon Mac.
 - Q: Should the launch budget and the smoothness checks be judged on the owner's iPhone 16 alone,
@@ -262,9 +263,9 @@ rejection to a resubmission, recording every round.
   difference found there is a beta finding. The development tools stay at Xcode 26.3
   (Clarifications); if they cannot install, debug or measure on iOS 27, the device checks use
   builds installed from TestFlight and measurements the phone itself records.
-- **Version 1.0 slips past April 2027**: App Store Connect then requires the iOS 27 SDK, which this
-  Mac cannot build with; submission waits for an Apple silicon Mac and a move to Xcode 27, with a
-  full retest.
+- **Version 1.0 slips past Apple's iOS 27 SDK requirement** (expected around April 2027): App
+  Store Connect then requires the iOS 27 SDK, which this Mac cannot build with; submission waits
+  for an Apple silicon Mac and a move to Xcode 27, with a full retest.
 - **The iPhone is older than "recent"**: it is an iPhone 16 (2024), and Constitution VII.1 names
   the last two hardware generations. A pass on it counts as a pass; a miss is profiled and fixed,
   and only a miss that remains after that is decided on a newer iPhone (Clarifications, FR-014).
@@ -436,9 +437,10 @@ rejection to a resubmission, recording every round.
 
 - **FR-032**: Version 1.0 MUST be built, tested and uploaded with Xcode 26.3, the latest Xcode the
   development Mac runs, on the Mac and on CI alike, and submitted while App Store Connect still
-  accepts the iOS 26 SDK (until April 2027). Before the plan, the constitution's toolchain
-  constraint MUST be amended to "the latest Xcode the development Mac runs, never below the App
-  Store's minimum SDK", with a rationale and a version bump (Clarifications).
+  accepts the iOS 26 SDK (until Apple requires the iOS 27 SDK, expected around April 2027). Before
+  the plan, the constitution's toolchain constraint MUST be amended to "the latest Xcode the
+  development Mac runs, never below the App Store's minimum SDK", with a rationale and a version
+  bump (Clarifications; done in v1.2.0).
 
 ### Traceability
 
@@ -507,7 +509,8 @@ FR-031 and FR-032 apply to every task.
   run on the phone's current iOS (27.0.1). Whether Xcode 26.3 can install, debug and measure on iOS
   27 is settled in the plan; if not, the device checks use TestFlight builds and the phone's own
   measurements (FR-032 keeps the toolchain). The plan also confirms, from Apple's own notes, the
-  minimum SDK App Store Connect accepts and its April 2027 change.
+  minimum SDK App Store Connect accepts and when it changes (research R2: the iOS 26 SDK since
+  2026-04-28; no iOS 27 date announced yet).
 - **Diagnostics and the privacy label**: the app reads the system's diagnostic reports on the phone
   and only logs them, so it collects no data and "Data Not Collected" stays true. Crash reports
   that players choose to share with developers are gathered by Apple, not by the app; the plan
