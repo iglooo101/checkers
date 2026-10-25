@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 0/15 | In Progress |
-| | **Total** | | | | **37/41** | **139/154** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 0/4 | 1/15 | In Progress |
+| | **Total** | | | | **37/41** | **140/154** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -51,7 +51,7 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #169 E8: Release 1.0
 - #170 F8.0: Specification (Spec Kit)
-- #171 E8 Specify: write spec.md with /speckit-specify
+- #172 E8 Clarify: resolve open questions with /speckit-clarify
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -72,10 +72,11 @@ reported once (E5). With E6, Settings chooses one of three board themes (Classic
 Playful, with previews), turns the four original sounds and the move hints on and off, and Rules
 explains the game in seven illustrated sections.
 
-1. **E8 Release 1.0 (#169)**, the last epic, started on branch `008-release-1-0`: settle what
-   needs an Apple Developer Program membership or a real iPhone (#178, #181, #182, #185–#187),
-   then `/speckit-specify` from `FRD.md` (#171), with #192 (MetricKit, which can report E6's
-   `sound` and `settings` errors) and #181 (launch time on a real iPhone) among its tasks.
+1. **E8 Release 1.0 (#169)**, the last epic, on branch `008-release-1-0`: spec written
+   (`specs/008-release-1-0/spec.md`, #171 done); next `/speckit-clarify` (#172), which should
+   confirm that the owner's iPhone 16 counts for Constitution VII.1's launch budget, then the
+   plan (#173), which must settle whether Xcode 26.3 can install and measure on the phone's
+   iOS 27.0.1.
 2. Open for the user, from every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -144,6 +145,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   which UI tests cannot do inside the half-second thinking.
 - Launch time on a real iPhone is unmeasured until #181; the local baseline (Intel simulator,
   Debug build) is 3.6 s and only guards against regressions (the native app measured 2.1 s).
+- E8's device is the owner's iPhone 16 (2024, iPhone17,3), older than Constitution VII.1's "last
+  two hardware generations"; the spec counts a pass on it as evidence (newer models are faster),
+  to be confirmed in clarify. The phone runs iOS 27.0.1 while development and CI use Xcode 26.3;
+  if that Xcode cannot install or measure on iOS 27, both are updated together (E8 plan).
 - Command-line builds do not update `Localizable.xcstrings`; run `scripts/sync-string-catalog.sh`
   after adding or removing strings, or CI fails. Plural variations (Statistics' counts) are
   written by hand in the catalog's layout; `scripts/check-string-catalog.sh
@@ -462,12 +467,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 0/15 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 1/15 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
-- [~] #171 E8 Specify: write spec.md with /speckit-specify · S
-- [ ] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
+- [x] #171 E8 Specify: write spec.md with /speckit-specify · S
+- [~] #172 E8 Clarify: resolve open questions with /speckit-clarify · S
 - [ ] #173 E8 Plan: write plan.md with /speckit-plan, including the Constitution Check · M
 - [ ] #174 E8 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
 - [ ] #175 E8 Reconcile this epic's board tasks with tasks.md · S
@@ -873,3 +878,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   risks and change log current).
 - 2026-10-24: E8 started on branch `008-release-1-0` (#169, F8.0 #170 and #171 In Progress).
   Next up notes that `main` is at `0109e93` (the E6 close-out commit landed after `d85df26`).
+- 2026-10-24: E8 spec written (#171 Done, #172 In Progress): `specs/008-release-1-0/spec.md`, 6
+  user stories (every promise verified; fast and smooth on a real iPhone; diagnostics after
+  release; icon and store page; TestFlight beta round; submitted and approved), 31 requirements, 10
+  success criteria. Settled with the user first: paid developer account, device checks on their
+  iPhone, a scripted original icon, GitHub Pages for the privacy and support pages, the store name
+  chosen in App Store Connect, bundle ID kept, free everywhere, uploads with an API key outside
+  the repository, TestFlight with a few external testers, one release checklist gathering every
+  open hand check, manual release; E8 ends at approval. Found while writing: the iPhone is an
+  iPhone 16 on iOS 27.0.1, and the Home Screen name is the lowercase "checkers".
