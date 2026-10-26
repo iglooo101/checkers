@@ -984,3 +984,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   Pro Max (53 pt); `LocalizationTests` and the catalog check pass. #179 done (T007, T009).
   Progress: 38/41 features, 145/155 tasks. Risks: the SE's narrow margin above 44 points. Next:
   US3, with the user's US1 phone checks (T012–T014) open.
+- 2026-10-25: Session close-out: board, plan and `HANDOFF.md` reviewed against the close-out
+  checklist (board matches: 6 items In Progress, #179 closed; Next up and Risks current; `main` at
+  the branch head). Next session starts with US3 (`HANDOFF.md`, Next steps 1).

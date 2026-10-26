@@ -846,6 +846,13 @@ Last updated: 2026-10-25
   (risk in `EXECUTION_PLAN.md`).
 - **`cd` in a command moves the session's directory**: it happened twice more (after `cd` into
   the spec folder and into the build products); use subshells or absolute paths.
+- **Read the gate itself before a fast-forward**: `gh api
+  repos/iglooo101/checkers/commits/<full sha>/check-runs --jq '.check_runs[] | select(.name=="CI
+  gate") | .status + " " + (.conclusion // "")'` gives the required check for that exact commit;
+  a 10-second `until` loop on it waits for a docs-only run (done in about a minute).
+- **"Is the execution plan up to date?"** is answered by `update_plan.py --check` (the board's
+  numbers) and a read of the hand-written Next up, Risks and change log, which the check cannot
+  see.
 
 ## Next steps
 
