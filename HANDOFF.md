@@ -36,6 +36,8 @@ Last updated: 2026-10-26
   and deleted. **E8 is in progress on `008-release-1-0`**: F8.0 (spec, clarify, constitution
   v1.2.0, plan, tasks, board) is done, the first implementation batch (T001–T011) is done, and
   US3's code (T023–T027, diagnostics) landed on 2026-10-26 (`f328c30`, CI run 40272374316).
+  #206's fix (T058) and this close-out were pushed together at the end of the 2026-10-26
+  session, with their CI run still going (Next steps 1); `main` was not fast-forwarded to them.
   `main` follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -69,10 +71,15 @@ Last updated: 2026-10-26
   `US3DiagnosticsTests` with `Support/DiagnosticFixtures.swift`. 321 blocking tests. The owner's
   T028 passed on the phone (simulated payloads: one line per kind, Apple's key names as in the
   contract, time stamps without a zone), so #192 is done. The full plan's only local failure was
-  the engine's SC-004 speed check (10.2 s with the engine unchanged), tracked as #206 (T058, In
-  Progress): the simulator build of the count takes 9.2 s alone at full speed, 2.3 times the Mac
-  build, and this Mac throttles after builds, so `scripts/test.sh` can fail on it locally until
-  #206 is fixed (CI passes).
+  the engine's SC-004 speed check (10.2 s with the engine unchanged), tracked as #206 (T058).
+  **#206's fix** (2026-10-26, T058 done in `tasks.md`; #206 stays In Progress until CI is
+  green): `checkers.xctestplan` runs `CheckersEngineTests` one at a time (`"parallelizable" :
+  false`, that target only); the test and the engine are unchanged, only `sixTurnSpeed`'s
+  comment says why. Measured causes (`validation.md` §1): code coverage changes nothing; the
+  first session's 9.2 s came from the simulator booting during each timed run; in the blocking
+  plan the engine bundle runs last, beside its own suites on a Mac heated by the UI tests. With
+  the fix the full blocking plan passes 321 of 321 locally (the count 3.86 s of CPU time; the
+  engine bundle 50 s instead of about 28 s).
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -912,9 +919,42 @@ Last updated: 2026-10-26
   ran ten minutes before it was noticed.
 - **The blocking plan gathers code coverage**: `xcrun xccov view --report --only-targets
   .build/TestResults/<name>.xcresult` lists coverage for the run, so the code under test is
-  instrumented; that may be why the simulator build of the count is 2.3 times slower (untested).
+  instrumented. It does not slow the count (measured in the next session: 4.47 s with and
+  without instrumentation); the 2.3 times was the simulator booting.
 - **A temporary probe in a tracked test file** (a `print` of the measured value) is quick and
   safe when `git checkout -- <file>` removes it before any commit; check with `git status`.
+
+## Lessons learned (#206 cause and fix, 2026-10-26)
+
+- **Check that the build under test is what the hypothesis needs**: the plan was to rerun the
+  built tests with `-enableCodeCoverage NO`, but the binary was already instrumented
+  (`otool -l <binary> | grep __llvm_prf` lists the profile sections), so that run would still
+  have timed instrumented code. Testing coverage needed a second `build-for-testing
+  -enableCodeCoverage NO` into its own derived data (41 s here), then timing both builds.
+- **A simulator boot is a load storm**: `xcodebuild test` and `test-without-building` boot a
+  shut-down simulator and shut it down afterwards, and a boot drives this Mac's load average to
+  about 50 and its clock down to `CPU_Speed_Limit` 68 for about four minutes. Before timing
+  anything in the simulator, boot it (`xcrun simctl boot <udid>`, then `bootstatus`) and wait
+  until `sysctl -n vm.loadavg` settles; `test-without-building` then leaves it booted (after
+  `scripts/test.sh` it was shut down again).
+- **Alternate the two variants when comparing builds**: a single coverage-on run followed by a
+  coverage-off run made coverage-off look slower (7.8 s against 9.6 s) because the Mac was
+  drifting; A/B/A/B pairs with `pmset -g therm` before and after each run show the drift.
+- **The result bundle's action log is a timeline**: `xcrun xcresulttool get log --path
+  <xcresult> --type action` gives each test target's start time (JSON `startTime`, `duration`,
+  nested `subsections`). It showed that the blocking plan runs the app's unit tests and UI tests
+  at the same time and the engine bundle last; its durations did not add up (the engine bundle's
+  ran past the end of the run), so rely on the start times.
+- **Swift Testing's in-process parallelism follows the test plan**: `"parallelizable" : false`
+  on a target becomes `InProcessParallelizationEnabled` 0 in the built `.xctestrun` and runs that
+  bundle's tests one at a time; `-parallel-testing-enabled NO` does the same for one run.
+  `-parallel-testing-enabled YES` instead runs the bundle on a new simulator clone ("Clone 1 of
+  iPhone 17"), and the tests' `print` output does not come back from it. On the Mac, `swift
+  test --no-parallel` runs the engine suites one at a time.
+- **On this Intel Mac a thread's CPU time is not private**: the counting thread's own CPU time
+  grows when other tests keep the cores busy (3.8–4.4 s one at a time, 6.8–7.9 s beside the
+  other suites; most likely the twin hardware thread and a lower turbo clock, not measured), so
+  CPU time only keeps other threads' work out (#202); only running alone removes their effect.
 
 ## Next steps
 
@@ -922,24 +962,27 @@ Last updated: 2026-10-26
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **#206 (T058), the engine's speed check on this Mac** (In Progress; `/speckit-implement`
-   T058): the miss is reproduced and measured (`validation.md` §1, "#206 investigation", and
-   the comment on #206). Next: with the Mac at `CPU_Speed_Limit` 100, run the built count alone
-   with `test-without-building` and `-enableCodeCoverage NO`, and compare with 9.2 s; if coverage
-   explains the 2.3 times, consider turning coverage off for the engine in the blocking plan (or
-   for the whole plan, if nothing reads it); otherwise find what else differs between the
-   simulator and `swift test` builds. Then choose the fix from the measured cause, and ask the
-   owner first if it changes what SC-004 measures (E2 spec: the 6-turn count in under 10 s on
-   the development Mac). Show it passing hot and with the engine suites beside it, then the full
-   blocking plan, push, CI, fast-forward `main`, close #206. No engine change.
+1. **Land #206 (T058)**: the fix and this close-out were pushed together on `008-release-1-0`
+   and their full CI run was still going at the end of the session. Find it with `gh run list
+   --branch 008-release-1-0 --limit 3`, then read the gate for the branch head's full SHA (the
+   `check-runs` query in the "first E8 batch finished" lessons). If `CI gate` passed:
+   `git push origin <sha>:refs/heads/main`, comment the CI result on #206 (the cause, the fix
+   and the measurements were posted there at the close-out), `board_move.py Done 206` and check
+   that #206 is closed, `update_plan.py`, and a docs-only close-out line in `EXECUTION_PLAN.md`'s
+   change log (about 20 s of CI). F8.2 (#180) stays open for #181 and #182. If the run failed,
+   read the log before rerunning (lessons: runners without simulators, time limits).
 2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
    Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the
    T010 archive in Xcode (`open .build/Release/Checkers-1.0-0.xcarchive`) and Generate Privacy
    Report; T014, the iPad smoke check on the "iPad (A16) E8" simulator with the same archive's
    app. Then #177 (T012, T013) and #178 (T014) can close.
 3. **Next stories while the user's checks wait**: US4 (icon, name, screenshots, pages, listing,
-   T029–T040), then US2's code (T015–T020) and its phone measurements (T021) after US3 and US4's
-   app changes.
+   T029–T040; move #184 and #185 to In Progress first, with `update_plan.py` in the same step),
+   then US2's code (T015–T020) and its phone measurements (T021) after US3 and US4's app
+   changes. With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
+   real slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen,
+   `CPU_Speed_Limit` 54, that scales to about 8 s, an estimate); time other checks in a settled
+   simulator (#206 lessons).
 4. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
    Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
    600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract

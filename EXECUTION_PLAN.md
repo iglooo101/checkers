@@ -86,11 +86,16 @@ explains the game in seven illustrated sections.
    traceability matrix (#179 done), archive privacy check on a local archive, board fit on the
    smallest and largest iPhones). **US3 (diagnostics, #192) is done** (T023–T028: code in
    `f328c30`, CI run 40272374316; the user's phone check with simulated payloads passed).
-   **#206 (T058, the engine's speed check on this Mac) is in progress**: the miss is reproduced;
-   the simulator build of the count is 2.3 times slower than the Mac build and the Mac throttles
-   when hot. Next: test whether code coverage causes the 2.3 times, then choose the fix (the
-   owner decides if it changes what SC-004 measures). Then US4 and US2's code, while the user's
-   US1 checks on the phone wait (T012–T014; they close #177 and #178).
+   **#206 (T058, the engine's speed check on this Mac) is in progress**: code coverage is ruled
+   out (4.47 s with and without); the "2.3 times" was the simulator booting during the timed
+   runs, and in the blocking plan the count misses because the other engine suites run beside it
+   on a Mac heated by the UI tests. The fix, the blocking plan running the engine's tests one at
+   a time (`parallelizable` off in `checkers.xctestplan`; 4.2–4.4 s under the load where parallel
+   runs failed at 11 s), does not change what SC-004 measures; the full blocking plan passes 321
+   of 321 locally with it (T058 done). It was pushed at the 2026-10-26 close-out with its CI run
+   still going: once `CI gate` is green, fast-forward `main` and close #206 (`HANDOFF.md`, Next
+   steps 1). Then US4 (#184, #185) and US2's code, while the user's US1 checks on the phone wait
+   (T012–T014; they close #177 and #178).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -158,10 +163,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   about three times slower than usual (CI run 40023240169; a rerun passed). It now times the
   counting thread's CPU time (#202). On the development Mac that is not enough: the full
   blocking plan failed on it at 10.2 s on 2026-10-26, and the engine's tests in the simulator
-  fail it most of the time (11–14 s). The simulator build of the count takes 9.2 s alone at full
-  clock speed (the Mac build 4.0 s), `xcodebuild`'s build heats this Mac until it throttles,
-  and parallel tests add the rest. Until #206 (T058) fixes the check, a local `scripts/test.sh`
-  can fail on it with no engine change; CI's arm64 runner passes. Other wall-clock budgets (E4's Hard turn time, the launch
+  fail it most of the time (11–14 s). Measured causes (`validation.md` §1): the count takes 4.5 s
+  alone in a settled simulator, like the Mac build; the other engine suites beside it raise that
+  to 6.8–7.9 s, this Mac throttles when hot (`CPU_Speed_Limit` down to 54), and a simulator boot
+  during a timed run nearly doubles it; code coverage changes nothing. The blocking plan now runs
+  the engine's tests one at a time (#206, T058; the count 3.86 s in a full local run), which
+  leaves heat as the only factor: alone the count would reach about 8 s at the lowest clock seen
+  (an estimate). The engine bundle takes about 50 s instead of 28 s locally; CI's arm64 runner
+  passed before and should stay well inside `build-and-test`'s 45 minutes. Other wall-clock budgets (E4's Hard turn time, the launch
   test) can be hit the same way; E4's are measured alone, and the launch test only reports.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
@@ -1031,3 +1040,18 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   the next step); `HANDOFF.md` updated (state, lessons, next steps); this plan reviewed against
   the close-out checklist (board matches: 7 items In Progress; Next up and the speed-check risk
   rewritten from the measurements). Next session starts with #206.
+- 2026-10-26: #206 cause measured (`validation.md` §1): code coverage changes nothing (a second
+  build without instrumentation, 4.47 s like the instrumented one once the simulator had
+  settled); the first session's 9.2 s came from the simulator booting during each timed run;
+  in the blocking plan the engine bundle runs last, beside its own suites on a Mac heated by the
+  UI tests. Fix being verified: `checkers.xctestplan` runs the engine's tests one at a time
+  (`parallelizable` off; the count 4.2–4.4 s where forced parallel runs failed at 11.0 s).
+  `checkers/CLAUDE.md` and the test's comment no longer claim parallel tests cannot fail it.
+- 2026-10-26: #206's fix verified locally: the full blocking plan (CI's warnings-as-errors
+  settings) passes 321 of 321 in 19.8 minutes, the count at 3.86 s of CPU time and the engine
+  bundle at 50 s; the strict format check and the 12 script tests pass. T058 done in `tasks.md`;
+  #206 stays In Progress until CI is green (board unchanged: 7 items In Progress).
+- 2026-10-26: Session close-out: the fix and the docs (`validation.md` §1, `tasks.md`,
+  `HANDOFF.md` with the #206 lessons, `checkers/CLAUDE.md`, this plan) pushed together, one full
+  CI run; this plan reviewed against the close-out checklist (board matches; Next up and the
+  speed-check risk rewritten). Next session starts by landing #206 (`HANDOFF.md`, Next steps 1).
