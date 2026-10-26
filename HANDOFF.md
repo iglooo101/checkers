@@ -69,7 +69,10 @@ Last updated: 2026-10-26
   `US3DiagnosticsTests` with `Support/DiagnosticFixtures.swift`. 321 blocking tests. The owner's
   T028 passed on the phone (simulated payloads: one line per kind, Apple's key names as in the
   contract, time stamps without a zone), so #192 is done. The full plan's only local failure was
-  the engine's SC-004 speed check (10.2 s with the engine unchanged), tracked as #206 (T058).
+  the engine's SC-004 speed check (10.2 s with the engine unchanged), tracked as #206 (T058, In
+  Progress): the simulator build of the count takes 9.2 s alone at full speed, 2.3 times the Mac
+  build, and this Mac throttles after builds, so `scripts/test.sh` can fail on it locally until
+  #206 is fixed (CI passes).
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -869,10 +872,10 @@ Last updated: 2026-10-26
 
 - **A thread's CPU time is not immune to load on this Mac**: the 6-turn count takes 4.8 s alone
   and 9.6 s beside the other engine suites (`swift test` in `checkers/CheckersEngine`), and 10.2
-  s of CPU time failed the full plan. With 16 hardware threads over 8 cores, a busy twin thread
-  and a lower clock slow the counting thread itself; #202's CPU-time measure only stops other
-  threads' work from being counted. CI's arm64 runner is not affected. Compare alone and in
-  parallel before blaming the code (#206).
+  s of CPU time failed the full plan. A busy twin hardware thread and a lower clock slow the
+  counting thread itself; #202's CPU-time measure only stops other threads' work from being
+  counted. CI's arm64 runner is not affected. (The #206 lessons below show this was only part
+  of the cause.)
 - **Write fixture key names out**: the diagnostics fixtures spell `crashDiagnostics` and the
   others literally instead of reading the parser's `arrayKey`, so a wrong key fails the test; a
   mutation (a wrong launch key) proved it.
@@ -887,6 +890,31 @@ Last updated: 2026-10-26
 - **A follow-up found mid-story gets its own board task and `tasks.md` entry before the push**,
   so one push carries the code, the docs and the issue number (a later docs push would cancel the
   code's CI run).
+- **Apple's simulated MetricKit payloads** (Debug › Simulate MetricKit Payloads, only while Xcode
+  debugs the app on the phone) carry all five kinds with sample metadata (`pid` 123,
+  "testEventName", `lowPowerModeEnabled` true) and time stamps without a zone; filter Xcode's
+  console with `reported`. The system messages around them (PointerUI, "AX Safe category") are
+  noise.
+
+## Lessons learned (#206 investigation, 2026-10-26)
+
+- **Measure the first hypothesis before writing it into an issue**: #206's body blamed parallel
+  tests; one more run of the count alone in the simulator (9.2 s at full speed, 11.1 s hot)
+  showed the main causes were elsewhere. Time the suspect alone, in each environment that runs
+  it (`swift test` on the Mac and the simulator differ by 2.3 times), before choosing a fix.
+- **This Mac throttles itself when hot**: `pmset -g therm` shows `CPU_Speed_Limit` (100 at full
+  speed; 54–62 right after an `xcodebuild` build). A timed test that runs after a build can lose
+  half the clock. Read it before and after every timing run, and use `xcodebuild
+  test-without-building -xctestrun .build/DerivedData/Build/Products/<name>.xctestrun
+  -destination … -only-testing:…` (simulator only) to time without the build's heat.
+- **`pmset -g therm` separates name and value with a tab**: `grep "CPU_Speed_Limit *= 100"` never
+  matches; use `grep -E "CPU_Speed_Limit[[:space:]]*= 100"`. A wait loop on the wrong pattern
+  ran ten minutes before it was noticed.
+- **The blocking plan gathers code coverage**: `xcrun xccov view --report --only-targets
+  .build/TestResults/<name>.xcresult` lists coverage for the run, so the code under test is
+  instrumented; that may be why the simulator build of the count is 2.3 times slower (untested).
+- **A temporary probe in a tracked test file** (a `print` of the measured value) is quick and
+  safe when `git checkout -- <file>` removes it before any commit; check with `git status`.
 
 ## Next steps
 
@@ -894,10 +922,15 @@ Last updated: 2026-10-26
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **#206 (T058), the engine's speed check on this Mac**: move #206 to In Progress; show the miss
-   with the engine suites in parallel (several `swift test` runs in `checkers/CheckersEngine`),
-   change `ReferenceCountTests.sixTurnSpeed` so what runs beside it cannot slow it (for example,
-   time the count while no other test runs), show it passing under the same load, then the full
+1. **#206 (T058), the engine's speed check on this Mac** (In Progress; `/speckit-implement`
+   T058): the miss is reproduced and measured (`validation.md` §1, "#206 investigation", and
+   the comment on #206). Next: with the Mac at `CPU_Speed_Limit` 100, run the built count alone
+   with `test-without-building` and `-enableCodeCoverage NO`, and compare with 9.2 s; if coverage
+   explains the 2.3 times, consider turning coverage off for the engine in the blocking plan (or
+   for the whole plan, if nothing reads it); otherwise find what else differs between the
+   simulator and `swift test` builds. Then choose the fix from the measured cause, and ask the
+   owner first if it changes what SC-004 measures (E2 spec: the 6-turn count in under 10 s on
+   the development Mac). Show it passing hot and with the engine suites beside it, then the full
    blocking plan, push, CI, fast-forward `main`, close #206. No engine change.
 2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
    Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the

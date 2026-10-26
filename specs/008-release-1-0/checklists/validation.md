@@ -60,6 +60,23 @@ Before any app code of the slice, on `008-release-1-0`:
   clock and stayed under 10 s of CPU time. Tracked as #206 (T058). The script tests (12), the
   strict format check and `scripts/check-string-catalog.sh` ("String catalog is up to date.")
   pass; `traceability.md` is unchanged (the new tests name spec IDs, no FRD ID).
+- **#206 investigation** (T058, 2026-10-26, in progress; engine unchanged, a temporary `print`
+  of the CPU time in `sixTurnSpeed`, removed afterwards). CPU time of the 6-turn count:
+
+  | Where | Beside it | Mac's `CPU_Speed_Limit` | CPU time (s) |
+  |---|---|---|---|
+  | `swift test` (Mac, Debug) | nothing | 100 | 3.97 (4.8 earlier) |
+  | `swift test` (Mac, Debug) | the whole engine suite | not read | 6.97, 7.50, 7.82 |
+  | Simulator, `xcodebuild test` | the engine's tests | not read | 11.6, 14.2 (both fail) |
+  | Simulator, `xcodebuild test` | nothing | 62 after the run | 11.1, 11.1 (fail) |
+  | Simulator, `xcodebuild test` | nothing | 100 before, 54 after | 9.5 |
+  | Simulator, `test-without-building` | nothing | 100 before and after | 9.26, 9.21 |
+
+  So the simulator build of the count takes about 9.2 s alone at full speed, 2.3 times the Mac
+  build, leaving 0.8 s of margin; the build that `xcodebuild test` runs first heats the Mac
+  until it throttles its clock (`pmset -g therm`), and parallel tests add the rest. The run
+  gathers code coverage (`xcrun xccov view --report --only-targets` lists coverage for the
+  run), which instruments the code: the next hypothesis for the 2.3 times, not yet tested.
 
 ## §2 Promises on the phone (US1)
 

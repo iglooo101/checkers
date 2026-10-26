@@ -55,6 +55,7 @@ Epics are listed in execution order.
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #186 TestFlight build and beta round
 - #205 Validate the E8 slice and update project docs
+- #206 Keep the 6-turn speed check reliable on the development Mac
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -84,8 +85,11 @@ explains the game in seven illustrated sections.
    guard and pre-push hook, `device.sh`, the `checkers-device` scheme, network guard,
    traceability matrix (#179 done), archive privacy check on a local archive, board fit on the
    smallest and largest iPhones). **US3 (diagnostics, #192) is done** (T023–T028: code in
-   `f328c30`, CI run 40272374316; the user's phone check with simulated payloads passed). Next:
-   #206 (T058, the engine's speed check on this Mac), then US4 and US2's code, while the user's
+   `f328c30`, CI run 40272374316; the user's phone check with simulated payloads passed).
+   **#206 (T058, the engine's speed check on this Mac) is in progress**: the miss is reproduced;
+   the simulator build of the count is 2.3 times slower than the Mac build and the Mac throttles
+   when hot. Next: test whether code coverage causes the 2.3 times, then choose the fix (the
+   owner decides if it changes what SC-004 measures). Then US4 and US2's code, while the user's
    US1 checks on the phone wait (T012–T014; they close #177 and #178).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
@@ -153,10 +157,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Timing checks on CI runners: the wall-clock SC-004 check failed once at 10.5 s on a runner
   about three times slower than usual (CI run 40023240169; a rerun passed). It now times the
   counting thread's CPU time (#202). On the development Mac that is not enough: the full
-  blocking plan failed on it at 10.2 s on 2026-10-26 (alone 4.8 s, beside the other engine
-  suites 9.6 s; 8 cores with 16 hardware threads slow the counting thread), so a local run can
-  fail there with no engine change until #206 (T058) makes the check independent of what runs
-  beside it; CI's arm64 runner passes. Other wall-clock budgets (E4's Hard turn time, the launch
+  blocking plan failed on it at 10.2 s on 2026-10-26, and the engine's tests in the simulator
+  fail it most of the time (11–14 s). The simulator build of the count takes 9.2 s alone at full
+  clock speed (the Mac build 4.0 s), `xcodebuild`'s build heats this Mac until it throttles,
+  and parallel tests add the rest. Until #206 (T058) fixes the check, a local `scripts/test.sh`
+  can fail on it with no engine change; CI's arm64 runner passes. Other wall-clock budgets (E4's Hard turn time, the launch
   test) can be hit the same way; E4's are measured alone, and the launch test only reports.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
@@ -533,7 +538,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [~] #181 Cold launch under 400 ms on a recent iPhone (release build) · S
 - [ ] #182 Hitch-ratio check during play and AI turns · S
-- [ ] #206 Keep the 6-turn speed check reliable on the development Mac · S
+- [~] #206 Keep the 6-turn speed check reliable on the development Mac · S
 
 **F8.3 App Store delivery** (#183)
 
@@ -1013,3 +1018,16 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   and no unreadable report; Apple's key names match the contract, whose example now shows the
   zone-less time stamps. T021 now starts with Low Power Mode off (the sample payloads reported it
   on). Progress: 38/41 features, 146/156 tasks.
+- 2026-10-26: #206 started (In Progress, T058). Reproduced: the 6-turn count's CPU time was
+  7.0–7.8 s in three `swift test` runs of the whole engine suite (3.97 s alone), and 11.6 and
+  14.2 s in two simulator runs of the engine's tests, both over the 10 s budget. Found on the
+  way: this Mac throttles itself when hot (`pmset -g therm` showed `CPU_Speed_Limit` 54–62 right
+  after `xcodebuild` builds), and the count then takes 9.5–11.1 s alone in the simulator, so
+  heat, not only the parallel tests, inflates the measure. At full speed with no build first
+  (`test-without-building`), the simulator count still takes 9.2 s alone, 2.3 times the Mac
+  build; the run gathers code coverage, the next hypothesis. Measurements in `validation.md` §1
+  and on #206.
+- 2026-10-26: Session close-out: #206 stays In Progress (T058 updated with the measurements and
+  the next step); `HANDOFF.md` updated (state, lessons, next steps); this plan reviewed against
+  the close-out checklist (board matches: 7 items In Progress; Next up and the speed-check risk
+  rewritten from the measurements). Next session starts with #206.
