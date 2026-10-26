@@ -115,3 +115,8 @@ Before any app code of the slice, on `008-release-1-0`:
 ## §7 Submission (US6)
 
 ## §8 CI
+
+- **US3** (2026-10-26, `f328c30`, run 40272374316): `CI gate` green with both jobs:
+  `build-and-test` 27.9 minutes (176 app unit tests, 59 UI tests, 86 engine tests; the engine's
+  SC-004 check passed, 14.0 s of wall clock) and `engine-strength` 5.3 minutes. `main`
+  fast-forwarded to `f328c30`.

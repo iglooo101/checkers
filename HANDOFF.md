@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-10-25
+Last updated: 2026-10-26
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -34,9 +34,9 @@ Last updated: 2026-10-25
   deletion, so the user runs it once the next slice's branch exists). **E6 is done** (last code
   CI run 40130998987 on `d85df26`); its branch `007-settings-themes-sound-and-rules` was merged
   and deleted. **E8 is in progress on `008-release-1-0`**: F8.0 (spec, clarify, constitution
-  v1.2.0, plan, tasks, board) is done and the first implementation batch (T001–T011) is done.
-  `main` follows the branch head by fast-forward after each green `CI gate` (the batch's code
-  commit `5e45a6a`, CI run 40238654507, and its docs close-out).
+  v1.2.0, plan, tasks, board) is done, the first implementation batch (T001–T011) is done, and
+  US3's code (T023–T027, diagnostics) landed on 2026-10-26 (`f328c30`, CI run 40272374316).
+  `main` follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -58,8 +58,18 @@ Last updated: 2026-10-25
   `tasks.md`: T001–T011 (baseline 313 tests; the Release `checkers-device` test build compiles no
   engine tests; `release.sh archive 0` passes its check, archive in
   `.build/Release/Checkers-1.0-0.xcarchive` for T013 and T014; the board fits on the iPhone SE
-  with 44.9-point squares and on the 17 Pro Max with 53; all in `checklists/validation.md`). No
-  app code has changed yet.
+  with 44.9-point squares and on the 17 Pro Max with 53; all in `checklists/validation.md`).
+  **US3** (2026-10-26, T023–T027): `Features/Diagnostics/` holds `DiagnosticReport` (reads a
+  MetricKit payload's JSON: five kinds, both time stamps, metadata re-encoded with sorted keys;
+  anything else throws `DiagnosticError.unreadable`), `DiagnosticsLog` (`OSLogDiagnosticsLog`
+  writes one line per diagnostic under the new `diagnostics` category, kind and times public,
+  details private; `RecordingDiagnosticsLog` keeps them in a `Mutex` for tests) and
+  `DiagnosticsSubscriber` (`nonisolated`, `handle(_:log:)` takes the payloads' JSON so tests
+  need no `MXDiagnosticPayload`), started from a `.task` in `CheckersApp`;
+  `US3DiagnosticsTests` with `Support/DiagnosticFixtures.swift`. 321 blocking tests. #192 stays
+  In Progress until the owner's T028 (Simulate MetricKit Payloads on the phone). The full plan's
+  only local failure was the engine's SC-004 speed check (10.2 s with the engine unchanged),
+  tracked as #206 (T058).
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -138,13 +148,14 @@ Last updated: 2026-10-25
   (`build-and-test` has a 45-minute limit since #204). Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 8 epics, 41 features, 155 tasks (#1–#205; #188 is a PR) on the project board.
+- **Backlog**: 8 epics, 41 features, 156 tasks (#1–#206; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
   in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done, and in F8.1 #179
-  (traceability) is done; the rest of F8.1–F8.3 comes next (38/41 features, 145/155 tasks; #205
-  added for validation).
+  (traceability) is done; #192 (diagnostics) has its code on `main` and waits for the owner's
+  phone check; the rest of F8.1–F8.3 comes next (38/41 features, 145/156 tasks; #205 added for
+  validation, #206 for the engine's speed check on the development Mac).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -854,18 +865,44 @@ Last updated: 2026-10-25
   numbers) and a read of the hand-written Next up, Risks and change log, which the check cannot
   see.
 
+## Lessons learned (E8 US3, 2026-10-26)
+
+- **A thread's CPU time is not immune to load on this Mac**: the 6-turn count takes 4.8 s alone
+  and 9.6 s beside the other engine suites (`swift test` in `checkers/CheckersEngine`), and 10.2
+  s of CPU time failed the full plan. With 16 hardware threads over 8 cores, a busy twin thread
+  and a lower clock slow the counting thread itself; #202's CPU-time measure only stops other
+  threads' work from being counted. CI's arm64 runner is not affected. Compare alone and in
+  parallel before blaming the code (#206).
+- **Write fixture key names out**: the diagnostics fixtures spell `crashDiagnostics` and the
+  others literally instead of reading the parser's `arrayKey`, so a wrong key fails the test; a
+  mutation (a wrong launch key) proved it.
+- **Mutations in one run must not overlap**: dropping the sorted keys fails every case that
+  compares a detail, which would hide a second mutation in the per-kind test; run such a
+  mutation alone. Back up untracked files before mutating them (git cannot restore them).
+- **Typed throws suit a parser**: `init(json:) throws(DiagnosticError)` with `do throws(…)` at
+  the caller keeps the failure path explicit; `JSONSerialization` with `.sortedKeys` and
+  `.fragmentsAllowed` gives a stable detail text for any metadata value.
+- **SwiftLint warns on `String(decoding:as:)` for `Data`** (`optional_data_string_conversion`):
+  use the failable `String(bytes:encoding:)`.
+- **A follow-up found mid-story gets its own board task and `tasks.md` entry before the push**,
+  so one push carries the code, the docs and the issue number (a later docs push would cancel the
+  code's CI run).
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **US3, diagnostics** (`/speckit-implement`, `specs/008-release-1-0/tasks.md` T023–T028; board
-   #192 to In Progress first): the fixtures and `US3DiagnosticsTests` and the logging categories
-   first (seen failing), then `DiagnosticReport`, `DiagnosticsLog`, `DiagnosticsSubscriber` and
-   the `.task` in `CheckersApp`; regenerate `traceability.md` after adding tests that name FRD
-   IDs; push once, CI, fast-forward `main`. T028 (Simulate MetricKit Payloads on the phone) is
-   the user's.
+1. **#206 (T058), the engine's speed check on this Mac**: move #206 to In Progress; show the miss
+   with the engine suites in parallel (several `swift test` runs in `checkers/CheckersEngine`),
+   change `ReferenceCountTests.sixTurnSpeed` so what runs beside it cannot slow it (for example,
+   time the count while no other test runs), show it passing under the same load, then the full
+   blocking plan, push, CI, fast-forward `main`, close #206. No engine change.
+   **For the user, US3's T028**: run the app from Xcode on HKH16, Debug › Simulate MetricKit
+   Payloads, and read the `[diagnostics]` lines in Xcode's console; if Apple's key names differ
+   from `contracts/diagnostics.md`, the fixtures, parser and contract change together, test
+   first. Then #192 closes.
 2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
    Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the
    T010 archive in Xcode (`open .build/Release/Checkers-1.0-0.xcarchive`) and Generate Privacy

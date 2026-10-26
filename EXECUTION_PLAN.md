@@ -84,10 +84,11 @@ explains the game in seven illustrated sections.
    Setup, Foundational and US1's code tasks are done (T001–T011: baseline of 313 tests, secrets
    guard and pre-push hook, `device.sh`, the `checkers-device` scheme, network guard,
    traceability matrix (#179 done), archive privacy check on a local archive, board fit on the
-   smallest and largest iPhones). **US3 (diagnostics, #192) is in progress**: T023–T027 are
-   done test-first and pushed for CI; #192 closes after the user's T028 (Simulate MetricKit
-   Payloads on the phone). Then #206 (T058, the engine's speed check on this Mac), US4 and US2's
-   code, while the user's US1 checks on the phone wait (T012–T014; they close #177 and #178).
+   smallest and largest iPhones). **US3's code (diagnostics, #192) is on `main`** (T023–T027,
+   `f328c30`, CI run 40272374316); #192 closes after the user's T028 (Simulate MetricKit
+   Payloads on the phone). Next: #206 (T058, the engine's speed check on this Mac), then US4 and
+   US2's code, while the user's US1 checks on the phone wait (T012–T014; they close #177 and
+   #178).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -1004,3 +1005,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   engine suites 9.6 s on this 8-core, 16-thread Mac; CI's runner passes). The user chose to push
   US3 and track the check: #206 added (F8.2 #180, T058 in `tasks.md`). Progress: 38/41
   features, 145/156 tasks.
+- 2026-10-26: US3's code landed: `f328c30` green in CI run 40272374316 (all 321 tests, the
+  SC-004 check among them, and the strength matches), `main` fast-forwarded. #192 stays In
+  Progress for the user's T028. `HANDOFF.md` updated (state, US3 lessons, next steps); this plan
+  reviewed against the close-out checklist (board matches; Next up and Risks current). Next:
+  #206 (T058).
