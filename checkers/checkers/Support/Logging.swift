@@ -14,6 +14,7 @@ nonisolated enum Log {
         case storage
         case settings
         case sound
+        case diagnostics
     }
 
     static let app = Logger(subsystem: subsystem, category: Category.app.rawValue)
@@ -23,4 +24,5 @@ nonisolated enum Log {
     static let storage = Logger(subsystem: subsystem, category: Category.storage.rawValue)
     static let settings = Logger(subsystem: subsystem, category: Category.settings.rawValue)
     static let sound = Logger(subsystem: subsystem, category: Category.sound.rawValue)
+    static let diagnostics = Logger(subsystem: subsystem, category: Category.diagnostics.rawValue)
 }

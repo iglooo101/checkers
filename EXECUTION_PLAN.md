@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-25 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
+Last updated: 2026-10-26 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 6/16 | In Progress |
-| | **Total** | | | | **38/41** | **145/155** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 6/17 | In Progress |
+| | **Total** | | | | **38/41** | **145/156** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -54,6 +54,7 @@ Epics are listed in execution order.
 - #178 Verify iPhone portrait-only on devices
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #186 TestFlight build and beta round
+- #192 Add a MetricKit diagnostics subscriber for crashes and hangs
 - #205 Validate the E8 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -83,8 +84,10 @@ explains the game in seven illustrated sections.
    Setup, Foundational and US1's code tasks are done (T001–T011: baseline of 313 tests, secrets
    guard and pre-push hook, `device.sh`, the `checkers-device` scheme, network guard,
    traceability matrix (#179 done), archive privacy check on a local archive, board fit on the
-   smallest and largest iPhones). Next: US3 (diagnostics, T023–T028), then US4 and US2's code,
-   while the user's US1 checks on the phone wait (T012–T014; they close #177 and #178).
+   smallest and largest iPhones). **US3 (diagnostics, #192) is in progress**: T023–T027 are
+   done test-first and pushed for CI; #192 closes after the user's T028 (Simulate MetricKit
+   Payloads on the phone). Then #206 (T058, the engine's speed check on this Mac), US4 and US2's
+   code, while the user's US1 checks on the phone wait (T012–T014; they close #177 and #178).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -150,7 +153,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   the length tests; a changed color must pass `US4ContrastTests`.
 - Timing checks on CI runners: the wall-clock SC-004 check failed once at 10.5 s on a runner
   about three times slower than usual (CI run 40023240169; a rerun passed). It now times the
-  counting thread's CPU time (#202). Other wall-clock budgets (E4's Hard turn time, the launch
+  counting thread's CPU time (#202). On the development Mac that is not enough: the full
+  blocking plan failed on it at 10.2 s on 2026-10-26 (alone 4.8 s, beside the other engine
+  suites 9.6 s; 8 cores with 16 hardware threads slow the counting thread), so a local run can
+  fail there with no engine change until #206 (T058) makes the check independent of what runs
+  beside it; CI's arm64 runner passes. Other wall-clock budgets (E4's Hard turn time, the launch
   test) can be hit the same way; E4's are measured alone, and the launch test only reports.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
@@ -506,7 +513,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 6/16 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 6/17 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -521,12 +528,13 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #177 Verify no network requests, no permission prompts, no account or analytics · S
 - [~] #178 Verify iPhone portrait-only on devices · S
 - [x] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
-- [ ] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
+- [~] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
 
 **F8.2 Performance** (#180) · Constitution VII
 
 - [~] #181 Cold launch under 400 ms on a recent iPhone (release build) · S
 - [ ] #182 Hitch-ratio check during play and AI turns · S
+- [ ] #206 Keep the 6-turn speed check reliable on the development Mac · S
 
 **F8.3 App Store delivery** (#183)
 
@@ -987,3 +995,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-25: Session close-out: board, plan and `HANDOFF.md` reviewed against the close-out
   checklist (board matches: 6 items In Progress, #179 closed; Next up and Risks current; `main` at
   the branch head). Next session starts with US3 (`HANDOFF.md`, Next steps 1).
+- 2026-10-26: US3 started (#192 In Progress): the diagnostics fixtures and `US3DiagnosticsTests`
+  (8 tests) and the `diagnostics` log category were written first and failed to compile, then
+  `DiagnosticReport`, `DiagnosticsLog` and `DiagnosticsSubscriber` (started from a `.task` in
+  `CheckersApp`) made them pass; three deliberate parser defects each failed the intended tests.
+  T023–T027 done. The full blocking plan passed 320 of 321 tests: the engine's SC-004 speed
+  check missed at 10.2 s of CPU time with the engine unchanged (alone 4.8 s, beside the other
+  engine suites 9.6 s on this 8-core, 16-thread Mac; CI's runner passes). The user chose to push
+  US3 and track the check: #206 added (F8.2 #180, T058 in `tasks.md`). Progress: 38/41
+  features, 145/156 tasks.

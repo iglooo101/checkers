@@ -49,6 +49,17 @@ Before any app code of the slice, on `008-release-1-0`:
   SUCCEEDED"); it compiles only `checkers`, `CheckersEngine` and `checkersUITests` (the log never
   names `CheckersEngineTests`), and its `.xctestrun` holds the `Device` plan with
   `checkersUITests` alone. `scripts/test.sh` is unchanged since `970b5a9`.
+- **Blocking plan with US3** (2026-10-26, US3's code on `4fc7275`, iPhone 17 simulator, iOS
+  26.3): 320 of 321 tests pass (176 app unit tests, 8 more than the baseline; 59 UI tests; 85 of
+  86 engine tests), no compiler warning, 19.8 minutes. The one failure is the engine's
+  `US3 SC-004: the 6-turn count takes under 10 seconds of CPU time` at 10.2 s, with the engine
+  unchanged since `16ecf98`: alone the count takes 4.8 s (`swift test --filter
+  ReferenceCountTests/sixTurnSpeed`), beside the other engine suites 9.6 s (`swift test`, 89
+  tests pass), as the busy cores of this Mac (8 cores, 16 hardware threads) slow the counting
+  thread and inflate its own CPU time; CI's last code run (40238654507) measured 14.3 s of wall
+  clock and stayed under 10 s of CPU time. Tracked as #206 (T058). The script tests (12), the
+  strict format check and `scripts/check-string-catalog.sh` ("String catalog is up to date.")
+  pass; `traceability.md` is unchanged (the new tests name spec IDs, no FRD ID).
 
 ## §2 Promises on the phone (US1)
 
@@ -78,6 +89,22 @@ Before any app code of the slice, on `008-release-1-0`:
   date."
 
 ## §3 Diagnostics on the phone (US3)
+
+- **Tests** (T023–T027, 2026-10-26): the fixtures (`Support/DiagnosticFixtures.swift`, key
+  names written out, not taken from the app) and `US3DiagnosticsTests` (8 tests, 12 cases: one
+  per kind, the contract's order and names, two crashes and a hang in kind order, no arrays,
+  eight damaged payloads, a damaged payload before a good one, the detail's sorted keys, "none")
+  failed to compile before `DiagnosticReport` existed, and `LoggingTests` lists the
+  `diagnostics` category; with T025–T027 both suites pass alone and in the blocking plan.
+- **Mutations** (2026-10-26): a wrong key for launch diagnostics failed only the launch case;
+  skipping items that are not objects failed only the "crashDiagnostics holding strings" case
+  of the two FR-010 tests; writing the detail without sorted keys failed every case that checks
+  a detail, the reordered metadata among them. The parser was restored after each.
+- **Start**: `CheckersApp` keeps one `DiagnosticsSubscriber` with an `OSLogDiagnosticsLog` and
+  starts it from a `.task` on the root view; `PrivacyManifestTests` pass unchanged and the
+  privacy manifest is untouched.
+- **On the phone** (T028, owner): open; Debug › Simulate MetricKit Payloads and the payload's
+  key names against contracts/diagnostics.md.
 
 ## §4 Icon, name, launch screen, screenshots, listing, pages (US4)
 
