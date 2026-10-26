@@ -103,8 +103,19 @@ Before any app code of the slice, on `008-release-1-0`:
 - **Start**: `CheckersApp` keeps one `DiagnosticsSubscriber` with an `OSLogDiagnosticsLog` and
   starts it from a `.task` on the root view; `PrivacyManifestTests` pass unchanged and the
   privacy manifest is untouched.
-- **On the phone** (T028, owner): open; Debug › Simulate MetricKit Payloads and the payload's
-  key names against contracts/diagnostics.md.
+- **On the phone** (T028, 2026-10-26, owner): a Debug build from Xcode 26.3 at `a4a05f3` on
+  HKH16 (iOS 27.0.1); after Home appeared, Debug › Simulate MetricKit Payloads gave five lines
+  in Xcode's console, one per kind in the contract's order: "Crash reported for 2026-10-26
+  01:45:41 to 2026-10-26 01:45:41; details: {…}", then Hang, CPU exception, Disk-write exception
+  and Launch, each with its metadata as JSON with sorted keys (for example `"hangDuration":"20
+  sec"`, `"totalCPUTime":"20 sec"`, `"writesCaused":"2000 byte"`, `"launchDuration":"20000
+  ms"`, and for the crash `"signal":11` with an Objective-C exception reason). No "could not be
+  read" line. Apple's key names match contracts/diagnostics.md; the time stamps have no zone
+  (the contract's example now shows that form; the parser keeps them as written). The details
+  were readable because Xcode's debugger was attached; without it they are redacted as private.
+  The sample payloads report `"lowPowerModeEnabled":true`, most likely sample data (`pid` 123,
+  "testEventName"), but Low Power Mode is checked off before US2's measurements (T021). SC-006
+  met.
 
 ## §4 Icon, name, launch screen, screenshots, listing, pages (US4)
 

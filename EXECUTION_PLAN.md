@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 6/17 | In Progress |
-| | **Total** | | | | **38/41** | **145/156** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 7/17 | In Progress |
+| | **Total** | | | | **38/41** | **146/156** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -54,7 +54,6 @@ Epics are listed in execution order.
 - #178 Verify iPhone portrait-only on devices
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #186 TestFlight build and beta round
-- #192 Add a MetricKit diagnostics subscriber for crashes and hangs
 - #205 Validate the E8 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -84,11 +83,10 @@ explains the game in seven illustrated sections.
    Setup, Foundational and US1's code tasks are done (T001–T011: baseline of 313 tests, secrets
    guard and pre-push hook, `device.sh`, the `checkers-device` scheme, network guard,
    traceability matrix (#179 done), archive privacy check on a local archive, board fit on the
-   smallest and largest iPhones). **US3's code (diagnostics, #192) is on `main`** (T023–T027,
-   `f328c30`, CI run 40272374316); #192 closes after the user's T028 (Simulate MetricKit
-   Payloads on the phone). Next: #206 (T058, the engine's speed check on this Mac), then US4 and
-   US2's code, while the user's US1 checks on the phone wait (T012–T014; they close #177 and
-   #178).
+   smallest and largest iPhones). **US3 (diagnostics, #192) is done** (T023–T028: code in
+   `f328c30`, CI run 40272374316; the user's phone check with simulated payloads passed). Next:
+   #206 (T058, the engine's speed check on this Mac), then US4 and US2's code, while the user's
+   US1 checks on the phone wait (T012–T014; they close #177 and #178).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -514,7 +512,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 6/17 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 7/17 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -529,7 +527,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #177 Verify no network requests, no permission prompts, no account or analytics · S
 - [~] #178 Verify iPhone portrait-only on devices · S
 - [x] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
-- [~] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
+- [x] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
 
 **F8.2 Performance** (#180) · Constitution VII
 
@@ -1010,3 +1008,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   Progress for the user's T028. `HANDOFF.md` updated (state, US3 lessons, next steps); this plan
   reviewed against the close-out checklist (board matches; Next up and Risks current). Next:
   #206 (T058).
+- 2026-10-26: US3 done (#192 Done and closed): the user's T028 on HKH16 (iOS 27.0.1) gave one
+  `[diagnostics]` line per simulated kind, in order, with both time stamps and sorted details,
+  and no unreadable report; Apple's key names match the contract, whose example now shows the
+  zone-less time stamps. T021 now starts with Low Power Mode off (the sample payloads reported it
+  on). Progress: 38/41 features, 146/156 tasks.

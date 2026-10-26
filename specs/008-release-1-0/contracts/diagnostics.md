@@ -25,8 +25,8 @@ Implements spec FR-008 to FR-010 and SC-006 (research R9). Types are in
 
 ```json
 {
-  "timeStampBegin": "2026-10-25 21:00:00 +0000",
-  "timeStampEnd": "2026-10-25 21:59:00 +0000",
+  "timeStampBegin": "2026-10-26 01:45:41",
+  "timeStampEnd": "2026-10-26 01:45:41",
   "crashDiagnostics": [{ "diagnosticMetaData": { "signal": 11 }, "callStackTree": {} }],
   "hangDiagnostics": [{ "diagnosticMetaData": { "hangDuration": "3 sec" } }],
   "cpuExceptionDiagnostics": [],
@@ -42,8 +42,11 @@ Implements spec FR-008 to FR-010 and SC-006 (research R9). Types are in
   sorted keys, so the same input always logs the same text. `callStackTree` and other keys are
   ignored.
 - Anything else, including bytes that are not JSON, is `DiagnosticError.unreadable`.
-- Apple's key names are confirmed on the phone with Xcode's Debug › Simulate MetricKit Payloads
-  in US3 (quickstart §3); if they differ, the fixtures and this section change together.
+- Apple's key names were confirmed on the phone with Xcode's Debug › Simulate MetricKit Payloads
+  on 2026-10-26 (T028, iOS 27.0.1, quickstart §3): all five arrays, both time stamps and
+  `diagnosticMetaData`. The time stamps came without a zone, as in the example above; the app
+  keeps them as written, so the fixtures' `+0000` form reads the same way. If the names change
+  in a later iOS, the fixtures and this section change together.
 
 ## Log entries (category `diagnostics`)
 

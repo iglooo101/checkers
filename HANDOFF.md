@@ -66,10 +66,10 @@ Last updated: 2026-10-26
   details private; `RecordingDiagnosticsLog` keeps them in a `Mutex` for tests) and
   `DiagnosticsSubscriber` (`nonisolated`, `handle(_:log:)` takes the payloads' JSON so tests
   need no `MXDiagnosticPayload`), started from a `.task` in `CheckersApp`;
-  `US3DiagnosticsTests` with `Support/DiagnosticFixtures.swift`. 321 blocking tests. #192 stays
-  In Progress until the owner's T028 (Simulate MetricKit Payloads on the phone). The full plan's
-  only local failure was the engine's SC-004 speed check (10.2 s with the engine unchanged),
-  tracked as #206 (T058).
+  `US3DiagnosticsTests` with `Support/DiagnosticFixtures.swift`. 321 blocking tests. The owner's
+  T028 passed on the phone (simulated payloads: one line per kind, Apple's key names as in the
+  contract, time stamps without a zone), so #192 is done. The full plan's only local failure was
+  the engine's SC-004 speed check (10.2 s with the engine unchanged), tracked as #206 (T058).
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -153,9 +153,9 @@ Last updated: 2026-10-26
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
   in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done, and in F8.1 #179
-  (traceability) is done; #192 (diagnostics) has its code on `main` and waits for the owner's
-  phone check; the rest of F8.1–F8.3 comes next (38/41 features, 145/156 tasks; #205 added for
-  validation, #206 for the engine's speed check on the development Mac).
+  (traceability) and #192 (diagnostics) are done; the rest of F8.1–F8.3 comes next (38/41
+  features, 146/156 tasks; #205 added for validation, #206 for the engine's speed check on the
+  development Mac).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -899,10 +899,6 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    change `ReferenceCountTests.sixTurnSpeed` so what runs beside it cannot slow it (for example,
    time the count while no other test runs), show it passing under the same load, then the full
    blocking plan, push, CI, fast-forward `main`, close #206. No engine change.
-   **For the user, US3's T028**: run the app from Xcode on HKH16, Debug › Simulate MetricKit
-   Payloads, and read the `[diagnostics]` lines in Xcode's console; if Apple's key names differ
-   from `contracts/diagnostics.md`, the fixtures, parser and contract change together, test
-   first. Then #192 closes.
 2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
    Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the
    T010 archive in Xcode (`open .build/Release/Checkers-1.0-0.xcarchive`) and Generate Privacy
