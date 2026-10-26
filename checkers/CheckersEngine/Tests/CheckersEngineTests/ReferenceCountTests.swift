@@ -18,7 +18,9 @@ struct ReferenceCountTests {
     }
 
     /// Timed by the CPU time of the thread that counts, not the wall clock: on a busy CI runner the
-    /// tests running in parallel would otherwise count against the engine (#202).
+    /// tests running in parallel would otherwise count against the engine (#202). That is not
+    /// enough on the development Mac, where busy neighbours still slow the counting thread
+    /// itself, so the blocking test plan runs the engine's tests one at a time (#206).
     @Test("US3 SC-004: the 6-turn count takes under 10 seconds of CPU time")
     func sixTurnSpeed() throws {
         let start = clock_gettime_nsec_np(CLOCK_THREAD_CPUTIME_ID)

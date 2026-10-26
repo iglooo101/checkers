@@ -20,6 +20,8 @@ scripts/test.sh                         # blocking test plan: unit, UI and engin
 TEST_PLAN=Performance scripts/test.sh   # cold-launch timing only
 scripts/report-launch.sh .build/TestResults/Performance.xcresult   # compare with launch-baselines.json
 (cd checkers/CheckersEngine && swift test)   # engine tests on the Mac, without the app (lints too)
+(cd checkers/CheckersEngine && swift test --no-parallel)   # one test at a time, like the blocking
+                                        # plan; in parallel the 6-turn speed check can miss (#206)
 (cd checkers/CheckersEngine && swift test --filter US3)   # one story's suite (US1…US5)
 (cd checkers/CheckersEngine && swift test -c release --filter CheckersEngineStrengthTests)
                                         # strength matches, Release only (skipped in Debug)
@@ -143,8 +145,10 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
 - Engine tests (`CheckersEngine/Tests/CheckersEngineTests/`): one suite per story
   (`US1StartAndMoveTests`…`US5UndoTests`) whose test names list the FRD IDs they prove; unit
   suites for squares, positions and steps; `ReferenceCountTests` (published move counts, depths
-  1–7; the 6-turn count's speed check times the counting thread's CPU time, so tests running in
-  parallel cannot fail it) and `RandomGameTests` (1,000 seeded games with full undo). Helpers in
+  1–7; the 6-turn count's speed check times the counting thread's CPU time, which keeps other
+  threads' work out but not their slowing of the counting thread on the Intel development Mac,
+  so `checkers.xctestplan` runs the engine's tests one at a time (`parallelizable` off, #206)) and
+  `RandomGameTests` (1,000 seeded games with full undo). Helpers in
   `Support/` build positions from square names, for example
   `GameState(["c3": .lightMan], toMove: .light)`. E4 adds
   `TurnGeneratorTests`, `US1ComputerPlayerTests` and `US2ComputerLevelTests` (shallow searches:

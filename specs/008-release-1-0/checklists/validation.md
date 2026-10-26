@@ -60,8 +60,8 @@ Before any app code of the slice, on `008-release-1-0`:
   clock and stayed under 10 s of CPU time. Tracked as #206 (T058). The script tests (12), the
   strict format check and `scripts/check-string-catalog.sh` ("String catalog is up to date.")
   pass; `traceability.md` is unchanged (the new tests name spec IDs, no FRD ID).
-- **#206 investigation** (T058, 2026-10-26, in progress; engine unchanged, a temporary `print`
-  of the CPU time in `sixTurnSpeed`, removed afterwards). CPU time of the 6-turn count:
+- **#206 investigation** (T058, 2026-10-26; engine unchanged, a temporary `print` of the CPU
+  time in `sixTurnSpeed`, removed afterwards). CPU time of the 6-turn count, first session:
 
   | Where | Beside it | Mac's `CPU_Speed_Limit` | CPU time (s) |
   |---|---|---|---|
@@ -72,11 +72,58 @@ Before any app code of the slice, on `008-release-1-0`:
   | Simulator, `xcodebuild test` | nothing | 100 before, 54 after | 9.5 |
   | Simulator, `test-without-building` | nothing | 100 before and after | 9.26, 9.21 |
 
-  So the simulator build of the count takes about 9.2 s alone at full speed, 2.3 times the Mac
-  build, leaving 0.8 s of margin; the build that `xcodebuild test` runs first heats the Mac
-  until it throttles its clock (`pmset -g therm`), and parallel tests add the rest. The run
-  gathers code coverage (`xcrun xccov view --report --only-targets` lists coverage for the
-  run), which instruments the code: the next hypothesis for the 2.3 times, not yet tested.
+  Second session: code coverage, the first session's last hypothesis. The built engine test
+  binary is instrumented (`otool -l` shows `__llvm_prf_cnts` and the other profile sections),
+  so a run with `-enableCodeCoverage NO` alone would still run instrumented code; a second build
+  with `build-for-testing -enableCodeCoverage NO` (no profile sections) was timed beside it.
+  Every run is `test-without-building` in the simulator, alone unless stated:
+
+  | Simulator | Build | Mac's `CPU_Speed_Limit` | CPU time (s) |
+  |---|---|---|---|
+  | booted by the run | instrumented | 100 before and after | 7.77 |
+  | booted by the run | coverage off | 100 before and after | 9.60, 8.55 |
+  | booted by the run, Mac heating | instrumented, coverage off, instrumented | 100 → 82, 82 → 56, 56 → 64 | 8.94, 9.89, 10.83 (fail) |
+  | booted and settled first | coverage off, instrumented | 100 before and after | 4.47, 4.47 |
+  | booted and settled first, beside the engine's tests in parallel | coverage off, instrumented, instrumented | 100 before and after | 6.76, 7.87, 7.43 |
+  | booted and settled first, the engine's tests one at a time (`-parallel-testing-enabled NO`) | instrumented | 100 before and after | 3.79 |
+
+  So **coverage changes nothing** (4.47 s with and without), and the "2.3 times" was **the
+  simulator's boot**: `test-without-building` and `xcodebuild test` boot the simulator when it
+  is shut down and shut it down afterwards, and a boot drives the load average to about 50 and
+  the Mac down to `CPU_Speed_Limit` 68 for about four minutes (`simctl boot`, then the load
+  read every 10 s). Booted and settled first, the simulator build of the count takes 4.5 s like
+  the Mac build. Beside the other engine suites it takes 6.8–7.9 s, as in `swift test`, and one
+  at a time 3.8 s (the engine bundle then takes 55 s of wall clock instead of 28 s).
+  In the blocking plan the boot is not the problem: the action log of US3's failed run
+  (`xcresulttool get log --type action`) shows the engine bundle starting last, at 1,131 s of
+  the 1,193-second run, once the UI tests had finished (1,118 s), so it ran with the other
+  engine suites beside it on a Mac heated by 18 minutes of UI tests, and the run ended 62 s
+  later (the bundle takes 28 s on a cool Mac). Of the three factors, heat cannot be removed by a test, while running the
+  engine's tests one at a time removes the neighbours, the larger of the two others, and
+  matches what SC-004 times: the engine's own speed.
+- **#206 fix** (T058, 2026-10-26): `checkers.xctestplan` sets `"parallelizable" : false` on
+  `CheckersEngineTests` only (the built `.xctestrun` then holds `InProcessParallelizationEnabled`
+  0 for that bundle), so Swift Testing runs the engine's tests one at a time; the test and the
+  engine are unchanged, only `sixTurnSpeed`'s comment says why. Alternating runs of the engine
+  bundle in a settled simulator, as the Mac heated:
+
+  | Run | Engine tests | Mac's `CPU_Speed_Limit` | Count's CPU time | Bundle (wall) |
+  |---|---|---|---|---|
+  | forced parallel (`-parallel-testing-enabled YES`, which also runs them on a new simulator clone) | in parallel | 100 → 100 | passed | 66 s |
+  | the plan | one at a time | 100 → 100 | 4.15 s | 85 s |
+  | forced parallel | in parallel | 100 → 76 | run failed (output not kept) | 106 s |
+  | the plan | one at a time | 76 → 100 | 4.38 s | 89 s |
+  | forced parallel | in parallel | 100 → 72 | run failed (output not kept) | 105 s |
+  | the plan | one at a time | 72 → 100 | 4.32 s | 92 s |
+  | forced parallel, output kept | in parallel | 100 → 68 | `sixTurnSpeed` failed (11.0 s) | — |
+
+  (The wall times include starting the simulator's test runner.) `swift test --no-parallel` in
+  `checkers/CheckersEngine` gives the same: 4.04 s (89 tests in 54.8 s) against 7.72 s in a
+  plain `swift test` (27.3 s). **Blocking plan with the fix** (`scripts/test.sh` with CI's
+  warnings-as-errors settings, iPhone 17 simulator, iOS 26.3, with the temporary `print`):
+  **321 of 321 tests pass** (176 app unit tests, 59 UI tests, 86 engine tests in 50.3 s), the
+  count took 3.86 s of CPU time, 19.8 minutes (Mac at 88 at the start, 100 at the end); after
+  removing the `print`, the strict format check and the 12 script tests pass.
 
 ## §2 Promises on the phone (US1)
 
