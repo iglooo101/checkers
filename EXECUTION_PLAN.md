@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 5/16 | In Progress |
-| | **Total** | | | | **38/41** | **144/155** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 6/16 | In Progress |
+| | **Total** | | | | **38/41** | **145/155** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -52,7 +52,6 @@ Epics are listed in execution order.
 - #169 E8: Release 1.0
 - #177 Verify no network requests, no permission prompts, no account or analytics
 - #178 Verify iPhone portrait-only on devices
-- #179 FRD traceability check: every FR ID covered by a test or a manual check
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #186 TestFlight build and beta round
 - #205 Validate the E8 slice and update project docs
@@ -81,10 +80,11 @@ explains the game in seven illustrated sections.
    plan written (#173: `plan.md`, research R1–R17 measured on the phone, data model, three
    contracts, quickstart), `tasks.md` generated and analyzed (#174: 57 tasks; 15 findings
    applied), and the board reconciled (#175, adding #205), which completes F8.0 (#170).
-   Implementation has started: T002–T004 and T006–T009 are done (secrets guard and pre-push hook,
-   `device.sh`, network guard, traceability matrix, archive privacy check); T001, T005 and T010
-   are started and T011 is open (see `HANDOFF.md`, Next steps 1). Then the user's US1 checks on
-   the phone (T012–T014), and US3, US4 and US2's code meanwhile.
+   Setup, Foundational and US1's code tasks are done (T001–T011: baseline of 313 tests, secrets
+   guard and pre-push hook, `device.sh`, the `checkers-device` scheme, network guard,
+   traceability matrix (#179 done), archive privacy check on a local archive, board fit on the
+   smallest and largest iPhones). Next: US3 (diagnostics, T023–T028), then US4 and US2's code,
+   while the user's US1 checks on the phone wait (T012–T014; they close #177 and #178).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -205,6 +205,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   of the failed jobs on the same image passed. Rerun when the log shows that; if it happens on
   every run, the pinned destination (iPhone 17, iOS 26.2) or the Xcode pin must follow the image
   (`.github/workflows/ci.yml`).
+- The board's squares on the iPhone SE (3rd generation) are 44.9 points, 0.9 above FR-PLAT-01's
+  minimum, and the blocking plan runs only on the iPhone 17 (53 points on the 17 Pro Max): a
+  wider board frame or margin would fail on the SE without failing CI. Run
+  `testUS1_boardFitsAndShowsOnlyTheIndicator` on the SE simulator after any change to the game
+  screen's layout (E8 `validation.md` §2).
 - Audits at an arbitrary scroll position are not deterministic: text left under the navigation
   bar fails the contrast check wherever the swipe stops (E6 `validation.md` §6). Audit screens at
   their top or end.
@@ -501,7 +506,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 5/16 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 6/16 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -515,7 +520,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [~] #177 Verify no network requests, no permission prompts, no account or analytics · S
 - [~] #178 Verify iPhone portrait-only on devices · S
-- [~] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
+- [x] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
 - [ ] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
 
 **F8.2 Performance** (#180) · Constitution VII
@@ -973,3 +978,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   Device plan, the pre-push hook and five script tests (12 pass). HANDOFF.md updated (current
   state, lessons learned from the batch, next steps); this plan reviewed against the close-out
   checklist (board matches; Next up revised; a risk for the per-clone hook).
+- 2026-10-25: First E8 batch finished (T001, T005, T010, T011 done): baseline 313 tests and 12
+  script tests; the `checkers-device` Release test build compiles no engine tests; `release.sh
+  archive 0` passes its privacy check; the board fits on the iPhone SE (squares 44.9 pt) and 17
+  Pro Max (53 pt); `LocalizationTests` and the catalog check pass. #179 done (T007, T009).
+  Progress: 38/41 features, 145/155 tasks. Risks: the SE's narrow margin above 44 points. Next:
+  US3, with the user's US1 phone checks (T012–T014) open.

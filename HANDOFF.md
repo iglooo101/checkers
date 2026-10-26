@@ -34,10 +34,9 @@ Last updated: 2026-10-25
   deletion, so the user runs it once the next slice's branch exists). **E6 is done** (last code
   CI run 40130998987 on `d85df26`); its branch `007-settings-themes-sound-and-rules` was merged
   and deleted. **E8 is in progress on `008-release-1-0`**: F8.0 (spec, clarify, constitution
-  v1.2.0, plan, tasks, board) is done and implementation has started (T001–T011 batch, see
-  below). `main` follows the branch head by fast-forward after each green `CI gate`; the last
-  session ended with the batch's first code commit pushed and its CI run not yet checked, so
-  `main` may lag the branch by that commit.
+  v1.2.0, plan, tasks, board) is done and the first implementation batch (T001–T011) is done.
+  `main` follows the branch head by fast-forward after each green `CI gate` (the batch's code
+  commit `5e45a6a`, CI run 40238654507, and its docs close-out).
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -56,8 +55,11 @@ Last updated: 2026-10-25
   `scripts/hooks/pre-push` (this clone has `git config core.hooksPath scripts/hooks`; a new clone
   must set it), `*.p8` in `.gitignore`, and five script tests (`test-no-secrets`, `test-device`,
   `test-no-network`, `test-traceability`, `test-release-check`); all 12 script tests pass. Done in
-  `tasks.md`: T002–T004, T006–T009; started: T001, T005, T010; open: T011. No app code has
-  changed yet.
+  `tasks.md`: T001–T011 (baseline 313 tests; the Release `checkers-device` test build compiles no
+  engine tests; `release.sh archive 0` passes its check, archive in
+  `.build/Release/Checkers-1.0-0.xcarchive` for T013 and T014; the board fits on the iPhone SE
+  with 44.9-point squares and on the 17 Pro Max with 53; all in `checklists/validation.md`). No
+  app code has changed yet.
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -140,8 +142,9 @@ Last updated: 2026-10-25
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
-  in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done; the implementation
-  features F8.1–F8.3 come next (38/41 features, 144/155 tasks; #205 added for validation).
+  in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done, and in F8.1 #179
+  (traceability) is done; the rest of F8.1–F8.3 comes next (38/41 features, 145/155 tasks; #205
+  added for validation).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -824,29 +827,46 @@ Last updated: 2026-10-25
 - **A paid team's development profile lasts a year**, not seven days (that is the free tier):
   `security cms -D -i <app>/embedded.mobileprovision` shows its `ExpirationDate`.
 
+## Lessons learned (first E8 batch finished, 2026-10-25)
+
+- **Screenshots of a passing UI test without a throwaway test**: the plans keep attachments only
+  on failure, but a copy of the built `.xctestrun` (in `.build/DerivedData/Build/Products/`, so
+  its `__TESTROOT__` paths still resolve) with `SystemAttachmentLifetime` set to `keepAlways` and
+  `PreferredScreenCaptureFormat` to `screenshots` on `checkersUITests`, run with
+  `xcodebuild test-without-building -xctestrun <copy> -destination id=<simulator>
+  -only-testing:…`, keeps a screenshot and a UI snapshot of every step. `xcrun xcresulttool
+  export attachments` writes them with a `manifest.json`; the UI snapshots are binary property
+  lists whose `plutil -p` output holds every element's frame next to its identifier. This works
+  on simulators only (on the phone `test-without-building` cannot launch the app).
+- **A build-products folder keeps old products**: `.build/DeviceDerivedData` still held the
+  research probe's `CheckersEngineTests.xctest`; judge what a build compiled from its log and
+  the file times, not from what the folder contains.
+- **The smallest iPhone is close to the 44-point limit**: the board's squares are 44.9 points on
+  the iPhone SE, while CI runs only the iPhone 17, so a layout change can break the SE silently
+  (risk in `EXECUTION_PLAN.md`).
+- **`cd` in a command moves the session's directory**: it happened twice more (after `cd` into
+  the spec folder and into the build products); use subshells or absolute paths.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Finish the first implementation batch** (`/speckit-implement`, `specs/008-release-1-0/tasks.md`):
-   check the pushed commit's CI run (`gh run list --branch 008-release-1-0`) and fast-forward
-   `main` if `CI gate` passed; T001: run `scripts/test.sh` and record the baseline counts in
-   `checklists/validation.md`; T005: `xcodebuild build-for-testing -scheme checkers-device
-   -configuration Release -destination generic/platform=iOS` builds without the engine's tests;
-   T010: `scripts/release.sh archive 0` (build 0 is never uploaded) and record the check; T011:
-   run `testUS1_boardFitsAndShowsOnlyTheIndicator` with `-only-testing` on the iPhone SE (3rd
-   generation) and iPhone 17 Pro Max simulators, then `LocalizationTests` and
-   `scripts/check-string-catalog.sh checkers/checkers/Localizable.xcstrings .build/DerivedData`.
-   Mark them done, push, CI, fast-forward `main`, and close #178 and #179 if their tasks are done.
+1. **US3, diagnostics** (`/speckit-implement`, `specs/008-release-1-0/tasks.md` T023–T028; board
+   #192 to In Progress first): the fixtures and `US3DiagnosticsTests` and the logging categories
+   first (seen failing), then `DiagnosticReport`, `DiagnosticsLog`, `DiagnosticsSubscriber` and
+   the `.task` in `CheckersApp`; regenerate `traceability.md` after adding tests that name FRD
+   IDs; push once, CI, fast-forward `main`. T028 (Simulate MetricKit Payloads on the phone) is
+   the user's.
 2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
    Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the
-   T010 archive in Xcode and Generate Privacy Report; T014, the iPad smoke check on the "iPad
-   (A16) E8" simulator. Then #177 can close.
-3. **Next stories while the user's checks wait**: US3 (diagnostics, T023–T028), then US4 (icon,
-   name, screenshots, pages, listing, T029–T040), then US2's code (T015–T020) and its phone
-   measurements (T021) after US3 and US4's app changes.
+   T010 archive in Xcode (`open .build/Release/Checkers-1.0-0.xcarchive`) and Generate Privacy
+   Report; T014, the iPad smoke check on the "iPad (A16) E8" simulator with the same archive's
+   app. Then #177 (T012, T013) and #178 (T014) can close.
+3. **Next stories while the user's checks wait**: US4 (icon, name, screenshots, pages, listing,
+   T029–T040), then US2's code (T015–T020) and its phone measurements (T021) after US3 and US4's
+   app changes.
 4. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
    Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
    600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract

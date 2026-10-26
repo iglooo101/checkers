@@ -10,10 +10,15 @@ Results of [quickstart.md](../quickstart.md), story by story, with every measure
 
 ## Baseline (T001, 2026-10-25)
 
-Before any slice code, on `008-release-1-0` at `5bf6a87`:
+Before any app code of the slice, on `008-release-1-0`:
 
-- `scripts/test.sh` (blocking plan on the iPhone 17 simulator, iOS 26.3): BASELINE_TESTS.
-- `scripts/tests/run.sh`: 7 script tests pass.
+- `scripts/test.sh` (blocking plan on the iPhone 17 simulator, iOS 26.3), at `5e45a6a`, whose
+  changes since `5bf6a87` are scripts, the `checkers-device` scheme and `Device.xctestplan` only
+  (no app, test or blocking-plan change): **313 tests pass** (168 app unit tests, 59 UI tests,
+  86 engine tests; 0 failed, 0 skipped), the same 313 as E6's close-out; no compiler warning; 18.7
+  minutes.
+- `scripts/tests/run.sh`: 7 script tests pass at `5bf6a87`; 12 at `5e45a6a` (the five added by
+  T002, T003, T006, T007 and T008).
 
 ## Research measurements (2026-10-25)
 
@@ -33,7 +38,44 @@ Before any slice code, on `008-release-1-0` at `5bf6a87`:
 
 ## §1 Automated checks
 
+- **Script tests** (2026-10-25, `5e45a6a`): `scripts/tests/run.sh` passes all 12, among them
+  `test-no-secrets`, `test-device`, `test-no-network`, `test-traceability` and
+  `test-release-check`.
+- **Traceability** (T009, 2026-10-25): `python3 scripts/traceability.py --check` passes;
+  [traceability.md](../traceability.md) lists 84 FRD IDs covered by tests, FR-PLAT-02 removed and
+  none missing.
+- **Release test build** (T005, 2026-10-25, `5e45a6a`): `xcodebuild build-for-testing -scheme
+  checkers-device -configuration Release -destination generic/platform=iOS` succeeds ("TEST BUILD
+  SUCCEEDED"); it compiles only `checkers`, `CheckersEngine` and `checkersUITests` (the log never
+  names `CheckersEngineTests`), and its `.xctestrun` holds the `Device` plan with
+  `checkersUITests` alone. `scripts/test.sh` is unchanged since `970b5a9`.
+
 ## §2 Promises on the phone (US1)
+
+- **Archive check** (T010, 2026-10-25, `5e45a6a`): `scripts/release.sh archive 0` archives
+  version 1.0 (0) in Release with Xcode 26.3 and the iOS 26.2 SDK, signed for team 5RH237UKVE
+  (build 0 is never uploaded), then `check` passes: "no tracking, no tracking domains, no
+  collected data, user defaults with CA92.1 only, no permission asked" (one manifest,
+  `PrivacyInfo.xcprivacy`). The archive is `.build/Release/Checkers-1.0-0.xcarchive` for T013 and
+  T014.
+- **Board fit** (T011, FR-PLAT-01, 2026-10-25, `5e45a6a`): `testUS1_boardFitsAndShowsOnlyTheIndicator`
+  passes alone on both ends of the supported sizes (iOS 26.3.1 simulators, Debug), and a
+  screenshot of its two-player game on each shows the whole board in portrait under "Light to
+  move", with the menu button and nothing else (the plan keeps attachments only on failure, so
+  the built test ran from a copy of its `.xctestrun` with `SystemAttachmentLifetime` set to
+  `keepAlways` and `PreferredScreenCaptureFormat` to `screenshots`; frames from its UI snapshot):
+
+  | Device | Window (pt) | Board (pt) | Square (pt) |
+  |---|---|---|---|
+  | iPhone SE (3rd generation) | 375 × 667 | 367 × 367 at (4, 214.5) | 44.9 |
+  | iPhone 17 Pro Max | 440 × 956 | 432 × 432 at (4, 330.3) | 53.0 |
+
+  The SE's squares clear the 44-point minimum by 0.9 point: any wider frame or margin on the
+  board would fail there first.
+- **English and localizable** (T011, FR-PLAT-03, 2026-10-25): `LocalizationTests` passed in the
+  baseline run (both tests), and `scripts/check-string-catalog.sh
+  checkers/checkers/Localizable.xcstrings .build/DerivedData` reports "String catalog is up to
+  date."
 
 ## §3 Diagnostics on the phone (US3)
 
