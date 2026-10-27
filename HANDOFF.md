@@ -36,8 +36,7 @@ Last updated: 2026-10-26
   and deleted. **E8 is in progress on `008-release-1-0`**: F8.0 (spec, clarify, constitution
   v1.2.0, plan, tasks, board) is done, the first implementation batch (T001–T011) is done, and
   US3's code (T023–T027, diagnostics) landed on 2026-10-26 (`f328c30`, CI run 40272374316).
-  #206's fix (T058) and this close-out were pushed together at the end of the 2026-10-26
-  session, with their CI run still going (Next steps 1); `main` was not fast-forwarded to them.
+  #206's fix (T058) landed on `main` (`eb4b680`, CI run 40345930966) and #206 is closed.
   `main` follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -72,9 +71,9 @@ Last updated: 2026-10-26
   T028 passed on the phone (simulated payloads: one line per kind, Apple's key names as in the
   contract, time stamps without a zone), so #192 is done. The full plan's only local failure was
   the engine's SC-004 speed check (10.2 s with the engine unchanged), tracked as #206 (T058).
-  **#206's fix** (2026-10-26, T058 done in `tasks.md`; #206 stays In Progress until CI is
-  green): `checkers.xctestplan` runs `CheckersEngineTests` one at a time (`"parallelizable" :
-  false`, that target only); the test and the engine are unchanged, only `sixTurnSpeed`'s
+  **#206's fix** (2026-10-26, T058; done, CI run 40345930966 green with the engine's 86 tests
+  in 26.8 s and the count at 2.0 s): `checkers.xctestplan` runs `CheckersEngineTests` one at a
+  time (`"parallelizable" : false`, that target only); the test and the engine are unchanged, only `sixTurnSpeed`'s
   comment says why. Measured causes (`validation.md` §1): code coverage changes nothing; the
   first session's 9.2 s came from the simulator booting during each timed run; in the blocking
   plan the engine bundle runs last, beside its own suites on a Mac heated by the UI tests. With
@@ -163,9 +162,9 @@ Last updated: 2026-10-26
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
   in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done, and in F8.1 #179
-  (traceability) and #192 (diagnostics) are done; the rest of F8.1–F8.3 comes next (38/41
-  features, 146/156 tasks; #205 added for validation, #206 for the engine's speed check on the
-  development Mac).
+  (traceability) and #192 (diagnostics) are done, and in F8.2 #206 (the engine's speed check on
+  the development Mac); the rest of F8.1–F8.3 comes next (38/41 features, 147/156 tasks; #205
+  added for validation).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -962,15 +961,8 @@ Last updated: 2026-10-26
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Land #206 (T058)**: the fix and this close-out were pushed together on `008-release-1-0`
-   and their full CI run was still going at the end of the session. Find it with `gh run list
-   --branch 008-release-1-0 --limit 3`, then read the gate for the branch head's full SHA (the
-   `check-runs` query in the "first E8 batch finished" lessons). If `CI gate` passed:
-   `git push origin <sha>:refs/heads/main`, comment the CI result on #206 (the cause, the fix
-   and the measurements were posted there at the close-out), `board_move.py Done 206` and check
-   that #206 is closed, `update_plan.py`, and a docs-only close-out line in `EXECUTION_PLAN.md`'s
-   change log (about 20 s of CI). F8.2 (#180) stays open for #181 and #182. If the run failed,
-   read the log before rerunning (lessons: runners without simulators, time limits).
+1. **#206 is landed** (2026-10-26): `main` at `eb4b680`, the CI result posted on #206, which is
+   closed. F8.2 (#180) stays open for #181 and #182.
 2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
    Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the
    T010 archive in Xcode (`open .build/Release/Checkers-1.0-0.xcarchive`) and Generate Privacy

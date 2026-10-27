@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 7/17 | In Progress |
-| | **Total** | | | | **38/41** | **146/156** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 8/17 | In Progress |
+| | **Total** | | | | **38/41** | **147/156** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -55,7 +55,6 @@ Epics are listed in execution order.
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #186 TestFlight build and beta round
 - #205 Validate the E8 slice and update project docs
-- #206 Keep the 6-turn speed check reliable on the development Mac
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -86,15 +85,11 @@ explains the game in seven illustrated sections.
    traceability matrix (#179 done), archive privacy check on a local archive, board fit on the
    smallest and largest iPhones). **US3 (diagnostics, #192) is done** (T023–T028: code in
    `f328c30`, CI run 40272374316; the user's phone check with simulated payloads passed).
-   **#206 (T058, the engine's speed check on this Mac) is in progress**: code coverage is ruled
-   out (4.47 s with and without); the "2.3 times" was the simulator booting during the timed
-   runs, and in the blocking plan the count misses because the other engine suites run beside it
-   on a Mac heated by the UI tests. The fix, the blocking plan running the engine's tests one at
-   a time (`parallelizable` off in `checkers.xctestplan`; 4.2–4.4 s under the load where parallel
-   runs failed at 11 s), does not change what SC-004 measures; the full blocking plan passes 321
-   of 321 locally with it (T058 done). It was pushed at the 2026-10-26 close-out with its CI run
-   still going: once `CI gate` is green, fast-forward `main` and close #206 (`HANDOFF.md`, Next
-   steps 1). Then US4 (#184, #185) and US2's code, while the user's US1 checks on the phone wait
+   **#206 (T058, the engine's speed check on this Mac) is done**: the blocking plan runs the
+   engine's tests one at a time (`parallelizable` off in `checkers.xctestplan`), which does not
+   change what SC-004 measures; 321 of 321 pass locally and CI run 40345930966 was green on
+   `eb4b680` (the engine's 86 tests in 26.8 s, the count 2.0 s), and `main` was fast-forwarded to
+   it. Next: US4 (#184, #185) and US2's code, while the user's US1 checks on the phone wait
    (T012–T014; they close #177 and #178).
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
@@ -169,8 +164,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   during a timed run nearly doubles it; code coverage changes nothing. The blocking plan now runs
   the engine's tests one at a time (#206, T058; the count 3.86 s in a full local run), which
   leaves heat as the only factor: alone the count would reach about 8 s at the lowest clock seen
-  (an estimate). The engine bundle takes about 50 s instead of 28 s locally; CI's arm64 runner
-  passed before and should stay well inside `build-and-test`'s 45 minutes. Other wall-clock budgets (E4's Hard turn time, the launch
+  (an estimate). The engine bundle takes about 50 s instead of 28 s locally and 26.8 s on CI's
+  arm64 runner (CI run 40345930966, the count 2.0 s), well inside `build-and-test`'s 45 minutes.
+  Other wall-clock budgets (E4's Hard turn time, the launch
   test) can be hit the same way; E4's are measured alone, and the launch test only reports.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
@@ -526,7 +522,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 7/17 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 8/17 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -547,7 +543,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 - [~] #181 Cold launch under 400 ms on a recent iPhone (release build) · S
 - [ ] #182 Hitch-ratio check during play and AI turns · S
-- [~] #206 Keep the 6-turn speed check reliable on the development Mac · S
+- [x] #206 Keep the 6-turn speed check reliable on the development Mac · S
 
 **F8.3 App Store delivery** (#183)
 
@@ -1055,3 +1051,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   `HANDOFF.md` with the #206 lessons, `checkers/CLAUDE.md`, this plan) pushed together, one full
   CI run; this plan reviewed against the close-out checklist (board matches; Next up and the
   speed-check risk rewritten). Next session starts by landing #206 (`HANDOFF.md`, Next steps 1).
+- 2026-10-26: #206 done: CI run 40345930966 was green on `eb4b680` (the engine's 86 tests one
+  at a time in 26.8 s, the 6-turn count 2.0 s), `main` was fast-forwarded to it, and the result
+  was posted on #206, which is closed. F8.2 (#180) stays open for #181 and #182. Progress: 38/41
+  features, 147/156 tasks, 6 items In Progress. Next: US4 (#184, #185) while the user's US1
+  checks wait.
