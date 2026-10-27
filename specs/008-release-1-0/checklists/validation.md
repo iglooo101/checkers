@@ -183,6 +183,35 @@ Before any app code of the slice, on `008-release-1-0`:
 
 ## §4 Icon, name, launch screen, screenshots, listing, pages (US4)
 
+- **Icon** (T029, T033, 2026-10-26): `scripts/make-icon.py` draws the three 1024 × 1024 files in
+  1.4 s on the development Mac: `AppIcon.png` (8-bit RGB, 19,105 bytes), `AppIcon-Dark.png`
+  (8-bit RGBA, the piece and its crown only, 19,428 bytes) and `AppIcon-Tinted.png` (8-bit
+  grayscale, Rec. 709 weights, 12,296 bytes), each with an `sRGB` chunk, and names them in
+  `Contents.json` (Xcode's layout kept: the file round-trips byte for byte). The artwork: a disc
+  of radius 320 with a 40-pixel `#A88F5F` edge (6.25% of the diameter; the app's is 6.6%) and a
+  `#FFFAF0` face, a drawn crown (`#6B4426`, a polygon 376 pixels wide at its points with three
+  balls of radius 28: 59% of the piece's width at its points, where the app's crown is 55%; the app's `crown.fill` is an SF Symbol, which Apple does not allow
+  in app icons), on a two-by-two corner with dark squares at the bottom left and top right.
+  `test-make-icon.sh` failed on the missing script and files before, and passes. **Mutation**:
+  one channel of `AppIcon-Dark.png` raised by two steps made `--check` fail, naming the file;
+  restored from a backup (the files were untracked). `--check` also reads a `sips` re-encode of
+  `AppIcon.png` (row filters 1–4) as the same pixels.
+- **Name, encryption, launch screen** (T030, T032, T035, 2026-10-26): the app target's Debug and
+  Release settings have `INFOPLIST_KEY_CFBundleDisplayName = Checkers` and
+  `INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO`, and `App/InfoPlist.xcstrings` holds the
+  name (en, translated). `PlatformSettingsTests`: the FR-016 (also through
+  `localizedInfoDictionary`) and FR-022 tests failed with both keys nil, and pass; the FR-017
+  test passed at once and was proven by a mutation (a temporary `INFOPLIST_FILE` adding
+  `UILaunchScreen` › `UIColorName` AccentColor to the Debug build failed only that test;
+  removed). `release.sh check` now names a display name other than "Checkers", a missing
+  encryption key and a version other than 1.0; the three fixture variants of
+  `test-release-check.sh` passed the old check. The owner's phone check of the name and the
+  launch screen in light and dark is part of T034.
+- **Full checks** (2026-10-26, the batch before its push): the blocking plan with CI's
+  warnings-as-errors settings passes 324 of 324 in 20 minutes (179 app unit tests, 59 UI tests,
+  86 engine tests; the 6-turn count passed after 5.0 s); the strict format check and the 13
+  script tests pass; `traceability.py --check` is unchanged (no new FRD IDs).
+
 ## §5 Performance on the phone (US2)
 
 ## §6 TestFlight (US5)

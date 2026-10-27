@@ -37,6 +37,9 @@ Last updated: 2026-10-26
   v1.2.0, plan, tasks, board) is done, the first implementation batch (T001–T011) is done, and
   US3's code (T023–T027, diagnostics) landed on 2026-10-26 (`f328c30`, CI run 40272374316).
   #206's fix (T058) landed on `main` (`eb4b680`, CI run 40345930966) and #206 is closed.
+  US4's first batch (T029, T030, T032, T033, T035: icon and name) and this close-out were
+  pushed together at the end of the 2026-10-26 session, with their CI run still going (Next
+  steps 1); `main` was not fast-forwarded to them.
   `main` follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -79,6 +82,20 @@ Last updated: 2026-10-26
   plan the engine bundle runs last, beside its own suites on a Mac heated by the UI tests. With
   the fix the full blocking plan passes 321 of 321 locally (the count 3.86 s of CPU time; the
   engine bundle 50 s instead of about 28 s).
+  **US4, first batch** (2026-10-26; #184 and #185 In Progress): `scripts/make-icon.py
+  [--check]` (standard library, 1.4 s) draws `AppIcon.png` (RGB), `AppIcon-Dark.png` (RGBA, the
+  piece only) and `AppIcon-Tinted.png` (grayscale) into `AppIcon.appiconset` and names them in
+  its `Contents.json`: a cream king with a drawn crown (not the app's SF Symbol, which Apple does
+  not allow in icons) on a two-by-two Classic corner, in the Classic colors; `--check` reads any
+  PNG row filter and allows one step per channel. The app target sets
+  `INFOPLIST_KEY_CFBundleDisplayName = Checkers` and `INFOPLIST_KEY_ITSAppUsesNonExemptEncryption
+  = NO`, with `App/InfoPlist.xcstrings` holding the name; `PlatformSettingsTests` checks the
+  name, the encryption key and the plain launch screen (324 blocking tests); `release.sh check`
+  also requires "Checkers", the encryption key false and version 1.0; `test-make-icon.sh` is
+  the 13th script test. T034 (the owner approves the icon and, on the phone, the name and a
+  plain launch in light and dark; moved there from T035) is open. T031 (the listing's test)
+  moved to the second batch with T039, since it fails until the listing exists. Records in
+  `validation.md` §4.
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
@@ -163,8 +180,8 @@ Last updated: 2026-10-26
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
   in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done, and in F8.1 #179
   (traceability) and #192 (diagnostics) are done, and in F8.2 #206 (the engine's speed check on
-  the development Mac); the rest of F8.1–F8.3 comes next (38/41 features, 147/156 tasks; #205
-  added for validation).
+  the development Mac); in F8.3 #184 and #185 (US4) are In Progress; the rest of F8.1–F8.3
+  comes next (38/41 features, 147/156 tasks; #205 added for validation).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -955,23 +972,65 @@ Last updated: 2026-10-26
   other suites; most likely the twin hardware thread and a lower turbo clock, not measured), so
   CPU time only keeps other threads' work out (#202); only running alone removes their effect.
 
+## Lessons learned (landing #206 and US4's first batch, 2026-10-26)
+
+- **`board_move.py Done` closes the issue a few seconds later** (the board's workflow): `gh issue
+  view` right after it still said OPEN, and `gh issue close` then reported it already closed.
+  Re-read the state after a short wait instead of closing by hand.
+- **SF Symbols are not allowed in app icons** (Apple's symbol license), so the icon draws its own
+  crown instead of the app's `crown.fill`; any later icon change must keep it a drawn shape.
+- **A guard test on the generated Info.plist can be proven with a temporary `INFOPLIST_FILE`**:
+  with `GENERATE_INFOPLIST_FILE` on, Xcode merges that file's keys into the generated ones, so a
+  plist adding `UILaunchScreen` › `UIColorName` failed the launch-screen test. Put the file next
+  to the `.xcodeproj` (outside the synchronized folders, which would copy it as a resource), set
+  it in one configuration of the app target only (a command-line setting reaches every target,
+  packages included), back up `project.pbxproj` first and restore it after.
+- **Don't edit what a running build reads**: the red run of a test was building in the
+  background, so the project edit waited for it; the script-only parts (`release.sh`) went
+  ahead meanwhile.
+- **Xcode's JSON layouts**: an asset catalog's `Contents.json` round-trips byte for byte through
+  `json.dumps(…, indent=2, separators=(",", " : "), sort_keys=True)` plus a newline; string
+  catalogs (`.xcstrings`) have the same layout but no final newline.
+- **Pure-Python drawing is fast enough with spans**: per sample row, each shape gives x
+  intervals; merged per color and added to a per-pixel difference row, then
+  `itertools.accumulate` gives the coverage. Three 1024 × 1024 icons with 4 × 4 samples take 1.4
+  s, and a per-row cache keeps the compositing cheap.
+- **A check that reads PNG files must undo row filters**: our files use filter 0, but `sips`
+  (and any optimizer) writes filters 1–4; decoding a `sips` re-encode to the same pixels proved
+  the reader.
+- **`cd` in a command moved the session's directory again** (into the spec folder while reading
+  `tasks.md`); use `sed -n … <path>` or `(cd … && …)`.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **#206 is landed** (2026-10-26): `main` at `eb4b680`, the CI result posted on #206, which is
-   closed. F8.2 (#180) stays open for #181 and #182.
-2. **For the user (US1)**: T012, a fresh Release install on the phone with Settings › Privacy &
-   Security › App Privacy Report on, every screen, both kinds of game, rotation; T013, open the
-   T010 archive in Xcode (`open .build/Release/Checkers-1.0-0.xcarchive`) and Generate Privacy
-   Report; T014, the iPad smoke check on the "iPad (A16) E8" simulator with the same archive's
-   app. Then #177 (T012, T013) and #178 (T014) can close.
-3. **Next stories while the user's checks wait**: US4 (icon, name, screenshots, pages, listing,
-   T029–T040; move #184 and #185 to In Progress first, with `update_plan.py` in the same step),
-   then US2's code (T015–T020) and its phone measurements (T021) after US3 and US4's app
-   changes. With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
+1. **Land US4's first batch**: the code and this close-out were pushed together on
+   `008-release-1-0` and their full CI run was still going at the end of the session. Find it
+   with `gh run list --branch 008-release-1-0 --limit 3`, then read the gate for the branch
+   head's full SHA (the `check-runs` query in the "first E8 batch finished" lessons). If `CI
+   gate` passed: `git push origin <sha>:refs/heads/main`, comment the batch on #184 (icon, name,
+   encryption key, launch screen test; T034 open) and #185 (the release check; the rest of its
+   tasks open), both stay In Progress; add the CI run to `validation.md` §8 and a close-out line
+   to `EXECUTION_PLAN.md`'s change log (docs only, about 20 s of CI). If the run failed, read the
+   log before rerunning.
+2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
+   Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
+   rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in
+   light, dark and tinted with Home Screen › Edit › Customize, check that the name reads
+   "Checkers" and that launching in light and dark shows a plain screen, then Home, without a
+   flash). At the Mac: T013, a new archive (`scripts/release.sh archive 0`; the T010 archive
+   predates the name and the icon) opened in Xcode with Generate Privacy Report; T014, the iPad
+   smoke check on the "iPad (A16) E8" simulator with that archive's app. Then #177 (T012, T013),
+   #178 (T014) and, with T034, #184 can close.
+3. **Next code while the user's checks wait**: US4's second batch: T031 with T039 (the listing's
+   limits test and `release/store-listing.md`), T036 (screenshot UI tests, `Screenshots` plan,
+   `scripts/screenshots.sh`, run twice) and T038 (the support and privacy pages, then enable
+   GitHub Pages); the owner then approves the screenshots (T037) and the texts (T039) and
+   creates the App Store Connect record (T040). Then US2's code (T015–T020) and its phone
+   measurements (T021) after US3 and US4's app changes. With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
    real slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen,
    `CPU_Speed_Limit` 54, that scales to about 8 s, an estimate); time other checks in a settled
    simulator (#206 lessons).

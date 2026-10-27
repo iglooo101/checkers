@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# US1 FR-002 FR-004: the archive declares nothing collected and asks for nothing (specs/008-release-1-0/contracts/release-tooling.md).
+# US1 FR-002 FR-004, US4 FR-016 FR-022: the archive declares nothing collected, asks for nothing, and is Checkers 1.0 without non-exempt encryption (specs/008-release-1-0/contracts/release-tooling.md).
 
 set -uo pipefail
 SCRIPTS="$(cd "$(dirname "$0")/.." && pwd)"
@@ -69,5 +69,17 @@ expect_failure "$archive" "NSCameraUsageDescription" "a usage description"
 archive="$(variant manifest)"
 rm "$(app "$archive")/PrivacyInfo.xcprivacy"
 expect_failure "$archive" "no privacy manifest" "a missing privacy manifest"
+
+archive="$(variant name)"
+plutil -replace CFBundleDisplayName -string "checkers" "$(app "$archive")/Info.plist"
+expect_failure "$archive" "CFBundleDisplayName" "the lowercase target name under the icon"
+
+archive="$(variant encryption)"
+plutil -remove ITSAppUsesNonExemptEncryption "$(app "$archive")/Info.plist"
+expect_failure "$archive" "ITSAppUsesNonExemptEncryption" "a missing encryption declaration"
+
+archive="$(variant version)"
+plutil -replace CFBundleShortVersionString -string "1.1" "$(app "$archive")/Info.plist"
+expect_failure "$archive" "CFBundleShortVersionString" "a version other than 1.0"
 
 exit $((failures > 0))

@@ -53,6 +53,8 @@ Epics are listed in execution order.
 - #177 Verify no network requests, no permission prompts, no account or analytics
 - #178 Verify iPhone portrait-only on devices
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
+- #184 App icon and launch screen
+- #185 App Store metadata, screenshots and privacy label (Data Not Collected)
 - #186 TestFlight build and beta round
 - #205 Validate the E8 slice and update project docs
 <!-- END GENERATED: in-progress -->
@@ -89,8 +91,14 @@ explains the game in seven illustrated sections.
    engine's tests one at a time (`parallelizable` off in `checkers.xctestplan`), which does not
    change what SC-004 measures; 321 of 321 pass locally and CI run 40345930966 was green on
    `eb4b680` (the engine's 86 tests in 26.8 s, the count 2.0 s), and `main` was fast-forwarded to
-   it. Next: US4 (#184, #185) and US2's code, while the user's US1 checks on the phone wait
-   (T012–T014; they close #177 and #178).
+   it. **US4 is in progress** (#184, #185): the first batch (T029, T030, T032, T033, T035) gives
+   the app its scripted icon in three variants, the name "Checkers" under the icon and the
+   encryption declaration, with tests for the name, the key and the plain launch screen and a
+   stricter `release.sh check` (324 blocking tests, 13 script tests); it was pushed at the
+   2026-10-26 close-out with its CI run still going: once `CI gate` is green, fast-forward `main`
+   (`HANDOFF.md`, Next steps 1). Next: US4's second batch (T031 with T039, T036, T038), then US2's
+   code. Waiting for the user: one phone sitting for T012 and T034 (icon, name, launch screen),
+   then T013 and T014 at the Mac; they close #177, #178 and #184.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -251,6 +259,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   `git fetch origin main:main` before comparing branches. Merged slice branches are deleted
   once the next slice's branch exists (`001-…` to `007-…` so far); the auto-mode safety check
   blocks deleting them, so the user runs it.
+- The icon waits for the owner's approval (T034). The tinted variant is the whole artwork in
+  grayscale, squares included (research R10); if iOS's tint makes it look busy, the fix is a
+  change to `make-icon.py` (for example the piece alone, as in the dark variant), then T033's
+  check again. The archive from T010 predates the icon and the name, so T013 and T014 need a
+  new one.
 
 ## Backlog
 
@@ -547,8 +560,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F8.3 App Store delivery** (#183)
 
-- [ ] #184 App icon and launch screen · M
-- [ ] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
+- [~] #184 App icon and launch screen · M
+- [~] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
 - [~] #186 TestFlight build and beta round · S
 - [ ] #187 Submit for App Store review · S
 - [~] #205 Validate the E8 slice and update project docs · S
@@ -1056,3 +1069,16 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   was posted on #206, which is closed. F8.2 (#180) stays open for #181 and #182. Progress: 38/41
   features, 147/156 tasks, 6 items In Progress. Next: US4 (#184, #185) while the user's US1
   checks wait.
+- 2026-10-26: US4 started: #184 and #185 moved to In Progress (8 items In Progress). First batch
+  done (T029, T030, T032, T033, T035): `scripts/make-icon.py` draws the three icon variants
+  (a cream king with a drawn crown on a two-by-two Classic corner), the app's name under the
+  icon is "Checkers" and it declares no non-exempt encryption; `PlatformSettingsTests` checks
+  the name, the key and the plain launch screen (324 blocking tests), `release.sh check`
+  requires all three, and `test-make-icon.sh` is the 13th script test. The phone check of the
+  name and launch screen moved from T035 to the owner's T034; T031 moved to the second batch
+  with T039. Records in `validation.md` §4.
+- 2026-10-26: Session close-out: the batch and the docs (`tasks.md`, `validation.md` §4,
+  `HANDOFF.md` with this session's lessons, this plan) pushed together, one full CI run; this
+  plan reviewed against the close-out checklist (board matches: 147/156 tasks, 8 In Progress;
+  Next up and Risks updated). Next session starts by landing the batch (`HANDOFF.md`, Next
+  steps 1).

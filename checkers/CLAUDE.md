@@ -31,6 +31,8 @@ scripts/tests/run.sh                    # script tests (CI rules, lint rules, fo
 scripts/sync-string-catalog.sh          # after a command-line build: update the string catalog
 python3 scripts/make-sounds.py          # rewrite the four game sounds from their recipes
 python3 scripts/make-sounds.py --check  # the committed sounds still match their recipes
+python3 scripts/make-icon.py            # redraw the app icon (default, dark, tinted)
+python3 scripts/make-icon.py --check    # the committed icons still match the drawing
 ```
 
 Command-line builds need `-skipPackagePluginValidation` (already in `scripts/lib.sh`); in Xcode,

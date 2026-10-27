@@ -3,7 +3,8 @@
 # Usage:
 #   scripts/release.sh archive <build>   archive HEAD in Release with that build number, then check it
 #   scripts/release.sh check <archive>   the archived app declares nothing collected, no tracking,
-#                                        only the user-defaults API (CA92.1), and asks for nothing
+#                                        only the user-defaults API (CA92.1), asks for nothing, and
+#                                        is Checkers 1.0 without non-exempt encryption
 
 source "$(dirname "$0")/lib.sh"
 
@@ -74,6 +75,15 @@ info = plistlib.loads((app / "Info.plist").read_bytes())
 for key in sorted(info):
     if key.endswith("UsageDescription"):
         problems.append(f"Info.plist asks for a permission: {key}.")
+if info.get("CFBundleDisplayName") != "Checkers":
+    problems.append(f"Info.plist's CFBundleDisplayName is {info.get('CFBundleDisplayName')!r}; "
+                    "the name under the icon must be 'Checkers'.")
+if info.get("ITSAppUsesNonExemptEncryption") is not False:
+    problems.append(f"Info.plist's ITSAppUsesNonExemptEncryption is "
+                    f"{info.get('ITSAppUsesNonExemptEncryption')!r}; it must be false.")
+if info.get("CFBundleShortVersionString") != "1.0":
+    problems.append(f"Info.plist's CFBundleShortVersionString is "
+                    f"{info.get('CFBundleShortVersionString')!r}; this release is 1.0.")
 
 if problems:
     print(f"Archive check failed for {app.name}:")
@@ -81,7 +91,8 @@ if problems:
         print(f"- {problem}")
     sys.exit(1)
 print(f"Archive check passed for {app.name}: no tracking, no tracking domains, no collected "
-      "data, user defaults with CA92.1 only, no permission asked.")
+      "data, user defaults with CA92.1 only, no permission asked, Checkers 1.0 without "
+      "non-exempt encryption.")
 PY
 }
 
