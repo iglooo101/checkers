@@ -8,8 +8,10 @@ import Testing
 /// (specs/007-settings-themes-sound-and-rules/spec.md, US4; contracts/settings-and-sound.md,
 /// "Playback" and "When sounds cannot play").
 struct US4SoundPlaybackTests {
-    /// Waits up to `seconds` for work off the main actor, such as the sound bank's preparation.
-    static func waitFor(_ condition: () -> Bool, seconds: Double = 5) async throws {
+    /// Waits up to `seconds` for work off the main actor, such as the sound bank's preparation,
+    /// which took 2.5 to 15.7 s on CI's simulators (0.8 s on the development Mac): the limit only
+    /// guards against a hang.
+    static func waitFor(_ condition: () -> Bool, seconds: Double = 30) async throws {
         let deadline = ContinuousClock.now + .seconds(seconds)
         while !condition() && ContinuousClock.now < deadline {
             try await Task.sleep(for: .milliseconds(10))
