@@ -95,9 +95,16 @@ explains the game in seven illustrated sections.
    the app its scripted icon in three variants, the name "Checkers" under the icon and the
    encryption declaration, with tests for the name, the key and the plain launch screen and a
    stricter `release.sh check` (324 blocking tests, 13 script tests); CI run 40432329029 was
-   green on `325b4b3` and `main` was fast-forwarded to it on 2026-10-28. Next: US4's second batch
-   (T031 with T039, T036, T038), then US2's code. Waiting for the user: one phone sitting for T012 and T034 (icon, name, launch screen),
-   then T013 and T014 at the Mac; they close #177, #178 and #184.
+   green on `325b4b3` and `main` was fast-forwarded to it on 2026-10-28. The second batch
+   (2026-10-28) adds the store listing `release/store-listing.md` with its limits test (T031,
+   T039; 14 script tests), the support and privacy pages, live on GitHub Pages (T038), and the
+   six store screenshots in `release/screenshots/` from `ScreenshotUITests` through
+   `scripts/screenshots.sh`, byte-identical on a second run (T036); it was pushed with its CI
+   run going: once `CI gate` is green, fast-forward `main` (`HANDOFF.md`, Next steps 1). Next
+   code: US2 (T015–T020), then its phone measurements (T021). Waiting for the user: approving
+   the screenshots (T037) and the listing's texts, name and copyright holder (T039), then the
+   App Store Connect record (T040); one phone sitting for T012 and T034 (icon, name, launch
+   screen), then T013 and T014 at the Mac; they close #177, #178 and #184.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -263,6 +270,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   change to `make-icon.py` (for example the piece alone, as in the dark variant), then T033's
   check again. The archive from T010 predates the icon and the name, so T013 and T014 need a
   new one.
+- The store screenshots are files from the local iPhone 17 simulator on iOS 26.3
+  (`scripts/screenshots.sh`); any change to a screen they show, to the theme colors or to the
+  simulator runtime changes them. Rerun the script after such a change (a second run must report
+  no change) and have the owner approve them again (T037) before an upload.
 
 ## Backlog
 
@@ -1086,3 +1097,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   was fast-forwarded to it; the batch was posted on #184 and #185, which stay In Progress (T034
   and the rest of US4 open). Board unchanged: 147/156 tasks, 8 In Progress. Next: US4's second
   batch (T031 with T039, T036, T038).
+- 2026-10-28: US4's second batch: the store listing with its limits test (T031, T039 written;
+  the owner's review open), the support and privacy pages on `main` (`74541c2`, docs-only CI)
+  and live once the owner enabled GitHub Pages (the auto-mode safety check blocks that call;
+  both `curl` checks pass, T038 done), and the six store screenshots (T036 done: two runs of
+  `scripts/screenshots.sh`, the second unchanged). Pushed with the docs in one full CI run.
+  Board unchanged: 147/156 tasks, 8 In Progress (#185 stays open for T037, T039 and T040).

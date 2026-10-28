@@ -33,6 +33,8 @@ python3 scripts/make-sounds.py          # rewrite the four game sounds from thei
 python3 scripts/make-sounds.py --check  # the committed sounds still match their recipes
 python3 scripts/make-icon.py            # redraw the app icon (default, dark, tinted)
 python3 scripts/make-icon.py --check    # the committed icons still match the drawing
+scripts/screenshots.sh                  # the six store screenshots into release/screenshots/;
+                                        # a second run must report no change
 ```
 
 Command-line builds need `-skipPackagePluginValidation` (already in `scripts/lib.sh`); in Xcode,
@@ -173,8 +175,9 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
   arguments: `launch(replacing:with:)` passes `-savedGame <hex>` or `-record <hex>` (JSON text as
   bytes, for this launch only; `StoredValues` holds the records), and the plain argument
   `-savedGame none` reads as no saved game. Acceptance tests
-  name their story ID (`US1`…). Test plans: `checkers.xctestplan` (blocking) and
-  `Performance.xctestplan` (launch timing).
+  name their story ID (`US1`…). Test plans: `checkers.xctestplan` (blocking),
+  `Performance.xctestplan` (launch timing) and `Screenshots.xctestplan` (`ScreenshotUITests`, the
+  store screenshots, which the blocking plan skips; run by `scripts/screenshots.sh`).
 - The project uses **file-system synchronized groups** (`objectVersion = 77`): files dropped into a
   target's folder join that target without `project.pbxproj` edits.
 

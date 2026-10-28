@@ -211,6 +211,35 @@ Before any app code of the slice, on `008-release-1-0`:
   warnings-as-errors settings passes 324 of 324 in 20 minutes (179 app unit tests, 59 UI tests,
   86 engine tests; the 6-turn count passed after 5.0 s); the strict format check and the 13
   script tests pass; `traceability.py --check` is unchanged (no new FRD IDs).
+- **Store listing** (T031, T039, 2026-10-28): `release/store-listing.md` holds the 15 fields of
+  the contract, each paragraph and list item on one line (App Store Connect keeps line breaks).
+  Lengths with comments removed: name 29 characters ("Checkers – Classic Board Game", a proposal),
+  subtitle 29, promotional text 149, description 1,641 in seven paragraphs (each followed by its
+  FRD IDs), keywords 94 bytes, App Review notes 744 bytes, What to Test 636. Every description
+  sentence was read against FRD v1.3 and the review notes' labels against the string catalog
+  (New game, Two players, Computer, Start, Continue, Statistics; the game menu at the top
+  right). `test-store-listing.sh` failed on the missing listing, then passes; it is the 14th
+  script test. Open for the owner: the texts, the name and the copyright holder's name.
+- **Public pages** (T038, 2026-10-28): `docs/index.md` and `docs/privacy.md` landed on `main` in
+  `74541c2` (docs-only CI); the owner enabled Pages from `main` and `/docs` (the auto-mode safety
+  check blocks that call); the first build took 36 s. `https://iglooo101.github.io/checkers/`
+  and `https://iglooo101.github.io/checkers/privacy/` answer 200, the support page contains
+  "GitHub" and links to `privacy/`, and the privacy page contains "collects no data"
+  (quickstart §4). The privacy page also says the data is part of the iPhone's own backups.
+- **Screenshots** (T036, 2026-10-28): `ScreenshotUITests` (six tests, skipped by the blocking
+  plan) through `Screenshots.xctestplan` (English, US, no coverage) on the iPhone 17 simulator,
+  iOS 26.3, by `scripts/screenshots.sh`. States: Home with a saved game; a Medium game against
+  the computer ten turns in, Light to move, six pieces hinted; a two-player game where c3 has
+  jumped to e5 and must go on to c7 ("capture required", e5 selected, c7 marked); a two-player
+  game after e7–d8 crowns a Light king, Dark to move; the top of Rules; Statistics with
+  7/1/1, 4/3/2 and 1/4/1. The three game positions come from seeded random games played by the
+  engine in a scratch package (20,000 seeds in 0.2 s), checked as boards, and are saved with an
+  empty history. Each test redraws `XCUIScreen.main.screenshot()` on an opaque
+  `UIGraphicsImageRenderer` (standard range), so every file is 1206 × 2622, 8-bit RGB, no alpha,
+  sRGB IEC61966-2.1 (`sips`), 104–275 KB. First run: all six written, 3.3 minutes with the
+  build, the tests 75 s. Second run: "No screenshot changed.", 1.2 minutes, every file
+  byte-identical (`shasum`) (FR-019). The status bar shows 9:41, full signal and a charging
+  battery (`--batteryState charged`, as the contract says). The owner's approval is T037.
 
 ## §5 Performance on the phone (US2)
 
