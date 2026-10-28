@@ -243,6 +243,21 @@ Before any app code of the slice, on `008-release-1-0`:
 
 ## §5 Performance on the phone (US2)
 
+- **Code and rehearsal** (T015–T020, 2026-10-28; the phone was not connected, so the numbers on
+  it are T021's): `device-timings.py` and `test-device-timings.sh` (six captures; 15 script
+  tests); `scripts/device-session-game.json` with its unit test (180 app unit tests, 325
+  blocking); the three log lines (T018); `DeviceSessionUITests`; `device.sh session`. On the
+  iPhone 17 simulator, Debug build, the app started as `session` starts it
+  (`SIMCTL_CHILD_OS_ACTIVITY_DT_MODE=YES xcrun simctl launch --console-pty …` with the same
+  arguments) and the test attached: passed in 4.5 minutes; the capture held 71 measurement lines
+  among 214,872; `device-timings.py`: easy, medium and hard 6 turns each (the block ran twice),
+  100% within 0.5–1.0 s, slowest 534, 535 and 819 ms; 52 sounds, slowest start 66.0 ms, output
+  latency 0.1 ms (the simulator's). The same session with the test launching the app
+  (`TEST_RUNNER_SESSION_GAME`) passed in 4.6 minutes. Neither bundle had hitch metrics, nor did a
+  throwaway probe on a launched app: the simulator reports none, so the attached-or-launched
+  question of research R6 is settled by the first run on the phone, which `session` handles
+  either way.
+
 ## §6 TestFlight (US5)
 
 ## §7 Submission (US6)
@@ -257,3 +272,15 @@ Before any app code of the slice, on `008-release-1-0`:
   `build-and-test` 31.9 minutes (179 app unit tests, 59 UI tests, 86 engine tests in 42.9 s one
   at a time; the SC-004 count passed after 4.6 s; the launch timing test reported) and
   `engine-strength` 6.1 minutes. `main` fast-forwarded to `325b4b3` on 2026-10-28.
+- **US4, second batch** (2026-10-28, `614fdca`, run 40766132938): `CI gate` red. `build-and-test`
+  failed after 34.7 minutes with three failures in code the batch did not touch, on an older
+  runner image (`macos-26-arm64` 20261013.0424, against 20261021.0445 for the last green run)
+  that ran everything about twice as slowly (the app's unit tests 21.0 s against 9.6 s, the
+  unchanged engine tests 81.8 s against 42.9 s): `US4SoundPlaybackTests`' "a player whose sounds
+  cannot be prepared says they are unavailable" (its 5-second wait expired; the test took 2.5,
+  8.6, 12.9 and 15.7 s in four CI runs and 0.8 s locally, so its wait now allows 30 s, a test-only
+  change); `testUS3_finishedGameCounts` (the tap on Computer in setup did not take, the form
+  stayed on Two players with no difficulty buttons); `testUS5_auditNewGame` ("Audit failed to
+  complete in time", an XCTest limit). The screenshot tests did not run (59 UI tests, as
+  before). `engine-strength` passed. The batch was not landed on its own: the next push carries
+  it with US2's code and one full run tests both.

@@ -53,6 +53,7 @@ Epics are listed in execution order.
 - #177 Verify no network requests, no permission prompts, no account or analytics
 - #178 Verify iPhone portrait-only on devices
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
+- #182 Hitch-ratio check during play and AI turns
 - #184 App icon and launch screen
 - #185 App Store metadata, screenshots and privacy label (Data Not Collected)
 - #186 TestFlight build and beta round
@@ -99,12 +100,18 @@ explains the game in seven illustrated sections.
    (2026-10-28) adds the store listing `release/store-listing.md` with its limits test (T031,
    T039; 14 script tests), the support and privacy pages, live on GitHub Pages (T038), and the
    six store screenshots in `release/screenshots/` from `ScreenshotUITests` through
-   `scripts/screenshots.sh`, byte-identical on a second run (T036); it was pushed with its CI
-   run going: once `CI gate` is green, fast-forward `main` (`HANDOFF.md`, Next steps 1). Next
-   code: US2 (T015–T020), then its phone measurements (T021). Waiting for the user: approving
+   `scripts/screenshots.sh`, byte-identical on a second run (T036). Its CI run failed on a slow
+   runner in three timing-bound tests the batch did not touch (`validation.md` §8); the sound
+   test's wait was widened. **US2's code is written** (#181, #182; T015–T020): the computer's
+   timing and sound delay log lines, `device-timings.py`, the session's saved game and
+   `DeviceSessionUITests`, and `device.sh session`, which falls back to a run in which the test
+   launches the app if XCTest gives no hitch metrics for an attached app; rehearsed on the
+   simulator, which reports no hitch metrics. Batch, fix and US2 were pushed together: once
+   `CI gate` is green, fast-forward `main` (`HANDOFF.md`, Next steps 1). Waiting for the user: approving
    the screenshots (T037) and the listing's texts, name and copyright holder (T039), then the
    App Store Connect record (T040); one phone sitting for T012 and T034 (icon, name, launch
-   screen), then T013 and T014 at the Mac; they close #177, #178 and #184.
+   screen) and US2's measurements (T021: `scripts/device.sh launch` and `session`), then T013 and
+   T014 at the Mac; they close #177, #178 and #184, and with T022, #181 and #182.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
@@ -274,6 +281,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   (`scripts/screenshots.sh`); any change to a screen they show, to the theme colors or to the
   simulator runtime changes them. Rerun the script after such a change (a second run must report
   no change) and have the owner approve them again (T037) before an upload.
+- CI runners differ: run 40766132938 ran on an older `macos-26-arm64` image (20261013) about
+  twice as slowly as usual, and three timing-bound tests failed there: the sound test's wait
+  (widened to 30 s), a lost tap on Computer in setup and an audit that did not finish in time
+  (XCTest's limit). If the last two come back, make `startComputerGame` wait for the difficulty
+  buttons and retap, and retry an audit that times out; rerun the failed jobs only after reading
+  the log.
 
 ## Backlog
 
@@ -565,7 +578,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F8.2 Performance** (#180) · Constitution VII
 
 - [~] #181 Cold launch under 400 ms on a recent iPhone (release build) · S
-- [ ] #182 Hitch-ratio check during play and AI turns · S
+- [~] #182 Hitch-ratio check during play and AI turns · S
 - [x] #206 Keep the 6-turn speed check reliable on the development Mac · S
 
 **F8.3 App Store delivery** (#183)
@@ -1103,3 +1116,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   both `curl` checks pass, T038 done), and the six store screenshots (T036 done: two runs of
   `scripts/screenshots.sh`, the second unchanged). Pushed with the docs in one full CI run.
   Board unchanged: 147/156 tasks, 8 In Progress (#185 stays open for T037, T039 and T040).
+- 2026-10-28: #182 moved to In Progress (9 items). US2's code (T015–T020): the three timing log
+  lines, `device-timings.py` with six fixture captures (15 script tests), the session's saved
+  game with its unit test (325 blocking tests), `DeviceSessionUITests` (in `Device.xctestplan`,
+  skipped by the blocking plan) and `device.sh session`, rehearsed on the simulator both ways.
+  The second batch's CI run 40766132938 failed on a slow runner in three tests it did not touch;
+  the sound test's wait was widened. Batch, fix and US2 pushed together for one full run.

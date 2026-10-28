@@ -35,6 +35,9 @@ python3 scripts/make-icon.py            # redraw the app icon (default, dark, ti
 python3 scripts/make-icon.py --check    # the committed icons still match the drawing
 scripts/screenshots.sh                  # the six store screenshots into release/screenshots/;
                                         # a second run must report no change
+scripts/device.sh status | launch | session   # on the owner's iPhone, Release: connection,
+                                        # ten cold launches, the scripted session (hitches, the
+                                        # computer's timing, the sound delay)
 ```
 
 Command-line builds need `-skipPackagePluginValidation` (already in `scripts/lib.sh`); in Xcode,
@@ -176,8 +179,11 @@ trust the SwiftLint plugin once when asked. Derived data goes to `.build/Derived
   bytes, for this launch only; `StoredValues` holds the records), and the plain argument
   `-savedGame none` reads as no saved game. Acceptance tests
   name their story ID (`US1`…). Test plans: `checkers.xctestplan` (blocking),
-  `Performance.xctestplan` (launch timing) and `Screenshots.xctestplan` (`ScreenshotUITests`, the
-  store screenshots, which the blocking plan skips; run by `scripts/screenshots.sh`).
+  `Performance.xctestplan` (launch timing), `Screenshots.xctestplan` (`ScreenshotUITests`, the
+  store screenshots, run by `scripts/screenshots.sh`) and `Device.xctestplan` (the
+  `checkers-device` scheme on the phone: `LaunchPerformanceTests` and `DeviceSessionUITests`, which
+  attaches to the app `scripts/device.sh session` started); the blocking plan skips all three
+  kinds.
 - The project uses **file-system synchronized groups** (`objectVersion = 77`): files dropped into a
   target's folder join that target without `project.pbxproj` edits.
 

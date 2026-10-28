@@ -39,8 +39,10 @@ Last updated: 2026-10-28
   #206's fix (T058) landed on `main` (`eb4b680`, CI run 40345930966) and #206 is closed.
   US4's first batch (T029, T030, T032, T033, T035: icon and name) landed on `main` on
   2026-10-28 (`325b4b3`, CI run 40432329029). US4's second batch (T031, T036, T038, T039:
-  listing, screenshots, public pages) was pushed at the end of the 2026-10-28 session with its
-  CI run still going (Next steps 1); the pages themselves are on `main` (`74541c2`) and live.
+  listing, screenshots, public pages; `614fdca`) failed CI run 40766132938 on a slow runner in
+  three tests it did not touch; the pages themselves are on `main` (`74541c2`) and live. US2's
+  code (T015–T020) and a wider wait in a sound test followed, and all of it was pushed together
+  at the end of the 2026-10-28 session with its CI run still going (Next steps 1).
   `main` follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -109,7 +111,20 @@ Last updated: 2026-10-28
   iPhone 17 simulator (iOS 26.3), sets light appearance, the default text size and the 9:41
   status bar, and writes `release/screenshots/01-home.png` … `06-statistics.png` (1206 × 2622
   RGB, no alpha, sRGB); a second run printed "No screenshot changed.". T037, T039's review and
-  T040 wait for the owner. Records in
+  T040 wait for the owner.
+  **US2's code** (2026-10-28; #181 and #182 In Progress): `GameSession+Timing.swift` logs
+  "Computer turn at <level>: first step after <n> ms" (`computer`), `SoundBank` logs "Sound <name>
+  started <x> ms after its step" (the request time read on the main actor by `AudioSoundPlayer`)
+  and "Output latency <x> ms" on each preparation (`sound`), all public, notice level;
+  `scripts/device-timings.py` judges a console capture (SC-005); `scripts/device-session-game.json`
+  (a two-player position: e1–f2 by tap, e5–f4, c3–d4 by drag, f4–g3, f2–h4, b6–c5, then d4–b6–d8
+  crowning) with a `StorageTests` test; `DeviceSessionUITests` (in `Device.xctestplan`, skipped by
+  the blocking plan) attaches to the running app, or launches it when `SESSION_GAME` holds the
+  game's hex bytes, and measures `XCTHitchMetric` over one session; `scripts/device.sh session`
+  installs the Release build, launches it with `devicectl --console`, runs the test, and if the
+  bundle has no hitch metrics runs it again with `TEST_RUNNER_SESSION_GAME`. Rehearsed on the
+  simulator both ways (it reports no hitch metrics at all). 325 blocking tests, 15 script tests.
+  T021 (the measurements on the phone) and T022 wait for the phone. Records in
   `validation.md` §4.
 - **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
@@ -1036,19 +1051,41 @@ Last updated: 2026-10-28
 - **`cd` in a command moved the session's directory again** (into the fixtures folder); use
   subshells or absolute paths.
 
+## Lessons learned (US2's code and a slow runner, 2026-10-28)
+
+- **`XCUIApplication.activate()` launches an app that is not running**, without its launch
+  arguments; a test that must attach to an app started elsewhere checks `app.state !=
+  .notRunning` first.
+- **`TEST_RUNNER_<NAME>` reaches the test as `<NAME>`**: `TEST_RUNNER_SESSION_GAME=<hex>
+  xcodebuild test-without-building …` gave the UI test the saved game's bytes, so a script can
+  hand a test data from a file without a Swift copy.
+- **`measure(metrics:options:)` with `iterationCount = 1` runs its block twice** (the rehearsal
+  logged six computer turns per level for three moves each); a measured block must start and end
+  in the same state.
+- **The simulator reports no `XCTHitchMetric` values**, even for an app the test launched (a
+  throwaway probe); hitches can only be measured on the phone.
+- **`simctl launch --console-pty` with `SIMCTL_CHILD_OS_ACTIVITY_DT_MODE=YES`** mirrors the app's
+  `Logger` lines like `devicectl --console` on the phone, so a device script can be rehearsed on
+  the simulator; the capture held 215,000 lines of system noise around 71 of ours.
+- **A run that is slow everywhere points at the runner**: compare the image version (`Runner
+  Image` in the job log) and the unchanged suites' times with the last green run before blaming
+  the code; then check each failure's own history (the sound test's durations in four runs showed
+  its 5-second wait was the weak point).
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Land US4's second batch**: the code and this close-out were pushed together on
-   `008-release-1-0`; find the run with `gh run list --branch 008-release-1-0 --limit 3` and read
-   the gate for the branch head's full SHA (the `check-runs` query in the "first E8 batch
-   finished" lessons). If `CI gate` passed: `git push origin <sha>:refs/heads/main`, comment the
-   batch on #185 (listing, pages, screenshots; T037, T039's review and T040 open; it stays In
-   Progress), add the run to `validation.md` §8 and a line to `EXECUTION_PLAN.md`'s change log
-   (docs only). If it failed, read the log before rerunning.
+1. **Land US4's second batch and US2's code**: both, the sound test's wider wait and this
+   close-out were pushed together on `008-release-1-0`; find the run with `gh run list --branch
+   008-release-1-0 --limit 3` and read the gate for the branch head's full SHA (the `check-runs`
+   query in the "first E8 batch finished" lessons). If `CI gate` passed: `git push origin
+   <sha>:refs/heads/main`, comment the batch on #185 (listing, pages, screenshots; T037, T039's
+   review and T040 open) and US2's code on #181 and #182 (T021 and T022 open); all stay In
+   Progress; add the run to `validation.md` §8 and a line to `EXECUTION_PLAN.md`'s change log
+   (docs only). If it failed, read the log before rerunning (the slow-runner risk in the plan).
 2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
    Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
    rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in
@@ -1057,14 +1094,19 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    flash). At the Mac: T013, a new archive (`scripts/release.sh archive 0`; the T010 archive
    predates the name and the icon) opened in Xcode with Generate Privacy Report; T014, the iPad
    smoke check on the "iPad (A16) E8" simulator with that archive's app. Then #177 (T012, T013),
-   #178 (T014) and, with T034, #184 can close.
+   #178 (T014) and, with T034, #184 can close. In the same sitting, US2's T021: Low Power Mode
+   off, then `scripts/device.sh launch` and `scripts/device.sh session` (it prints whether the
+   hitches came from the attached run or from a launched one; record that in `validation.md` §5
+   with every number); on a miss, T022.
 3. **For the user, at the Mac**: approve the six screenshots in `release/screenshots/` or ask
    for other states (T037; the status bar shows a charging battery, as the contract's
    `--batteryState charged` gives); review `release/store-listing.md` against the FRD and approve
    the texts and the name, and give the copyright holder's name as it should appear (T039);
    then create the App Store Connect record and enter the listing (T040).
-4. **Next code while the user's checks wait**: US2's code (T015–T020) and its phone
-   measurements (T021) after US3 and US4's app changes. With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
+4. **Next code while the user's checks wait**: the US5 and US6 tasks that need no Apple
+   account: T041 (`test-release-guards.sh` with a stub `gh`), T042 (the release checklist
+   `checklists/release.md`), T043 (`release/ExportOptions.plist`, `release/builds.md`, and
+   `release.sh`'s archive guards, `upload` and `record`), T049 and T050 (`submit-check`). With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
    real slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen,
    `CPU_Speed_Limit` 54, that scales to about 8 s, an estimate); time other checks in a settled
    simulator (#206 lessons).
