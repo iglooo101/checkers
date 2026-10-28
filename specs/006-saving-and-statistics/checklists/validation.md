@@ -109,7 +109,7 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   and `testUS1_chainSurvivesBackground` (Home pressed mid-chain, relaunch: the same piece keeps
   jumping); `US1ContinueTests` save after every turn and undo, keep the computer's turn from its
   start (FR-004), and continue it with exactly one computer turn (SC-003). **Pass.**
-- Left for the user: closing the app from the app switcher (the tests use `terminate()`), and
+- Moved to E8 release checklist RC-08 and RC-09: closing the app from the app switcher (the tests use `terminate()`), and
   pressing Home on the simulator while the computer thinks (UI tests cannot act inside the
   half-second thinking; `US1ContinueTests` covers saving at that moment).
 
@@ -126,7 +126,7 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   Easy game adds one loss); `US3RecordTests` (every ending at every difficulty changes one count
   once; two-player, abandoned and left games change nothing; undo and continue count once,
   SC-004). **Pass.**
-- Left for the user: finishing games by hand at Easy and Medium and checking Statistics.
+- Moved to E8 release checklist RC-10: finishing games by hand at Easy and Medium and checking Statistics.
 
 ## 5. A damaged saved game or record
 
@@ -151,7 +151,7 @@ plan relies on. Development Mac: Intel Core i9-9980HK, 2.4 GHz, Xcode 26.3, Swif
   All 17 audits pass on the iPhone 17, and on the iPhone SE (3rd generation) at
   `accessibility-extra-extra-extra-large` in Dark Mode; that simulator was reset to `large` and
   light afterwards. **Pass** (SC-007).
-- Left for the user: VoiceOver reading each Statistics block as one sentence on a device or
+- Moved to E8 release checklist RC-11: VoiceOver reading each Statistics block as one sentence on a device or
   simulator (the label is tested in `US3RecordTests`; XCUITest cannot drive VoiceOver).
 
 ## 7. CI

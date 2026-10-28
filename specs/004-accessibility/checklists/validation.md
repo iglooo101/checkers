@@ -40,7 +40,7 @@ starting 2026-10-22.
 
 ## 3. Play with VoiceOver (SC-001)
 
-*Open for the user*: XCUITest cannot drive VoiceOver. Play the quickstart §3 game by hand on the
+*Moved to E8 release checklist RC-03*: XCUITest cannot drive VoiceOver. Play the quickstart §3 game by hand on the
 simulator or an iPhone and record it here. The automated tests cover the same paths: double-tap
 runs the tap path, focus follows `focusSquare`, and every announcement goes through the
 `Announcer` seam.

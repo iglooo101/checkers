@@ -33,7 +33,7 @@ starting 2026-10-21.
 | Check | Result | Notes |
 |---|---|---|
 | Two-player game from launch to the result panel by taps and drags | Automated | UI tests cover each step: tapped and dragged moves (US1, US3), the capture-required indicator and notice after `c3–d4, f6–e5` (US2), undo back to the start (US5), resign with confirm and cancel, the result panel and Play again (US4), setup choices across a relaunch (US6), Rules/Settings return and the leave confirmation (US7). Multi-jumps and crowning are covered by `US2CaptureChainTests` |
-| A full game played by hand | *For the user* | Not done by the implementer; the quickstart §3 list is the script |
+| A full game played by hand | *Moved to E8 release checklist RC-01* | Not done by the implementer; the quickstart §3 list is the script |
 
 ## 4. Screen sizes and text sizes (SC-003, SC-006)
 
@@ -43,7 +43,7 @@ starting 2026-10-21.
 | Game screen on iPhone 17 Pro Max, default text (T029) | Pass | Same tests |
 | Game screen on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T029) | Pass | `US1`, `US2` and `US3` UI tests all pass: board fits with 44-point squares, labels and indicator correct, tap and drag work |
 | Previews (T029) | Written | `GameView`, `BoardView`, `PieceView`: start, capture required with notice, selection with targets, Dark at the bottom with kings, `accessibility5`, dark |
-| Visual review of the large-text layout | *For the user* | The automated checks above show every control reachable and the board fitting; how it looks is for a person to judge (previews in Xcode, or the SE simulator at the largest size) |
+| Visual review of the large-text layout | *Moved to E8 release checklist RC-02* | The automated checks above show every control reachable and the board fitting; how it looks is for a person to judge (previews in Xcode, or the SE simulator at the largest size) |
 | Result panel and resign alert on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T035) | Pass | `US4GameEndUITests` passes: alert buttons, result text and both result buttons found and tapped; previews for all six results at `accessibility5` and dark |
 | Resign confirmation as an alert (T035) | Changed | On iOS 26 a confirmation dialog from a toolbar item shows as a popover without Cancel (*measured*), so resign uses an alert; research R10 updated |
 | Setup on iPhone SE at `accessibility-extra-extra-extra-large`, Dark Mode (T046) | Pass | `US6SetupUITests` passes after scrolling: the form is taller than the screen at this size and creates rows as they scroll into view, so the test scrolls to each choice; it also passes at default size on iPhone 17 |

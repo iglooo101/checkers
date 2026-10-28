@@ -129,7 +129,7 @@ measurements below check the ones the code depends on.
   first and last pictures), `US2RulesTests` (the seven sections, their pictures and every text
   word for word against the contract, 364 words of text) and E4's cover tests (the computer's
   next step waits while Rules covers the game).
-- **Left for the user**: VoiceOver through Rules, each heading read as a heading and the rotor
+- **Moved to E8 release checklist RC-17**: VoiceOver through Rules, each heading read as a heading and the rotor
   moving between sections (FR-025's header trait; XCUITest cannot read traits).
 
 ## 4. Themes, visual review (US3, FR-012, SC-002)
@@ -144,10 +144,10 @@ measurements below check the ones the code depends on.
 
 - 2026-10-24 (T028): the user listened to the four files on the Mac with `afplay` (move, capture,
   crowning, game end, in that order). **Approved as they are**; the recipes and files stand.
-- **Left for the user on an iPhone** (quickstart §5): a sound's delay after a step (SC-004,
+- **Moved to E8 release checklist RC-12 to RC-16** (quickstart §5; the delay also by `scripts/device.sh session`, RC-23): a sound's delay after a step (SC-004,
   within 0.1 s), silent mode (SC-005, FR-016), the volume buttons (FR-016), other apps' music
   going on (FR-016), and a second sound starting over the first (FR-019).
-- **Left for the user**: VoiceOver in Settings reads each theme row as its name, the chosen one
+- **Moved to E8 release checklist RC-18**: VoiceOver in Settings reads each theme row as its name, the chosen one
   as selected, and nothing for the small boards or the checkmark (quickstart §4).
 
 ## 6. Largest text and Dark Mode (FR-026, SC-007)

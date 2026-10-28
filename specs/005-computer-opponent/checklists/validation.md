@@ -148,26 +148,26 @@ T033, 2026-10-22. Each step of the scenario is covered by the blocking tests, wh
 - New game as Dark, Undo unavailable until the player moves: `testUS1_computerOpensAsLight`,
   `US4ComputerUndoTests.undoAvailability`.
 - Resign while it thinks: `US3ComputerControlTests.resignWhileThinking`.
-- Home while it thinks, then back: **open for the user**. A throwaway UI test (not committed)
+- Home while it thinks, then back: **moved to E8 release checklist RC-06**. A throwaway UI test (not committed)
   could not press Home during the thinking, since XCUITest's wait after a tap outlasts it: the
   reply had already appeared. It confirmed only that a computer game is intact after 6.6 s in the
   background (exactly one reply, the player's turn).
 
 ## 4. Playtest (SC-004, US2)
 
-**Open for the user**: three games against Easy as a beginner, three against Hard at your best
+**Moved to E8 release checklist RC-04 and RC-05**: three games against Easy as a beginner, three against Hard at your best
 (quickstart §4).
 
 ## 5. Timing on an iPhone (SC-005)
 
-**Open for the user** (needs a recent iPhone with a Release build). Closest proxy, the development
+**Moved to E8 release checklist RC-23** (`scripts/device.sh session`; needs a recent iPhone with a Release build). Closest proxy, the development
 Mac in Release: Hard's slowest turn 419 ms (every Hard turn of 12 match games timed alone, mean
 262 ms), so with the 0.5 s minimum pause the first step appears at 0.5 s; the 0.8 s limit only
 applies in Debug builds.
 
 ## 6. VoiceOver (US5)
 
-**Open for the user**: a few moves against the computer with VoiceOver on (quickstart §6). The
+**Moved to E8 release checklist RC-07**: a few moves against the computer with VoiceOver on (quickstart §6). The
 announcements and focus are covered by `US5ComputerAnnouncementTests`.
 
 ## 7. CI
