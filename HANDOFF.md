@@ -41,8 +41,9 @@ Last updated: 2026-10-28
   2026-10-28 (`325b4b3`, CI run 40432329029). US4's second batch (T031, T036, T038, T039:
   listing, screenshots, public pages; `614fdca`) failed CI run 40766132938 on a slow runner in
   three tests it did not touch; the pages themselves are on `main` (`74541c2`) and live. US2's
-  code (T015–T020) and a wider wait in a sound test followed, and all of it was pushed together
-  at the end of the 2026-10-28 session with its CI run still going (Next steps 1).
+  code (T015–T020) and a wider wait in a sound test followed; all of it landed on `main`
+  (`4e095e3`, CI run 40772536644). The release tooling (T041–T043, T049, T050) and checklist
+  (T042) were pushed at the end of the session with their CI run still going (Next steps 1).
   `main` follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -1071,6 +1072,12 @@ Last updated: 2026-10-28
   Image` in the job log) and the unchanged suites' times with the last green run before blaming
   the code; then check each failure's own history (the sound test's durations in four runs showed
   its 5-second wait was the weak point).
+- **Stub the real tools before a script test's first red run**: `test-release-guards.sh`'s first
+  run started a real `xcodebuild archive`, because `release.sh` did not have its dry-run mode
+  yet; a stub `xcodebuild` beside the stub `gh` on `PATH` makes every case harmless whatever the
+  script does, and lets a refusal check that the stub was never called.
+- **`xcodebuild` prints its whole command line** ("Command line invocation"), so secrets passed as
+  arguments must be filtered from its output (`release.sh upload` pipes it through `sed`).
 
 ## Next steps
 
@@ -1078,14 +1085,13 @@ Last updated: 2026-10-28
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Land US4's second batch and US2's code**: both, the sound test's wider wait and this
-   close-out were pushed together on `008-release-1-0`; find the run with `gh run list --branch
-   008-release-1-0 --limit 3` and read the gate for the branch head's full SHA (the `check-runs`
-   query in the "first E8 batch finished" lessons). If `CI gate` passed: `git push origin
-   <sha>:refs/heads/main`, comment the batch on #185 (listing, pages, screenshots; T037, T039's
-   review and T040 open) and US2's code on #181 and #182 (T021 and T022 open); all stay In
-   Progress; add the run to `validation.md` §8 and a line to `EXECUTION_PLAN.md`'s change log
-   (docs only). If it failed, read the log before rerunning (the slow-runner risk in the plan).
+1. **Land the release tooling**: US4's second batch and US2's code are on `main` (`4e095e3`,
+   CI run 40772536644). The release tooling (T041–T043, T049, T050), the release checklist
+   (T042) and this close-out were pushed together with their CI run still going; find it with
+   `gh run list --branch 008-release-1-0 --limit 3` and read the gate for the branch head's full
+   SHA. If `CI gate` passed: `git push origin <sha>:refs/heads/main`, comment on #186 (T041–T043)
+   and #187 (T049, T050), both stay In Progress, and add the run to `validation.md` §8 and the
+   change log (docs only). If it failed, read the log before rerunning.
 2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
    Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
    rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in
@@ -1103,10 +1109,10 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    `--batteryState charged` gives); review `release/store-listing.md` against the FRD and approve
    the texts and the name, and give the copyright holder's name as it should appear (T039);
    then create the App Store Connect record and enter the listing (T040).
-4. **Next code while the user's checks wait**: the US5 and US6 tasks that need no Apple
-   account: T041 (`test-release-guards.sh` with a stub `gh`), T042 (the release checklist
-   `checklists/release.md`), T043 (`release/ExportOptions.plist`, `release/builds.md`, and
-   `release.sh`'s archive guards, `upload` and `record`), T049 and T050 (`submit-check`). With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
+4. **Without the owner only the slice's polish is left** (T053–T057), best done once the
+   owner's checks are in; T048 applies only if the beta finds a problem. With the API key in
+   `../secrets` (T044), the first build is `scripts/release.sh archive 1`, then `upload`
+   (T045). With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
    real slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen,
    `CPU_Speed_Limit` 54, that scales to about 8 s, an estimate); time other checks in a settled
    simulator (#206 lessons).

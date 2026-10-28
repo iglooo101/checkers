@@ -57,6 +57,7 @@ Epics are listed in execution order.
 - #184 App icon and launch screen
 - #185 App Store metadata, screenshots and privacy label (Data Not Collected)
 - #186 TestFlight build and beta round
+- #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
 <!-- END GENERATED: in-progress -->
 
@@ -106,8 +107,14 @@ explains the game in seven illustrated sections.
    timing and sound delay log lines, `device-timings.py`, the session's saved game and
    `DeviceSessionUITests`, and `device.sh session`, which falls back to a run in which the test
    launches the app if XCTest gives no hitch metrics for an attached app; rehearsed on the
-   simulator, which reports no hitch metrics. Batch, fix and US2 were pushed together: once
-   `CI gate` is green, fast-forward `main` (`HANDOFF.md`, Next steps 1). Waiting for the user: approving
+   simulator, which reports no hitch metrics. Batch, fix and US2 landed on `main` together
+   (`4e095e3`, CI run 40772536644). **The release tooling
+   is written** (#186, #187; T041–T043, T049, T050): `release.sh` refuses to archive a dirty,
+   unchecked or renumbered commit, uploads with the key in `../secrets` without printing it,
+   records builds, and `submit-check` gates the submission on `checklists/release.md`, which
+   gathers all 27 open hand checks (T042); pushed after US2's run, it lands once its own run is
+   green (`HANDOFF.md`, Next steps 1). What
+   is left without the owner is the slice's polish (T053–T057). Waiting for the user: approving
    the screenshots (T037) and the listing's texts, name and copyright holder (T039), then the
    App Store Connect record (T040); one phone sitting for T012 and T034 (icon, name, launch
    screen) and US2's measurements (T021: `scripts/device.sh launch` and `session`), then T013 and
@@ -586,7 +593,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #184 App icon and launch screen · M
 - [~] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
 - [~] #186 TestFlight build and beta round · S
-- [ ] #187 Submit for App Store review · S
+- [~] #187 Submit for App Store review · S
 - [~] #205 Validate the E8 slice and update project docs · S
 <!-- END GENERATED: backlog -->
 
@@ -1122,3 +1129,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   skipped by the blocking plan) and `device.sh session`, rehearsed on the simulator both ways.
   The second batch's CI run 40766132938 failed on a slow runner in three tests it did not touch;
   the sound test's wait was widened. Batch, fix and US2 pushed together for one full run.
+- 2026-10-28: #187 moved to In Progress (10 items). The release tooling: `release.sh` archive
+  guards, `upload` and `record` (T043), `submit-check` (T050), tested by `test-release-guards.sh`
+  against a temporary repository with stub `gh` and `xcodebuild` (T041, T049; 16 script tests);
+  `checklists/release.md` with 27 items, the earlier slices pointing to them and the traceability
+  matrix naming them (T042). Committed while US2's run was going, pushed after it.
+- 2026-10-28: US4's second batch and US2's code landed: CI run 40772536644 green on `4e095e3`
+  (325 blocking tests; the sound test took 13.2 s, beyond its old wait), `main` fast-forwarded,
+  posted on #185, #181 and #182, which stay In Progress. The release tooling and these docs
+  pushed next, one full run.

@@ -260,7 +260,22 @@ Before any app code of the slice, on `008-release-1-0`:
 
 ## §6 TestFlight (US5)
 
+- **Tooling** (T041–T043, 2026-10-28): `release/ExportOptions.plist` (the contract's six values,
+  `plutil -lint` OK), `release/builds.md` (empty table), `scripts/release.sh` `archive` guards
+  (clean tree, `CI gate` success for HEAD through `gh`, a build number above every row), `upload`
+  (the key from `../secrets`, mode 600, its ID and issuer replaced in everything printed) and
+  `record` (rows in order, states forward, a rejected build stays rejected);
+  `checklists/release.md` with 27 items (T042). `test-release-guards.sh` (16 script tests) runs
+  every case against a temporary repository with stub `gh` and `xcodebuild`. Nothing has been
+  archived or uploaded for TestFlight yet: that needs the owner's API key (T044).
+
 ## §7 Submission (US6)
+
+- **Gate** (T049, T050, 2026-10-28): `scripts/release.sh submit-check <build>` passes the good
+  fixture pair (four items, two carried from build 1 by "cannot affect RC-01, RC-03") and refuses
+  an open item, a failed one, one accepted without a reason, a build that is not the latest, one
+  only uploaded, a rejected one, and an item from an earlier build that a later build's notes do
+  not cover.
 
 ## §8 CI
 
@@ -284,3 +299,8 @@ Before any app code of the slice, on `008-release-1-0`:
   complete in time", an XCTest limit). The screenshot tests did not run (59 UI tests, as
   before). `engine-strength` passed. The batch was not landed on its own: the next push carries
   it with US2's code and one full run tests both.
+- **US4's second batch and US2's code** (2026-10-28, `4e095e3`, run 40772536644): `CI gate`
+  green with both jobs on image 20261021.0445: `build-and-test` 31.2 minutes (180 app unit tests,
+  59 UI tests, 86 engine tests in 34.0 s; the SC-004 count passed after 2.7 s; the sound test
+  passed after 13.2 s, beyond its old 5-second wait) and `engine-strength` 6.1 minutes. `main`
+  fast-forwarded to `4e095e3`; posted on #185, #181 and #182.

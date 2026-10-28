@@ -38,6 +38,11 @@ scripts/screenshots.sh                  # the six store screenshots into release
 scripts/device.sh status | launch | session   # on the owner's iPhone, Release: connection,
                                         # ten cold launches, the scripted session (hitches, the
                                         # computer's timing, the sound delay)
+scripts/release.sh archive <n> | check <archive> | upload <archive> | record <n> <state> [note]
+                                        # release builds: archive only a clean, CI-passed HEAD
+                                        # with a new number; upload with the key in ../secrets;
+                                        # rows of release/builds.md
+scripts/release.sh submit-check <n>     # build n may be submitted (checklists/release.md)
 ```
 
 Command-line builds need `-skipPackagePluginValidation` (already in `scripts/lib.sh`); in Xcode,
