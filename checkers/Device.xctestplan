@@ -10,6 +10,7 @@
   "testTargets" : [
     {
       "selectedTests" : [
+        "DeviceSessionUITests",
         "LaunchPerformanceTests"
       ],
       "target" : {

@@ -342,6 +342,7 @@ extension GameSession {
 
     /// Thinks and pauses together, then shows the turn step by step (contract: Timeline).
     private func playComputerTurn(from start: GameState) async {
+        let started = ContinuousClock.now
         let opponent = opponent
         let difficulty = setup.difficulty
         let choosing = Task { await opponent.chooseTurn(in: start, difficulty: difficulty) }
@@ -375,8 +376,11 @@ extension GameSession {
             guard await waitUntilVisible(), applyStep(step, byComputer: true) != nil else {
                 return
             }
-            if index == 0, steps.count > 1 {
-                computerPhase = .playing
+            if index == 0 {
+                logFirstComputerStep(since: started, difficulty: difficulty)
+                if steps.count > 1 {
+                    computerPhase = .playing
+                }
             }
         }
     }

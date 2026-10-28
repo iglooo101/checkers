@@ -1,0 +1,49 @@
+2026-10-28 14:21:13.131580+0100 checkers[812:20431] [settings] Stored setting moveHints is unreadable; using its default
+Launched application with Hussein-Helmy.checkers bundle identifier.
+2026-10-28 14:21:13.132311+0100 checkers[812:20431] [sound] Output latency 21.3 ms
+2026-10-28 14:21:13.133042+0100 checkers[812:20431] [AXRuntime] AX Safe category class 'SwiftUI.AccessibilityNode' was not found
+2026-10-28 14:21:13.133773+0100 checkers[812:20431] [sound] Sound move started 4.2 ms after its step
+2026-10-28 14:21:13.134504+0100 checkers[812:20431] [sound] Sound capture started 6.8 ms after its step
+2026-10-28 14:21:13.135235+0100 checkers[812:20431] [sound] Sound move started 3.1 ms after its step
+2026-10-28 14:21:13.135966+0100 checkers[812:20431] [sound] Sound crowning started 18.5 ms after its step
+2026-10-28 14:21:13.136697+0100 checkers[812:20431] [sound] Sound gameEnd started 98.7 ms after its step
+2026-10-28 14:21:13.137428+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 612 ms
+2026-10-28 14:21:13.138159+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 655 ms
+2026-10-28 14:21:13.138890+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 701 ms
+2026-10-28 14:21:13.139621+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 742 ms
+2026-10-28 14:21:13.140352+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 588 ms
+2026-10-28 14:21:13.141083+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 960 ms
+2026-10-28 14:21:13.141814+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 534 ms
+2026-10-28 14:21:13.142545+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 803 ms
+2026-10-28 14:21:13.143276+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 690 ms
+2026-10-28 14:21:13.144007+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 720 ms
+2026-10-28 14:21:13.144738+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 615 ms
+2026-10-28 14:21:13.145469+0100 checkers[812:20431] [computer] Computer turn at easy: first step after 507 ms
+2026-10-28 14:21:13.146200+0100 checkers[812:20431] [game] Saved the game after a turn
+2026-10-28 14:21:13.146931+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 640 ms
+2026-10-28 14:21:13.147662+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 812 ms
+2026-10-28 14:21:13.148393+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 775 ms
+2026-10-28 14:21:13.149124+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 702 ms
+2026-10-28 14:21:13.149855+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 698 ms
+2026-10-28 14:21:13.150586+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 901 ms
+2026-10-28 14:21:13.151317+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 744 ms
+2026-10-28 14:21:13.152048+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 660 ms
+2026-10-28 14:21:13.152779+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 589 ms
+2026-10-28 14:21:13.153510+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 930 ms
+2026-10-28 14:21:13.154241+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 721 ms
+2026-10-28 14:21:13.154972+0100 checkers[812:20431] [computer] Computer turn at medium: first step after 685 ms
+
+2026-10-28 14:21:13.155703+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 801 ms
+2026-10-28 14:21:13.156434+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 803 ms
+2026-10-28 14:21:13.157165+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 802 ms
+2026-10-28 14:21:13.157896+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 810 ms
+2026-10-28 14:21:13.158627+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 805 ms
+2026-10-28 14:21:13.159358+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 800 ms
+2026-10-28 14:21:13.160089+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 806 ms
+2026-10-28 14:21:13.160820+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 812 ms
+2026-10-28 14:21:13.161551+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 999 ms
+2026-10-28 14:21:13.162282+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 804 ms
+2026-10-28 14:21:13.163013+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 803 ms
+2026-10-28 14:21:13.163744+0100 checkers[812:20431] [computer] Computer turn at hard: first step after 801 ms
+2026-10-28 14:21:13.164475+0100 checkers[812:20431] [sound] Output latency 20.9 ms
+2026-10-28 14:21:13.165206+0100 checkers[812:20431] [PointerUI] Pointer interaction not available on this device

@@ -184,4 +184,35 @@ struct StorageTests {
     static func object(_ data: Data) throws -> NSDictionary {
         try #require(try JSONSerialization.jsonObject(with: data) as? NSDictionary)
     }
+
+    /// The steps `DeviceSessionUITests` plays from scripts/device-session-game.json, a position
+    /// found by a throwaway search over seeded games (specs/008-release-1-0/research.md R5):
+    /// Light e1–f2 (by tap), Dark e5–f4, Light c3–d4 (by drag), Dark f4–g3, Light f2–h4 (a
+    /// capture), Dark b6–c5, then Light d4–b6–d8, a two-jump chain that crowns.
+    static let deviceSessionSteps = [
+        ("e1", "f2"), ("e5", "f4"), ("c3", "d4"), ("f4", "g3"), ("f2", "h4"), ("b6", "c5"),
+        ("d4", "b6"), ("b6", "d8"),
+    ]
+
+    @Test("US2 FR-012: the device session's saved game is valid and plays its steps")
+    func deviceSessionGame() throws {
+        let file = URL(filePath: #filePath).deletingLastPathComponent()
+            .deletingLastPathComponent().deletingLastPathComponent()
+            .appending(path: "scripts/device-session-game.json")
+        let game = try SavedGame.decoding(Data(contentsOf: file))
+        #expect(game.setup.opponent == .twoPlayers)
+        #expect(game.playerSide == nil)
+        var state = game.state
+        #expect(state.sideToMove == .light)
+
+        var results: [StepResult] = []
+        for (from, to) in Self.deviceSessionSteps {
+            results.append(try state.apply(Step(from, to)))
+        }
+        #expect(results.prefix(4).allSatisfy { $0.captured == nil && !$0.crowned })
+        #expect(results[4].captured != nil && !results[4].turnContinues)
+        #expect(results[6].captured != nil && results[6].turnContinues)
+        #expect(results[7].captured != nil && results[7].crowned && !results[7].turnContinues)
+        #expect(state.outcome == .inProgress)
+    }
 }

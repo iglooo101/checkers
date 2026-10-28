@@ -46,9 +46,11 @@ final class AudioSoundPlayer: SoundPlayer {
     }
 
     func play(_ effect: SoundEffect) {
+        // Read here, on the main actor, so the bank's delay line counts the hop to the bank too.
+        let requestedAt = ContinuousClock.now
         Task { [weak self, bank] in
             do throws(SoundError) {
-                try await bank.play(effect)
+                try await bank.play(effect, requestedAt: requestedAt)
                 self?.isAvailable = true
             } catch {
                 self?.failed(error)

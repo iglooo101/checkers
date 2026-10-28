@@ -22,6 +22,7 @@
         "name" : "checkersUITests"
       },
       "skippedTests" : [
+        "DeviceSessionUITests",
         "LaunchPerformanceTests",
         "ScreenshotUITests"
       ]

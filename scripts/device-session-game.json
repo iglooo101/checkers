@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "setup": {"opponent": "twoPlayers", "difficulty": "easy", "side": "light"},
+  "playerSide": null,
+  "state": {
+    "position": {"light": 1983, "dark": 3688628224, "kings": 0},
+    "sideToMove": "light",
+    "chainSquare": null,
+    "outcome": "inProgress",
+    "noProgressCount": 0,
+    "turns": []
+  }
+}

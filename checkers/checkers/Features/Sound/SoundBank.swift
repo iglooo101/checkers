@@ -1,4 +1,5 @@
 import AVFoundation
+import OSLog
 
 /// Why a sound could not play (specs/007-settings-themes-sound-and-rules/contracts/
 /// settings-and-sound.md, "When sounds cannot play").
@@ -34,7 +35,9 @@ actor SoundBank {
     }
 
     /// Sets the audio session's category and loads the four players; after a failure the bank
-    /// stays unprepared, so the next sound prepares it again.
+    /// stays unprepared, so the next sound prepares it again. Logs the system's output latency,
+    /// which the phone's sound delay check adds to each sound's start
+    /// (specs/008-release-1-0/contracts/release-tooling.md, "Device logs").
     func prepare() throws(SoundError) {
         players = [:]
         do {
@@ -42,6 +45,9 @@ actor SoundBank {
         } catch {
             throw .audioSession
         }
+        let latency = AVAudioSession.sharedInstance().outputLatency * 1_000
+        Log.sound.notice(
+            "Output latency \(latency, format: .fixed(precision: 1), privacy: .public) ms")
         var loaded: [SoundEffect: AVAudioPlayer] = [:]
         for effect in SoundEffect.allCases {
             let url = directory.appending(path: effect.fileName)
@@ -61,8 +67,11 @@ actor SoundBank {
     }
 
     /// Plays a sound from its start, preparing the bank first if it is not ready. Each sound has
-    /// its own player, so a sound starts even while another still plays (FR-019).
-    func play(_ effect: SoundEffect) throws(SoundError) {
+    /// its own player, so a sound starts even while another still plays (FR-019). Given the
+    /// moment the game asked for the sound, it logs how long the start took ("Device logs").
+    func play(
+        _ effect: SoundEffect, requestedAt: ContinuousClock.Instant? = nil
+    ) throws(SoundError) {
         if !isPrepared {
             try prepare()
         }
@@ -71,6 +80,13 @@ actor SoundBank {
         guard player.play() else {
             players = [:]
             throw .playback(effect)
+        }
+        if let requestedAt {
+            let (seconds, attoseconds) = (ContinuousClock.now - requestedAt).components
+            let milliseconds = Double(seconds) * 1_000 + Double(attoseconds) / 1e15
+            Log.sound.notice(
+                "Sound \(effect.rawValue, privacy: .public) started \(milliseconds, format: .fixed(precision: 1), privacy: .public) ms after its step"
+            )
         }
     }
 
