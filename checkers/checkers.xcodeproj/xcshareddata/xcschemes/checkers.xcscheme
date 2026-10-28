@@ -50,6 +50,9 @@
          <TestPlanReference
             reference = "container:Performance.xctestplan">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:Screenshots.xctestplan">
+         </TestPlanReference>
       </TestPlans>
    </TestAction>
    <LaunchAction

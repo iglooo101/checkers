@@ -1,0 +1,27 @@
+{
+  "configurations" : [
+    {
+      "id" : "047AF071-172D-488B-82BF-D377F334A4B0",
+      "name" : "Configuration 1",
+      "options" : {}
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "language" : "en",
+    "region" : "US"
+  },
+  "testTargets" : [
+    {
+      "selectedTests" : [
+        "ScreenshotUITests"
+      ],
+      "target" : {
+        "containerPath" : "container:checkers.xcodeproj",
+        "identifier" : "7E570013307AC4A2001AE686",
+        "name" : "checkersUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

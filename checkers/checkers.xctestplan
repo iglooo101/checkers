@@ -22,7 +22,8 @@
         "name" : "checkersUITests"
       },
       "skippedTests" : [
-        "LaunchPerformanceTests"
+        "LaunchPerformanceTests",
+        "ScreenshotUITests"
       ]
     },
     {
