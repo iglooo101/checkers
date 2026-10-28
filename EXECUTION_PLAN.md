@@ -1138,3 +1138,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   (325 blocking tests; the sound test took 13.2 s, beyond its old wait), `main` fast-forwarded,
   posted on #185, #181 and #182, which stay In Progress. The release tooling and these docs
   pushed next, one full run.
+- 2026-10-28: Session close-out: this plan reviewed against the close-out checklist (board
+  matches: 147/156 tasks, 10 In Progress; Next up, Risks and the change log current), and
+  `HANDOFF.md` updated (current state, the session's lessons, next steps). The release tooling
+  (`ba1b928`) was in CI at the end of the session; this close-out stays a local commit until
+  that run is green, so it cannot cancel it (`HANDOFF.md`, Next steps 1).

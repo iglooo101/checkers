@@ -209,10 +209,12 @@ Last updated: 2026-10-28
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
-  in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done, and in F8.1 #179
-  (traceability) and #192 (diagnostics) are done, and in F8.2 #206 (the engine's speed check on
-  the development Mac); in F8.3 #184 and #185 (US4) are In Progress; the rest of F8.1–F8.3
-  comes next (38/41 features, 147/156 tasks; #205 added for validation).
+  in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done; in F8.1 #179
+  (traceability) and #192 (diagnostics) are done and #177 and #178 wait for the owner's checks;
+  in F8.2 #206 (the engine's speed check on the development Mac) is done and #181 and #182 (US2)
+  wait for the phone (T021); in F8.3 #184 to #187 (icon, store page, TestFlight, submission) are
+  In Progress, their code written and waiting for the owner and Apple; #205 (validation) is open
+  (38/41 features, 147/156 tasks, 10 items In Progress).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -1078,6 +1080,9 @@ Last updated: 2026-10-28
   script does, and lets a refusal check that the stub was never called.
 - **`xcodebuild` prints its whole command line** ("Command line invocation"), so secrets passed as
   arguments must be filtered from its output (`release.sh upload` pipes it through `sed`).
+- **A close-out during a code run stays local**: pushing Markdown on top of a running code run
+  cancels it and the docs-only run turns the gate green without testing the code; commit the
+  close-out, push it after the code run is green.
 
 ## Next steps
 
@@ -1085,13 +1090,20 @@ Last updated: 2026-10-28
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Land the release tooling**: US4's second batch and US2's code are on `main` (`4e095e3`,
-   CI run 40772536644). The release tooling (T041–T043, T049, T050), the release checklist
-   (T042) and this close-out were pushed together with their CI run still going; find it with
-   `gh run list --branch 008-release-1-0 --limit 3` and read the gate for the branch head's full
-   SHA. If `CI gate` passed: `git push origin <sha>:refs/heads/main`, comment on #186 (T041–T043)
-   and #187 (T049, T050), both stay In Progress, and add the run to `validation.md` §8 and the
-   change log (docs only). If it failed, read the log before rerunning.
+1. **Land the release tooling, then this close-out**: US4's second batch and US2's code are on
+   `main` (`4e095e3`, CI run 40772536644). The release tooling (T041–T043, T049, T050) and the
+   release checklist (T042) were pushed as `ba1b928`, and its full CI run was still going at the
+   end of the session. This close-out is one more **local, unpushed** commit on top of it:
+   pushing it during that run would have cancelled the run and, being Markdown only, turned the
+   gate green without testing the tooling (the E6 Polish lesson). So: find the run with `gh run
+   list --branch 008-release-1-0 --limit 3` and read the gate for `ba1b928`'s full SHA (the
+   `check-runs` query in the "first E8 batch finished" lessons). If `CI gate` passed: push the
+   branch (the close-out's docs-only run takes about 20 s), read the gate for the new head, then
+   `git push origin <head sha>:refs/heads/main`; comment on #186 (T041–T043) and #187 (T049,
+   T050), both stay In Progress; add both runs to `validation.md` §8 and a line to the change
+   log (docs only). If the `ba1b928` run failed, read the log before anything else (the
+   slow-runner risk in the plan), fix through a new code commit, and push that with the
+   close-out.
 2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
    Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
    rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in
@@ -1116,17 +1128,17 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    real slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen,
    `CPU_Speed_Limit` 54, that scales to about 8 s, an estimate); time other checks in a settled
    simulator (#206 lessons).
-5. **For the user, before E8's TestFlight step**: create an App Store Connect API key (App
-   Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
+5. **For the user, before E8's TestFlight step (the longest wait now: Beta App Review, then a
+   week of external testing)**: create an App Store Connect API key (App Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
    600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract
    `release-tooling.md`); create the app record in App Store Connect with a unique store name and the
    bundle ID `Hussein-Helmy.checkers`; recruit two to five external testers, at least one new to
    checkers for the Easy playtest.
-6. **The open hand checks of E3–E7** (E3's hand-played game and largest-text review, E7's
-   VoiceOver game, E4's playtest, Home while the computer thinks and VoiceOver moves, E5's
-   app-switcher, background and Statistics checks, E6's iPhone sound checks and VoiceOver through
-   Rules and Settings) are now items of E8's release checklist (spec FR-026), run on the
-   TestFlight build; each must pass or be accepted in writing before submission.
+6. **The open hand checks of E3–E8** are the 27 rows of
+   `specs/008-release-1-0/checklists/release.md` (RC-01 to RC-27; the earlier slices'
+   `validation.md` files point to them), run on TestFlight builds; each must be passed or
+   accepted in writing on the submitted build, which `scripts/release.sh submit-check <build>`
+   enforces (FR-028).
 7. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
    `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
    Mac; any update after Apple requires the iOS 27 SDK (expected around April 2027) needs an Apple
