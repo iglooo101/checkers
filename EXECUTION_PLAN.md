@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-26 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
+Last updated: 2026-10-28 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -94,10 +94,9 @@ explains the game in seven illustrated sections.
    it. **US4 is in progress** (#184, #185): the first batch (T029, T030, T032, T033, T035) gives
    the app its scripted icon in three variants, the name "Checkers" under the icon and the
    encryption declaration, with tests for the name, the key and the plain launch screen and a
-   stricter `release.sh check` (324 blocking tests, 13 script tests); it was pushed at the
-   2026-10-26 close-out with its CI run still going: once `CI gate` is green, fast-forward `main`
-   (`HANDOFF.md`, Next steps 1). Next: US4's second batch (T031 with T039, T036, T038), then US2's
-   code. Waiting for the user: one phone sitting for T012 and T034 (icon, name, launch screen),
+   stricter `release.sh check` (324 blocking tests, 13 script tests); CI run 40432329029 was
+   green on `325b4b3` and `main` was fast-forwarded to it on 2026-10-28. Next: US4's second batch
+   (T031 with T039, T036, T038), then US2's code. Waiting for the user: one phone sitting for T012 and T034 (icon, name, launch screen),
    then T013 and T014 at the Mac; they close #177, #178 and #184.
 2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
@@ -1082,3 +1081,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   plan reviewed against the close-out checklist (board matches: 147/156 tasks, 8 In Progress;
   Next up and Risks updated). Next session starts by landing the batch (`HANDOFF.md`, Next
   steps 1).
+- 2026-10-28: US4's first batch landed: CI run 40432329029 was green on `325b4b3`
+  (`build-and-test` 31.9 minutes, 324 blocking tests; `engine-strength` 6.1 minutes) and `main`
+  was fast-forwarded to it; the batch was posted on #184 and #185, which stay In Progress (T034
+  and the rest of US4 open). Board unchanged: 147/156 tasks, 8 In Progress. Next: US4's second
+  batch (T031 with T039, T036, T038).

@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-10-26
+Last updated: 2026-10-28
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -37,9 +37,8 @@ Last updated: 2026-10-26
   v1.2.0, plan, tasks, board) is done, the first implementation batch (T001–T011) is done, and
   US3's code (T023–T027, diagnostics) landed on 2026-10-26 (`f328c30`, CI run 40272374316).
   #206's fix (T058) landed on `main` (`eb4b680`, CI run 40345930966) and #206 is closed.
-  US4's first batch (T029, T030, T032, T033, T035: icon and name) and this close-out were
-  pushed together at the end of the 2026-10-26 session, with their CI run still going (Next
-  steps 1); `main` was not fast-forwarded to them.
+  US4's first batch (T029, T030, T032, T033, T035: icon and name) landed on `main` on
+  2026-10-28 (`325b4b3`, CI run 40432329029).
   `main` follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -1007,15 +1006,8 @@ Last updated: 2026-10-26
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Land US4's first batch**: the code and this close-out were pushed together on
-   `008-release-1-0` and their full CI run was still going at the end of the session. Find it
-   with `gh run list --branch 008-release-1-0 --limit 3`, then read the gate for the branch
-   head's full SHA (the `check-runs` query in the "first E8 batch finished" lessons). If `CI
-   gate` passed: `git push origin <sha>:refs/heads/main`, comment the batch on #184 (icon, name,
-   encryption key, launch screen test; T034 open) and #185 (the release check; the rest of its
-   tasks open), both stay In Progress; add the CI run to `validation.md` §8 and a close-out line
-   to `EXECUTION_PLAN.md`'s change log (docs only, about 20 s of CI). If the run failed, read the
-   log before rerunning.
+1. **US4's first batch is landed** (2026-10-28: `main` at `325b4b3`, CI run 40432329029, posted
+   on #184 and #185, recorded in `validation.md` §8).
 2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
    Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
    rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in

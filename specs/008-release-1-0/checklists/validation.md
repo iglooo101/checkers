@@ -224,3 +224,7 @@ Before any app code of the slice, on `008-release-1-0`:
   `build-and-test` 27.9 minutes (176 app unit tests, 59 UI tests, 86 engine tests; the engine's
   SC-004 check passed, 14.0 s of wall clock) and `engine-strength` 5.3 minutes. `main`
   fast-forwarded to `f328c30`.
+- **US4, first batch** (2026-10-27, `325b4b3`, run 40432329029): `CI gate` green with both jobs:
+  `build-and-test` 31.9 minutes (179 app unit tests, 59 UI tests, 86 engine tests in 42.9 s one
+  at a time; the SC-004 count passed after 4.6 s; the launch timing test reported) and
+  `engine-strength` 6.1 minutes. `main` fast-forwarded to `325b4b3` on 2026-10-28.
