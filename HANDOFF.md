@@ -49,7 +49,10 @@ Last updated: 2026-10-28
   call returned 200). On 2026-10-29 build 1 (`363f98e`) went to TestFlight: bundle ID
   registered through the API, the owner's record (app 6828523739, "Checkers – Classic Board
   Game"), `release.sh archive 1` and `upload` (T045, processed); the listing is entered and
-  #185 is done (T037, T039, T040); build 1 is in the owner's internal TestFlight group.
+  #185 is done (T037, T039, T040); build 1 is in the owner's internal TestFlight group, and
+  the owner installed it on HKH16 (now iOS 27.2): #184 is done (T034) and T012 passed. At the
+  session's close T013 (the Organizer's privacy report) and T014 (the iPad check on a Release
+  simulator build) were under way; `main` matches the branch.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -1148,6 +1151,25 @@ Last updated: 2026-10-28
   without reading its values, and the first save of it did not take.
 - **Moving an issue to Done closes it**: the board's workflow closed #185 before `gh issue
   close`, which then reported "Could not close the issue"; check the state rather than retry.
+- **A report that is off records nothing**: the first T012 session ran with App Privacy Report
+  off, which the owner found only when Checkers was missing from it. Ask the owner to confirm
+  the report shows other apps (proof it records) before reading a missing entry as a pass, and
+  turn it on before a fresh install.
+- **Ask a yes/no question as the expected result, or use options**: "Rotation: no" answered
+  "did every screen stay in portrait?" ambiguously; a multiple-choice question ("stayed in
+  portrait" / "something rotated" / "not tested") settled it.
+- **A device archive cannot serve a simulator check**: the archive's app is arm64 `iphoneos`,
+  this Mac's simulators run x86_64, so R17's iPad check uses a Release simulator build of the
+  same code; check `lipo -info` and `DTPlatformName` before planning to install an archive's
+  app anywhere but a device.
+- **The Organizer's privacy report is in the archive row's context menu** (right-click ›
+  Generate Privacy Report), not among the Distribute and Validate buttons.
+- **The phone updates itself**: HKH16 went from iOS 27.0.1 to 27.2 between sessions
+  (`xcrun devicectl device info details` shows `osVersionNumber`); check device runs still work
+  before a measurement sitting.
+- **A Python edit script with several replacements writes nothing if one anchor misses**; a
+  commit chained after it on the next line still runs. Chain the commit with `&&` after the
+  script, or check the script's output first.
 - **A feature moves with its first task**: E8's F8.1, F8.2 and F8.3 stayed in Todo while their
   tasks were In Progress or Done, and `update_plan.py --check` cannot see that (it compares the
   plan with the board, not the board with itself). When a task starts, move its feature (and
@@ -1159,26 +1181,28 @@ Last updated: 2026-10-28
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the user: one phone sitting with build 1 from TestFlight**. Build 1
-   (`363f98e`) is in the owner's internal group ("checkers test flight group", one tester
-   invited, automatic distribution). On HKH16: install TestFlight from the App Store, accept the
-   invitation and install Checkers (done 2026-10-29; T034 approved on it and #184 closed; the
-   phone is now on iOS 27.2, so check that Xcode 26.3 still runs tests on it before T021).
-   Then: T012 (Settings › Privacy &
-   Security › App Privacy Report on, every screen, both kinds of game, rotation; T012's text
-   names a `device.sh launch` install; a TestFlight install of the same commit in Release is the
-   build players get, so note which was used) and the release checklist rows for build 1 (T046;
-   `checklists/release.md`, RC-01 to RC-27, each passed or accepted with a reason). Last, with
-   the phone connected and Low Power Mode off, the agent runs US2's T021 (`scripts/device.sh
-   launch`, then `session`; record every number in `validation.md` §5, and whether the hitches
-   came from the attached or a launched run; on a miss, T022). `device.sh` installs a
-   development-signed build over the TestFlight one, so do it after the TestFlight items and
-   reinstall from TestFlight afterwards. Then `release.sh record 1 "TestFlight internal"`.
-2. **For the user, at the Mac**: T013, open the build 1 archive (`open
-   .build/Release/Checkers-1.0-1.xcarchive`; it carries the icon and the name, unlike T010's)
-   in Xcode's Organizer and Generate Privacy Report; T014, the iPad smoke check on the "iPad
-   (A16) E8" simulator with that archive's app. With T012 they close #177 and #178; with T034,
-   #184.
+1. **Recommended next, for the user, at the Mac: finish T013 and T014** (minutes each, both set
+   up at the close of 2026-10-29). T013: in Xcode's Organizer (Window › Organizer › Archives),
+   right-click checkers 1.0 (1) › Generate Privacy Report, save the PDF and read it (expected:
+   no collected data, no tracking, no tracking domains, User Defaults with CA92.1 only); record
+   in `validation.md` §2. T014: the "iPad (A16) E8" simulator has a Release simulator build of
+   the same code installed fresh (rebuild it if the simulator was erased: `xcodebuild build
+   -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
+   'platform=iOS Simulator,name=iPad (A16) E8' CURRENT_PROJECT_VERSION=1`, then `simctl
+   install`); the owner launches it, plays a few moves against the computer and in a
+   two-player game, opens every screen, rotates (Device › Rotate) and resizes the window
+   (expected: works as on an iPhone, in portrait); record in `validation.md` §2 and in the
+   release checklist row. T012 passed, so T013 closes #177 and T014 closes #178.
+2. **Then, with the phone: the release checklist on build 1 (T046) and US2's measurements
+   (T021)**. On the TestFlight install, work through `checklists/release.md` (RC-01 to RC-27;
+   each passed or accepted with a reason; T012 and T034 are already done on build 1). Last,
+   with the phone connected and Low Power Mode off: first `scripts/device.sh status` and one
+   short device run, since the phone is now on iOS 27.2 and Xcode 26.3 was proven only on
+   27.0.1; then `scripts/device.sh launch` and `session` (record every number in
+   `validation.md` §5, and whether the hitches came from the attached or a launched run; on a
+   miss, T022). `device.sh` installs a development-signed build over the TestFlight one, so do
+   it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
+   record 1 "TestFlight internal"`.
 3. **The external round (T047)**: two to five external testers, at least one new to checkers
    (the rest of T044; the external group "test flight checkers outside group" has one, not
    invited); the What to Test text is already on build 1; the beta app description, feedback

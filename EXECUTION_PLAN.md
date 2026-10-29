@@ -124,16 +124,20 @@ explains the game in seven illustrated sections.
    and the listing (T039), which was entered through the API and read back, and the owner
    published the privacy label, turned off Macs and Vision Pro and gave the review contact
    (T040). The owner's internal TestFlight group has build 1. What is left without the owner
-   is the slice's polish (T053, T055–T057). Waiting for the user: one phone sitting (step 2);
-   T013 (the build 1 archive, `.build/Release/Checkers-1.0-1.xcarchive`, carries the icon and
-   the name, so it can serve) and T014 at the Mac; they close #177 and #178, and with T022,
-   #181 and #182. **#184 is done**: the owner approved the icon, the name and the launch on
-   build 1 from TestFlight (T034, 2026-10-29).
-2. **Recommended next, for the user: one phone sitting with build 1 from TestFlight** (steps in
-   `HANDOFF.md`, Next steps 1): install it on HKH16 (done; T034 approved on it), the App Privacy
-   Report session (T012), and work through `checklists/release.md` on
-   it (T046), with the phone connected for `scripts/device.sh launch` and `session` (T021).
-   Then the external round (T047): two to five external testers, at least one new to checkers
+   is the slice's polish (T053, T055–T057). **#184 is done**: the owner approved the icon, the
+   name and the launch on build 1 from TestFlight (T034, 2026-10-29). **T012 passed** the same
+   day on a fresh TestFlight install with App Privacy Report on (no prompt, portrait
+   throughout, no entry for Checkers). In progress at the close: T013 (the build 1 archive is
+   open in Xcode's Organizer; Generate Privacy Report is next) and T014 (the "iPad (A16) E8"
+   simulator has a Release simulator build of the same code installed, because the archive's
+   iPhone device build cannot run in a simulator). They close #177 and #178, and with T021 and
+   T022, #181 and #182.
+2. **Recommended next, for the user: finish T013 and T014 at the Mac, then the release
+   checklist on build 1** (steps in `HANDOFF.md`, Next steps 1 and 2): the Organizer's privacy
+   report (minutes), the iPad smoke check on the simulator already set up, then
+   `checklists/release.md` on the TestFlight install (T046) with the phone connected for
+   `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check
+   Xcode 26.3 still runs tests on it first). Then the external round (T047): two to five external testers, at least one new to checkers
    (the rest of T044; the external group has one), Beta App Review (about a day) and a week of
    testing, the longest wait left.
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
@@ -219,9 +223,13 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   is 3.6 s and only guards against regressions.
 - E8's device is the owner's iPhone 16 (2024, iPhone17,3), older than Constitution VII.1's "last
   two hardware generations"; a pass on it counts (newer models are faster), and a miss that
-  remains after profiling is decided on a newer iPhone (E8 clarify). The phone runs iOS 27.0.1:
-  Xcode 26.3 builds, installs, debugs, runs UI tests and records Instruments traces there (E8
-  research R1; the development profile is valid until 2027-10-15). Two limits: device runs must
+  remains after profiling is decided on a newer iPhone (E8 clarify). On iOS 27.0.1, Xcode 26.3
+  built, installed, debugged, ran UI tests and recorded Instruments traces there (E8 research
+  R1; the development profile is valid until 2027-10-15). By 2026-10-29 the phone had updated
+  to iOS 27.2, which is not yet tried with Xcode 26.3: run `scripts/device.sh status` and one
+  short device run before T021; if Xcode 26.3 cannot run tests on it, the measurements need
+  another route (the app's log lines through `devicectl --console` with a TestFlight install,
+  or a newer Mac). Two limits: device runs must
   use `xcodebuild test` (`test-without-building` cannot launch the app), and `xctrace export`
   crashes on iOS 27 traces, so numbers come from XCTest metrics and the app's log through
   `devicectl --console`, and traces are read in the Instruments app. Developer Mode was found
@@ -292,11 +300,6 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   `git fetch origin main:main` before comparing branches. Merged slice branches are deleted
   once the next slice's branch exists (`001-…` to `007-…` so far); the auto-mode safety check
   blocks deleting them, so the user runs it.
-- The icon waits for the owner's approval (T034). The tinted variant is the whole artwork in
-  grayscale, squares included (research R10); if iOS's tint makes it look busy, the fix is a
-  change to `make-icon.py` (for example the piece alone, as in the dark variant), then T033's
-  check again. The archive from T010 predates the icon and the name, so T013 and T014 need a
-  new one.
 - The store screenshots are files from the local iPhone 17 simulator on iOS 26.3
   (`scripts/screenshots.sh`); any change to a screen they show, to the theme colors or to the
   simulator runtime changes them. Rerun the script after such a change (a second run must report
@@ -1192,3 +1195,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   in light and dark on build 1 from TestFlight (T034; the phone is now on iOS 27.2). #184 moved
   to Done and closed (board: 149/156 tasks, 11 In Progress). Next: the App Privacy Report
   session on a fresh TestFlight install (T012).
+- 2026-10-29: T012 passed on a fresh TestFlight install of build 1 with App Privacy Report on
+  (a first try with the report off did not count): no prompt, portrait throughout, no entry
+  for Checkers. T013 and T014 started: the build 1 archive is open in the Organizer, and since
+  the archive's iPhone device build cannot run in a simulator, a Release simulator build of the
+  same code is installed on "iPad (A16) E8". Session close-out: this plan reviewed whole (board
+  matches: 38/41 features, 149/156 tasks, 11 In Progress; Next up names T013, T014 and the
+  release checklist; the resolved icon risk removed and the phone's iOS 27.2 added), and
+  `HANDOFF.md` updated (current state, the session's lessons, next steps).

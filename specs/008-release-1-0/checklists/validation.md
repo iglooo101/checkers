@@ -152,6 +152,25 @@ Before any app code of the slice, on `008-release-1-0`:
   checkers/checkers/Localizable.xcstrings .build/DerivedData` reports "String catalog is up to
   date."
 
+- **Promises on the phone** (T012, 2026-10-29, build 1 from TestFlight, `363f98e`, Release,
+  on HKH16, iPhone 16, iOS 27.2): a first session did not count, because App Privacy Report was
+  off. With the report on, the owner deleted Checkers, reinstalled build 1 from TestFlight (a
+  fresh Release install of the commit players get; T012's text names a `device.sh launch`
+  install of the same build configuration), played against the computer and a two-player game,
+  opened every screen and turned the phone to both landscape sides and upside down on each.
+  Results: no permission prompt; every screen stayed in portrait; App Privacy Report recording
+  (it listed TestFlight's own network activity from the install) with no entry for Checkers in
+  any section, so no network activity and no data or sensor access (SC-002, FR-001 to FR-003,
+  FR-005; FR-PRIV-01, FR-PRIV-02, FR-PLAT-01).
+
+- **Organizer report and iPad check, started** (T013, T014, 2026-10-29): build 1's archive is
+  open in Xcode's Organizer (listed as 1.0 (1), "Uploaded to Apple"); Generate Privacy Report
+  is the owner's next step. The archive's app is an iPhone device build (arm64, `iphoneos`),
+  which no simulator runs (this Mac's are x86_64), so R17's "the archive's app" is replaced by a
+  Release simulator build of the same code: `xcodebuild build -configuration Release` for
+  "iPad (A16) E8" (iOS 26.3), version 1.0 (1), x86_64, no app file changed since `363f98e`;
+  installed fresh on the booted simulator for the owner's smoke check.
+
 ## §3 Diagnostics on the phone (US3)
 
 - **Tests** (T023–T027, 2026-10-26): the fixtures (`Support/DiagnosticFixtures.swift`, key
