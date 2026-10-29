@@ -112,8 +112,8 @@ explains the game in seven illustrated sections.
    is written** (#186, #187; T041–T043, T049, T050): `release.sh` refuses to archive a dirty,
    unchecked or renumbered commit, uploads with the key in `../secrets` without printing it,
    records builds, and `submit-check` gates the submission on `checklists/release.md`, which
-   gathers all 27 open hand checks (T042); pushed after US2's run, it lands once its own run is
-   green (`HANDOFF.md`, Next steps 1). What
+   gathers all 27 open hand checks (T042); it landed on `main` (`ba1b928`, CI run 40777068059),
+   and #186 and #187 wait for the owner and Apple. What
    is left without the owner is the slice's polish (T053–T057). Waiting for the user: approving
    the screenshots (T037) and the listing's texts, name and copyright holder (T039), then the
    App Store Connect record (T040); one phone sitting for T012 and T034 (icon, name, launch
@@ -1143,3 +1143,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   `HANDOFF.md` updated (current state, the session's lessons, next steps). The release tooling
   (`ba1b928`) was in CI at the end of the session; this close-out stays a local commit until
   that run is green, so it cannot cancel it (`HANDOFF.md`, Next steps 1).
+- 2026-10-28: The release tooling landed: CI run 40777068059 green on `ba1b928` (16 script
+  tests, 325 blocking tests; the sound test about 5 s), pushed with the session's close-out,
+  `main` fast-forwarded, posted on #186 and #187, which stay In Progress (board unchanged:
+  147/156 tasks, 10 In Progress).

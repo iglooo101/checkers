@@ -43,8 +43,9 @@ Last updated: 2026-10-28
   three tests it did not touch; the pages themselves are on `main` (`74541c2`) and live. US2's
   code (T015–T020) and a wider wait in a sound test followed; all of it landed on `main`
   (`4e095e3`, CI run 40772536644). The release tooling (T041–T043, T049, T050) and checklist
-  (T042) were pushed at the end of the session with their CI run still going (Next steps 1).
-  `main` follows the branch head by fast-forward after each green `CI gate`.
+  (T042) landed on `main` too (`ba1b928`, CI run 40777068059, 16 script tests), with the
+  session's close-out on top. `main` follows the branch head by fast-forward after each green
+  `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -1090,20 +1091,10 @@ Last updated: 2026-10-28
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Land the release tooling, then this close-out**: US4's second batch and US2's code are on
-   `main` (`4e095e3`, CI run 40772536644). The release tooling (T041–T043, T049, T050) and the
-   release checklist (T042) were pushed as `ba1b928`, and its full CI run was still going at the
-   end of the session. This close-out is one more **local, unpushed** commit on top of it:
-   pushing it during that run would have cancelled the run and, being Markdown only, turned the
-   gate green without testing the tooling (the E6 Polish lesson). So: find the run with `gh run
-   list --branch 008-release-1-0 --limit 3` and read the gate for `ba1b928`'s full SHA (the
-   `check-runs` query in the "first E8 batch finished" lessons). If `CI gate` passed: push the
-   branch (the close-out's docs-only run takes about 20 s), read the gate for the new head, then
-   `git push origin <head sha>:refs/heads/main`; comment on #186 (T041–T043) and #187 (T049,
-   T050), both stay In Progress; add both runs to `validation.md` §8 and a line to the change
-   log (docs only). If the `ba1b928` run failed, read the log before anything else (the
-   slow-runner risk in the plan), fix through a new code commit, and push that with the
-   close-out.
+1. **Done**: the release tooling landed (`ba1b928`, CI run 40777068059 green), the close-out
+   with it, `main` fast-forwarded, and #186 and #187 have their comments; both stay In Progress.
+   **Recommended next**: the owner's App Store Connect setup (step 5), since Beta App Review and
+   a week of external testing are the longest wait left; steps 2 and 3 can run meanwhile.
 2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
    Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
    rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in

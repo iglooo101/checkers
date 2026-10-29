@@ -304,3 +304,9 @@ Before any app code of the slice, on `008-release-1-0`:
   59 UI tests, 86 engine tests in 34.0 s; the SC-004 count passed after 2.7 s; the sound test
   passed after 13.2 s, beyond its old 5-second wait) and `engine-strength` 6.1 minutes. `main`
   fast-forwarded to `4e095e3`; posted on #185, #181 and #182.
+- **The release tooling and checklist** (2026-10-28, `ba1b928`, run 40777068059): `CI gate`
+  green with both jobs on image 20261021.618: `build-and-test` 28.4 minutes (16 script tests,
+  among them the new `test-release-guards.sh`; 180 app unit tests in 9.9 s, 59 UI tests, 86
+  engine tests in 30.7 s; the SC-004 count passed after 2.3 s; the sound test passed in about
+  5 s) and `engine-strength` 5.6 minutes. `main` fast-forwarded past `ba1b928` with the
+  session's close-out; posted on #186 (T041–T043) and #187 (T049, T050).
