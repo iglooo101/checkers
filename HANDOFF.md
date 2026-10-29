@@ -44,8 +44,9 @@ Last updated: 2026-10-28
   code (T015–T020) and a wider wait in a sound test followed; all of it landed on `main`
   (`4e095e3`, CI run 40772536644). The release tooling (T041–T043, T049, T050) and checklist
   (T042) landed on `main` too (`ba1b928`, CI run 40777068059, 16 script tests), with the
-  session's close-out on top. `main` follows the branch head by fast-forward after each green
-  `CI gate`.
+  session's close-out on top (`main` at `654a00f`, then this close-out). The App Store Connect
+  key is not in `../secrets` yet (T044; the owner has the steps, Next steps 1). `main` follows
+  the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -1085,16 +1086,41 @@ Last updated: 2026-10-28
   cancels it and the docs-only run turns the gate green without testing the code; commit the
   close-out, push it after the code run is green.
 
+## Lessons learned (landing the release tooling, 2026-10-28)
+
+- **Save a job's log through `gh run view`**: `gh api …/actions/jobs/<id>/logs` refused to write
+  output with terminal escape sequences in it (an empty file); `gh run view <run> --job <id> --log
+  | tr -d '\033' > <scratchpad file>` saved all 9,567 lines. Get job IDs from `gh api
+  …/actions/runs/<run>/jobs`.
+- **Swift Testing's result lines interleave with the app's log lines in CI**, so a test's own
+  "passed after" can be cut off; read its time from its "started" and "✔" time stamps.
+- **Wait for a gate in the background**: foreground `sleep` is blocked; a `run_in_background`
+  loop polling the commit's `check-runs` every 10 s until `CI gate` completes notifies the
+  session when it is done.
+- **`gh issue view` takes `--comments` or `--json`, not both**; read the last comment with
+  `--json comments --jq '.comments[-1].body'`.
+- **Owner-only steps get exact steps, not attempts**: the App Store Connect key needs the
+  owner's Apple Account (two-factor) and downloads once, so the session gives the clicks and
+  the commands to run, then checks the files' names and modes without printing their values.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Done**: the release tooling landed (`ba1b928`, CI run 40777068059 green), the close-out
-   with it, `main` fast-forwarded, and #186 and #187 have their comments; both stay In Progress.
-   **Recommended next**: the owner's App Store Connect setup (step 5), since Beta App Review and
-   a week of external testing are the longest wait left; steps 2 and 3 can run meanwhile.
+1. **Recommended next, for the user: the App Store Connect key (T044)**. Every remaining E8
+   item waits on the owner, Apple or the phone, and Beta App Review plus a week of external
+   testing is the longest wait left. The steps given to the owner: App Store Connect › Users and
+   Access › Integrations › App Store Connect API › Team Keys (Request Access first if no key
+   exists; Account Holder only) › Generate API Key, name "Checkers release", Access App
+   Manager; note the Issuer ID (above the list) and the Key ID; Download (once only); then
+   `mv ~/Downloads/AuthKey_<KEY_ID>.p8 ~/Documents/secrets/`, `chmod 600` it, write
+   `appstoreconnect.txt` with `KEY_ID=` and `ISSUER_ID=` lines and `chmod 600` it. When the owner
+   says it is saved: check that both files exist with mode 600 and that the file name's Key ID
+   matches `KEY_ID=` (never print either value), record "key in place" in `validation.md` §6
+   and comment on #186. Then the app record in App Store Connect (step 5) and the first upload
+   (step 4). Steps 2 and 3 can run meanwhile.
 2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
    Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
    rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in
@@ -1119,12 +1145,10 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    real slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen,
    `CPU_Speed_Limit` 54, that scales to about 8 s, an estimate); time other checks in a settled
    simulator (#206 lessons).
-5. **For the user, before E8's TestFlight step (the longest wait now: Beta App Review, then a
-   week of external testing)**: create an App Store Connect API key (App Manager role) and save it next to `github.txt` in `../secrets` as `AuthKey_<KEY_ID>.p8` (mode
-   600) with `appstoreconnect.txt` holding `KEY_ID=` and `ISSUER_ID=` (E8 contract
-   `release-tooling.md`); create the app record in App Store Connect with a unique store name and the
-   bundle ID `Hussein-Helmy.checkers`; recruit two to five external testers, at least one new to
-   checkers for the Easy playtest.
+5. **For the user, before E8's TestFlight step**, besides the key (step 1): create the app
+   record in App Store Connect with a unique store name and the bundle ID
+   `Hussein-Helmy.checkers`; recruit two to five external testers, at least one new to checkers
+   for the Easy playtest.
 6. **The open hand checks of E3–E8** are the 27 rows of
    `specs/008-release-1-0/checklists/release.md` (RC-01 to RC-27; the earlier slices'
    `validation.md` files point to them), run on TestFlight builds; each must be passed or

@@ -119,7 +119,9 @@ explains the game in seven illustrated sections.
    App Store Connect record (T040); one phone sitting for T012 and T034 (icon, name, launch
    screen) and US2's measurements (T021: `scripts/device.sh launch` and `session`), then T013 and
    T014 at the Mac; they close #177, #178 and #184, and with T022, #181 and #182.
-2. For the user before E8's TestFlight step: an App Store Connect API key (App Manager role) saved
+2. For the user before E8's TestFlight step, and the recommended next step since Beta App Review
+   and a week of external testing are the longest wait left: an App Store Connect API key (App
+   Manager role; T044, not in place yet, steps in `HANDOFF.md`, Next steps 1) saved
    with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
    unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
    least one new to checkers.
@@ -1147,3 +1149,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   tests, 325 blocking tests; the sound test about 5 s), pushed with the session's close-out,
   `main` fast-forwarded, posted on #186 and #187, which stay In Progress (board unchanged:
   147/156 tasks, 10 In Progress).
+- 2026-10-28: Session close-out: this plan reviewed whole (board matches: 38/41 features,
+  147/156 tasks, 10 In Progress; Next up names the owner's App Store Connect key, T044, as the
+  next step; Order, Risks and the change log current), and `HANDOFF.md` updated (current state,
+  the session's lessons, next steps with the key's steps).
