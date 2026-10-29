@@ -126,11 +126,12 @@ explains the game in seven illustrated sections.
    (T040). The owner's internal TestFlight group has build 1. What is left without the owner
    is the slice's polish (T053, T055–T057). Waiting for the user: one phone sitting (step 2);
    T013 (the build 1 archive, `.build/Release/Checkers-1.0-1.xcarchive`, carries the icon and
-   the name, so it can serve) and T014 at the Mac; they close #177, #178 and #184, and with
-   T022, #181 and #182.
+   the name, so it can serve) and T014 at the Mac; they close #177 and #178, and with T022,
+   #181 and #182. **#184 is done**: the owner approved the icon, the name and the launch on
+   build 1 from TestFlight (T034, 2026-10-29).
 2. **Recommended next, for the user: one phone sitting with build 1 from TestFlight** (steps in
-   `HANDOFF.md`, Next steps 1): install it on HKH16, approve the icon, name and launch screen
-   (T034), the App Privacy Report session (T012), and work through `checklists/release.md` on
+   `HANDOFF.md`, Next steps 1): install it on HKH16 (done; T034 approved on it), the App Privacy
+   Report session (T012), and work through `checklists/release.md` on
    it (T046), with the phone connected for `scripts/device.sh launch` and `session` (T021).
    Then the external round (T047): two to five external testers, at least one new to checkers
    (the rest of T044; the external group has one), Beta App Review (about a day) and a week of
@@ -1187,3 +1188,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-10-29: Board fix: E8's started features F8.1 (#176), F8.2 (#180) and F8.3 (#183) had
   stayed in Todo while their tasks moved (two to four of their tasks done or in progress); moved
   to In Progress (board: 148/156 tasks, 12 In Progress, Todo empty).
+- 2026-10-29: #184 done: the owner approved the three icon variants, the name and the launch
+  in light and dark on build 1 from TestFlight (T034; the phone is now on iOS 27.2). #184 moved
+  to Done and closed (board: 149/156 tasks, 11 In Progress). Next: the App Privacy Report
+  session on a fresh TestFlight install (T012).

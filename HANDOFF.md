@@ -1162,9 +1162,9 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 1. **Recommended next, for the user: one phone sitting with build 1 from TestFlight**. Build 1
    (`363f98e`) is in the owner's internal group ("checkers test flight group", one tester
    invited, automatic distribution). On HKH16: install TestFlight from the App Store, accept the
-   invitation and install Checkers. Then on that install: T034 (approve the icon in light, dark
-   and tinted with Home Screen › Edit › Customize; the name reads "Checkers"; launching in light
-   and dark shows a plain screen, then Home, without a flash), T012 (Settings › Privacy &
+   invitation and install Checkers (done 2026-10-29; T034 approved on it and #184 closed; the
+   phone is now on iOS 27.2, so check that Xcode 26.3 still runs tests on it before T021).
+   Then: T012 (Settings › Privacy &
    Security › App Privacy Report on, every screen, both kinds of game, rotation; T012's text
    names a `device.sh launch` install; a TestFlight install of the same commit in Release is the
    build players get, so note which was used) and the release checklist rows for build 1 (T046;
