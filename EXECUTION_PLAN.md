@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 9/17 | In Progress |
-| | **Total** | | | | **38/41** | **148/156** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 10/17 | In Progress |
+| | **Total** | | | | **38/41** | **149/156** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -57,7 +57,6 @@ Epics are listed in execution order.
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #182 Hitch-ratio check during play and AI turns
 - #183 F8.3: App Store delivery
-- #184 App icon and launch screen
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
@@ -585,7 +584,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 9/17 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 10/17 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -610,7 +609,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F8.3 App Store delivery** (#183)
 
-- [~] #184 App icon and launch screen · M
+- [x] #184 App icon and launch screen · M
 - [x] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
 - [~] #186 TestFlight build and beta round · S
 - [~] #187 Submit for App Store review · S

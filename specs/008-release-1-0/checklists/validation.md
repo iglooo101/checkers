@@ -207,6 +207,13 @@ Before any app code of the slice, on `008-release-1-0`:
   encryption key and a version other than 1.0; the three fixture variants of
   `test-release-check.sh` passed the old check. The owner's phone check of the name and the
   launch screen in light and dark is part of T034.
+- **Icon, name and launch approved** (T034, 2026-10-29, build 1 from TestFlight, `363f98e`, on
+  HKH16, iPhone 16, now on iOS 27.2; App Store Connect showed the owner's tester state
+  `INSTALLED`): the owner looked at the three 1024 × 1024 files in Preview (store size) and at
+  the icon on the Home Screen in Light, Dark and Tinted (Edit › Customize), saw the name
+  "Checkers" under it, and launched the app after closing it in light and in dark appearance:
+  a plain screen, then Home, without a flash. Approved as it is; no change to `make-icon.py`
+  (SC-007, FR-015, FR-016, FR-017).
 - **Full checks** (2026-10-26, the batch before its push): the blocking plan with CI's
   warnings-as-errors settings passes 324 of 324 in 20 minutes (179 app unit tests, 59 UI tests,
   86 engine tests; the 6-turn count passed after 5.0 s); the strict format check and the 13
