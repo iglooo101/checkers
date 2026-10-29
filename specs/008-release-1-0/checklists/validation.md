@@ -220,6 +220,31 @@ Before any app code of the slice, on `008-release-1-0`:
   (New game, Two players, Computer, Start, Continue, Statistics; the game menu at the top
   right). `test-store-listing.sh` failed on the missing listing, then passes; it is the 14th
   script test. Open for the owner: the texts, the name and the copyright holder's name.
+- **Listing approved** (T039, 2026-10-29): the owner read `release/store-listing.md` in full and
+  approved every field as written, with the copyright "2026 Hussein Helmy"; the name was
+  already accepted by App Store Connect when the record was made. The review notes' labels were
+  checked against the string catalog again the same day (all 16 present, exact case).
+- **Listing entered** (T040, 2026-10-29, at the owner's choice through the API with the key; each
+  value parsed from `release/store-listing.md` without its comments and read back): name,
+  subtitle and privacy policy URL (app info, en-US); description, keywords, promotional text and
+  support URL (version 1.0, en-US); copyright "2026 Hussein Helmy" and manual release; category
+  Games › Board, no secondary; App Review notes, no demo account; age rating with every
+  question None or No (13 frequency, 10 yes/no; Made for Kids left unset), which Apple rates
+  `FOUR_PLUS`; price free (USA $0.00 manual, the other territories 0.00 automatically);
+  available in all 175 territories and in new ones; build 1's What to Test (en-US). All 16
+  text and setting read-backs match the file. The empty English (Canada) localization from
+  the record's creation was deleted, so only en-US remains (spec: English (U.S.) only). The
+  six approved screenshots were uploaded in order to the `APP_IPHONE_61` set (the API's type
+  for 1179 × 2556 and 1206 × 2622); Apple processed each (`COMPLETE`, 1206 × 2622, no errors;
+  the first took about 10 minutes) and each one's MD5 matches the approved file. The owner
+  set the privacy label to "Data Not Collected" and published it (the API cannot read it). The
+  owner turned off availability on Apple silicon Macs and Apple Vision Pro (the API cannot read
+  it either) and entered the App Review contact, which the API shows filled (first name, last
+  name, phone, email; their values are not recorded here). T040 is done, and with it #185.
+- **TestFlight groups** (2026-10-29, made by the owner): an internal group with automatic
+  distribution, one tester invited and build 1 in beta testing (`IN_BETA_TESTING`); an external
+  group with one tester, not invited yet, no build (external testing waits for Beta App Review,
+  T047).
 - **Public pages** (T038, 2026-10-28): `docs/index.md` and `docs/privacy.md` landed on `main` in
   `74541c2` (docs-only CI); the owner enabled Pages from `main` and `/docs` (the auto-mode safety
   check blocks that call); the first build took 36 s. `https://iglooo101.github.io/checkers/`
@@ -240,6 +265,11 @@ Before any app code of the slice, on `008-release-1-0`:
   build, the tests 75 s. Second run: "No screenshot changed.", 1.2 minutes, every file
   byte-identical (`shasum`) (FR-019). The status bar shows 9:41, full signal and a charging
   battery (`--batteryState charged`, as the contract says). The owner's approval is T037.
+- **Screenshots approved** (T037, 2026-10-29): the owner reviewed the six files in Finder and
+  approved them as they are, charging battery included. Approved files (SHA-256 prefixes):
+  `01-home` dcd55f2a0c26, `02-computer-game` 42d117d88984, `03-capture-chain` 8018787d80d9,
+  `04-king` d3a37fbd1ef2, `05-rules` 081ac80648f1, `06-statistics` 977ef4800742. A rerun of
+  `scripts/screenshots.sh` that changes any of them needs approval again before an upload.
 
 ## §5 Performance on the phone (US2)
 
@@ -277,6 +307,39 @@ Before any app code of the slice, on `008-release-1-0`:
   lists only two wildcard IDs and two old sample IDs: `Hussein-Helmy.checkers` is not
   registered yet, and App Store Connect's New App dialog offers only registered bundle IDs, so
   it is registered before the record (T040). The external testers (the rest of T044) are open.
+- **Bundle ID and record** (2026-10-29): `Hussein-Helmy.checkers` registered with the key
+  (`POST /v1/bundleIds`, 201; Apple stores it as a Universal App ID named "Checkers"). The owner
+  created the app record (T040's first half): app 6828523739, "Checkers – Classic Board Game"
+  (the listing's proposed name was free), SKU `checkers-ios`, confirmed with `GET /v1/apps`. Its
+  primary language came out English (Canada); the spec says English (U.S.), so the owner changes
+  it in App Information.
+- **First upload** (T045, 2026-10-29): build 1 archived from `363f98e` (its `CI gate` green) with
+  `release.sh archive 1`; the archive check passed. The first `release.sh upload` stopped in the
+  export before anything was sent: "Cloud signing permission error" and "No profiles for
+  'Hussein-Helmy.checkers' were found": the App Manager key may not use cloud signing, so it
+  cannot create the App Store profile. As R14 planned, the Xcode account signed in on this Mac
+  (the Account Holder) exported the archive once to a scratch folder (`destination` `export`,
+  `-allowProvisioningUpdates`, no key), which created "iOS Team Store Provisioning Profile:
+  Hussein-Helmy.checkers" (expires 2027-10-29) and signed with the Mac's Apple Distribution
+  certificate (expires 2027-10-14; `get-task-allow` false, `beta-reports-active` true). The
+  same `release.sh upload` then succeeded with the key alone ("Upload succeeded") and recorded
+  build 1 as uploaded; no log holds the key's values. So the key uploads, and the Xcode account
+  makes the profile once, again only when the profile or the certificate expires or changes.
+- **Build 1 processed** (2026-10-29): uploaded 10:35 Pacific, `VALID` by 13:37 local (about
+  2 minutes after it was listed); `usesNonExemptEncryption` false, so App Store Connect asks no
+  export-compliance question; internal state "ready for beta testing", external "ready for beta
+  submission". `release.sh record 1 processed`. T045 is done; T054's full checks ran after the
+  upload instead of before it (below).
+- **Full checks on build 1's commit** (T054, 2026-10-29, `363f98e`, run after the upload, which
+  `tasks.md` puts after them; the commit's `CI gate` had passed): `scripts/format.sh` changed no
+  file; `check-format.sh --strict`, `scripts/tests/run.sh` (16 script tests, 17 s),
+  `check-string-catalog.sh` and `traceability.py --check` pass; `scripts/test.sh` passed 325 of
+  325 tests (`xcresulttool`: none failed or skipped; the engine's 86 in 63 s; 21.5 minutes in
+  all, `CPU_Speed_Limit` 100). No compiler warning and no SwiftLint error; the only "warning"
+  lines are Xcode's `appintentsmetadataprocessor` notice "Metadata extraction skipped. No
+  AppIntents.framework dependency found.", printed for every app target without App Intents
+  (the release archive prints it too), not a warning in the project's code. Build 1 stands. T054
+  runs again before submission.
 
 ## §7 Submission (US6)
 

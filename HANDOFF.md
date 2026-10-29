@@ -46,8 +46,11 @@ Last updated: 2026-10-28
   (T042) landed on `main` too (`ba1b928`, CI run 40777068059, 16 script tests), with the
   session's close-out on top (`main` at `654a00f`, then `54fecab`). The App Store Connect key
   is in `../secrets` (T044, 2026-10-29: a Team Key with the App Manager role; a read-only API
-  call returned 200); the bundle ID `Hussein-Helmy.checkers` is not registered yet, which the
-  app record needs (Next steps 1). `main` follows
+  call returned 200). On 2026-10-29 build 1 (`363f98e`) went to TestFlight: bundle ID
+  registered through the API, the owner's record (app 6828523739, "Checkers – Classic Board
+  Game"), `release.sh archive 1` and `upload` (T045, processed); the listing is entered and
+  #185 is done (T037, T039, T040); build 1 is in the owner's internal TestFlight group.
+  `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -1105,51 +1108,90 @@ Last updated: 2026-10-28
   owner's Apple Account (two-factor) and downloads once, so the session gives the clicks and
   the commands to run, then checks the files' names and modes without printing their values.
 
+## Lessons learned (key, record, build 1 and listing, 2026-10-29)
+
+- **Keys in Certificates, Identifiers & Profiles are not App Store Connect keys**: those are
+  for push, Sign in with Apple and the like. The upload key comes from App Store Connect ›
+  Users and Access › Integrations › App Store Connect API › Team Keys (Request Access first;
+  granted at once for an individual Account Holder).
+- **Check a new key with a read-only call**: a JWT signed with `openssl dgst -sha256 -sign`
+  (DER signature converted to raw r‖s) and Python's standard library, then `GET /v1/apps`;
+  200 proves the Key ID, issuer and key agree before any upload depends on them. The helper
+  printed statuses and safe attributes only, never the token. Python modules beside a script
+  run with `-I` need `sys.path.insert(0, <script dir>)`.
+- **Automatic signing in Xcode does not register an explicit App ID**: device runs used the
+  team's wildcard profile, so `Hussein-Helmy.checkers` did not exist and the New App dialog
+  could not offer it. `POST /v1/bundleIds` with the App Manager key registered it (Apple
+  stores it as Universal).
+- **The App Manager key uploads but cannot make the App Store profile** ("Cloud signing
+  permission error", "No profiles … were found"). One `xcodebuild -exportArchive` with
+  `destination` `export` and `-allowProvisioningUpdates` but no key used the Xcode account (the
+  Account Holder) to make the profile with the Mac's Apple Distribution certificate; after
+  that `release.sh upload` with the key worked unchanged. Processing took about 2 minutes.
+- **Read `tasks.md`'s ordering rules before an outward step**: T054 (the full local checks) was
+  due before the first upload and ran after it; it passed, so build 1 stands, but the order was
+  missed. The `appintentsmetadataprocessor` "Metadata extraction skipped" lines are an Xcode
+  notice in every build without App Intents, not a project warning.
+- **The record's language comes from the New App dialog**: the owner picked English (Canada)
+  first; changing the primary language to English (U.S.) left an empty en-CA localization,
+  which had to be deleted (`DELETE /v1/appStoreVersionLocalizations/<id>`) so only en-US
+  remains.
+- **The API enters almost the whole listing**: app info and version localizations, copyright,
+  release type, categories (`GAMES`, `GAMES_BOARD`), the review notes, the age rating
+  declaration (13 frequency answers `NONE`, 10 yes/no `false`; Apple then shows `FOUR_PLUS`),
+  the price schedule (the free USA price point, others automatic), `POST /v2/appAvailabilities`
+  with all 175 territories, What to Test (`betaBuildLocalizations`) and screenshots
+  (`APP_IPHONE_61` takes 1206 × 2622; reserve, PUT the parts, commit with the MD5; the first
+  took about 10 minutes to reach `COMPLETE`). An invalid enum value in a POST returns the list
+  of valid ones. The privacy label, the Mac and Vision Pro switches and the review contact are
+  web-only or the owner's data; the review contact can be confirmed as filled through the API
+  without reading its values, and the first save of it did not take.
+- **Moving an issue to Done closes it**: the board's workflow closed #185 before `gh issue
+  close`, which then reported "Could not close the issue"; check the state rather than retry.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the user: the bundle ID, then the app record (T040's first half)**.
-   The key is in place (T044, 2026-10-29), and Beta App Review plus a week of external testing
-   is the longest wait left. The team has only wildcard App IDs (`GET /v1/bundleIds`), and the
-   New App dialog offers only registered bundle IDs, so first: developer.apple.com ›
-   Certificates, Identifiers & Profiles › Identifiers › + › App IDs › App, description
-   "Checkers", Bundle ID Explicit `Hussein-Helmy.checkers`, no capabilities, Register. Then App
-   Store Connect › Apps › + › New App: iOS, the name from `release/store-listing.md` (a proposal
-   until T039; it stays editable until submission, and if it is taken the owner picks another
-   and it changes in the listing), English (U.S.), that bundle ID, SKU `checkers-ios`, Full
-   Access. Confirm with a read-only `GET /v1/apps` signed with the key (a stdlib and `openssl`
-   script; it printed only the status and the bundle IDs). Then the first build (step 4).
-   Steps 2 and 3 can run meanwhile.
-2. **For the user, on the phone in one sitting**: US1's T012 (a fresh Release install with
-   Settings › Privacy & Security › App Privacy Report on, every screen, both kinds of game,
-   rotation) and US4's T034 (that install now carries the icon and the name: approve the icon in
-   light, dark and tinted with Home Screen › Edit › Customize, check that the name reads
-   "Checkers" and that launching in light and dark shows a plain screen, then Home, without a
-   flash). At the Mac: T013, a new archive (`scripts/release.sh archive 0`; the T010 archive
-   predates the name and the icon) opened in Xcode with Generate Privacy Report; T014, the iPad
-   smoke check on the "iPad (A16) E8" simulator with that archive's app. Then #177 (T012, T013),
-   #178 (T014) and, with T034, #184 can close. In the same sitting, US2's T021: Low Power Mode
-   off, then `scripts/device.sh launch` and `scripts/device.sh session` (it prints whether the
-   hitches came from the attached run or from a launched one; record that in `validation.md` §5
-   with every number); on a miss, T022.
-3. **For the user, at the Mac**: approve the six screenshots in `release/screenshots/` or ask
-   for other states (T037; the status bar shows a charging battery, as the contract's
-   `--batteryState charged` gives); review `release/store-listing.md` against the FRD and approve
-   the texts and the name, and give the copyright holder's name as it should appear (T039);
-   then create the App Store Connect record and enter the listing (T040).
-4. **Without the owner only the slice's polish is left** (T053–T057), best done once the
-   owner's checks are in; T048 applies only if the beta finds a problem. With the API key in
-   `../secrets` (T044) and the app record made (step 1), the first build is
-   `scripts/release.sh archive 1`, then `upload` (T045). With #206 landed, a local `scripts/test.sh` failure on the speed check points to a
-   real slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen,
-   `CPU_Speed_Limit` 54, that scales to about 8 s, an estimate); time other checks in a settled
-   simulator (#206 lessons).
-5. **For the user, before E8's external TestFlight round**, besides the app record (step 1):
-   recruit two to five external testers, at least one new to checkers for the Easy playtest
-   (the rest of T044).
+1. **Recommended next, for the user: one phone sitting with build 1 from TestFlight**. Build 1
+   (`363f98e`) is in the owner's internal group ("checkers test flight group", one tester
+   invited, automatic distribution). On HKH16: install TestFlight from the App Store, accept the
+   invitation and install Checkers. Then on that install: T034 (approve the icon in light, dark
+   and tinted with Home Screen › Edit › Customize; the name reads "Checkers"; launching in light
+   and dark shows a plain screen, then Home, without a flash), T012 (Settings › Privacy &
+   Security › App Privacy Report on, every screen, both kinds of game, rotation; T012's text
+   names a `device.sh launch` install; a TestFlight install of the same commit in Release is the
+   build players get, so note which was used) and the release checklist rows for build 1 (T046;
+   `checklists/release.md`, RC-01 to RC-27, each passed or accepted with a reason). Last, with
+   the phone connected and Low Power Mode off, the agent runs US2's T021 (`scripts/device.sh
+   launch`, then `session`; record every number in `validation.md` §5, and whether the hitches
+   came from the attached or a launched run; on a miss, T022). `device.sh` installs a
+   development-signed build over the TestFlight one, so do it after the TestFlight items and
+   reinstall from TestFlight afterwards. Then `release.sh record 1 "TestFlight internal"`.
+2. **For the user, at the Mac**: T013, open the build 1 archive (`open
+   .build/Release/Checkers-1.0-1.xcarchive`; it carries the icon and the name, unlike T010's)
+   in Xcode's Organizer and Generate Privacy Report; T014, the iPad smoke check on the "iPad
+   (A16) E8" simulator with that archive's app. With T012 they close #177 and #178; with T034,
+   #184.
+3. **The external round (T047)**: two to five external testers, at least one new to checkers
+   (the rest of T044; the external group "test flight checkers outside group" has one, not
+   invited); the What to Test text is already on build 1; the beta app description, feedback
+   email and Beta App Review contact are still to enter; submit build 1 (or a later one) for
+   Beta App Review (about a day), then a week of testing, the longest wait left.
+4. **Without the owner only the slice's polish is left** (T053, T055–T057), best done once the
+   owner's checks are in; T048 applies only if the beta finds a problem. T054 ran on `363f98e`
+   after build 1's upload (all pass) and runs again before submission. A later build:
+   `scripts/release.sh archive <n>` then `upload`; if the export again says "Cloud signing
+   permission error", run the local export once with the Xcode account (lessons above). With
+   #206 landed, a local `scripts/test.sh` failure on the speed check points to a real slowdown
+   (alone the count takes about 4 s; even at this Mac's lowest clock seen, `CPU_Speed_Limit`
+   54, that scales to about 8 s, an estimate); time other checks in a settled simulator (#206
+   lessons).
+5. **The App Store Connect record is complete for submission except the build**: the listing,
+   screenshots, privacy label, age rating, price, availability and review contact are in
+   (`validation.md` §4); the build is chosen on the version page at submission (US6).
 6. **The open hand checks of E3–E8** are the 27 rows of
    `specs/008-release-1-0/checklists/release.md` (RC-01 to RC-27; the earlier slices'
    `validation.md` files point to them), run on TestFlight builds; each must be passed or

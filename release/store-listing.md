@@ -11,9 +11,8 @@ file stays the source when a field changes.
 ## Name
 
 Checkers – Classic Board Game
-<!-- A proposal: the store name must be unique in the App Store, so App Store Connect decides.
-If it is taken, the owner picks another and changes it here. The name under the icon stays
-"Checkers" whatever this is (FR-016). -->
+<!-- Accepted by App Store Connect when the record was made (app 6828523739, 2026-10-29) and
+approved by the owner (T039). The name under the icon stays "Checkers" (FR-016). -->
 
 ## Subtitle
 
@@ -74,7 +73,7 @@ Free (no in-app purchases), in every country and region. iPhone only: availabili
 ## Copyright
 
 2026 Hussein Helmy
-<!-- The owner's name as it should appear: to be confirmed by the owner (T039). -->
+<!-- Confirmed by the owner (T039, 2026-10-29). -->
 
 ## App Review notes
 

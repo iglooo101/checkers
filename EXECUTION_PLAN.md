@@ -42,8 +42,8 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 8/17 | In Progress |
-| | **Total** | | | | **38/41** | **147/156** | |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 9/17 | In Progress |
+| | **Total** | | | | **38/41** | **148/156** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -55,7 +55,6 @@ Epics are listed in execution order.
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #182 Hitch-ratio check during play and AI turns
 - #184 App icon and launch screen
-- #185 App Store metadata, screenshots and privacy label (Data Not Collected)
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
@@ -115,18 +114,25 @@ explains the game in seven illustrated sections.
    gathers all 27 open hand checks (T042); it landed on `main` (`ba1b928`, CI run 40777068059),
    and #186 and #187 wait for the owner and Apple. The owner's App Store Connect key is in
    place (T044, 2026-10-29: a Team Key with the App Manager role; a read-only API call returned
-   200). What is left without the owner is the slice's polish (T053–T057). Waiting for the user: approving
-   the screenshots (T037) and the listing's texts, name and copyright holder (T039), then the
-   App Store Connect record (T040); one phone sitting for T012 and T034 (icon, name, launch
-   screen) and US2's measurements (T021: `scripts/device.sh launch` and `session`), then T013 and
-   T014 at the Mac; they close #177, #178 and #184, and with T022, #181 and #182.
-2. For the user before E8's TestFlight step, and the recommended next step since Beta App Review
-   and a week of external testing are the longest wait left: register the bundle ID
-   `Hussein-Helmy.checkers` (the team has only wildcard App IDs, and App Store Connect's New
-   App dialog offers only registered ones), then create the app record with a unique store
-   name (T040's first half; steps in `HANDOFF.md`, Next steps 1); then the first build (T045).
-   Two to five external testers, at least one new to checkers, are still to be found (the rest
-   of T044).
+   200). **Build 1 is in TestFlight** (2026-10-29): the bundle ID registered through the API,
+   the owner made the record (app 6828523739, "Checkers – Classic Board Game"), `release.sh`
+   archived `363f98e` and uploaded it once the Xcode account had made the App Store profile
+   (T045; processed, no export-compliance question), and T054's full checks passed on that
+   commit afterwards (325 of 325). **#185 is done**: the owner approved the screenshots (T037)
+   and the listing (T039), which was entered through the API and read back, and the owner
+   published the privacy label, turned off Macs and Vision Pro and gave the review contact
+   (T040). The owner's internal TestFlight group has build 1. What is left without the owner
+   is the slice's polish (T053, T055–T057). Waiting for the user: one phone sitting (step 2);
+   T013 (the build 1 archive, `.build/Release/Checkers-1.0-1.xcarchive`, carries the icon and
+   the name, so it can serve) and T014 at the Mac; they close #177, #178 and #184, and with
+   T022, #181 and #182.
+2. **Recommended next, for the user: one phone sitting with build 1 from TestFlight** (steps in
+   `HANDOFF.md`, Next steps 1): install it on HKH16, approve the icon, name and launch screen
+   (T034), the App Privacy Report session (T012), and work through `checklists/release.md` on
+   it (T046), with the phone connected for `scripts/device.sh launch` and `session` (T021).
+   Then the external round (T047): two to five external testers, at least one new to checkers
+   (the rest of T044; the external group has one), Beta App Review (about a day) and a week of
+   testing, the longest wait left.
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -220,9 +226,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - The pre-push hook that refuses a push while key material is tracked works only where it is
   switched on (`git config core.hooksPath scripts/hooks`, set in this clone on 2026-10-25); CI runs
   the same check after each push. A new clone must set it before the API key exists.
-- E8 depends on the user and on Apple: the registered bundle ID, the App Store Connect record
-  and a unique store name, the external testers, Beta App Review (about a day) and App Review.
-  Tasks that wait
+- E8 depends on the user and on Apple: the phone sitting, the external testers, Beta App Review
+  (about a day) and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
   texts, screenshots, pages) does not wait.
 - The development Mac (2019 Intel MacBook Pro, macOS 15.8.1) cannot run Xcode 27 (Apple silicon
@@ -292,7 +297,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - The store screenshots are files from the local iPhone 17 simulator on iOS 26.3
   (`scripts/screenshots.sh`); any change to a screen they show, to the theme colors or to the
   simulator runtime changes them. Rerun the script after such a change (a second run must report
-  no change) and have the owner approve them again (T037) before an upload.
+  no change) and have the owner approve them again (T037) before an upload; the approved six
+  are in App Store Connect (`APP_IPHONE_61`, MD5s matching), so changed files are uploaded
+  there again too.
+- Signing for uploads: the App Manager key cannot use cloud signing, so it cannot make the App
+  Store profile; the Xcode account on this Mac made "iOS Team Store Provisioning Profile:
+  Hussein-Helmy.checkers" with one local export (`validation.md` §6), and the key uploads with
+  it. When the Apple Distribution certificate (2027-10-14) or the profile (2027-10-29) expires,
+  or on another Mac, run that export once more before `release.sh upload`.
 - CI runners differ: run 40766132938 ran on an older `macos-26-arm64` image (20261013) about
   twice as slowly as usual, and three timing-bound tests failed there: the sound test's wait
   (widened to 30 s), a lost tap on Computer in setup and an audit that did not finish in time
@@ -570,7 +582,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 8/17 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 9/17 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -596,7 +608,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 **F8.3 App Store delivery** (#183)
 
 - [~] #184 App icon and launch screen · M
-- [~] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
+- [x] #185 App Store metadata, screenshots and privacy label (Data Not Collected) · M
 - [~] #186 TestFlight build and beta round · S
 - [~] #187 Submit for App Store review · S
 - [~] #205 Validate the E8 slice and update project docs · S
@@ -1161,3 +1173,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   a read-only API call signed with it returned 200 (`validation.md` §6). The bundle ID
   `Hussein-Helmy.checkers` is not registered yet, so registering it and creating the app record
   are the next step (Next up 2). Board unchanged (147/156 tasks, 10 In Progress).
+- 2026-10-29: Build 1 in TestFlight and #185 done. `Hussein-Helmy.checkers` registered through
+  the API; the owner made the record (app 6828523739); build 1 archived from `363f98e` and
+  uploaded (T045; the key uploads, the Xcode account made the App Store profile once) and
+  processed; T054's checks passed on that commit after the upload (325 of 325). The owner
+  approved the screenshots (T037) and the listing (T039); the listing, age rating 4+, free price,
+  175 territories and the six screenshots were entered through the API and read back, and the
+  owner published the privacy label, turned off Macs and Vision Pro and gave the review contact
+  (T040). #185 moved to Done and closed (board: 148/156 tasks, 9 In Progress). Next up: the phone
+  sitting with build 1 from TestFlight.
