@@ -50,10 +50,13 @@ Epics are listed in execution order.
 
 <!-- BEGIN GENERATED: in-progress -->
 - #169 E8: Release 1.0
+- #176 F8.1: Platform and privacy verification
 - #177 Verify no network requests, no permission prompts, no account or analytics
 - #178 Verify iPhone portrait-only on devices
+- #180 F8.2: Performance
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
 - #182 Hitch-ratio check during play and AI turns
+- #183 F8.3: App Store delivery
 - #184 App icon and launch screen
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
@@ -1182,3 +1185,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   owner published the privacy label, turned off Macs and Vision Pro and gave the review contact
   (T040). #185 moved to Done and closed (board: 148/156 tasks, 9 In Progress). Next up: the phone
   sitting with build 1 from TestFlight.
+- 2026-10-29: Board fix: E8's started features F8.1 (#176), F8.2 (#180) and F8.3 (#183) had
+  stayed in Todo while their tasks moved (two to four of their tasks done or in progress); moved
+  to In Progress (board: 148/156 tasks, 12 In Progress, Todo empty).

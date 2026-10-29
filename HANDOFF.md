@@ -1148,6 +1148,10 @@ Last updated: 2026-10-28
   without reading its values, and the first save of it did not take.
 - **Moving an issue to Done closes it**: the board's workflow closed #185 before `gh issue
   close`, which then reported "Could not close the issue"; check the state rather than retry.
+- **A feature moves with its first task**: E8's F8.1, F8.2 and F8.3 stayed in Todo while their
+  tasks were In Progress or Done, and `update_plan.py --check` cannot see that (it compares the
+  plan with the board, not the board with itself). When a task starts, move its feature (and
+  epic) to In Progress in the same `board_move.py` call.
 
 ## Next steps
 
