@@ -268,6 +268,15 @@ Before any app code of the slice, on `008-release-1-0`:
   `checklists/release.md` with 27 items (T042). `test-release-guards.sh` (16 script tests) runs
   every case against a temporary repository with stub `gh` and `xcodebuild`. Nothing has been
   archived or uploaded for TestFlight yet: that needs the owner's API key (T044).
+- **Key in place** (T044, 2026-10-29): the owner requested API access (granted at once) and
+  generated a Team Key with the App Manager role. `../secrets/AuthKey_<KEY_ID>.p8` (an EC P-256
+  private key) and `../secrets/appstoreconnect.txt` (one `KEY_ID=` and one `ISSUER_ID=` line)
+  both have mode 600, the file name's Key ID matches `KEY_ID=`, and no copy is left in
+  Downloads; neither value was printed. A read-only call signed with it (`GET /v1/apps`)
+  returned HTTP 200 with no apps, so the Key ID, the issuer and the key agree. `GET /v1/bundleIds`
+  lists only two wildcard IDs and two old sample IDs: `Hussein-Helmy.checkers` is not
+  registered yet, and App Store Connect's New App dialog offers only registered bundle IDs, so
+  it is registered before the record (T040). The external testers (the rest of T044) are open.
 
 ## §7 Submission (US6)
 

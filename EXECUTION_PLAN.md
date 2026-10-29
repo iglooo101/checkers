@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-28 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
+Last updated: 2026-10-29 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -113,18 +113,20 @@ explains the game in seven illustrated sections.
    unchecked or renumbered commit, uploads with the key in `../secrets` without printing it,
    records builds, and `submit-check` gates the submission on `checklists/release.md`, which
    gathers all 27 open hand checks (T042); it landed on `main` (`ba1b928`, CI run 40777068059),
-   and #186 and #187 wait for the owner and Apple. What
-   is left without the owner is the slice's polish (T053–T057). Waiting for the user: approving
+   and #186 and #187 wait for the owner and Apple. The owner's App Store Connect key is in
+   place (T044, 2026-10-29: a Team Key with the App Manager role; a read-only API call returned
+   200). What is left without the owner is the slice's polish (T053–T057). Waiting for the user: approving
    the screenshots (T037) and the listing's texts, name and copyright holder (T039), then the
    App Store Connect record (T040); one phone sitting for T012 and T034 (icon, name, launch
    screen) and US2's measurements (T021: `scripts/device.sh launch` and `session`), then T013 and
    T014 at the Mac; they close #177, #178 and #184, and with T022, #181 and #182.
 2. For the user before E8's TestFlight step, and the recommended next step since Beta App Review
-   and a week of external testing are the longest wait left: an App Store Connect API key (App
-   Manager role; T044, not in place yet, steps in `HANDOFF.md`, Next steps 1) saved
-   with its key ID and issuer ID in `../secrets`; the app record in App Store Connect with a
-   unique store name and the bundle ID `Hussein-Helmy.checkers`; two to five external testers, at
-   least one new to checkers.
+   and a week of external testing are the longest wait left: register the bundle ID
+   `Hussein-Helmy.checkers` (the team has only wildcard App IDs, and App Store Connect's New
+   App dialog offers only registered ones), then create the app record with a unique store
+   name (T040's first half; steps in `HANDOFF.md`, Next steps 1); then the first build (T045).
+   Two to five external testers, at least one new to checkers, are still to be found (the rest
+   of T044).
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -218,8 +220,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - The pre-push hook that refuses a push while key material is tracked works only where it is
   switched on (`git config core.hooksPath scripts/hooks`, set in this clone on 2026-10-25); CI runs
   the same check after each push. A new clone must set it before the API key exists.
-- E8 depends on the user and on Apple: the API key, the App Store Connect record and a unique
-  store name, the external testers, Beta App Review (about a day) and App Review. Tasks that wait
+- E8 depends on the user and on Apple: the registered bundle ID, the App Store Connect record
+  and a unique store name, the external testers, Beta App Review (about a day) and App Review.
+  Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
   texts, screenshots, pages) does not wait.
 - The development Mac (2019 Intel MacBook Pro, macOS 15.8.1) cannot run Xcode 27 (Apple silicon
@@ -1153,3 +1156,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   147/156 tasks, 10 In Progress; Next up names the owner's App Store Connect key, T044, as the
   next step; Order, Risks and the change log current), and `HANDOFF.md` updated (current state,
   the session's lessons, next steps with the key's steps).
+- 2026-10-29: The owner's App Store Connect key is in place (T044's first half): a Team Key
+  with the App Manager role, both files in `../secrets` with mode 600 and matching Key IDs, and
+  a read-only API call signed with it returned 200 (`validation.md` §6). The bundle ID
+  `Hussein-Helmy.checkers` is not registered yet, so registering it and creating the app record
+  are the next step (Next up 2). Board unchanged (147/156 tasks, 10 In Progress).
