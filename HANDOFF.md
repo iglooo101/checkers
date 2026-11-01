@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-10-28
+Last updated: 2026-11-01
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -1225,7 +1225,13 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    `validation.md` files point to them), run on TestFlight builds; each must be passed or
    accepted in writing on the submitted build, which `scripts/release.sh submit-check <build>`
    enforces (FR-028).
-7. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
+7. **After 1.0 is submitted: E9 Online play (#207), version 1.1.** The owner approved the
+   design on 2026-11-01; it is written in #207's body (decisions, screens, code, privacy,
+   tests, open research). Start with #209 (FRD 1.4 and constitution 1.3.0: the app is no
+   longer fully offline), then `/speckit-specify` (#210) on a new branch `009-online-play`
+   from `main`, with #207's design as its input. Keep E9's code off `main` until 1.0 is
+   submitted.
+8. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
    `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
    Mac; any update after Apple requires the iOS 27 SDK (expected around April 2027) needs an Apple
    silicon Mac and Xcode 27.

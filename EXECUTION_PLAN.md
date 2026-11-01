@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-10-29 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
+Last updated: 2026-11-01 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -43,7 +43,8 @@ Epics are listed in execution order.
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
 | 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 10/17 | In Progress |
-| | **Total** | | | | **38/41** | **149/156** | |
+| 9 | E9 Online play | #207 | M6 Release 1.1 | P2 | 0/1 | 0/6 | Todo |
+| | **Total** | | | | **38/42** | **149/162** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -146,6 +147,12 @@ explains the game in seven illustrated sections.
    VoiceOver moves; E5's app-switcher and background checks; E7's VoiceOver game; E3's
    hand-played game and largest-text review. They are now items of E8's release checklist (spec
    FR-026), run on the TestFlight build before submission.
+4. **After 1.0 is submitted: E9 Online play (#207)** for version 1.1 (milestone M6). The owner
+   approved its design on 2026-11-01 (written in #207): live games against an invited friend
+   through Game Center, no own server; a lost connection ends the game with no result; no undo
+   online; a separate Online record in Statistics; sides drawn at random. F9.0 (#208) starts by
+   revising the FRD to 1.4 and the constitution to 1.3.0 (#209), since both promise a fully
+   offline app, then runs the Spec Kit flow (#210–#214) on a new branch `009-online-play`.
 
 ## Order and dependencies
 
@@ -159,6 +166,7 @@ explains the game in seven illustrated sections.
 | 6 | E5 Saving and statistics | E4 | Resume during the computer's turn and the record vs the computer need E4. |
 | 7 | E6 Settings, themes, sound and rules | E3 | Settings, themes, sound and rules act on the game screen. |
 | 8 | E8 Release 1.0 | All other epics | Verification and App Store delivery. |
+| 9 | E9 Online play | E8 | Version 1.1: added after 1.0's scope was fixed (FRD §19 excluded online play from 1.0). |
 
 E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final task order.
 
@@ -172,6 +180,8 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   entries without their screens; E6 adds the screens and the hints toggle.
 - **E7 in later epics**: themes keep the non-color cues from #166 (#144), and each new screen's
   accessibility pass adds it to the audit test #168 (#131, #142, #152).
+- **E9 after the 1.0 submission**: E9's slice starts once 1.0 is submitted, and its code reaches
+  `main` only after that, so no 1.0 build (archived from `main`'s commits) picks it up.
 
 ## Risks and open items
 
@@ -317,6 +327,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   (XCTest's limit). If the last two come back, make `startComputerGame` wait for the difficulty
   buttons and retap, and retry an audit that times out; rerun the failed jobs only after reading
   the log.
+- E9 (online play) changes 1.0's privacy promises: FR-PRIV-01, `test-no-network`, the privacy
+  page and the store's privacy answers. Open until E9's research: whether the privacy label can
+  stay "Data Not Collected" with Game Center, whether a GameKit live match triggers iOS's Local
+  Network prompt (which would break FR-PRIV-02, "no system permission"), and whether a simulator
+  can be the second player, since the owner has one iPhone and the hand check needs two
+  signed-in devices.
 
 ## Backlog
 
@@ -618,6 +634,17 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #186 TestFlight build and beta round · S
 - [~] #187 Submit for App Store review · S
 - [~] #205 Validate the E8 slice and update project docs · S
+
+### E9 Online play (#207) · M6 Release 1.1 · P2 · 0/6 tasks
+
+**F9.0 Specification (Spec Kit)** (#208) · FRD §2, §18, §19 and a new Online play section
+
+- [ ] #209 E9 Revise the FRD (1.4) and the constitution (1.3.0) for online play · S
+- [ ] #210 E9 Specify: write spec.md with /speckit-specify · S · after #209
+- [ ] #211 E9 Clarify: resolve open questions with /speckit-clarify · S
+- [ ] #212 E9 Plan: write plan.md with /speckit-plan, including the Constitution Check · S
+- [ ] #213 E9 Tasks: generate tasks.md with /speckit-tasks and check it with /speckit-analyze · S
+- [ ] #214 E9 Reconcile this epic's board tasks with tasks.md · S
 <!-- END GENERATED: backlog -->
 
 ## Change log
@@ -1203,3 +1230,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   matches: 38/41 features, 149/156 tasks, 11 In Progress; Next up names T013, T014 and the
   release checklist; the resolved icon risk removed and the phone's iOS 27.2 added), and
   `HANDOFF.md` updated (current state, the session's lessons, next steps).
+- 2026-11-01: Online play designed with the owner for version 1.1 (after 1.0, which stays
+  unchanged): live games against an invited friend through Game Center. Added milestone M6
+  Release 1.1, the board's "E9 Online play" Epic option, epic #207 (blocked by #169; the
+  approved design in its body), F9.0 #208 and its tasks #209–#214 (all Todo; #210 after #209),
+  and #207 to `update_plan.py`'s epic order (board: 38/42 features, 149/162 tasks, 11 In
+  Progress). Next up gains E9 after the 1.0 submission; a sequencing note keeps E9's code off
+  `main` until then; E9's privacy questions added to the risks.

@@ -17,7 +17,7 @@ from gh_client import REPO_ROOT, board_items, issues
 
 PLAN = REPO_ROOT / "EXECUTION_PLAN.md"
 # Execution order of the epics; keep in step with "Order and dependencies" in EXECUTION_PLAN.md.
-EPIC_ORDER = [1, 29, 57, 153, 95, 114, 132, 169]
+EPIC_ORDER = [1, 29, 57, 153, 95, 114, 132, 169, 207]
 CHECKBOX = {"Todo": " ", "In Progress": "~", "Done": "x"}
 
 
