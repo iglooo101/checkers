@@ -52,7 +52,9 @@ Last updated: 2026-11-01
   #185 is done (T037, T039, T040); build 1 is in the owner's internal TestFlight group, and
   the owner installed it on HKH16 (now iOS 27.2): #184 is done (T034) and T012 passed. At the
   session's close T013 (the Organizer's privacy report) and T014 (the iPad check on a Release
-  simulator build) were under way; `main` matches the branch.
+  simulator build) were under way; `main` matches the branch. On 2026-11-01 online play was
+  planned for 1.1 (E9, below) and that plan landed on `main` (`00728ad`, CI run 41279140804,
+  the full gate in 26 minutes because `update_plan.py` changed); T013 and T014 are still open.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -137,7 +139,7 @@ Last updated: 2026-11-01
   simulator both ways (it reports no hitch metrics at all). 325 blocking tests, 15 script tests.
   T021 (the measurements on the phone) and T022 wait for the phone. Records in
   `validation.md` §4.
-- **Device**: the owner's iPhone "HKH16" (iPhone 16, iOS 27.0.1, Developer Mode on) is connected
+- **Device**: the owner's iPhone "HKH16" (iPhone 16, now iOS 27.2, Developer Mode on) is connected
   to this Mac. On 2026-10-25 Xcode 26.3 built a Debug build, signed it automatically for team
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
   The debugger, UI tests (through `xcodebuild test`) and Instruments recording work there too;
@@ -146,6 +148,16 @@ Last updated: 2026-11-01
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
+- **Next release, 1.1: E9 Online play** (#207, milestone M6 Release 1.1, all Todo, blocked by
+  E8). Designed with the owner on 2026-11-01 and written in #207's body: live games against an
+  invited friend through Game Center (GameKit live match, no own server); a lost connection,
+  including the app being suspended, ends the game with no result; no undo online; a separate
+  Online record in Statistics (`Record` version 2, still reading 1.0's version 1); sides drawn
+  at random; a `MatchConnection` and an `OnlineMatchmaker` protocol with GameKit and fake
+  implementations; the engine judges every received turn. It conflicts with today's FRD (§2,
+  §19, FR-PRIV-01) and the constitution's "fully offline" summary, so F9.0 (#208) starts with
+  #209 (FRD 1.4, constitution 1.3.0), then the Spec Kit tasks #210–#214. It starts after the
+  1.0 submission, and its code stays off `main` until then.
 - **App**: **fully native SwiftUI** (E3): Home, Game setup, a two-player game screen (tap and
   drag, hints, chains, crowning, undo, resign, result panel, Play again), Statistics (E5), and
   since E6 Settings (board theme, sound effects and move hints) and Rules (seven sections with
@@ -1175,6 +1187,32 @@ Last updated: 2026-11-01
   plan with the board, not the board with itself). When a task starts, move its feature (and
   epic) to In Progress in the same `board_move.py` call.
 
+## Lessons learned (planning online play, 2026-11-01)
+
+- **A new feature idea starts from the FRD's scope**: "add 2 online players" ran into FRD §2
+  and §19 (online play excluded by decision), FR-PRIV-01, `test-no-network`, the privacy page
+  and the store's "Data Not Collected" label. Checking those first turned the request into a
+  release decision (1.0 or later) before any design, and the owner chose 1.1.
+- **Asking one multiple-choice question at a time, with a recommendation, worked**: release,
+  match style, opponents, approach, disconnects, undo, statistics and sides took eight
+  questions, then three design sections approved one by one.
+- **`docs/` is published**: GitHub Pages serves `/docs` from `main`, so design notes must not
+  go there (a brainstorming tool's default `docs/…/specs/` path would have published one). An
+  approved design waiting for its slice lives in the epic's issue body; Spec Kit's `specs/`
+  takes it over.
+- **Adding an option to a board single-select field replaces the whole list**:
+  `updateProjectV2Field` with `singleSelectOptions` must repeat every existing option with its
+  `id`, or items may lose their values. Counting the Epic values before and after (205 each)
+  confirmed nothing was lost.
+- **A new epic needs four things outside its issues**: a milestone, an option in the board's
+  Epic field, its number in `update_plan.py`'s `EPIC_ORDER` (otherwise the plan never shows
+  it) and a row in the plan's order table. Issues created through `gh api repos/…/issues`
+  return JSON, which `gh_client.gh` parses (`gh issue create` prints only a URL); sub-issues
+  and dependencies are the GraphQL `addSubIssue` and `addBlockedBy` mutations on node IDs.
+- **Any change under `scripts/` is code for CI**: `classify-changes.sh` sent the plan update
+  through the full gate (26 minutes) because `update_plan.py` changed. That is fine for a rare
+  change, but keep a plan-only update to Markdown when the script does not need to change.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
@@ -1208,6 +1246,10 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    invited); the What to Test text is already on build 1; the beta app description, feedback
    email and Beta App Review contact are still to enter; submit build 1 (or a later one) for
    Beta App Review (about a day), then a week of testing, the longest wait left.
+   **Recommended (2026-11-01): start it right after T013 and T014, before step 2**, so Beta
+   App Review and the testers' week run while the owner works through the checklist and the
+   measurements. The session can enter the three missing fields through the API once the owner
+   gives the description text and the email to use.
 4. **Without the owner only the slice's polish is left** (T053, T055–T057), best done once the
    owner's checks are in; T048 applies only if the beta finds a problem. T054 ran on `363f98e`
    after build 1's upload (all pass) and runs again before submission. A later build:

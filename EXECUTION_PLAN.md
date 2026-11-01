@@ -140,7 +140,10 @@ explains the game in seven illustrated sections.
    `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check
    Xcode 26.3 still runs tests on it first). Then the external round (T047): two to five external testers, at least one new to checkers
    (the rest of T044; the external group has one), Beta App Review (about a day) and a week of
-   testing, the longest wait left.
+   testing, the longest wait left. **Recommended order (2026-11-01): submit build 1 for Beta App
+   Review right after T013 and T014**, once the owner gives the beta description and feedback
+   email (the session enters them through the API), so the review and the testers' week run
+   during the checklist and T021.
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -1237,3 +1240,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   and #207 to `update_plan.py`'s epic order (board: 38/42 features, 149/162 tasks, 11 In
   Progress). Next up gains E9 after the 1.0 submission; a sequencing note keeps E9's code off
   `main` until then; E9's privacy questions added to the risks.
+- 2026-11-01: Session close-out. The E9 plan landed on `main` (`00728ad`, CI run 41279140804).
+  This plan reviewed whole: the board matches (38/42 features, 149/162 tasks, 11 In Progress;
+  E8's statuses unchanged since 2026-10-29, T013 and T014 still open); Next up recommends
+  starting the external round (T047) right after T013 and T014 so its wait overlaps the
+  checklist; risks unchanged apart from E9's. `HANDOFF.md` updated (current state with E9, the
+  phone's iOS 27.2, the session's lessons, next steps).
