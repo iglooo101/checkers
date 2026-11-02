@@ -202,6 +202,23 @@ Before any app code of the slice, on `008-release-1-0`:
   `scrolledTo` swipes until `Start` exists. Not yet known: whether `Start` shows without scrolling
   at the default text size on the iPhones. A game against the computer was reached on the
   iPhone 16 (T012).
+- **`Start` on the iPhones** (T059, #215, 2026-11-02, iOS 26.3 simulators, the default text size
+  set by launch argument, a temporary UI test that was not committed; the app's code is unchanged
+  since build 1). Frames in points, read from the UI and confirmed on the SE's and the 16e's
+  screenshots:
+
+  | Device | Window | `Start` with Computer | `Start` with Two players |
+  |---|---|---|---|
+  | iPhone SE (3rd generation) | 375 × 667 | Off screen; Random is cut by the edge (646.5 to 698.5) | Shown, 305.5 to 357.5 |
+  | iPhone 16e | 390 × 844 | Shown, 760 to 812 | Shown, 332.3 to 384.3 |
+  | iPhone 17 | 402 × 874 | Shown, 775 to 827 | Shown, 347.3 to 399.3 |
+
+  The owner reports that on their iPhone 16 (393 × 852, build 1 from TestFlight, iOS 27.2),
+  `Start` with Computer chosen does not show without scrolling. That differs from the 16e, which
+  is nearly the same size, and the cause is not known: the phone's text size or Display Zoom, or
+  iOS 27.2's layout, which this Mac cannot simulate (Xcode 26.3 has no iOS 27 runtime). The six
+  store screenshots do not show Game setup, so a change there would not affect them. The owner's
+  decision is open.
 
 ## §3 Diagnostics on the phone (US3)
 

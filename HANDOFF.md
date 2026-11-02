@@ -1238,6 +1238,14 @@ Last updated: 2026-11-02
   until told to drag the form up. Ask whether someone new to the app would see each screen's main
   action, not only whether a test can reach it. To scroll in the Simulator, attach a mouse and
   drag: the owner did not find a two-finger trackpad scroll easy.
+- **A temporary UI test measures what no committed test asserts**: a file in the synced
+  `checkersUITests` folder, `build-for-testing` once (37 s here), then `test-without-building
+  -only-testing:` per simulator; `XCTAttachment`s with `.keepAlways` carry the frames and
+  screenshots (the lint bans `print`), and `xcresulttool export attachments` reads them. Remove the
+  file afterwards. `lib.sh` sets `set -euo pipefail` in whatever sources it, and `simctl shutdown`
+  returns 149 on a simulator `xcodebuild` has already shut down, which stopped the first run.
+- **A simulator of the same size is not the phone**: at the default text size the 16e showed
+  `Start` while the owner's iPhone 16 on iOS 27.2 did not. Ask the owner to look at the phone.
 - **Read App Store Connect before planning a step there**: the plan and this file said Beta App
   Review was still to do, and the session asked the owner for the fields it needed, while the API
   showed build 1 `APPROVED` since 2026-10-29 and those fields already filled. The owner can change
@@ -1252,10 +1260,11 @@ Last updated: 2026-11-02
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the session: #215 (T059)**, before more testers join (T013 and T014
-   passed on 2026-11-02): check Game setup with Computer chosen at the default text size on the iPhone SE (3rd
-   generation) and iPhone 17 simulators, record whether `Start` shows without scrolling, and let
-   the owner decide whether to change it (FR-027). A later build repeats RC-21 on the "iPad
+1. **Recommended next, for the owner: decide #215 (T059)**, before more testers join (T013 and
+   T014 passed on 2026-11-02). `Start` on Game setup with Computer chosen is off screen on the
+   iPhone SE, shown at the bottom on the 16e and the 17, and hidden on the owner's iPhone 16 by
+   their report (`validation.md` §2). Keeping it always visible is a behavior change under
+   FR-027: `FRD.md` first, a failing test, the fix, CI and build 2. A later build repeats RC-21 on the "iPad
    (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
    -scheme checkers -configuration Release -destination 'platform=iOS Simulator,name=iPad (A16)
    E8' CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).

@@ -58,6 +58,7 @@ Epics are listed in execution order.
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
+- #215 Check that Game setup's Start is easy to find on iPhones
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -133,8 +134,8 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: check #215 (T059, the session), then a real beta description and the
-   testers (the owner).** App Store Connect shows that Beta App Review already approved build 1
+2. **Recommended next, for the owner: decide #215 (T059; checked, `validation.md` §2), then a
+   real beta description and the testers.** App Store Connect shows that Beta App Review already approved build 1
    (submitted 2026-10-29, recorded only on 2026-11-02; `validation.md` §4), so no submission is
    needed. The beta description there is a 14-character placeholder, and the external group has
    one tester invited, not yet installed, and its public link on. Left of T047: two to five
@@ -330,10 +331,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   the log.
 - Game setup's `Start` can sit below the visible part of the form with Computer chosen, with
   nothing showing that more follows: the owner did not find it in the iPad window (T014).
-  Dragging the form up reaches it. Whether it shows without scrolling at the default text size
-  on the iPhones is unchecked (#215, T059); check before inviting the external testers, since at
-  least one is new to checkers. Keeping `Start` always visible would be a behavior change under
-  FR-027: `FRD.md` first, a failing test, the fix, CI and a new build.
+  Dragging the form up reaches it. Checked at the default text size on iOS 26.3 (#215, T059,
+  `validation.md` §2): off screen on the iPhone SE, shown at the bottom on the 16e and the 17. The
+  owner reports it hidden on their iPhone 16 on iOS 27.2, which is not explained. The owner's
+  decision is open, and is best made before more testers join, since at least one is new to
+  checkers. Keeping `Start` always visible would be a behavior change under FR-027: `FRD.md`
+  first, a failing test, the fix, CI and a new build.
 - The Organizer's privacy report of build 1 is a blank PDF (T013, `validation.md` §2), and
   whether that is Xcode's normal output for an app with nothing to declare is not confirmed. It
   was accepted because the archive's one manifest is checked directly. A later build needs RC-20
@@ -646,7 +649,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #186 TestFlight build and beta round · S
 - [~] #187 Submit for App Store review · S
 - [~] #205 Validate the E8 slice and update project docs · S
-- [ ] #215 Check that Game setup's Start is easy to find on iPhones · S
+- [~] #215 Check that Game setup's Start is easy to find on iPhones · S
 
 ### E9 Online play (#207) · M6 Release 1.1 · P2 · 0/6 tasks
 
@@ -1278,3 +1281,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   review as still to do; Next up now starts at #215, then a real beta description in place of the
   placeholder and the testers. T047 stays open for the testers and the week. The board is
   unchanged.
+- 2026-11-02: #215 started (In Progress, T059) and checked: at the default text size on iOS 26.3,
+  `Start` with Computer chosen is off screen on the iPhone SE and shown at the bottom on the 16e
+  and the 17; the owner reports it hidden on their iPhone 16 on iOS 27.2, which is not explained
+  (`validation.md` §2). #215 stays In Progress for the owner's decision (board: 39/42 features,
+  151/163 tasks, 9 In Progress).
