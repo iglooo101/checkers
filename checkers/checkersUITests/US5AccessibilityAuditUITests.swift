@@ -43,11 +43,9 @@ final class US5AccessibilityAuditUITests: XCTestCase {
         if app.switches["settings.moveHints"].exists {
             return element.elementType == .staticText
         }
-        // Setup rows the scrolling form cuts at the screen's edge once the audit enlarges the
-        // text, a line or Start below the computer's choices: they scale and scroll into view,
-        // but the audit reports whichever row is cut.
-        let isSetupRow = element.elementType == .staticText || element.identifier == "setup.start"
-        return isSetupRow && app.element("setup.start").exists
+        // Setup lines the scrolling form cuts at the screen's edge once the audit enlarges the
+        // text: they scale and scroll into view, but the audit reports whichever line is cut.
+        return element.elementType == .staticText && app.element("setup.start").exists
     }
 
     /// Runs every audit type on the current screen; each problem not on the allow-list fails the

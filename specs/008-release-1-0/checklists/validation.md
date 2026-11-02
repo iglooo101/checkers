@@ -217,8 +217,24 @@ Before any app code of the slice, on `008-release-1-0`:
   `Start` with Computer chosen does not show without scrolling. That differs from the 16e, which
   is nearly the same size, and the cause is not known: the phone's text size or Display Zoom, or
   iOS 27.2's layout, which this Mac cannot simulate (Xcode 26.3 has no iOS 27 runtime). The six
-  store screenshots do not show Game setup, so a change there would not affect them. The owner's
-  decision is open.
+  store screenshots do not show Game setup, so a change there would not affect them. The owner
+  decided to keep `Start` always visible (#216).
+- **`Start` pinned below the form** (T060, #216, FR-SETUP-07, 2026-11-02): `FRD.md` 1.3.1 first,
+  then `testUS6_startStaysOnScreen`, observed failing on the iPhone 17 at the largest text size
+  and on the iPhone SE at the default size, with no app code changed. With `Start` in
+  `safeAreaInset(edge: .bottom)`, styled like Home's main button, it passes on both. The tests
+  around the screen (`US2AbandonUITests`, `US5AccessibilityAuditUITests`, `US6SetupUITests`,
+  `US7NavigationUITests`; 29 tests) pass on the iPhone 17, with `setup.start` removed from the
+  audit's allow-list.
+- **The audit on the iPhone SE** (2026-11-02): one of those 29 fails there,
+  `testUS5_auditSetupComputer`, with "Contrast failed". A probe audited the screen twice: at rest
+  it flags "Light", the row the pinned area cuts (542.5 to 594.5, the area's button from 588.5);
+  scrolled to the end it flags "Computer" and "Two players", the rows then under the navigation
+  bar, and not "Light". So the report follows whichever row sits under an edge while the colors
+  stay the same: the limit in E6 `validation.md` §6, not a contrast problem. The native
+  `safeAreaBar` was tried once and reported more (the headers too), so `safeAreaInset` stays. The
+  blocking plan runs on the iPhone 17, where it passes. The SE is not part of it, so the failure
+  stays local.
 
 ## §3 Diagnostics on the phone (US3)
 
@@ -328,6 +344,20 @@ Before any app code of the slice, on `008-release-1-0`:
   are filled (their values are not recorded here, because this repository is public). Usage so
   far: 2 installs, 8 sessions, 0 crashes, 0 feedback reports. T047's two to five testers and its
   week of testing are still ahead.
+- **Beta description and public link** (2026-11-02, the owner's choices, through the API): the
+  placeholder is replaced by this text (535 characters), read back identical; the external
+  group's public link is off; build 1 stays `APPROVED` and `IN_BETA_TESTING` afterwards.
+
+  > Checkers is American checkers for iPhone. Play against the computer at Easy, Medium or Hard,
+  > or with a friend on the same phone.
+  >
+  > It works fully offline, with no account and no analytics. Your game is saved as you play, so
+  > you can leave and continue later. Statistics keeps your record against the computer, Settings
+  > has three board themes, sound effects and move hints, and Rules explains the game with
+  > illustrations.
+  >
+  > This is a test build of version 1.0, so please tell us what works and what doesn't. What to
+  > Test lists what to try.
 - **Public pages** (T038, 2026-10-28): `docs/index.md` and `docs/privacy.md` landed on `main` in
   `74541c2` (docs-only CI); the owner enabled Pages from `main` and `/docs` (the auto-mode safety
   check blocks that call); the first build took 36 s. `https://iglooo101.github.io/checkers/`

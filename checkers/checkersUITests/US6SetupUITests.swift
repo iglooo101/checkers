@@ -35,6 +35,24 @@ final class US6SetupUITests: XCTestCase {
         XCTAssertTrue(app.scrolledTo(app.element("setup.start")).isEnabled)
     }
 
+    /// FR-SETUP-07: with Computer chosen, whose rows reach furthest, Start is on screen without
+    /// scrolling, at the default and at the largest text size.
+    @MainActor
+    func testUS6_startStaysOnScreen() {
+        for size in ["UICTContentSizeCategoryL", "UICTContentSizeCategoryAccessibilityXXXL"] {
+            let app = XCUIApplication()
+            app.launchArguments += ["-UIPreferredContentSizeCategoryName", size]
+            app.launch()
+            openSetup(in: app)
+            app.buttons["Computer"].tap()
+
+            let start = app.element("setup.start")
+            XCTAssertTrue(start.waitForExistence(timeout: 3), size)
+            XCTAssertTrue(start.isHittable, size)
+            XCTAssertTrue(app.windows.firstMatch.frame.contains(start.frame), size)
+        }
+    }
+
     @MainActor
     private func openSetup(in app: XCUIApplication) {
         let newGame = app.element("home.newGame")

@@ -59,7 +59,9 @@ Last updated: 2026-11-02
   manifest and `release.sh check` (`validation.md` §2). T014 passed the same day, so #178 and
   F8.1 (#176) closed; it found that `Start` on Game setup can be hidden (#215, T059). App Store
   Connect also shows build 1 approved by Beta App Review (submitted 2026-10-29) and in the
-  external group, which the repo had not recorded (`validation.md` §4).
+  external group, which the repo had not recorded (`validation.md` §4). The owner then approved
+  the beta description, now entered, turned off the public link, and decided to keep `Start`
+  always visible: `FRD.md` 1.3.1, FR-SETUP-07, #216, shipping in build 2.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -149,7 +151,7 @@ Last updated: 2026-11-02
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
   The debugger, UI tests (through `xcodebuild test`) and Instruments recording work there too;
   `xctrace export` does not (E8 research R1).
-- **Functional requirements**: `FRD.md` v1.3 (1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
+- **Functional requirements**: `FRD.md` v1.3.1 (1.3.1: FR-SETUP-07; 1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
@@ -1246,6 +1248,10 @@ Last updated: 2026-11-02
   returns 149 on a simulator `xcodebuild` has already shut down, which stopped the first run.
 - **A simulator of the same size is not the phone**: at the default text size the 16e showed
   `Start` while the owner's iPhone 16 on iOS 27.2 did not. Ask the owner to look at the phone.
+- **The audit flags text under an edge, whatever its colors**: on the SE, the pinned `Start` cuts
+  "Light" at rest and the audit reports contrast on it; scrolled to the end, it reports the rows
+  under the navigation bar instead. Audit twice, at rest and scrolled, before calling a contrast
+  report real. `safeAreaBar`'s fade reported more, not less.
 - **Read App Store Connect before planning a step there**: the plan and this file said Beta App
   Review was still to do, and the session asked the owner for the fields it needed, while the API
   showed build 1 `APPROVED` since 2026-10-29 and those fields already filled. The owner can change
@@ -1260,11 +1266,12 @@ Last updated: 2026-11-02
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the owner: decide #215 (T059)**, before more testers join (T013 and
-   T014 passed on 2026-11-02). `Start` on Game setup with Computer chosen is off screen on the
-   iPhone SE, shown at the bottom on the 16e and the 17, and hidden on the owner's iPhone 16 by
-   their report (`validation.md` §2). Keeping it always visible is a behavior change under
-   FR-027: `FRD.md` first, a failing test, the fix, CI and build 2. A later build repeats RC-21 on the "iPad
+1. **Recommended next: finish #216 (T060) and build 2.** The fix is in (FR-SETUP-07; `Start`
+   pinned below the form). Once `CI gate` passes and `main` is fast-forwarded: `scripts/release.sh
+   archive 2`, then `upload`, then read through the API whether build 2 needs Beta App Review,
+   add it to the external group and write its notes in `release/builds.md`. FR-027: every release
+   checklist item the fix could affect runs on build 2, among them RC-21 on the iPad simulator
+   with a new Release simulator build. The owner then looks at Game setup on the iPhone 16. A later build repeats RC-21 on the "iPad
    (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
    -scheme checkers -configuration Release -destination 'platform=iOS Simulator,name=iPad (A16)
    E8' CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
@@ -1279,10 +1286,7 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
    record 1 "TestFlight internal"`.
 3. **The external round (T047)**: Beta App Review already approved build 1 (submitted
-   2026-10-29), and What to Test, the feedback email and the review contact are filled. Left: a
-   real beta description in place of the 14-character placeholder (the session can enter the
-   owner's approved text through the API); the owner's decision on the external group's public
-   link, which is on; two to five external testers, at least one new to checkers (the rest of
+   2026-10-29), and What to Test, the feedback email and the review contact are filled. Left: two to five external testers, at least one new to checkers (the rest of
    T044; the group has one invited, not yet installed); and a week of testing, the longest wait
    left, which can run during step 2. Then `release.sh record 1 external`.
 4. **Without the owner only the slice's polish is left** (T053, T055–T057), best done once the

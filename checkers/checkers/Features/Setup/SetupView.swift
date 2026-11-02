@@ -3,7 +3,7 @@ import SwiftUI
 
 /// Game setup: the opponent and, against the computer, the difficulty and side, then Start
 /// (FR-007, FR-008). Choices are rows with check marks, which keep their full text at every text
-/// size.
+/// size. Start sits below the form, so it stays on screen without scrolling (FR-SETUP-07).
 struct SetupView: View {
     @Bindable var router: AppRouter
 
@@ -46,10 +46,21 @@ struct SetupView: View {
                     Text("Side").foregroundStyle(Color.primary)
                 }
             }
-            Section {
-                Button("Start") { router.startGame() }
-                    .accessibilityIdentifier("setup.start")
+        }
+        .safeAreaInset(edge: .bottom) {
+            Button {
+                router.startGame()
+            } label: {
+                Text("Start")
+                    .foregroundStyle(Color.onAccent)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 6)
             }
+            .buttonStyle(.borderedProminent)
+            .controlSize(.large)
+            .accessibilityIdentifier("setup.start")
+            .padding()
+            .background(Color(.systemGroupedBackground))
         }
         .navigationTitle("New game")
         .alert("Abandon current game?", isPresented: abandonBinding) {

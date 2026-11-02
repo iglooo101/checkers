@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-11-02 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
+Last updated: 2026-11-02 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.1, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -42,9 +42,9 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 12/18 | In Progress |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 13/19 | In Progress |
 | 9 | E9 Online play | #207 | M6 Release 1.1 | P2 | 0/1 | 0/6 | Todo |
-| | **Total** | | | | **39/42** | **151/163** | |
+| | **Total** | | | | **39/42** | **152/164** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -58,7 +58,7 @@ Epics are listed in execution order.
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
-- #215 Check that Game setup's Start is easy to find on iPhones
+- #216 Keep Game setup's Start always visible (FR-SETUP-07)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -134,11 +134,12 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next, for the owner: decide #215 (T059; checked, `validation.md` §2), then a
-   real beta description and the testers.** App Store Connect shows that Beta App Review already approved build 1
-   (submitted 2026-10-29, recorded only on 2026-11-02; `validation.md` §4), so no submission is
-   needed. The beta description there is a 14-character placeholder, and the external group has
-   one tester invited, not yet installed, and its public link on. Left of T047: two to five
+2. **Recommended next: build 2 with the fix for `Start` (#216, T060), then the testers.**
+   `FRD.md` 1.3.1 adds FR-SETUP-07, `Start` is pinned below the form, and build 2 ships it
+   (FR-027). App Store Connect shows that Beta App Review already approved build 1 (submitted
+   2026-10-29, recorded only on 2026-11-02; `validation.md` §4); whether build 2 needs it again
+   shows once it is uploaded. The owner's beta description is in place and the external group's
+   public link is off; the group has one tester invited, not yet installed. Left of T047: two to five
    external testers, at least one new to checkers (the rest of T044), and a week of testing, the
    longest wait left. During that week, `checklists/release.md` on the TestFlight install (T046)
    with the phone connected for `scripts/device.sh launch` and `session` (T021; the phone is now
@@ -271,8 +272,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - E7's VoiceOver game by hand (SC-001, quickstart §3) is open for the user: XCUITest cannot drive
   VoiceOver, so announcements and focus are tested through the `Announcer` seam and the session.
 - The accessibility audit allow-list has three entries, all Dynamic Type reports on system
-  components: the setup row a scrolling form cuts at the screen's edge (a line, or Start with
-  Computer chosen), the texts of system alerts (the abandon question, the restore notices), and
+  components: the setup row a scrolling form cuts at the screen's edge (a line), the texts of system alerts (the abandon question, the restore notices), and
   since E6 the Settings texts its form cuts at the bottom edge (the Game section's header and
   footer); all scale on screen. Re-check them with each new iOS and Xcode
   (`specs/004-accessibility/plan.md`, `specs/006-saving-and-statistics/plan.md`,
@@ -329,14 +329,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   (XCTest's limit). If the last two come back, make `startComputerGame` wait for the difficulty
   buttons and retap, and retry an audit that times out; rerun the failed jobs only after reading
   the log.
-- Game setup's `Start` can sit below the visible part of the form with Computer chosen, with
-  nothing showing that more follows: the owner did not find it in the iPad window (T014).
-  Dragging the form up reaches it. Checked at the default text size on iOS 26.3 (#215, T059,
-  `validation.md` §2): off screen on the iPhone SE, shown at the bottom on the 16e and the 17. The
-  owner reports it hidden on their iPhone 16 on iOS 27.2, which is not explained. The owner's
-  decision is open, and is best made before more testers join, since at least one is new to
-  checkers. Keeping `Start` always visible would be a behavior change under FR-027: `FRD.md`
-  first, a failing test, the fix, CI and a new build.
+- Game setup's `Start` is pinned below the form (FR-SETUP-07, #216): with Computer chosen it was
+  off screen on the iPhone SE and, by the owner's report, on their iPhone 16 on iOS 27.2, which
+  differs from the iPhone 16e simulator and was not explained. On a screen too short for the form,
+  the pinned area cuts a row at rest, and the accessibility audit then reports contrast on that
+  row; scrolled to the end it reports the rows under the navigation bar instead. The colors do not
+  change, so this is the audit's limit, not a contrast problem, and `safeAreaBar` reported more.
+  The blocking plan runs on the iPhone 17, where it passes; an audit of this screen on a shorter
+  device will not, including if CI's device changes (`validation.md` §2).
 - The Organizer's privacy report of build 1 is a blank PDF (T013, `validation.md` §2), and
   whether that is Xcode's normal output for an app with nothing to declare is not confirmed. It
   was accepted because the archive's one manifest is checked directly. A later build needs RC-20
@@ -619,7 +619,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 12/18 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 13/19 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -649,7 +649,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #186 TestFlight build and beta round · S
 - [~] #187 Submit for App Store review · S
 - [~] #205 Validate the E8 slice and update project docs · S
-- [~] #215 Check that Game setup's Start is easy to find on iPhones · S
+- [x] #215 Check that Game setup's Start is easy to find on iPhones · S
+- [~] #216 Keep Game setup's Start always visible (FR-SETUP-07) · S
 
 ### E9 Online play (#207) · M6 Release 1.1 · P2 · 0/6 tasks
 
@@ -1286,3 +1287,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   and the 17; the owner reports it hidden on their iPhone 16 on iOS 27.2, which is not explained
   (`validation.md` §2). #215 stays In Progress for the owner's decision (board: 39/42 features,
   151/163 tasks, 9 In Progress).
+- 2026-11-02: The owner decided: keep `Start` always visible, enter the beta description, turn off
+  the public link. The last two are done through the API, and build 1 stays `APPROVED`. #215 done
+  (T059); #216 added and started (T060, F8.3 #183): `FRD.md` 1.3.1 adds FR-SETUP-07,
+  `testUS6_startStaysOnScreen` was seen failing, `Start` is pinned below the form, and `setup.start`
+  left the audit's allow-list. The SE's audit of Game setup reports contrast on the row the pinned
+  area cuts, which is the audit's limit (a risk above, `validation.md` §2). Next up: build 2. Board:
+  39/42 features, 152/164 tasks, 9 In Progress.

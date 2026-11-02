@@ -1,6 +1,8 @@
 # Functional Requirements Document: Checkers
 
-Version 1.3 · 2026-10-24
+Version 1.3.1 · 2026-11-02
+
+Changes in 1.3.1: FR-SETUP-07 added: Start stays on screen in Game setup without scrolling.
 
 Changes in 1.3: FR-SND-05 added: when sound effects are on but cannot be played, Settings
 says so and the app tries again with the next sound.
@@ -73,6 +75,8 @@ Home
 - **FR-SETUP-05** An abandoned game MUST NOT change the record.
 - **FR-SETUP-06** Every game MUST start from the standard American checkers position: 12 men per
   side on the dark squares of the three rows nearest each player, with Light to move.
+- **FR-SETUP-07** Start MUST stay on screen in Game setup without scrolling, whichever opponent is
+  chosen and at every text size.
 
 ## 6. The game screen
 
