@@ -42,9 +42,9 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 13/19 | In Progress |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 14/20 | In Progress |
 | 9 | E9 Online play | #207 | M6 Release 1.1 | P2 | 0/1 | 0/6 | Todo |
-| | **Total** | | | | **39/42** | **152/164** | |
+| | **Total** | | | | **39/42** | **153/165** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -58,7 +58,7 @@ Epics are listed in execution order.
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
-- #216 Keep Game setup's Start always visible (FR-SETUP-07)
+- #217 Fit Game setup's choices on screen without scrolling (FR-SETUP-08)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -134,14 +134,19 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next, for the owner: look at Game setup on build 2 on the iPhone 16 (#216,
-   T060), repeat the iPad check (RC-21) on the simulator already set up, and give the go-ahead to
-   submit build 2 for Beta App Review.** Build 2 (`5e23e82`, `FRD.md` 1.3.1, FR-SETUP-07, `Start`
-   pinned below the form) is uploaded and processed. Build 1 was approved by Beta App Review
-   (submitted 2026-10-29, recorded only on 2026-11-02; `validation.md` §4), but build 2 reads
-   `READY_FOR_BETA_SUBMISSION` and needs its own submission. The owner's beta description is in
-   place and the external group's public link is off; the group has one tester invited, not yet
-   installed, and only build 1. Left of T047: two to five
+2. **Recommended next: finish build 3 (#217, T061; the session), then the owner's checks on
+   it.** The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
+   hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
+   what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
+   controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
+   were seen failing and the change is written but not landed: it lands once the tests around the
+   screen and CI pass, and ships as build 3. Then the owner looks at Game setup on the iPhone 16,
+   repeats RC-21 on the iPad simulator, and gives the go-ahead to submit build 3 for Beta App
+   Review. Build 2 is uploaded and processed but goes no further than the internal groups. Build
+   1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
+   `validation.md` §4), and build 2 read `READY_FOR_BETA_SUBMISSION`, so a new build needs its own
+   submission. The owner's beta description is in place and the external group's public link is
+   off; the group has one tester invited, not yet installed, and only build 1. Left of T047: two to five
    external testers, at least one new to checkers (the rest of T044), and a week of testing, the
    longest wait left. During that week, `checklists/release.md` on the TestFlight install (T046)
    with the phone connected for `scripts/device.sh launch` and `session` (T021; the phone is now
@@ -621,7 +626,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 13/19 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 14/20 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -652,7 +657,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #187 Submit for App Store review · S
 - [~] #205 Validate the E8 slice and update project docs · S
 - [x] #215 Check that Game setup's Start is easy to find on iPhones · S
-- [~] #216 Keep Game setup's Start always visible (FR-SETUP-07) · S
+- [x] #216 Keep Game setup's Start always visible (FR-SETUP-07) · S
+- [~] #217 Fit Game setup's choices on screen without scrolling (FR-SETUP-08) · S
 
 ### E9 Online play (#207) · M6 Release 1.1 · P2 · 0/6 tasks
 
@@ -1301,3 +1307,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   submission, on the owner's go-ahead. #216 stays In Progress until the owner confirms `Start` on
   the iPhone 16, which no simulator here can show (iOS 27.2). `main` is at the fix's commit. Board:
   39/42 features, 152/164 tasks, 9 In Progress.
+- 2026-11-02: #216 done (T060; build 2). The owner's iPad check on build 2 found the Side choices
+  hidden until scrolling, and the owner chose compact choices: #217 added and started (T061, F8.3
+  #183), FR-SETUP-08 in `FRD.md` 1.3.2, to ship in build 3. Its tests were seen failing and the
+  change is written; both land after the tests and CI pass. Build 2 goes no further than the
+  internal groups. Board: 39/42 features, 153/165 tasks, 9 In Progress.

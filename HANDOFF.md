@@ -61,7 +61,9 @@ Last updated: 2026-11-02
   Connect also shows build 1 approved by Beta App Review (submitted 2026-10-29) and in the
   external group, which the repo had not recorded (`validation.md` §4). The owner then approved
   the beta description, now entered, turned off the public link, and decided to keep `Start`
-  always visible: `FRD.md` 1.3.1, FR-SETUP-07, #216, shipping in build 2.
+  always visible: `FRD.md` 1.3.1, FR-SETUP-07, #216, in build 2. The owner's iPad check on build 2
+  then found the Side choices hidden until scrolling, so the owner chose compact choices
+  (FR-SETUP-08, #217), to ship in build 3.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -1266,14 +1268,16 @@ Last updated: 2026-11-02
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the owner: confirm the fix on build 2 (#216, T060).** Build 2
-   (`5e23e82`) is uploaded and processed, and What to Test is on it. Install it from TestFlight on
-   the iPhone 16 and look at Game setup with Computer chosen: `Start` must show without scrolling,
-   which closes #216. Then RC-21 on the "iPad (A16) E8" simulator, which has a Release simulator
-   build of the same commit installed fresh. FR-027: every release checklist item the fix could
-   affect runs on build 2; `release/builds.md` says it cannot affect RC-20. Build 2 needs its own
-   Beta App Review submission for external testers (`READY_FOR_BETA_SUBMISSION`), on the owner's
-   go-ahead; add it to the external group too. A later build repeats RC-21 on the "iPad
+1. **Recommended next: finish #217 (T061) and build 3.** `FRD.md` 1.3.2 adds FR-SETUP-08, with
+   Difficulty and Side as one-line segmented controls and full rows at accessibility text sizes.
+   Its tests were seen failing and the change is written, not landed. Once the tests around the
+   screen pass locally and `CI gate` passes: fast-forward `main`, `scripts/release.sh archive 3`,
+   then `upload`, enter What to Test (the listing's text; a new build starts empty), and write its
+   notes in `release/builds.md`. Then the owner installs it from TestFlight and looks at Game setup
+   on the iPhone 16 (`Start` and every choice without scrolling), which closes #217, and repeats
+   RC-21 on the "iPad (A16) E8" simulator with a new Release simulator build. FR-027: every release
+   checklist item the fix could affect runs on build 3. It needs its own Beta App Review submission
+   for external testers, on the owner's go-ahead; add it to the external group too. A later build repeats RC-21 on the "iPad
    (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
    -scheme checkers -configuration Release -destination 'platform=iOS Simulator,name=iPad (A16)
    E8' CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
