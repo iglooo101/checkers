@@ -91,5 +91,5 @@ not edit it by hand: after adding or renaming a test that names an FRD ID, run
 | FR-PLAT-01 | covered | `checkers/checkersUITests/US1TwoPlayerMoveUITests.swift` › testUS1_boardFitsAndShowsOnlyTheIndicator | RC-19 (open)<br>RC-21 (open)<br>RC-26 (open) |
 | FR-PLAT-02 | removed | — | — |
 | FR-PLAT-03 | covered | `checkers/checkersTests/LocalizationTests.swift` › US7 FR-PLAT-03: every user-facing string comes from the string catalog | — |
-| FR-PRIV-01 | covered | `checkers/checkersTests/PrivacyManifestTests.swift` › US5 FR-PRIV-01: privacy manifest declares no tracking and no collected data | RC-19 (open)<br>RC-20 (open)<br>RC-26 (open) |
+| FR-PRIV-01 | covered | `checkers/checkersTests/PrivacyManifestTests.swift` › US5 FR-PRIV-01: privacy manifest declares no tracking and no collected data | RC-19 (open)<br>RC-20 (passed, build 1)<br>RC-26 (open) |
 | FR-PRIV-02 | covered | `checkers/checkersTests/PrivacyManifestTests.swift` › US4 FR-PRIV-02: the app asks for no permission | RC-19 (open) |

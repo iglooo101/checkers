@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-11-01
+Last updated: 2026-11-02
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -54,7 +54,9 @@ Last updated: 2026-11-01
   session's close T013 (the Organizer's privacy report) and T014 (the iPad check on a Release
   simulator build) were under way; `main` matches the branch. On 2026-11-01 online play was
   planned for 1.1 (E9, below) and that plan landed on `main` (`00728ad`, CI run 41279140804,
-  the full gate in 26 minutes because `update_plan.py` changed); T013 and T014 are still open.
+  the full gate in 26 minutes because `update_plan.py` changed). On 2026-11-02 T013 passed and
+  #177 closed: both Organizer reports are blank PDFs, accepted by the owner on the archive's
+  manifest and `release.sh check` (`validation.md` §2); T014 is open.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -1213,24 +1215,37 @@ Last updated: 2026-11-01
   through the full gate (26 minutes) because `update_plan.py` changed. That is fine for a rare
   change, but keep a plan-only update to Markdown when the script does not need to change.
 
+## Lessons learned (T013's blank report, 2026-11-02)
+
+- **Generate Privacy Report can save a blank PDF**: 808 bytes, one page of size 0 × 0, content
+  `q Q`, the same on a second try. Read the file's contents rather than assume a viewer problem.
+  Whether blank is Xcode's normal output for an app with nothing to declare is not confirmed, so
+  the record names the archive's manifest and `release.sh check` as the evidence, and the owner
+  decided. A task's expected result can name what a tool never shows: the quickstart expected a
+  `UserDefaults` entry from a report Apple describes as organized like the privacy label.
+- **`open` on an archive the Organizer already lists adds a second copy** (`Checkers-1.0-1
+  2.xcarchive`), with the same "Uploaded to Apple" status, because that status comes from the
+  archive's own record and not from a second upload. Look in the Organizer or
+  `~/Library/Developer/Xcode/Archives/<date>` first, and open an archive only if it is missing.
+- **Recording a result in `release.md` changes `traceability.md`**, whose manual-checks column
+  reads the checklist: run `python3 scripts/traceability.py` after each recorded row, or the next
+  `--check` fails.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the user, at the Mac: finish T013 and T014** (minutes each, both set
-   up at the close of 2026-10-29). T013: in Xcode's Organizer (Window › Organizer › Archives),
-   right-click checkers 1.0 (1) › Generate Privacy Report, save the PDF and read it (expected:
-   no collected data, no tracking, no tracking domains, User Defaults with CA92.1 only); record
-   in `validation.md` §2. T014: the "iPad (A16) E8" simulator has a Release simulator build of
+1. **Recommended next, for the user, at the Mac: finish T014** (minutes; T013 passed on
+   2026-11-02). The "iPad (A16) E8" simulator has a Release simulator build of
    the same code installed fresh (rebuild it if the simulator was erased: `xcodebuild build
    -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
    'platform=iOS Simulator,name=iPad (A16) E8' CURRENT_PROJECT_VERSION=1`, then `simctl
    install`); the owner launches it, plays a few moves against the computer and in a
    two-player game, opens every screen, rotates (Device › Rotate) and resizes the window
    (expected: works as on an iPhone, in portrait); record in `validation.md` §2 and in the
-   release checklist row. T012 passed, so T013 closes #177 and T014 closes #178.
+   release checklist row (RC-21). T014 closes #178.
 2. **Then, with the phone: the release checklist on build 1 (T046) and US2's measurements
    (T021)**. On the TestFlight install, work through `checklists/release.md` (RC-01 to RC-27;
    each passed or accepted with a reason; T012 and T034 are already done on build 1). Last,
@@ -1246,7 +1261,7 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    invited); the What to Test text is already on build 1; the beta app description, feedback
    email and Beta App Review contact are still to enter; submit build 1 (or a later one) for
    Beta App Review (about a day), then a week of testing, the longest wait left.
-   **Recommended (2026-11-01): start it right after T013 and T014, before step 2**, so Beta
+   **Recommended (2026-11-01): start it right after T014, before step 2**, so Beta
    App Review and the testers' week run while the owner works through the checklist and the
    measurements. The session can enter the three missing fields through the API once the owner
    gives the description text and the email to use.

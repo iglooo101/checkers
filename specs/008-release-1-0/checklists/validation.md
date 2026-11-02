@@ -170,6 +170,25 @@ Before any app code of the slice, on `008-release-1-0`:
   Release simulator build of the same code: `xcodebuild build -configuration Release` for
   "iPad (A16) E8" (iOS 26.3), version 1.0 (1), x86_64, no app file changed since `363f98e`;
   installed fresh on the booted simulator for the owner's smoke check.
+- **Organizer report** (T013, RC-20, 2026-11-02, build 1, `363f98e`, FR-004): Generate Privacy
+  Report, from the archive's row in the Organizer (listed as 1.0 (1)), saved two PDFs, at 00:22
+  and 00:26. Both are blank: 808 bytes, one page of size 0 × 0 whose content is only `q Q`, with
+  no text. So the report lists no collected data, no tracking and no tracking domains, which is
+  what FR-004 asks, but it does not show the `UserDefaults` entry the quickstart expected. Not
+  confirmed: that a blank PDF is Xcode's normal output for an app with nothing to declare.
+  Apple's documentation does not say, and the one forum thread found
+  (developer.apple.com/forums/thread/749511) has no answer, so a consistent export fault on this
+  Mac would look the same. The evidence is therefore the archive itself: the app holds one
+  manifest and no frameworks or plug-ins; the manifest declares no tracking, no tracking domains,
+  no collected data and `UserDefaults` with CA92.1; and `scripts/release.sh check` passes on it.
+  The owner accepted this as passed. A report from a copy of the archive that declares one data
+  type would show whether the export works; it was not run, because either result leaves the
+  manifest check as this build's evidence.
+- **A duplicate in the Organizer** (2026-11-02): `open` on
+  `.build/Release/Checkers-1.0-1.xcarchive` while the Organizer already listed it added a second
+  copy, `Checkers-1.0-1 2.xcarchive`, to Xcode's Archives folder at 00:15:22. `diff -r` found no
+  difference between the two, one PDF above came from each, and the copy was deleted with the
+  owner's agreement; the original stays.
 
 ## §3 Diagnostics on the phone (US3)
 

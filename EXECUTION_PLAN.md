@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-11-01 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
+Last updated: 2026-11-02 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -42,9 +42,9 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 10/17 | In Progress |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 1/4 | 11/17 | In Progress |
 | 9 | E9 Online play | #207 | M6 Release 1.1 | P2 | 0/1 | 0/6 | Todo |
-| | **Total** | | | | **38/42** | **149/162** | |
+| | **Total** | | | | **38/42** | **150/162** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -52,7 +52,6 @@ Epics are listed in execution order.
 <!-- BEGIN GENERATED: in-progress -->
 - #169 E8: Release 1.0
 - #176 F8.1: Platform and privacy verification
-- #177 Verify no network requests, no permission prompts, no account or analytics
 - #178 Verify iPhone portrait-only on devices
 - #180 F8.2: Performance
 - #181 Cold launch under 400 ms on a recent iPhone (release build)
@@ -125,23 +124,23 @@ explains the game in seven illustrated sections.
    and the listing (T039), which was entered through the API and read back, and the owner
    published the privacy label, turned off Macs and Vision Pro and gave the review contact
    (T040). The owner's internal TestFlight group has build 1. What is left without the owner
-   is the slice's polish (T053, T055–T057). **#184 is done**: the owner approved the icon, the
+   is the slice's polish (T053, T055–T057) and T054's second run before submission. **#184 is done**: the owner approved the icon, the
    name and the launch on build 1 from TestFlight (T034, 2026-10-29). **T012 passed** the same
    day on a fresh TestFlight install with App Privacy Report on (no prompt, portrait
-   throughout, no entry for Checkers). In progress at the close: T013 (the build 1 archive is
-   open in Xcode's Organizer; Generate Privacy Report is next) and T014 (the "iPad (A16) E8"
-   simulator has a Release simulator build of the same code installed, because the archive's
-   iPhone device build cannot run in a simulator). They close #177 and #178, and with T021 and
-   T022, #181 and #182.
-2. **Recommended next, for the user: finish T013 and T014 at the Mac, then the release
-   checklist on build 1** (steps in `HANDOFF.md`, Next steps 1 and 2): the Organizer's privacy
-   report (minutes), the iPad smoke check on the simulator already set up, then
-   `checklists/release.md` on the TestFlight install (T046) with the phone connected for
+   throughout, no entry for Checkers). **T013 passed on 2026-11-02, so #177 is done**: both
+   Organizer reports are blank PDFs, which list no collected data, tracking or tracking domains,
+   and the owner accepted that on the evidence of the archive's one manifest and `release.sh
+   check` (`validation.md` §2, RC-20). T014 is open (the "iPad (A16) E8" simulator has a Release
+   simulator build of the same code installed, because the archive's iPhone device build cannot
+   run in a simulator). T014 closes #178, and T021 and T022 close #181 and #182.
+2. **Recommended next, for the user: finish T014 at the Mac, then the release checklist on
+   build 1** (steps in `HANDOFF.md`, Next steps 1 and 2): the iPad smoke check on the simulator
+   already set up, then `checklists/release.md` on the TestFlight install (T046) with the phone connected for
    `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check
    Xcode 26.3 still runs tests on it first). Then the external round (T047): two to five external testers, at least one new to checkers
    (the rest of T044; the external group has one), Beta App Review (about a day) and a week of
    testing, the longest wait left. **Recommended order (2026-11-01): submit build 1 for Beta App
-   Review right after T013 and T014**, once the owner gives the beta description and feedback
+   Review right after T014**, once the owner gives the beta description and feedback
    email (the session enters them through the API), so the review and the testers' week run
    during the checklist and T021.
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
@@ -330,6 +329,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   (XCTest's limit). If the last two come back, make `startComputerGame` wait for the difficulty
   buttons and retap, and retry an audit that times out; rerun the failed jobs only after reading
   the log.
+- The Organizer's privacy report of build 1 is a blank PDF (T013, `validation.md` §2), and
+  whether that is Xcode's normal output for an app with nothing to declare is not confirmed. It
+  was accepted because the archive's one manifest is checked directly. A later build needs RC-20
+  again unless its notes say it cannot affect it, and a build that declares any data or adds an
+  SDK's manifest must not rely on a blank report.
 - E9 (online play) changes 1.0's privacy promises: FR-PRIV-01, `test-no-network`, the privacy
   page and the store's privacy answers. Open until E9's research: whether the privacy label can
   stay "Data Not Collected" with Game Center, whether a GameKit live match triggers iOS's Local
@@ -607,7 +611,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 10/17 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 11/17 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -619,7 +623,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 
 **F8.1 Platform and privacy verification** (#176) · FR-PLAT-01, FR-PLAT-03, FR-PRIV-01, FR-PRIV-02
 
-- [~] #177 Verify no network requests, no permission prompts, no account or analytics · S
+- [x] #177 Verify no network requests, no permission prompts, no account or analytics · S
 - [~] #178 Verify iPhone portrait-only on devices · S
 - [x] #179 FRD traceability check: every FR ID covered by a test or a manual check · S
 - [x] #192 Add a MetricKit diagnostics subscriber for crashes and hangs · S
@@ -1246,3 +1250,12 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   starting the external round (T047) right after T013 and T014 so its wait overlaps the
   checklist; risks unchanged apart from E9's. `HANDOFF.md` updated (current state with E9, the
   phone's iOS 27.2, the session's lessons, next steps).
+- 2026-11-02: T013 passed on build 1 and #177 is done (moved to Done and closed; board: 38/42
+  features, 150/162 tasks, 10 In Progress). Both Generate Privacy Report PDFs are blank, which
+  lists no collected data, tracking or tracking domains; whether that is Xcode's normal output is
+  not confirmed, and the owner accepted it on the evidence of the archive's one manifest and
+  `release.sh check` (`validation.md` §2; RC-20 recorded and the traceability matrix regenerated).
+  An `open` of the archive added an identical duplicate to the Organizer, deleted with the owner's
+  agreement. `device.sh status` passes on iOS 27.2 with Developer Mode on; the short device run
+  before T021 is still to come. This plan reviewed: T054's second run added to what is left
+  without the owner, Next up now starts at T014, the blank report added to the risks.

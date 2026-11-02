@@ -40,8 +40,10 @@ launch screen.
 3. App Privacy Report › Checkers. Expected: no network activity, no data or sensor access.
 4. Archive and check: `scripts/release.sh archive <build>` (runs `check`). Expected: the check
    passes. Open the archive (`open .build/Release/Checkers-1.0-<build>.xcarchive`, which adds it
-   to Xcode's Organizer), then Generate Privacy Report for it. Expected: no collected
-   data, no tracking, no tracking domains; `UserDefaults` with CA92.1 only.
+   to Xcode's Organizer; opening one it already lists adds a second copy), then right-click its
+   row › Generate Privacy Report and read the PDF. Expected: no collected data, no tracking, no
+   tracking domains. Build 1's PDF was blank, which lists none of them (`validation.md` §2), so
+   `UserDefaults` with CA92.1 only is confirmed by the check, not by the report.
 5. iPad smoke check (FR-005): on the "iPad (A16) E8" simulator, install the same build's app,
    launch it, play a few moves against the computer and in a two-player game, open every screen,
    rotate (Device › Rotate) and resize the window. Expected: it works as on an iPhone, in
