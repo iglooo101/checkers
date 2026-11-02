@@ -57,7 +57,9 @@ Last updated: 2026-11-02
   the full gate in 26 minutes because `update_plan.py` changed). On 2026-11-02 T013 passed and
   #177 closed: both Organizer reports are blank PDFs, accepted by the owner on the archive's
   manifest and `release.sh check` (`validation.md` §2). T014 passed the same day, so #178 and
-  F8.1 (#176) closed; it found that `Start` on Game setup can be hidden (#215, T059).
+  F8.1 (#176) closed; it found that `Start` on Game setup can be hidden (#215, T059). App Store
+  Connect also shows build 1 approved by Beta App Review (submitted 2026-10-29) and in the
+  external group, which the repo had not recorded (`validation.md` §4).
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -1236,6 +1238,13 @@ Last updated: 2026-11-02
   until told to drag the form up. Ask whether someone new to the app would see each screen's main
   action, not only whether a test can reach it. To scroll in the Simulator, attach a mouse and
   drag: the owner did not find a two-finger trackpad scroll easy.
+- **Read App Store Connect before planning a step there**: the plan and this file said Beta App
+  Review was still to do, and the session asked the owner for the fields it needed, while the API
+  showed build 1 `APPROVED` since 2026-10-29 and those fields already filled. The owner can change
+  the record on the web at any time, so a `GET` comes first (`betaAppLocalizations`,
+  `betaAppReviewSubmissions?filter[build]=`, `buildBetaDetail`, the groups' `betaTesters`). Print
+  counts and states only: this repository is public, so testers' details, the feedback email and
+  the public link stay out of it.
 
 ## Next steps
 
@@ -1243,10 +1252,8 @@ Last updated: 2026-11-02
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the owner: give the beta description and feedback email** (step 3
-   below; T013 and T014 passed on 2026-11-02), so the session can enter them and, on the owner's
-   go-ahead, submit build 1 for Beta App Review. **Before inviting the testers, #215 (T059)**:
-   check Game setup with Computer chosen at the default text size on the iPhone SE (3rd
+1. **Recommended next, for the session: #215 (T059)**, before more testers join (T013 and T014
+   passed on 2026-11-02): check Game setup with Computer chosen at the default text size on the iPhone SE (3rd
    generation) and iPhone 17 simulators, record whether `Start` shows without scrolling, and let
    the owner decide whether to change it (FR-027). A later build repeats RC-21 on the "iPad
    (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
@@ -1262,15 +1269,13 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    miss, T022). `device.sh` installs a development-signed build over the TestFlight one, so do
    it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
    record 1 "TestFlight internal"`.
-3. **The external round (T047)**: two to five external testers, at least one new to checkers
-   (the rest of T044; the external group "test flight checkers outside group" has one, not
-   invited); the What to Test text is already on build 1; the beta app description, feedback
-   email and Beta App Review contact are still to enter; submit build 1 (or a later one) for
-   Beta App Review (about a day), then a week of testing, the longest wait left.
-   **Recommended (2026-11-01): start it now, before step 2**, so Beta
-   App Review and the testers' week run while the owner works through the checklist and the
-   measurements. The session can enter the three missing fields through the API once the owner
-   gives the description text and the email to use.
+3. **The external round (T047)**: Beta App Review already approved build 1 (submitted
+   2026-10-29), and What to Test, the feedback email and the review contact are filled. Left: a
+   real beta description in place of the 14-character placeholder (the session can enter the
+   owner's approved text through the API); the owner's decision on the external group's public
+   link, which is on; two to five external testers, at least one new to checkers (the rest of
+   T044; the group has one invited, not yet installed); and a week of testing, the longest wait
+   left, which can run during step 2. Then `release.sh record 1 external`.
 4. **Without the owner only the slice's polish is left** (T053, T055–T057), best done once the
    owner's checks are in; T048 applies only if the beta finds a problem. T054 ran on `363f98e`
    after build 1's upload (all pass) and runs again before submission. A later build:

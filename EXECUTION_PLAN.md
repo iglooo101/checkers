@@ -133,16 +133,16 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next, for the user: the beta description and feedback email, then the release
-   checklist on build 1** (steps in `HANDOFF.md`, Next steps 1 and 2): `checklists/release.md`
-   on the TestFlight install (T046) with the phone connected for
-   `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check
-   Xcode 26.3 still runs tests on it first). Then the external round (T047): two to five external testers, at least one new to checkers
-   (the rest of T044; the external group has one), Beta App Review (about a day) and a week of
-   testing, the longest wait left. **Recommended order (2026-11-01): submit build 1 for Beta App
-   Review now**, once the owner gives the beta description and feedback email (the session
-   enters them through the API), so the review and the testers' week run during the checklist
-   and T021, and check #215 (T059) before inviting the testers.
+2. **Recommended next: check #215 (T059, the session), then a real beta description and the
+   testers (the owner).** App Store Connect shows that Beta App Review already approved build 1
+   (submitted 2026-10-29, recorded only on 2026-11-02; `validation.md` §4), so no submission is
+   needed. The beta description there is a 14-character placeholder, and the external group has
+   one tester invited, not yet installed, and its public link on. Left of T047: two to five
+   external testers, at least one new to checkers (the rest of T044), and a week of testing, the
+   longest wait left. During that week, `checklists/release.md` on the TestFlight install (T046)
+   with the phone connected for `scripts/device.sh launch` and `session` (T021; the phone is now
+   on iOS 27.2, so check Xcode 26.3 still runs tests on it first). Steps in `HANDOFF.md`, Next
+   steps 1 to 3.
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -249,8 +249,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - The pre-push hook that refuses a push while key material is tracked works only where it is
   switched on (`git config core.hooksPath scripts/hooks`, set in this clone on 2026-10-25); CI runs
   the same check after each push. A new clone must set it before the API key exists.
-- E8 depends on the user and on Apple: the phone sitting, the external testers, Beta App Review
-  (about a day) and App Review. Tasks that wait
+- E8 depends on the user and on Apple: the phone sitting, the external testers and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
   texts, screenshots, pages) does not wait.
 - The development Mac (2019 Intel MacBook Pro, macOS 15.8.1) cannot run Xcode 27 (Apple silicon
@@ -1273,3 +1272,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   up: added #215 (T059, F8.3 #183, Todo) to check the iPhones before the external testers are
   invited, and a risk (board: 39/42 features, 151/163 tasks, 8 In Progress). Next up now starts at
   the beta description and feedback email.
+- 2026-11-02: Correction from App Store Connect, read through the API: build 1's Beta App Review
+  was submitted on 2026-10-29 and is `APPROVED`, and the external group has the build, with one
+  tester invited and its public link on (`validation.md` §4). This plan and `HANDOFF.md` had the
+  review as still to do; Next up now starts at #215, then a real beta description in place of the
+  placeholder and the testers. T047 stays open for the testers and the week. The board is
+  unchanged.

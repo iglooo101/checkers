@@ -303,6 +303,14 @@ Before any app code of the slice, on `008-release-1-0`:
   distribution, one tester invited and build 1 in beta testing (`IN_BETA_TESTING`); an external
   group with one tester, not invited yet, no build (external testing waits for Beta App Review,
   T047).
+- **Beta App Review, found done** (read from the API on 2026-11-02; not recorded at the time):
+  build 1 was submitted on 2026-10-29 at 11:33 Pacific, its review state is `APPROVED` and its
+  `externalBuildState` is `IN_BETA_TESTING`. The external group has build 1, one tester invited by
+  email who has not installed it, and its public link on. The beta description in App Store
+  Connect is a placeholder of 14 characters; the feedback email and the Beta App Review contact
+  are filled (their values are not recorded here, because this repository is public). Usage so
+  far: 2 installs, 8 sessions, 0 crashes, 0 feedback reports. T047's two to five testers and its
+  week of testing are still ahead.
 - **Public pages** (T038, 2026-10-28): `docs/index.md` and `docs/privacy.md` landed on `main` in
   `74541c2` (docs-only CI); the owner enabled Pages from `main` and `/docs` (the auto-mode safety
   check blocks that call); the first build took 36 s. `https://iglooo101.github.io/checkers/`
