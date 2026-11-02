@@ -139,8 +139,8 @@ explains the game in seven illustrated sections.
    hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
    what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
    controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
-   were seen failing and pass on the iPhone 17 and the SE, and it ships as build 3 once `CI gate`
-   passes. Then the owner looks at Game setup on the iPhone 16,
+   were seen failing and pass on the iPhone 17 and the SE (`b1de6e2`, CI run 41415993172), and it
+   ships as build 3 once that run's `CI gate` passes. Then the owner looks at Game setup on the iPhone 16,
    repeats RC-21 on the iPad simulator, and gives the go-ahead to submit build 3 for Beta App
    Review. Build 2 is uploaded and processed but goes no further than the internal groups. Build
    1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
@@ -300,6 +300,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Code CI runs take 24–32 minutes by the end of E6 (`build-and-test` within its 45-minute limit
   since #204; the UI tests alone about 17 minutes), and a push cancels the running one; push once
   per story. If E8's tests bring it near 45 minutes, shorten the UI tests before raising it.
+- A docs-only push cancels a running code CI on the same branch (`cancel-in-progress`), and that
+  docs-only commit then passes `CI gate` with the tests skipped. `release.sh archive` checks only
+  HEAD's gate, so it would archive code whose tests never finished. Hold every push while a code
+  run is going, and before an archive confirm the gate of the last commit that changed code
+  (`git log -1 -- checkers`). The last two code runs took 34 minutes or so, a little over the range
+  above.
 - CI pins Xcode 26.3 on GitHub's `macos-26` image; if the image drops it, CI fails until the pin
   and the development Mac are updated together.
 - The engine's move generation is only moderately fast in Debug builds: the 6-turn reference
@@ -1317,3 +1323,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-02: #217's change is written and tested: all 33 tests around Game setup pass on the
   iPhone 17 and the SE, including the SE's audit (`validation.md` §2). It lands with `FRD.md` 1.3.2,
   and build 3 follows once `CI gate` passes.
+- 2026-11-02: Session close-out. This plan reviewed against the board and App Store Connect: 39/42
+  features, 153/165 tasks, 9 In Progress. Next up starts at build 3 (#217), then the owner's checks
+  on it, the go-ahead for its Beta App Review, and the testers. The risks gain the cancelled-CI trap.
+  `HANDOFF.md` updated (current state, the session's lessons, next steps). `b1de6e2`'s CI run
+  41415993172 was still running when this was written.

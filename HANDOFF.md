@@ -63,7 +63,10 @@ Last updated: 2026-11-02
   the beta description, now entered, turned off the public link, and decided to keep `Start`
   always visible: `FRD.md` 1.3.1, FR-SETUP-07, #216, in build 2. The owner's iPad check on build 2
   then found the Side choices hidden until scrolling, so the owner chose compact choices
-  (FR-SETUP-08, #217), to ship in build 3.
+  (FR-SETUP-08, #217), to ship in build 3. At the session's close `b1de6e2` holds that change,
+  with CI run 41415993172 still running; build 2 is in the internal groups only; the external group
+  has build 1, with one tester invited and not installed, and its public link off; and "iPad (A16)
+  E8" holds a Release simulator build of build 2's code.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -1265,6 +1268,17 @@ Last updated: 2026-11-02
   `betaAppReviewSubmissions?filter[build]=`, `buildBetaDetail`, the groups' `betaTesters`). Print
   counts and states only: this repository is public, so testers' details, the feedback email and
   the public link stay out of it.
+- **The App Store Connect helper is not in the repository**: this session's calls went through
+  scratch scripts: an ES256 JWT signed with `openssl dgst -sha256 -sign` (the DER signature turned
+  into raw r‖s), with `KEY_ID` and `ISSUER_ID` from `../secrets/appstoreconnect.txt` and
+  `AuthKey_<KEY_ID>.p8`, then Python's `urllib`. The writes used: `PATCH /v1/betaAppLocalizations/<id>`
+  (`description`), `PATCH /v1/betaGroups/<id>` (`publicLinkEnabled`) and `PATCH
+  /v1/betaBuildLocalizations/<id>` (`whatsNew`; a new build has an empty one). Rewrite it in a
+  minute, or add it under `scripts/` if a later slice needs it.
+- **A push cancels a running code CI, and the docs-only gate then passes**: `ci.yml` has
+  `cancel-in-progress: true`, a docs-only commit passes `CI gate` with `build-and-test` skipped, and
+  `release.sh archive` checks only HEAD's gate. So close-out docs wait until a code run is done, and
+  before an archive the gate to confirm is the last code commit's, not only HEAD's.
 
 ## Next steps
 
@@ -1274,8 +1288,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **Recommended next: finish #217 (T061) and build 3.** `FRD.md` 1.3.2 adds FR-SETUP-08, with
    Difficulty and Side as one-line segmented controls and full rows at accessibility text sizes.
-   Its tests were seen failing and pass on the iPhone 17 and the SE. Once `CI gate` passes:
-   fast-forward `main`, `scripts/release.sh archive 3`,
+   Its tests were seen failing and pass on the iPhone 17 and the SE. First read CI run 41415993172
+   on `b1de6e2`, the last code commit. Once its `CI gate` passes: fast-forward `main`, `scripts/release.sh archive 3`,
    then `upload`, enter What to Test (the listing's text; a new build starts empty), and write its
    notes in `release/builds.md`. Then the owner installs it from TestFlight and looks at Game setup
    on the iPhone 16 (`Start` and every choice without scrolling), which closes #217, and repeats
@@ -1285,16 +1299,17 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
    -scheme checkers -configuration Release -destination 'platform=iOS Simulator,name=iPad (A16)
    E8' CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
-2. **Then, with the phone: the release checklist on build 1 (T046) and US2's measurements
-   (T021)**. On the TestFlight install, work through `checklists/release.md` (RC-01 to RC-27;
-   each passed or accepted with a reason; T012 and T034 are already done on build 1). Last,
+2. **Then, with the phone: the release checklist on the latest build (T046) and US2's
+   measurements (T021)**. On the TestFlight install, work through `checklists/release.md` (RC-01 to RC-27;
+   each passed or accepted with a reason; T012 and T034 passed on build 1, and their rows, RC-19
+   and RC-25, are still open for the latest build). Last,
    with the phone connected and Low Power Mode off: first `scripts/device.sh status` and one
    short device run, since the phone is now on iOS 27.2 and Xcode 26.3 was proven only on
    27.0.1; then `scripts/device.sh launch` and `session` (record every number in
    `validation.md` §5, and whether the hitches came from the attached or a launched run; on a
    miss, T022). `device.sh` installs a development-signed build over the TestFlight one, so do
    it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
-   record 1 "TestFlight internal"`.
+   record <n> "TestFlight internal"`.
 3. **The external round (T047)**: Beta App Review already approved build 1 (submitted
    2026-10-29), and the beta description, feedback email and review contact are filled. Build 2
    needs its own submission (step 1). Left: two to five external testers, at least one new to checkers (the rest of
