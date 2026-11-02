@@ -453,6 +453,14 @@ Before any app code of the slice, on `008-release-1-0`:
   AppIntents.framework dependency found.", printed for every app target without App Intents
   (the release archive prints it too), not a warning in the project's code. Build 1 stands. T054
   runs again before submission.
+- **Build 2** (T060, 2026-11-02, `5e23e82`, CI run 41406069069, which took 34 minutes):
+  `release.sh archive 2` with its check passing, `upload` at 03:01 local with the key (no signing
+  error, and neither key value in the log), `VALID` within three minutes, with no export-compliance
+  question. What to Test was empty on the new build and now has the listing's text, the same as
+  build 1's. The internal groups have access to all builds (`IN_BETA_TESTING`). External testing
+  reads `READY_FOR_BETA_SUBMISSION`, so build 2 needs its own Beta App Review submission, which
+  waits for the owner's go-ahead. The external group still has only build 1. A Release simulator
+  build of the same commit (version 1.0 (2)) is installed fresh on "iPad (A16) E8" for RC-21.
 
 ## §7 Submission (US6)
 

@@ -8,3 +8,4 @@ previous build and which release checklist items it cannot affect ("cannot affec
 | Build | Commit | Uploaded | State | Notes |
 |---|---|---|---|---|
 | 1 | 363f98ea615949efc73c7fea0e946b9a7cc2068f | 2026-10-29 | processed |  |
+| 2 | 5e23e82b96f75a6f5d91296c9684030b1da4c0a7 | 2026-11-02 | processed | `Start` pinned below the form in Game setup (FR-SETUP-07, #216); cannot affect RC-20 |

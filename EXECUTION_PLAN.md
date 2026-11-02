@@ -134,12 +134,14 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: build 2 with the fix for `Start` (#216, T060), then the testers.**
-   `FRD.md` 1.3.1 adds FR-SETUP-07, `Start` is pinned below the form, and build 2 ships it
-   (FR-027). App Store Connect shows that Beta App Review already approved build 1 (submitted
-   2026-10-29, recorded only on 2026-11-02; `validation.md` §4); whether build 2 needs it again
-   shows once it is uploaded. The owner's beta description is in place and the external group's
-   public link is off; the group has one tester invited, not yet installed. Left of T047: two to five
+2. **Recommended next, for the owner: look at Game setup on build 2 on the iPhone 16 (#216,
+   T060), repeat the iPad check (RC-21) on the simulator already set up, and give the go-ahead to
+   submit build 2 for Beta App Review.** Build 2 (`5e23e82`, `FRD.md` 1.3.1, FR-SETUP-07, `Start`
+   pinned below the form) is uploaded and processed. Build 1 was approved by Beta App Review
+   (submitted 2026-10-29, recorded only on 2026-11-02; `validation.md` §4), but build 2 reads
+   `READY_FOR_BETA_SUBMISSION` and needs its own submission. The owner's beta description is in
+   place and the external group's public link is off; the group has one tester invited, not yet
+   installed, and only build 1. Left of T047: two to five
    external testers, at least one new to checkers (the rest of T044), and a week of testing, the
    longest wait left. During that week, `checklists/release.md` on the TestFlight install (T046)
    with the phone connected for `scripts/device.sh launch` and `session` (T021; the phone is now
@@ -1293,4 +1295,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   `testUS6_startStaysOnScreen` was seen failing, `Start` is pinned below the form, and `setup.start`
   left the audit's allow-list. The SE's audit of Game setup reports contrast on the row the pinned
   area cuts, which is the audit's limit (a risk above, `validation.md` §2). Next up: build 2. Board:
+  39/42 features, 152/164 tasks, 9 In Progress.
+- 2026-11-02: Build 2 is uploaded and processed (`5e23e82`, CI run 41406069069, `VALID` within
+  three minutes), with What to Test entered. External testing needs its own Beta App Review
+  submission, on the owner's go-ahead. #216 stays In Progress until the owner confirms `Start` on
+  the iPhone 16, which no simulator here can show (iOS 27.2). `main` is at the fix's commit. Board:
   39/42 features, 152/164 tasks, 9 In Progress.

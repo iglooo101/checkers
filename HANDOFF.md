@@ -1266,12 +1266,14 @@ Last updated: 2026-11-02
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: finish #216 (T060) and build 2.** The fix is in (FR-SETUP-07; `Start`
-   pinned below the form). Once `CI gate` passes and `main` is fast-forwarded: `scripts/release.sh
-   archive 2`, then `upload`, then read through the API whether build 2 needs Beta App Review,
-   add it to the external group and write its notes in `release/builds.md`. FR-027: every release
-   checklist item the fix could affect runs on build 2, among them RC-21 on the iPad simulator
-   with a new Release simulator build. The owner then looks at Game setup on the iPhone 16. A later build repeats RC-21 on the "iPad
+1. **Recommended next, for the owner: confirm the fix on build 2 (#216, T060).** Build 2
+   (`5e23e82`) is uploaded and processed, and What to Test is on it. Install it from TestFlight on
+   the iPhone 16 and look at Game setup with Computer chosen: `Start` must show without scrolling,
+   which closes #216. Then RC-21 on the "iPad (A16) E8" simulator, which has a Release simulator
+   build of the same commit installed fresh. FR-027: every release checklist item the fix could
+   affect runs on build 2; `release/builds.md` says it cannot affect RC-20. Build 2 needs its own
+   Beta App Review submission for external testers (`READY_FOR_BETA_SUBMISSION`), on the owner's
+   go-ahead; add it to the external group too. A later build repeats RC-21 on the "iPad
    (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
    -scheme checkers -configuration Release -destination 'platform=iOS Simulator,name=iPad (A16)
    E8' CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
@@ -1286,9 +1288,10 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
    record 1 "TestFlight internal"`.
 3. **The external round (T047)**: Beta App Review already approved build 1 (submitted
-   2026-10-29), and What to Test, the feedback email and the review contact are filled. Left: two to five external testers, at least one new to checkers (the rest of
+   2026-10-29), and the beta description, feedback email and review contact are filled. Build 2
+   needs its own submission (step 1). Left: two to five external testers, at least one new to checkers (the rest of
    T044; the group has one invited, not yet installed); and a week of testing, the longest wait
-   left, which can run during step 2. Then `release.sh record 1 external`.
+   left, which can run during step 2. Then `release.sh record <n> external`.
 4. **Without the owner only the slice's polish is left** (T053, T055–T057), best done once the
    owner's checks are in; T048 applies only if the beta finds a problem. T054 ran on `363f98e`
    after build 1's upload (all pass) and runs again before submission. A later build:
