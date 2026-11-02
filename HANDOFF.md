@@ -56,7 +56,8 @@ Last updated: 2026-11-02
   planned for 1.1 (E9, below) and that plan landed on `main` (`00728ad`, CI run 41279140804,
   the full gate in 26 minutes because `update_plan.py` changed). On 2026-11-02 T013 passed and
   #177 closed: both Organizer reports are blank PDFs, accepted by the owner on the archive's
-  manifest and `release.sh check` (`validation.md` §2); T014 is open.
+  manifest and `release.sh check` (`validation.md` §2). T014 passed the same day, so #178 and
+  F8.1 (#176) closed; it found that `Start` on Game setup can be hidden (#215, T059).
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -1215,7 +1216,7 @@ Last updated: 2026-11-02
   through the full gate (26 minutes) because `update_plan.py` changed. That is fine for a rare
   change, but keep a plan-only update to Markdown when the script does not need to change.
 
-## Lessons learned (T013's blank report, 2026-11-02)
+## Lessons learned (T013 and T014, 2026-11-02)
 
 - **Generate Privacy Report can save a blank PDF**: 808 bytes, one page of size 0 × 0, content
   `q Q`, the same on a second try. Read the file's contents rather than assume a viewer problem.
@@ -1230,6 +1231,11 @@ Last updated: 2026-11-02
 - **Recording a result in `release.md` changes `traceability.md`**, whose manual-checks column
   reads the checklist: run `python3 scripts/traceability.py` after each recorded row, or the next
   `--check` fails.
+- **A person finds what the UI tests walk past**: `scrolledTo` swipes until `Start` exists, so no
+  test notices that a button sits below the visible part of a screen. The owner did not find it
+  until told to drag the form up. Ask whether someone new to the app would see each screen's main
+  action, not only whether a test can reach it. To scroll in the Simulator, attach a mouse and
+  drag: the owner did not find a two-finger trackpad scroll easy.
 
 ## Next steps
 
@@ -1237,15 +1243,15 @@ Last updated: 2026-11-02
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next, for the user, at the Mac: finish T014** (minutes; T013 passed on
-   2026-11-02). The "iPad (A16) E8" simulator has a Release simulator build of
-   the same code installed fresh (rebuild it if the simulator was erased: `xcodebuild build
-   -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
-   'platform=iOS Simulator,name=iPad (A16) E8' CURRENT_PROJECT_VERSION=1`, then `simctl
-   install`); the owner launches it, plays a few moves against the computer and in a
-   two-player game, opens every screen, rotates (Device › Rotate) and resizes the window
-   (expected: works as on an iPhone, in portrait); record in `validation.md` §2 and in the
-   release checklist row (RC-21). T014 closes #178.
+1. **Recommended next, for the owner: give the beta description and feedback email** (step 3
+   below; T013 and T014 passed on 2026-11-02), so the session can enter them and, on the owner's
+   go-ahead, submit build 1 for Beta App Review. **Before inviting the testers, #215 (T059)**:
+   check Game setup with Computer chosen at the default text size on the iPhone SE (3rd
+   generation) and iPhone 17 simulators, record whether `Start` shows without scrolling, and let
+   the owner decide whether to change it (FR-027). A later build repeats RC-21 on the "iPad
+   (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
+   -scheme checkers -configuration Release -destination 'platform=iOS Simulator,name=iPad (A16)
+   E8' CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
 2. **Then, with the phone: the release checklist on build 1 (T046) and US2's measurements
    (T021)**. On the TestFlight install, work through `checklists/release.md` (RC-01 to RC-27;
    each passed or accepted with a reason; T012 and T034 are already done on build 1). Last,
@@ -1261,7 +1267,7 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    invited); the What to Test text is already on build 1; the beta app description, feedback
    email and Beta App Review contact are still to enter; submit build 1 (or a later one) for
    Beta App Review (about a day), then a week of testing, the longest wait left.
-   **Recommended (2026-11-01): start it right after T014, before step 2**, so Beta
+   **Recommended (2026-11-01): start it now, before step 2**, so Beta
    App Review and the testers' week run while the owner works through the checklist and the
    measurements. The session can enter the three missing fields through the API once the owner
    gives the description text and the email to use.

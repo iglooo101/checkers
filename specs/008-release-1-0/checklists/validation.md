@@ -189,6 +189,19 @@ Before any app code of the slice, on `008-release-1-0`:
   copy, `Checkers-1.0-1 2.xcarchive`, to Xcode's Archives folder at 00:15:22. `diff -r` found no
   difference between the two, one PDF above came from each, and the copy was deleted with the
   owner's agreement; the original stays.
+- **iPad check** (T014, RC-21, 2026-11-02, the Release simulator build above, "iPad (A16) E8",
+  iOS 26.3, FR-005): the owner ran the smoke check and reported that it went "fantastic", with
+  nothing else to report. Simulator screenshots show the app in a portrait-shaped window with
+  the iPad in each landscape direction, so turning the iPad does not turn the app.
+- **Finding: `Start` below the visible part of Game setup** (2026-11-02, #215, T059): with
+  Computer chosen, in that window, the form's visible part ended at Side's Random row. A UI
+  snapshot listed the rows through Dark as tappable, but not Random or `Start`, and nothing on
+  screen showed that more followed. The owner did not find `Start` until told to drag the form
+  up, and needed an attached mouse to drag in the Simulator, because a two-finger trackpad
+  scroll was not easy (so part of the difficulty was the Simulator's input); it then appeared and the game started, so RC-21 stands. No UI test can notice this, because
+  `scrolledTo` swipes until `Start` exists. Not yet known: whether `Start` shows without scrolling
+  at the default text size on the iPhones. A game against the computer was reached on the
+  iPhone 16 (T012).
 
 ## §3 Diagnostics on the phone (US3)
 
