@@ -53,6 +53,49 @@ final class US6SetupUITests: XCTestCase {
         }
     }
 
+    /// FR-SETUP-08: at the default text size every choice is on screen without scrolling, with
+    /// Difficulty and Side on one line each.
+    @MainActor
+    func testUS6_choicesFitWithoutScrolling() {
+        let app = XCUIApplication()
+        app.launchArguments += ["-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryL"]
+        app.launch()
+        openSetup(in: app)
+        app.buttons["Computer"].tap()
+
+        let window = app.windows.firstMatch.frame
+        let choices = [
+            "Computer", "Two players", "Easy", "Medium", "Hard", "Light", "Dark", "Random",
+        ]
+        for name in choices {
+            let choice = app.buttons[name]
+            XCTAssertTrue(choice.waitForExistence(timeout: 3), name)
+            XCTAssertTrue(choice.isHittable, name)
+            XCTAssertTrue(window.contains(choice.frame), name)
+        }
+        XCTAssertEqual(
+            app.buttons["Easy"].frame.midY, app.buttons["Hard"].frame.midY, accuracy: 1)
+        XCTAssertEqual(
+            app.buttons["Light"].frame.midY, app.buttons["Random"].frame.midY, accuracy: 1)
+    }
+
+    /// FR-SETUP-08: at the largest text size the choices stay rows, each with its full text.
+    @MainActor
+    func testUS6_largestTextKeepsChoicesInRows() {
+        let app = XCUIApplication()
+        app.launchArguments += [
+            "-UIPreferredContentSizeCategoryName", "UICTContentSizeCategoryAccessibilityXXXL",
+        ]
+        app.launch()
+        openSetup(in: app)
+        app.buttons["Computer"].tap()
+
+        let easy = app.scrolledTo(app.buttons["Easy"])
+        let medium = app.scrolledTo(app.buttons["Medium"])
+        XCTAssertTrue(easy.exists && medium.exists)
+        XCTAssertGreaterThanOrEqual(medium.frame.minY, easy.frame.maxY - 1)
+    }
+
     @MainActor
     private func openSetup(in app: XCUIApplication) {
         let newGame = app.element("home.newGame")

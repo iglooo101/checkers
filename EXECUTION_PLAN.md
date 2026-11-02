@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-11-02 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.1, constitution v1.2.0
+Last updated: 2026-11-02 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.2, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -139,8 +139,8 @@ explains the game in seven illustrated sections.
    hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
    what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
    controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
-   were seen failing and the change is written but not landed: it lands once the tests around the
-   screen and CI pass, and ships as build 3. Then the owner looks at Game setup on the iPhone 16,
+   were seen failing and pass on the iPhone 17 and the SE, and it ships as build 3 once `CI gate`
+   passes. Then the owner looks at Game setup on the iPhone 16,
    repeats RC-21 on the iPad simulator, and gives the go-ahead to submit build 3 for Beta App
    Review. Build 2 is uploaded and processed but goes no further than the internal groups. Build
    1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
@@ -336,14 +336,16 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   (XCTest's limit). If the last two come back, make `startComputerGame` wait for the difficulty
   buttons and retap, and retry an audit that times out; rerun the failed jobs only after reading
   the log.
-- Game setup's `Start` is pinned below the form (FR-SETUP-07, #216): with Computer chosen it was
+- Game setup is compact (FR-SETUP-07, FR-SETUP-08, #216, #217): `Start` is pinned below the form,
+  and Difficulty and Side take one line each at normal text sizes. With stacked rows, `Start` was
   off screen on the iPhone SE and, by the owner's report, on their iPhone 16 on iOS 27.2, which
-  differs from the iPhone 16e simulator and was not explained. On a screen too short for the form,
-  the pinned area cuts a row at rest, and the accessibility audit then reports contrast on that
-  row; scrolled to the end it reports the rows under the navigation bar instead. The colors do not
-  change, so this is the audit's limit, not a contrast problem, and `safeAreaBar` reported more.
-  The blocking plan runs on the iPhone 17, where it passes; an audit of this screen on a shorter
-  device will not, including if CI's device changes (`validation.md` §2).
+  differs from the iPhone 16e simulator and was not explained (Larger Text is off on that phone).
+  This Mac cannot simulate iOS 27, so the owner's look at build 3 is the proof for that phone. The
+  blocking plan runs only on the iPhone 17, so run `testUS6_choicesFitWithoutScrolling` on the SE
+  after any change to this screen. Where the form still scrolls, as at the largest text sizes, the
+  pinned area cuts a row at rest, and an audit at the default size would report contrast on that
+  row: the audit's limit, not a contrast problem, and `safeAreaBar` reported more
+  (`validation.md` §2).
 - The Organizer's privacy report of build 1 is a blank PDF (T013, `validation.md` §2), and
   whether that is Xcode's normal output for an app with nothing to declare is not confirmed. It
   was accepted because the archive's one manifest is checked directly. A later build needs RC-20
@@ -1312,3 +1314,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   #183), FR-SETUP-08 in `FRD.md` 1.3.2, to ship in build 3. Its tests were seen failing and the
   change is written; both land after the tests and CI pass. Build 2 goes no further than the
   internal groups. Board: 39/42 features, 153/165 tasks, 9 In Progress.
+- 2026-11-02: #217's change is written and tested: all 33 tests around Game setup pass on the
+  iPhone 17 and the SE, including the SE's audit (`validation.md` §2). It lands with `FRD.md` 1.3.2,
+  and build 3 follows once `CI gate` passes.

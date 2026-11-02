@@ -234,7 +234,18 @@ Before any app code of the slice, on `008-release-1-0`:
   stay the same: the limit in E6 `validation.md` §6, not a contrast problem. The native
   `safeAreaBar` was tried once and reported more (the headers too), so `safeAreaInset` stays. The
   blocking plan runs on the iPhone 17, where it passes. The SE is not part of it, so the failure
-  stays local.
+  stays local. The compact choices below remove the cut row at the default text size.
+- **Compact choices** (T061, #217, FR-SETUP-08, 2026-11-02): the owner's iPad check on build 2
+  showed Side's choices hidden until scrolling, so the owner chose one-line controls. `FRD.md`
+  1.3.2 first. `testUS6_choicesFitWithoutScrolling` failed on the iPhone 17 (Easy and Hard on
+  different lines) and the iPhone SE ("Dark" not fully on screen), with no app code changed.
+  `testUS6_largestTextKeepsChoicesInRows` passed at first, because the choices were rows, and was
+  seen failing with segmented controls at every size, before the fallback was added. With the
+  fallback, all 33 tests around the screen (`US1ComputerGameUITests`, `US2AbandonUITests`,
+  `US5AccessibilityAuditUITests`, `US6SetupUITests`, `US7NavigationUITests`) pass on both phones,
+  including the SE's `testUS5_auditSetupComputer`. Screenshots on the SE show every choice and
+  `Start` with room to spare at the default size, in light and dark; at the largest size the rows
+  keep their full text and scroll under the pinned `Start`.
 
 ## §3 Diagnostics on the phone (US3)
 

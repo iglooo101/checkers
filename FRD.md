@@ -1,6 +1,9 @@
 # Functional Requirements Document: Checkers
 
-Version 1.3.1 · 2026-11-02
+Version 1.3.2 · 2026-11-02
+
+Changes in 1.3.2: FR-SETUP-08 added: at the default text size, every Game setup choice fits on
+screen without scrolling.
 
 Changes in 1.3.1: FR-SETUP-07 added: Start stays on screen in Game setup without scrolling.
 
@@ -77,6 +80,9 @@ Home
   side on the dark squares of the three rows nearest each player, with Light to move.
 - **FR-SETUP-07** Start MUST stay on screen in Game setup without scrolling, whichever opponent is
   chosen and at every text size.
+- **FR-SETUP-08** At the default text size, every Game setup choice MUST be on screen without
+  scrolling on every supported iPhone. At accessibility text sizes the choices keep their full
+  text and may scroll.
 
 ## 6. The game screen
 

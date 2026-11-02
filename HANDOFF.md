@@ -153,7 +153,7 @@ Last updated: 2026-11-02
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
   The debugger, UI tests (through `xcodebuild test`) and Instruments recording work there too;
   `xctrace export` does not (E8 research R1).
-- **Functional requirements**: `FRD.md` v1.3.1 (1.3.1: FR-SETUP-07; 1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
+- **Functional requirements**: `FRD.md` v1.3.2 (1.3.2: FR-SETUP-08; 1.3.1: FR-SETUP-07; 1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
@@ -1254,6 +1254,10 @@ Last updated: 2026-11-02
   "Light" at rest and the audit reports contrast on it; scrolled to the end, it reports the rows
   under the navigation bar instead. Audit twice, at rest and scrolled, before calling a contrast
   report real. `safeAreaBar`'s fade reported more, not less.
+- **Fix what makes the symptom, not the symptom**: pinning `Start` only moved what was cut off, and
+  the owner saw that on the iPad within minutes. The cause was a form too tall for short screens.
+  A test that already passes proves nothing until it has failed: the largest-text test was seen
+  failing by making the controls compact at every size first, and only then adding the fallback.
 - **Read App Store Connect before planning a step there**: the plan and this file said Beta App
   Review was still to do, and the session asked the owner for the fields it needed, while the API
   showed build 1 `APPROVED` since 2026-10-29 and those fields already filled. The owner can change
@@ -1270,8 +1274,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **Recommended next: finish #217 (T061) and build 3.** `FRD.md` 1.3.2 adds FR-SETUP-08, with
    Difficulty and Side as one-line segmented controls and full rows at accessibility text sizes.
-   Its tests were seen failing and the change is written, not landed. Once the tests around the
-   screen pass locally and `CI gate` passes: fast-forward `main`, `scripts/release.sh archive 3`,
+   Its tests were seen failing and pass on the iPhone 17 and the SE. Once `CI gate` passes:
+   fast-forward `main`, `scripts/release.sh archive 3`,
    then `upload`, enter What to Test (the listing's text; a new build starts empty), and write its
    notes in `release/builds.md`. Then the owner installs it from TestFlight and looks at Game setup
    on the iPhone 16 (`Start` and every choice without scrolling), which closes #217, and repeats

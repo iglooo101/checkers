@@ -2,10 +2,12 @@ import CheckersEngine
 import SwiftUI
 
 /// Game setup: the opponent and, against the computer, the difficulty and side, then Start
-/// (FR-007, FR-008). Choices are rows with check marks, which keep their full text at every text
-/// size. Start sits below the form, so it stays on screen without scrolling (FR-SETUP-07).
+/// (FR-007, FR-008). Start sits below the form, so it stays on screen without scrolling
+/// (FR-SETUP-07), and Difficulty and Side take one line each, so the whole form fits at the default
+/// text size (FR-SETUP-08).
 struct SetupView: View {
     @Bindable var router: AppRouter
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         Form {
@@ -22,26 +24,23 @@ struct SetupView: View {
             }
             if router.setup.opponent == .computer {
                 Section {
-                    Picker("Difficulty", selection: $router.setup.difficulty) {
+                    choices(
+                        "Difficulty", selection: $router.setup.difficulty,
+                        identifier: "setup.difficulty"
+                    ) {
                         Text("Easy").tag(Difficulty.easy)
                         Text("Medium").tag(Difficulty.medium)
                         Text("Hard").tag(Difficulty.hard)
                     }
-                    .pickerStyle(.inline)
-                    .labelsHidden()
-                    .accessibilityIdentifier("setup.difficulty")
                 } header: {
                     Text("Difficulty").foregroundStyle(Color.primary)
                 }
                 Section {
-                    Picker("Side", selection: $router.setup.side) {
+                    choices("Side", selection: $router.setup.side, identifier: "setup.side") {
                         Text("Light").tag(SideChoice.light)
                         Text("Dark").tag(SideChoice.dark)
                         Text("Random").tag(SideChoice.random)
                     }
-                    .pickerStyle(.inline)
-                    .labelsHidden()
-                    .accessibilityIdentifier("setup.side")
                 } header: {
                     Text("Side").foregroundStyle(Color.primary)
                 }
@@ -70,6 +69,21 @@ struct SetupView: View {
                 .accessibilityIdentifier("setup.abandon.cancel")
         } message: {
             Text("Starting a new game discards the game in progress.")
+        }
+    }
+
+    /// A choice on one line or, at accessibility text sizes, in rows with check marks, which keep
+    /// their full text.
+    @ViewBuilder
+    private func choices<Value: Hashable, Content: View>(
+        _ title: LocalizedStringKey, selection: Binding<Value>, identifier: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        let picker = Picker(title, selection: selection, content: content)
+        if dynamicTypeSize.isAccessibilitySize {
+            picker.pickerStyle(.inline).labelsHidden().accessibilityIdentifier(identifier)
+        } else {
+            picker.pickerStyle(.segmented).labelsHidden().accessibilityIdentifier(identifier)
         }
     }
 
