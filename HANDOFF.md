@@ -67,7 +67,7 @@ Last updated: 2026-11-05
   `main` took it (`718afe0`) and build 3 went up from that commit: processed, What to Test entered,
   and the owner confirmed Game setup on the iPhone 16 from TestFlight, so #217 is done. Builds 2
   and 3 are in the internal
-  groups only; the external group has build 1, with one tester invited and not installed, and its
+  groups only, and #218 (FR-SET-05, the themes side by side in Settings) is to ship in build 4; the external group has build 1, with one tester invited and not installed, and its
   public link off; and "iPad (A16) E8" holds a Release simulator build of build 3's code.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
@@ -158,7 +158,7 @@ Last updated: 2026-11-05
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
   The debugger, UI tests (through `xcodebuild test`) and Instruments recording work there too;
   `xctrace export` does not (E8 research R1).
-- **Functional requirements**: `FRD.md` v1.3.2 (1.3.2: FR-SETUP-08; 1.3.1: FR-SETUP-07; 1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
+- **Functional requirements**: `FRD.md` v1.3.3 (1.3.3: FR-SET-05; 1.3.2: FR-SETUP-08; 1.3.1: FR-SETUP-07; 1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
@@ -241,15 +241,15 @@ Last updated: 2026-11-05
   (`build-and-test` has a 45-minute limit since #204). Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 9 epics, 42 features, 165 tasks (#1–#217; #188 is a PR) on the project board.
+- **Backlog**: 9 epics, 42 features, 166 tasks (#1–#218; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic of 1.0
   and is in progress: F8.0 (#170) and F8.1 (#176) are done; in F8.2 #206 (the engine's speed
   check on the development Mac) is done and #181 and #182 (US2) wait for the phone (T021); in
-  F8.3 #184, #185 and #215 to #217 are done, #186 and #187 (TestFlight, submission) wait for the
-  owner and Apple, and #205 (validation) is open. E9 Online play (#207) follows 1.0 (39/42
-  features, 154/165 tasks, 8 items In Progress).
+  F8.3 #184, #185 and #215 to #217 are done, #218 (build 4) is under way, #186 and #187
+  (TestFlight, submission) wait for the owner and Apple, and #205 (validation) is open. E9 Online
+  play (#207) follows 1.0 (39/42 features, 154/166 tasks, 9 items In Progress).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -1306,20 +1306,38 @@ Last updated: 2026-11-05
   appeared, with nothing else changed (compare the sorted files). `release.sh archive` refuses a
   modified tree, so restore it before a build, and add files to a commit by name.
 
+## Lessons learned (Settings side by side, 2026-11-05)
+
+- **A plain button's text element can take the whole label's frame**: inside a `.buttonStyle(.plain)`
+  column, the name's element had the column's frame, so the contrast audit measured the board as
+  text. Classic and Playful failed and black-and-white Modern did not, which pointed at it. A label
+  on the button with the visible text hidden from VoiceOver narrowed it to the name.
+- **Swapping views on `dynamicTypeSize` upsets the audit's text size checks**: `if` over two sets of
+  views reported "partially unsupported" and "clipped" at the largest size, and one `AnyLayout` over
+  the same views did not. It also took less code.
+- **Run the old layout through a new failure before guessing**: restoring the old view for one run
+  showed both audits pass on both phones, so the failures were the change's and not this Mac's.
+- **`-AppleInterfaceStyle Dark` as a launch argument does nothing here**: the "dark" screenshot came
+  out light and the test still passed. Use `xcrun simctl ui <udid> appearance dark` on a booted
+  simulator, read it back, and set it to light afterwards.
+- **Look at a screenshot of each state a test claims to cover**, since a passing test cannot say the
+  state was what its name says.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: RC-21 on build 3, then the go-ahead for its Beta App Review.** Build 3
-   (`718afe0`) is uploaded and processed, What to Test is entered, its notes are in
-   `release/builds.md`, and #217 is done: the owner confirmed Game setup on the iPhone 16 from
-   TestFlight. The owner repeats RC-21 on the "iPad (A16) E8" simulator, which holds a Release
-   simulator build of the same code. Move hints starting below the edge there is a known limit, not
-   a failure of RC-21 (the plan's Risks). FR-027: every release checklist item the fix could affect runs
-   on build 3. It needs its own Beta App Review submission for external testers, on the owner's
-   go-ahead; add it to the external group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
+1. **Recommended next: build 4 (#218, T062).** `FRD.md` 1.3.3 adds FR-SET-05, with the themes side
+   by side in Settings. Once `CI gate` passes on the code commit: fast-forward `main`, restore
+   `project.pbxproj` if an open Xcode rewrote it, `scripts/release.sh archive 4`, then `upload`,
+   enter What to Test (the listing's text; a new build starts empty), and write its notes in
+   `release/builds.md`. Then the owner installs it from TestFlight and looks at Settings and Game
+   setup on the iPhone 16, which closes #218, and repeats RC-21 on the "iPad (A16) E8" simulator with
+   a new Release simulator build. FR-027: every release checklist item the fix could affect runs on
+   build 4, RC-18 (VoiceOver in Settings) and RC-21 among them. It needs its own Beta App Review
+   submission for external testers, on the owner's go-ahead; add it to the external group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
    -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
    'platform=iOS Simulator,name=iPad (A16) E8' -derivedDataPath .build/ReleaseSimDerivedData
    -skipPackagePluginValidation CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
@@ -1335,7 +1353,7 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
    record <n> "TestFlight internal"`.
 3. **The external round (T047)**: Beta App Review already approved build 1 (submitted
-   2026-10-29), and the beta description, feedback email and review contact are filled. Build 3
+   2026-10-29), and the beta description, feedback email and review contact are filled. Build 4
    needs its own submission (step 1). Left: two to five external testers, at least one new to checkers (the rest of
    T044; the group has one invited, not yet installed); and a week of testing, the longest wait
    left, which can run during step 2. Then `release.sh record <n> external`.

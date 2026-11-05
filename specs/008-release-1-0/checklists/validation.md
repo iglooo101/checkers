@@ -256,7 +256,27 @@ Before any app code of the slice, on `008-release-1-0`:
   explanation ending at 803.7. The iPad's window has the SE's proportions and shows the same layout.
   The iPhone 16e simulators could not run the test, and the swipe was not measured on the iPad. The
   owner confirmed on the iPhone 16 (iOS 27.2) with build 3 that Move hints and its explanation show
-  without scrolling, so it stays as it is for 1.0 (`EXECUTION_PLAN.md`, Risks).
+  without scrolling, and it was first recorded as a known limit; the owner then chose to fix it
+  before the beta, with the themes side by side.
+- **Themes side by side** (T062, #218, FR-SET-05, 2026-11-05): `FRD.md` 1.3.3 first.
+  `testUS3_settingsFitWithoutScrolling` failed on the iPhone 17 (the themes 220 points apart) and on
+  the SE (the switch outside the window, the explanation missing, the themes apart), with no app code
+  changed. `testUS3_largestTextKeepsThemesInRows` passed at first, because the themes were rows, and
+  was seen failing with the themes side by side at every size, before the fallback was added.
+  The audit then failed the first version on both phones, while the old layout passed the same two
+  audits on both. A temporary switch tried the variants in one build. Contrast on Classic and Playful
+  and not on black-and-white Modern: the name's text element had the whole column's frame (98.5 ×
+  108.5), so the board's colors were measured as text. A label on the button and the visible text
+  hidden from VoiceOver narrows it to the name (54.5 × 20.5) and ends the report; `.borderless` and
+  `.accessibilityElement(children: .contain)` did not. Text size reports at the largest size: an `if`
+  swapped two sets of views when the size changed; one `AnyLayout` over the same buttons ends them.
+  With both, all 18 tests around the screen (`US3ThemeUITests`, `US1SettingsUITests`,
+  `US4SoundUITests`, `US7NavigationUITests`, `testUS5_auditSettings`,
+  `testUS5_auditSettingsLargestText`) pass on the iPhone 17 and the SE, and the two audits and the fit
+  test pass on the SE in dark appearance. Measured at the default size, the explanation ends at 571
+  of 667 on the SE (96 points to spare) and at 612 of 874 on the iPhone 17. Screenshots on the SE show
+  light, dark and XL side by side with no name cut, and XXL one below the other. Not measured: the
+  owner's iPhone 16 (the owner's check on build 4).
 
 ## §3 Diagnostics on the phone (US3)
 

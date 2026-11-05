@@ -1,6 +1,9 @@
 # Functional Requirements Document: Checkers
 
-Version 1.3.2 · 2026-11-02
+Version 1.3.3 · 2026-11-05
+
+Changes in 1.3.3: FR-SET-05 added: at the default text size, Settings fits on screen without
+scrolling.
 
 Changes in 1.3.2: FR-SETUP-08 added: at the default text size, every Game setup choice fits on
 screen without scrolling.
@@ -233,6 +236,9 @@ Home
 - **FR-SET-03** Setting changes MUST take effect immediately, including in a game in progress, and
   MUST persist across launches.
 - **FR-SET-04** Sound effects MUST be on by default.
+- **FR-SET-05** At the default text size, every Settings control and the move hints explanation
+  MUST be on screen without scrolling on every supported iPhone and in iPhone compatibility mode on
+  iPad. At accessibility text sizes the theme options keep their full text and may scroll.
 
 ## 15. Sound
 

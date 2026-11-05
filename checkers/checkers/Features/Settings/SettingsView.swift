@@ -4,25 +4,17 @@ import SwiftUI
 /// Settings: the player's choices for every game, applied at once, also to the game in progress
 /// (FR-001, FR-003; specs/007-settings-themes-sound-and-rules/contracts/screens.md).
 struct SettingsView: View {
+    /// The largest text size at which three theme names fit side by side on the narrowest iPhone.
+    private static let largestSizeSideBySide = DynamicTypeSize.xLarge
+
     @Bindable var router: AppRouter
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
         @Bindable var settings = router.settings
         Form {
             Section {
-                // One button per theme rather than an inline picker: a picker row merges its
-                // label into one text element whose frame takes in the preview, and the contrast
-                // audit then measures the board's squares as the name's colors.
-                ForEach(BoardTheme.allCases, id: \.self) { theme in
-                    let isChosen = settings.boardTheme == theme
-                    Button {
-                        settings.boardTheme = theme
-                    } label: {
-                        ThemeRow(theme: theme, isChosen: isChosen)
-                    }
-                    .accessibilityIdentifier("settings.theme.\(theme.rawValue)")
-                    .accessibilityAddTraits(isChosen ? .isSelected : [])
-                }
+                themeChoices
             } header: {
                 Text("Board theme").foregroundStyle(Color.primary)
             }
@@ -53,13 +45,40 @@ struct SettingsView: View {
         }
         .navigationTitle("Settings")
     }
+
+    /// The themes side by side, so the whole form fits at the default text size (FR-SET-05), and
+    /// one below the other once their names no longer fit. One layout that changes rather than two
+    /// sets of views: the audit's text size checks report views that are replaced as the size
+    /// changes.
+    private var themeChoices: some View {
+        let layout =
+            dynamicTypeSize > Self.largestSizeSideBySide
+            ? AnyLayout(VStackLayout(spacing: 16))
+            : AnyLayout(HStackLayout(alignment: .top, spacing: 8))
+        return layout {
+            ForEach(BoardTheme.allCases, id: \.self) { theme in
+                let isChosen = router.settings.boardTheme == theme
+                // One button per theme rather than an inline picker. Plain, or a tap anywhere in
+                // the form's row would press all three.
+                Button {
+                    router.settings.boardTheme = theme
+                } label: {
+                    ThemeChoice(theme: theme, isChosen: isChosen)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text(theme.name))
+                .accessibilityIdentifier("settings.theme.\(theme.rawValue)")
+                .accessibilityAddTraits(isChosen ? .isSelected : [])
+            }
+        }
+    }
 }
 
-/// A theme's row: a small board in that theme, its name, and a checkmark when it is chosen. The
-/// board and the checkmark are decorative, so VoiceOver reads the name and whether it is chosen
-/// (FR-013, FR-025). At large text sizes the name goes below the board when they do not fit side
-/// by side.
-private struct ThemeRow: View {
+/// A theme's choice: a small board in that theme, its name below, and a checkmark beside the name
+/// when it is chosen. All of it is hidden from VoiceOver, so it reads the button's label and whether
+/// it is chosen (FR-013, FR-025). With only the visible name as its label, the button's text element
+/// takes in the board, and the contrast audit measures the board's squares as the name's colors.
+private struct ThemeChoice: View {
     let theme: BoardTheme
     let isChosen: Bool
 
@@ -81,36 +100,25 @@ private struct ThemeRow: View {
     private static let previewWidth: CGFloat = 72
 
     var body: some View {
-        HStack(spacing: 16) {
-            ViewThatFits(in: .horizontal) {
-                HStack(spacing: 16) {
-                    preview
-                    name
+        VStack(spacing: 8) {
+            BoardPicture(position: Self.position, rows: 0..<4, columns: 0..<4)
+                .frame(width: Self.previewWidth)
+                .environment(\.boardTheme, theme)
+            HStack(spacing: 4) {
+                if isChosen {
+                    Image(systemName: "checkmark")
+                        .foregroundStyle(Color.accentColor)
+                        .accessibilityHidden(true)
                 }
-                VStack(alignment: .leading, spacing: 8) {
-                    preview
-                    name
-                }
-            }
-            Spacer(minLength: 0)
-            if isChosen {
-                Image(systemName: "checkmark")
-                    .foregroundStyle(Color.accentColor)
+                // Primary text, not the button's tint.
+                Text(theme.name)
+                    .foregroundStyle(Color.primary)
                     .accessibilityHidden(true)
             }
         }
+        .frame(maxWidth: .infinity)
         .padding(.vertical, 4)
-    }
-
-    /// Primary text, not the button's tint.
-    private var name: some View {
-        Text(theme.name).foregroundStyle(Color.primary)
-    }
-
-    private var preview: some View {
-        BoardPicture(position: Self.position, rows: 0..<4, columns: 0..<4)
-            .frame(width: Self.previewWidth)
-            .environment(\.boardTheme, theme)
+        .contentShape(Rectangle())
     }
 }
 
