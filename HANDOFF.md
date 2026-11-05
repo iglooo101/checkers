@@ -63,10 +63,11 @@ Last updated: 2026-11-04
   the beta description, now entered, turned off the public link, and decided to keep `Start`
   always visible: `FRD.md` 1.3.1, FR-SETUP-07, #216, in build 2. The owner's iPad check on build 2
   then found the Side choices hidden until scrolling, so the owner chose compact choices
-  (FR-SETUP-08, #217), to ship in build 3. `b1de6e2` holds that change, and CI run 41415993172 passed on it (33 minutes); build 2 is in the
-  internal groups only; the external group
-  has build 1, with one tester invited and not installed, and its public link off; and "iPad (A16)
-  E8" holds a Release simulator build of build 2's code.
+  (FR-SETUP-08, #217), to ship in build 3. `b1de6e2` holds that change, and CI run 41415993172 passed on it (33 minutes). On 2026-11-04
+  `main` took it (`718afe0`) and build 3 went up from that commit: processed, What to Test entered,
+  waiting for the owner's look at Game setup on the iPhone 16. Builds 2 and 3 are in the internal
+  groups only; the external group has build 1, with one tester invited and not installed, and its
+  public link off; and "iPad (A16) E8" holds a Release simulator build of build 3's code.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
@@ -1279,25 +1280,39 @@ Last updated: 2026-11-04
   `release.sh archive` checks only HEAD's gate. So close-out docs wait until a code run is done, and
   before an archive the gate to confirm is the last code commit's, not only HEAD's.
 
+## Lessons learned (build 3, 2026-11-04)
+
+- **`update_plan.py --check` reads the local file**: it passed while the close-out commit holding
+  the plan's latest text was unpushed, so GitHub's copy lagged. `git status -sb` ("ahead 1") shows
+  that; the check cannot.
+- **`scripts/device.sh status` can say "not connected" with the phone plugged in**: `devicectl list
+  devices` read `available (paired)` while the script failed on the tunnel. After `xcrun devicectl
+  device info details --device HKH16` the tunnel read `connected` and the script passed. Run that
+  once before asking the owner to reconnect.
+- **A new build is not listed at first**: `GET /v1/builds?filter[version]=3` found nothing for
+  about 90 seconds after the upload, then returned it already `VALID`. An empty list that soon is
+  not a failed upload.
+- **List `../secrets` by count, not with `ls`**: the key's file name holds the Key ID, which
+  `release.sh upload` keeps out of its log on purpose.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: finish #217 (T061) and build 3.** `FRD.md` 1.3.2 adds FR-SETUP-08, with
-   Difficulty and Side as one-line segmented controls and full rows at accessibility text sizes.
-   Its tests were seen failing and pass on the iPhone 17 and the SE, and CI run 41415993172 passed
-   on `b1de6e2`, the last code commit. Fast-forward `main`, `scripts/release.sh archive 3`,
-   then `upload`, enter What to Test (the listing's text; a new build starts empty), and write its
-   notes in `release/builds.md`. Then the owner installs it from TestFlight and looks at Game setup
-   on the iPhone 16 (`Start` and every choice without scrolling), which closes #217, and repeats
-   RC-21 on the "iPad (A16) E8" simulator with a new Release simulator build. FR-027: every release
-   checklist item the fix could affect runs on build 3. It needs its own Beta App Review submission
-   for external testers, on the owner's go-ahead; add it to the external group too. A later build repeats RC-21 on the "iPad
-   (A16) E8" simulator (rebuild for it: `xcodebuild build -project checkers/checkers.xcodeproj
-   -scheme checkers -configuration Release -destination 'platform=iOS Simulator,name=iPad (A16)
-   E8' CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
+1. **Recommended next: the owner's checks on build 3 (#217, T061).** `FRD.md` 1.3.2 adds
+   FR-SETUP-08, with Difficulty and Side as one-line segmented controls and full rows at
+   accessibility text sizes. Build 3 (`718afe0`) is uploaded and processed, What to Test is entered
+   and its notes are in `release/builds.md`. The owner installs it from TestFlight and looks at Game
+   setup on the iPhone 16 (`Start` and every choice without scrolling), which closes #217, and
+   repeats RC-21 on the "iPad (A16) E8" simulator, which holds a Release simulator build of the same
+   code. FR-027: every release checklist item the fix could affect runs on build 3. It needs its own
+   Beta App Review submission for external testers, on the owner's go-ahead; add it to the external
+   group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
+   -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
+   'platform=iOS Simulator,name=iPad (A16) E8' -derivedDataPath .build/ReleaseSimDerivedData
+   -skipPackagePluginValidation CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
 2. **Then, with the phone: the release checklist on the latest build (T046) and US2's
    measurements (T021)**. On the TestFlight install, work through `checklists/release.md` (RC-01 to RC-27;
    each passed or accepted with a reason; T012 and T034 passed on build 1, and their rows, RC-19
@@ -1310,7 +1325,7 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
    record <n> "TestFlight internal"`.
 3. **The external round (T047)**: Beta App Review already approved build 1 (submitted
-   2026-10-29), and the beta description, feedback email and review contact are filled. Build 2
+   2026-10-29), and the beta description, feedback email and review contact are filled. Build 3
    needs its own submission (step 1). Left: two to five external testers, at least one new to checkers (the rest of
    T044; the group has one invited, not yet installed); and a week of testing, the longest wait
    left, which can run during step 2. Then `release.sh record <n> external`.

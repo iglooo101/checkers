@@ -134,17 +134,17 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: finish build 3 (#217, T061; the session), then the owner's checks on
-   it.** The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
+2. **Recommended next: the owner's checks on build 3 (#217, T061).** The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
    hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
    what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
    controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
    were seen failing and pass on the iPhone 17 and the SE, and CI run 41415993172 passed on
-   `b1de6e2` (33 minutes), so it ships as build 3. Then the owner looks at Game setup on the iPhone 16,
+   `b1de6e2` (33 minutes). **Build 3 is uploaded and processed** (2026-11-04, `718afe0`), with What
+   to Test entered, in the internal groups. Now the owner looks at Game setup on the iPhone 16,
    repeats RC-21 on the iPad simulator, and gives the go-ahead to submit build 3 for Beta App
-   Review. Build 2 is uploaded and processed but goes no further than the internal groups. Build
+   Review. Build 2 goes no further than the internal groups. Build
    1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
-   `validation.md` §4), and build 2 read `READY_FOR_BETA_SUBMISSION`, so a new build needs its own
+   `validation.md` §4), and build 3 reads `READY_FOR_BETA_SUBMISSION`, so it needs its own
    submission. The owner's beta description is in place and the external group's public link is
    off; the group has one tester invited, not yet installed, and only build 1. Left of T047: two to five
    external testers, at least one new to checkers (the rest of T044), and a week of testing, the
@@ -1331,3 +1331,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-04: `b1de6e2`'s CI run 41415993172 passed with every job (33 minutes), so `main` takes
   #217's change and build 3 goes ahead. Board unchanged: 39/42 features, 153/165 tasks, 9 In
   Progress.
+- 2026-11-04: Build 3 uploaded and processed (`718afe0`; `validation.md` §6): What to Test entered,
+  in the internal groups, its external state `READY_FOR_BETA_SUBMISSION`. #217 stays In Progress
+  until the owner's look at Game setup on the iPhone 16. Board unchanged: 39/42 features, 153/165
+  tasks, 9 In Progress.
