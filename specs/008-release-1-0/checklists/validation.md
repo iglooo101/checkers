@@ -579,6 +579,15 @@ Before any app code of the slice, on `008-release-1-0`:
   failed (that match scored 52, below 70); with the new values the engine's 91 tests pass one at a time
   (45 s), and the Release strength suite passes: Medium 84.5 against Easy, Hard 85.5 against Medium,
   build 4's Medium 90 against Medium, build 4's Hard 98 against Hard (176 s), and the counts to 9 turns.
+- **Build 5** (T063, 2026-11-05, `dbae342`, CI run 42123712973 green with both jobs, `main` fast-forwarded):
+  `release.sh archive 5` with its check passing, `upload` at 18:19 local with the key (no signing error,
+  and neither key value in the log), `VALID` within a few minutes, with no export-compliance question.
+  What to Test now has build 4's text (read back equal). The internal groups have it
+  (`IN_BETA_TESTING`); external testing reads `READY_FOR_BETA_SUBMISSION`, so build 5 needs its own Beta
+  App Review submission, which waits for the owner's go-ahead. Its notes in `release/builds.md` name the
+  17 checklist items an engine-only change cannot affect. A Release simulator build of the same commit
+  (version 1.0 (5)) is installed over build 4's on "iPad (A16) E8": it opened in the iPhone window in
+  portrait, and the owner played a game there ("enjoyable"), so RC-21 passed on build 5.
 
 ## §7 Submission (US6)
 

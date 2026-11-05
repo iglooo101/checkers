@@ -138,8 +138,8 @@ explains the game in seven illustrated sections.
    group's one tester sent two reports on build 4 on 2026-11-05, "Hard game" and "Not an easy game to
    play" (`validation.md` §6), and the owner decided to make every level easier: Easy, Medium and Hard
    look 1, 2 and 3 turns ahead (`FRD.md` 1.3.4, FR-AI-02; each level still beats the one below by more
-   than 80 of 100, and loses clearly to build 4's same level). Then CI, build 5, Beta App Review on the
-   owner's go-ahead, the owner's answer to the tester (RC-27), and both playtests on build 5 (RC-04,
+   than 80 of 100, and loses clearly to build 4's same level). Build 5 (`dbae342`) is uploaded, processed
+   and in the internal groups, and RC-21 passed on it. Left: Beta App Review on the owner's go-ahead, the owner's answer to the tester (RC-27), and both playtests on build 5 (RC-04,
    RC-05; whether Hard still challenges an experienced casual player is open).
 3. **Then: the external testers (T047, the owner), with the release checklist on the latest build
    during their week.** **Build 4 is in external testing**: on the owner's go-ahead it was submitted
@@ -1387,3 +1387,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   The owner decided to make every level easier: #219 added and started (T063, F8.3 #183), FR-AI-02
   changed in `FRD.md` 1.3.4 (Easy, Medium and Hard look 1, 2 and 3 turns ahead), to ship in build 5.
   Board: 39/42 features, 155/167 tasks, 9 In Progress.
+- 2026-11-05: Build 5 uploaded and processed (`dbae342`, CI run 42123712973; `validation.md` §6): What
+  to Test entered, in the internal groups, its external state `READY_FOR_BETA_SUBMISSION`; RC-21 passed
+  on it (the owner played a game on the iPad simulator). #219 stays In Progress for Beta App Review, the
+  answer to the tester and the playtests. Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
