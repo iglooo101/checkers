@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-11-02 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.2, constitution v1.2.0
+Last updated: 2026-11-04 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.2, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -139,8 +139,8 @@ explains the game in seven illustrated sections.
    hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
    what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
    controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
-   were seen failing and pass on the iPhone 17 and the SE (`b1de6e2`, CI run 41415993172), and it
-   ships as build 3 once that run's `CI gate` passes. Then the owner looks at Game setup on the iPhone 16,
+   were seen failing and pass on the iPhone 17 and the SE, and CI run 41415993172 passed on
+   `b1de6e2` (33 minutes), so it ships as build 3. Then the owner looks at Game setup on the iPhone 16,
    repeats RC-21 on the iPad simulator, and gives the go-ahead to submit build 3 for Beta App
    Review. Build 2 is uploaded and processed but goes no further than the internal groups. Build
    1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
@@ -1328,3 +1328,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   on it, the go-ahead for its Beta App Review, and the testers. The risks gain the cancelled-CI trap.
   `HANDOFF.md` updated (current state, the session's lessons, next steps). `b1de6e2`'s CI run
   41415993172 was still running when this was written.
+- 2026-11-04: `b1de6e2`'s CI run 41415993172 passed with every job (33 minutes), so `main` takes
+  #217's change and build 3 goes ahead. Board unchanged: 39/42 features, 153/165 tasks, 9 In
+  Progress.

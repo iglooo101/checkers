@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-11-02
+Last updated: 2026-11-04
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -63,8 +63,8 @@ Last updated: 2026-11-02
   the beta description, now entered, turned off the public link, and decided to keep `Start`
   always visible: `FRD.md` 1.3.1, FR-SETUP-07, #216, in build 2. The owner's iPad check on build 2
   then found the Side choices hidden until scrolling, so the owner chose compact choices
-  (FR-SETUP-08, #217), to ship in build 3. At the session's close `b1de6e2` holds that change,
-  with CI run 41415993172 still running; build 2 is in the internal groups only; the external group
+  (FR-SETUP-08, #217), to ship in build 3. `b1de6e2` holds that change, and CI run 41415993172 passed on it (33 minutes); build 2 is in the
+  internal groups only; the external group
   has build 1, with one tester invited and not installed, and its public link off; and "iPad (A16)
   E8" holds a Release simulator build of build 2's code.
   `main` follows
@@ -239,16 +239,15 @@ Last updated: 2026-11-02
   (`build-and-test` has a 45-minute limit since #204). Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 8 epics, 41 features, 156 tasks (#1–#206; #188 is a PR) on the project board.
+- **Backlog**: 9 epics, 42 features, 165 tasks (#1–#217; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
-  #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic and is
-  in progress: F8.0 (#170: specify, clarify, plan, tasks, reconcile) is done; in F8.1 #179
-  (traceability) and #192 (diagnostics) are done and #177 and #178 wait for the owner's checks;
-  in F8.2 #206 (the engine's speed check on the development Mac) is done and #181 and #182 (US2)
-  wait for the phone (T021); in F8.3 #184 to #187 (icon, store page, TestFlight, submission) are
-  In Progress, their code written and waiting for the owner and Apple; #205 (validation) is open
-  (38/41 features, 147/156 tasks, 10 items In Progress).
+  #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic of 1.0
+  and is in progress: F8.0 (#170) and F8.1 (#176) are done; in F8.2 #206 (the engine's speed
+  check on the development Mac) is done and #181 and #182 (US2) wait for the phone (T021); in
+  F8.3 #184, #185, #215 and #216 are done, #186, #187 and #217 (TestFlight, submission, build 3)
+  wait for the owner and Apple, and #205 (validation) is open. E9 Online play (#207) follows 1.0
+  (39/42 features, 153/165 tasks, 9 items In Progress).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -1288,8 +1287,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **Recommended next: finish #217 (T061) and build 3.** `FRD.md` 1.3.2 adds FR-SETUP-08, with
    Difficulty and Side as one-line segmented controls and full rows at accessibility text sizes.
-   Its tests were seen failing and pass on the iPhone 17 and the SE. First read CI run 41415993172
-   on `b1de6e2`, the last code commit. Once its `CI gate` passes: fast-forward `main`, `scripts/release.sh archive 3`,
+   Its tests were seen failing and pass on the iPhone 17 and the SE, and CI run 41415993172 passed
+   on `b1de6e2`, the last code commit. Fast-forward `main`, `scripts/release.sh archive 3`,
    then `upload`, enter What to Test (the listing's text; a new build starts empty), and write its
    notes in `release/builds.md`. Then the owner installs it from TestFlight and looks at Game setup
    on the iPhone 16 (`Start` and every choice without scrolling), which closes #217, and repeats
