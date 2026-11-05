@@ -70,10 +70,18 @@ Last updated: 2026-11-05
   CI run 41978292013) and went up as build 4 on 2026-11-05: processed, What to Test entered, in the
   internal groups. The owner confirmed Settings on the iPhone 16 and the iPad simulator and RC-21
   passed on it, so #218 is done. On the owner's go-ahead it went to Beta App Review the same day
-  and was approved at once. The external group has builds 1 and 4, with one tester, still `INVITED`,
-  and its public link off; and "iPad (A16) E8" holds a Release simulator build of build 4's code and
-  was left running. At the session's close `main` matches the branch, and Xcode is closed. `main`
-  follows the branch head by fast-forward after each green `CI gate`.
+  and was approved at once. **Build 5** (2026-11-05): the external group's one tester installed build
+  4 and sent two TestFlight reports ("Hard game", "Not an easy game to play"), read through the API.
+  The owner made every level easier (#219, T063, `FRD.md` 1.3.4, FR-AI-02): Easy, Medium and Hard look
+  1, 2 and 3 turns ahead, and Easy now and then gives a man away (never two). That landed on `main`
+  (`dbae342`, CI run 42123712973) and went up as build 5: processed, What to Test entered, in the
+  internal and external groups after an at-once Beta App Review approval on the owner's go-ahead;
+  RC-21 passed on it (the owner played on the iPad simulator, "enjoyable"), and the owner answered the
+  tester by email. #219 stays In Progress for the playtests (RC-04, RC-05). The external group has
+  builds 1, 4 and 5, one tester and its public link off; "iPad (A16) E8" holds a Release simulator
+  build of build 5's code. At the session's close `main` matches the branch (`4aa3920` before the
+  close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
+  fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -201,11 +209,13 @@ Last updated: 2026-11-05
   1,000-position cross-check), and `GameSession` plays the computer's turn through two injected
   seams, `ComputerOpponent` (`EngineComputerOpponent` searches in a `@concurrent` function with
   a 0.8 s limit) and `TurnPacer` (0.5 s minimum thinking, 0.5 s between jumps), with the board
-  locked meanwhile. **The three levels differ** (E4 US2, research R4): Easy looks 2 turns ahead
-  and plays any turn within 40 points of its best, Medium 4 turns with an 8-point margin, Hard up
-  to 16 turns within 1,500,000 nodes, playing only exact ties; the root draws among them with a
-  seed (`SeededGenerator`, now in the engine). Medium scores 90 of 100 against Easy and Hard 99
-  of 100 against Medium. While it thinks the menu works (E4 US3): resign and leave cancel its
+  locked meanwhile. **The three levels differ** (research R4; since build 5, `FRD.md` 1.3.4): Easy
+  looks 1 turn ahead and plays any turn within 150 points of its best, Medium 2 turns with a 40-point
+  margin, Hard 3 turns playing only exact ties (its 1,500,000-node limit is only a guard now); the
+  search follows captures past its depth until the position is quiet, and the root draws among the
+  choices with a seed (`SeededGenerator`, in the engine). Medium scores 84.5 of 100 against Easy
+  and Hard 85.5 against Medium; build 4's Medium and Hard score 90 and 98 against today's (E4's
+  values were 2, 4 and 16 turns with margins 40, 8 and 0). While it thinks the menu works (E4 US3): resign and leave cancel its
   turn, and its next step waits while Rules or Settings covers the game (`ScreenCover`, set by
   the router from its path). Undo returns to the player's turn, cancelling the computer's (US4,
   research R9). VoiceOver announces each computer step once, without "Jump again." in its chain,
@@ -244,15 +254,15 @@ Last updated: 2026-11-05
   (`build-and-test` has a 45-minute limit since #204). Since E4 US2 a
   second job, `engine-strength`, runs the Release-only strength matches in parallel, and
   `CI gate` requires both (`scripts/ci/gate.sh` takes four results).
-- **Backlog**: 9 epics, 42 features, 166 tasks (#1–#218; #188 is a PR) on the project board.
+- **Backlog**: 9 epics, 42 features, 167 tasks (#1–#219; #188 is a PR) on the project board.
   **E1 Project foundation, E2 Rules engine, E3 Game experience, E7 Accessibility, E4 Computer
   opponent, E5 Saving and statistics and E6 Settings, themes, sound and rules are done** (E6:
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic of 1.0
   and is in progress: F8.0 (#170) and F8.1 (#176) are done; in F8.2 #206 (the engine's speed
   check on the development Mac) is done and #181 and #182 (US2) wait for the phone (T021); in
-  F8.3 #184, #185 and #215 to #218 are done, #186 and #187 (TestFlight, submission) wait for the
-  owner and Apple, and #205 (validation) is open. E9 Online play (#207) follows 1.0 (39/42 features,
-  155/166 tasks, 8 items In Progress).
+  F8.3 #184, #185 and #215 to #218 are done, #219 (easier levels, build 5) waits for the playtests,
+  #186 and #187 (TestFlight, submission) wait for the owner and Apple, and #205 (validation) is open.
+  E9 Online play (#207) follows 1.0 (39/42 features, 155/167 tasks, 9 items In Progress).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -1365,6 +1375,21 @@ Last updated: 2026-11-05
 - **Owner messages can arrive one fragment at a time** ("easy 1 step", "medium look ahead 2 steps",
   "hard look ahead 3 steps"): read them together, and treat a later fragment as a correction of an
   earlier typo ("easy look ahead 2 steps" meant Medium).
+- **Keep a test's old behavior as explicit limits**: the strength suite's `Contender` holds build 4's
+  Medium and Hard as `SearchLimits`, so "today's level must lose to the old one" is a match like any
+  other. Build 4's Easy equals today's Medium, so the Medium-against-Easy match already covers it.
+- **Positions for level tests can come from a probe**: random openings filtered by the property (Hard
+  always plays one turn that Medium never does, three turns ahead) found usable positions in seconds;
+  the tests state the measured facts (scores, choices), not a narrated line.
+- **A push can be refused by GitHub with "fatal error in commit_refs"** while githubstatus.com lists no
+  incident and the branch has no rules: retry every minute in the background (the tool's background
+  option, not `sleep` in the foreground); it went through within a few minutes, and the next pushes
+  worked at once.
+- **`update_plan.py --check` passes while the hand-written parts are stale**: after build 5 it
+  reported "up to date" while Next up and the risks still described build 4. Read Next up and the
+  risks at every close-out, as the checklist says.
+- **Take a commit's ID from its own output**: a mistyped one found no CI run (HTTP 404). Read it with
+  `git rev-parse --short HEAD` in the same command.
 
 ## Next steps
 
@@ -1372,34 +1397,31 @@ Last updated: 2026-11-05
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-0. **Under way: build 5 with easier levels (#219, T063).** Easy, Medium and Hard look 1, 2 and 3 turns
-   ahead (`FRD.md` 1.3.4). Landed on `main` (`dbae342`, CI run 42123712973); build 5 is uploaded,
-   processed, in the internal groups with What to Test entered, and RC-21 passed on it (the owner played
-   on the iPad simulator); on the owner's go-ahead it passed Beta App Review at once and is in the
-   external group, and the owner answered the tester by email the same day. Left: RC-04 and RC-05 (the
-   playtests) on build 5. A push can be refused by GitHub with "fatal error in commit_refs" and no incident: retry
-   every minute in the background; it went through within a few minutes.
-1. **Then: the external testers (T047; only the owner can name them).** Build 4
-   (`abfa729`) is approved by Beta App Review and in the external group, with What to Test entered and
-   its notes in `release/builds.md`. The owner adds testers in App Store Connect, for two to five in
-   all, at least one new to checkers (the rest of T044); the group has one, whose state read `INVITED`
-   on 2026-11-05. Keep their names and emails out of this public repository: record counts only. Once
-   they are invited, `release.sh record 4 external`. They get at least a week; record the playtest
-   result (RC-04, RC-05) and the feedback in `validation.md` §6, and answer every report (RC-27). A
-   problem they find goes through T048 and a new build.
-2. **During that week, with the phone: the release checklist on build 4 (T046), then US2's
+1. **Recommended next: more external testers (T047; only the owner can name them).** Build 5
+   (`dbae342`, easier levels) is approved by Beta App Review and in the external group beside builds 1
+   and 4, with What to Test entered and its notes in `release/builds.md`. The group has one tester, who
+   sent the first reports and was answered (`validation.md` §6). The owner adds more in App Store
+   Connect › TestFlight › the external group, for two to five in all, at least one new to checkers (the
+   rest of T044). Keep their names and emails out of this public repository: record counts only. Once
+   they are invited, `release.sh record 5 external`. They get at least a week; record the playtests on
+   build 5 (RC-04: a beginner wins at least one of three against Easy; RC-05: Hard challenges an
+   experienced casual player) and the feedback in `validation.md` §6, and answer every report (RC-27).
+   The playtests close #219. If RC-05 fails, Hard's depth goes up again (`FRD.md` first, then a build);
+   any other problem goes through T048 and a new build. Feedback is read with `GET
+   /v1/apps/6828523739/betaFeedbackScreenshotSubmissions` (and `…CrashSubmissions`), printing comments
+   and devices only.
+2. **During that week, with the phone: the release checklist on build 5 (T046), then US2's
    measurements (T021).** On the TestFlight install, work through `checklists/release.md`: each row
-   passed or accepted with a reason. `scripts/release.sh submit-check 4` lists the 25 still open: RC-20
-   carries from build 1 and RC-21 passed on build 4. RC-19 and RC-25 passed on build 1 in substance
-   (T012, T034) but must run again. RC-18 checks VoiceOver on Settings' new layout. The owner's
-   confirmation of build 4 named Settings, so look at Game setup again in the walkthrough. Then
-   `release.sh record 4 "TestFlight internal"`. Last, with the phone connected and Low Power Mode off:
-   `scripts/device.sh status` (if it says not connected, see the build 3 lessons) and one short device
-   run, since the phone is on iOS 27.2 and Xcode 26.3 was proven only on 27.0.1; then `scripts/device.sh
-   launch` and `session` (record every number in `validation.md` §5, and whether the hitches came from
-   the attached or a launched run; on a miss, T022). `device.sh` installs a development-signed build
-   over the TestFlight one, so do it after the TestFlight items and reinstall from TestFlight
-   afterwards.
+   passed or accepted with a reason. `scripts/release.sh submit-check 5` lists the 25 still open: RC-20
+   carries from build 1 and RC-21 passed on build 5. RC-19 and RC-25 passed on build 1 in substance
+   (T012, T034) but must run again. RC-18 checks VoiceOver on Settings' layout; look at Game setup again
+   too. Then `release.sh record 5 "TestFlight internal"`. Last, with the phone connected and Low Power
+   Mode off: `scripts/device.sh status` (if it says not connected, see the build 3 lessons) and one
+   short device run, since the phone is on iOS 27.2 and Xcode 26.3 was proven only on 27.0.1; then
+   `scripts/device.sh launch` and `session` (record every number in `validation.md` §5, and whether the
+   hitches came from the attached or a launched run; on a miss, T022). The computer's first step should
+   now sit at the 0.5 s minimum at every level. `device.sh` installs a development-signed build over the
+   TestFlight one, so do it after the TestFlight items and reinstall from TestFlight afterwards.
 3. **A later build, if one is needed**: FRD first for a behavior change, then failing tests, CI on the
    code commit, fast-forward `main`, Xcode closed (restore `project.pbxproj` if it rewrote the file),
    `scripts/release.sh archive <n>` and `upload`; if the export says "Cloud signing permission error",
@@ -1430,7 +1452,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    tests, open research). Start with #209 (FRD 1.4 and constitution 1.3.0: the app is no
    longer fully offline), then `/speckit-specify` (#210) on a new branch `009-online-play`
    from `main`, with #207's design as its input. Keep E9's code off `main` until 1.0 is
-   submitted.
+   submitted. On 2026-11-05 the owner asked where it stands; starting F9.0's documents on their own
+   branch during the testers' week was offered as an option, and the default (wait) stands.
 8. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
    `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
    Mac; any update after Apple requires the iOS 27 SDK (expected around April 2027) needs an Apple

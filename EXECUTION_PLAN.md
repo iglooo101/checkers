@@ -1409,3 +1409,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-05: The owner answered the tester's two reports by email (build 5's easier levels; RC-27 in
   part, `validation.md` §6). #219 is left with the playtests. Board unchanged: 39/42 features, 155/167
   tasks, 9 In Progress.
+- 2026-11-05: Session close-out. This plan reviewed against the board, the repository and App Store
+  Connect: 39/42 features, 155/167 tasks, 9 In Progress (#219 among them, waiting for the playtests).
+  Next up starts at more external testers and the playtests on build 5, then the release checklist and
+  the phone measurements on build 5; E9 still waits for the 1.0 submission. `HANDOFF.md` updated
+  (current state, the session's lessons, next steps).
