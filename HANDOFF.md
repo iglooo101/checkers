@@ -1375,9 +1375,10 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 0. **Under way: build 5 with easier levels (#219, T063).** Easy, Medium and Hard look 1, 2 and 3 turns
    ahead (`FRD.md` 1.3.4). Landed on `main` (`dbae342`, CI run 42123712973); build 5 is uploaded,
    processed, in the internal groups with What to Test entered, and RC-21 passed on it (the owner played
-   on the iPad simulator). Next: Beta App Review on the owner's go-ahead (`POST
-   /v1/betaAppReviewSubmissions`, then add the build to the external group), the owner's answer to the
-   tester (RC-27), and RC-04 and RC-05 (the playtests) on build 5.
+   on the iPad simulator); on the owner's go-ahead it passed Beta App Review at once and is in the
+   external group. Left: the owner's answer to the tester (RC-27), and RC-04 and RC-05 (the playtests)
+   on build 5. A push can be refused by GitHub with "fatal error in commit_refs" and no incident: retry
+   every minute in the background; it went through within a few minutes.
 1. **Then: the external testers (T047; only the owner can name them).** Build 4
    (`abfa729`) is approved by Beta App Review and in the external group, with What to Test entered and
    its notes in `release/builds.md`. The owner adds testers in App Store Connect, for two to five in

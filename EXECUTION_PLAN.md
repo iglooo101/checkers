@@ -139,7 +139,8 @@ explains the game in seven illustrated sections.
    play" (`validation.md` §6), and the owner decided to make every level easier: Easy, Medium and Hard
    look 1, 2 and 3 turns ahead (`FRD.md` 1.3.4, FR-AI-02; each level still beats the one below by more
    than 80 of 100, and loses clearly to build 4's same level). Build 5 (`dbae342`) is uploaded, processed
-   and in the internal groups, and RC-21 passed on it. Left: Beta App Review on the owner's go-ahead, the owner's answer to the tester (RC-27), and both playtests on build 5 (RC-04,
+   and in the internal groups, RC-21 passed on it, and it passed Beta App Review at once and is in the
+   external group. Left: the owner's answer to the tester (RC-27), and both playtests on build 5 (RC-04,
    RC-05; whether Hard still challenges an experienced casual player is open).
 3. **Then: the external testers (T047, the owner), with the release checklist on the latest build
    during their week.** **Build 4 is in external testing**: on the owner's go-ahead it was submitted
@@ -1391,3 +1392,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   to Test entered, in the internal groups, its external state `READY_FOR_BETA_SUBMISSION`; RC-21 passed
   on it (the owner played a game on the iPad simulator). #219 stays In Progress for Beta App Review, the
   answer to the tester and the playtests. Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
+- 2026-11-05: Build 5 submitted for Beta App Review on the owner's go-ahead and approved at once; it is
+  in the external group beside builds 1 and 4. #219 is left with the answer to the tester (RC-27) and
+  the playtests (RC-04, RC-05). Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.

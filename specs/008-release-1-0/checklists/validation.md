@@ -588,6 +588,11 @@ Before any app code of the slice, on `008-release-1-0`:
   17 checklist items an engine-only change cannot affect. A Release simulator build of the same commit
   (version 1.0 (5)) is installed over build 4's on "iPad (A16) E8": it opened in the iPhone window in
   portrait, and the owner played a game there ("enjoyable"), so RC-21 passed on build 5.
+- **Build 5's Beta App Review** (T063, T047, 2026-11-05, on the owner's go-ahead): the submission
+  returned `WAITING_FOR_REVIEW` and read `APPROVED` 20 seconds later, as build 4's had; build 5 joined
+  the external group (now builds 1, 4 and 5), whose one tester can install it. The push of this record
+  was refused four times by GitHub ("fatal error in commit_refs", no incident listed) and went through
+  on a later retry.
 
 ## §7 Submission (US6)
 
