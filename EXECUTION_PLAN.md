@@ -133,8 +133,9 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: the go-ahead to submit build 4 for Beta App Review, and the external
-   testers.** **#218 is done** (T062, 2026-11-05) and RC-21 passed on build 4. The owner's iPad check
+2. **Recommended next: the external testers, with the release checklist on build 4 during their
+   week.** **Build 4 is in external testing**: submitted on 2026-11-05 on the owner's go-ahead and
+   approved at once. **#218 is done** (T062, 2026-11-05) and RC-21 passed on build 4. The owner's iPad check
    on build 3 found Move hints below the edge in
    Settings at 375 × 667, and the owner chose to fix it before the beta, with the themes side by side
    (FR-SET-05, `FRD.md` 1.3.3). Its tests were seen failing, and all 18 tests around the screen pass
@@ -152,7 +153,7 @@ explains the game in seven illustrated sections.
    Build 1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
    `validation.md` §4), and build 3 read `READY_FOR_BETA_SUBMISSION`, so a new build needs its own
    submission. The owner's beta description is in place and the external group's public link is
-   off; the group has one tester invited, not yet installed, and only build 1. Left of T047: two to five
+   off; the group has one tester, still `INVITED`, and builds 1 and 4. Left of T047: two to five
    external testers, at least one new to checkers (the rest of T044), and a week of testing, the
    longest wait left. During that week, `checklists/release.md` on the TestFlight install (T046)
    with the phone connected for `scripts/device.sh launch` and `session` (T021; the phone is now
@@ -1368,3 +1369,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-05: #218 done (T062): the owner confirmed Settings on the iPhone 16 with build 4 from
   TestFlight and on the iPad simulator, and RC-21 passed on build 4. The go-ahead for its Beta App
   Review and the external testers are next. Board: 39/42 features, 155/166 tasks, 8 In Progress.
+- 2026-11-05: Build 4 submitted for Beta App Review on the owner's go-ahead and approved at once
+  (`validation.md` §6); it is in the external group beside build 1. T047 is left with the testers and
+  their week. Board unchanged: 39/42 features, 155/166 tasks, 8 In Progress.

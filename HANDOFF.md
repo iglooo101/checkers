@@ -70,8 +70,9 @@ Last updated: 2026-11-05
   groups only. #218 (FR-SET-05, the themes side by side in Settings) landed on `main` (`abfa729`,
   CI run 41978292013) and went up as build 4 on 2026-11-05: processed, What to Test entered, in the
   internal groups. The owner confirmed Settings on the iPhone 16 and the iPad simulator and RC-21
-  passed on it, so #218 is done. The external group has build 1, with one tester
-  invited and not installed, and its public link off; and "iPad (A16) E8" holds a Release simulator
+  passed on it, so #218 is done. On the owner's go-ahead it went to Beta App Review the same day
+  and was approved at once. The external group has builds 1 and 4, with one tester, still `INVITED`,
+  and its public link off; and "iPad (A16) E8" holds a Release simulator
   build of build 4's code.
   `main` follows
   the branch head by fast-forward after each green `CI gate`.
@@ -1312,6 +1313,13 @@ Last updated: 2026-11-05
 
 ## Lessons learned (Settings side by side, 2026-11-05)
 
+- **A follow-up build can pass Beta App Review at once**: build 4's submission returned
+  `WAITING_FOR_REVIEW` and read `APPROVED` moments later, so testers in the group could get it right
+  away. Be ready for that before submitting: the reason is not known, and it may not always happen.
+- **A later command runs after a failed edit script**: a Python edit missed an anchor and the commit on
+  the next line still went out without `HANDOFF.md`, as a lesson above already warned. Write the edit
+  as a script file and chain the commit with `&&`.
+
 - **A plain button's text element can take the whole label's frame**: inside a `.buttonStyle(.plain)`
   column, the name's element had the column's frame, so the contrast audit measured the board as
   text. Classic and Playful failed and black-and-white Modern did not, which pointed at it. A label
@@ -1333,14 +1341,14 @@ Last updated: 2026-11-05
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: the go-ahead to submit build 4 for Beta App Review.** `FRD.md` 1.3.3 adds
-   FR-SET-05, with the themes side by side in Settings. Build 4 (`abfa729`) is uploaded and processed,
-   What to Test is entered and its notes are in `release/builds.md`. #218 is done and RC-21 passed on
-   build 4, on the "iPad (A16) E8" simulator with a Release simulator build of the same code. Before a
-   later archive, restore `project.pbxproj` if an open Xcode rewrote it, with Xcode closed (restoring it
+1. **Recommended next: the external testers (T047).** Build 4 (`abfa729`) is approved by Beta App
+   Review and in the external group, with What to Test entered and its notes in `release/builds.md`.
+   #218 is done and RC-21 passed on build 4, on the "iPad (A16) E8" simulator with a Release simulator
+   build of the same code. Only the owner can name the testers. Before a later archive, restore `project.pbxproj` if an open Xcode rewrote it, with Xcode closed (restoring it
    under an open Xcode brings up "The backing file has been modified"). FR-027: every release checklist item the fix could affect runs on
-   build 4, RC-18 (VoiceOver in Settings) and RC-21 among them. It needs its own Beta App Review
-   submission for external testers, on the owner's go-ahead; add it to the external group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
+   build 4, RC-18 (VoiceOver in Settings) among them. A later build needs its own Beta App Review
+   submission, on the owner's go-ahead, and adding to the external group too: `POST
+   /v1/betaAppReviewSubmissions` with the build, then `POST /v1/betaGroups/<id>/relationships/builds`. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
    -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
    'platform=iOS Simulator,name=iPad (A16) E8' -derivedDataPath .build/ReleaseSimDerivedData
    -skipPackagePluginValidation CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).

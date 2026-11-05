@@ -526,6 +526,13 @@ Before any app code of the slice, on `008-release-1-0`:
   the owner's go-ahead. The external group still has only build 1. A Release simulator build of the
   same commit (version 1.0 (4)) is installed over build 3's on "iPad (A16) E8" for RC-21, keeping that
   simulator's saved data.
+- **Build 4's Beta App Review** (T047, 2026-11-05, 01:53 local, on the owner's go-ahead): the beta
+  description, feedback email, review contact and What to Test read as filled, and the build had no
+  earlier submission. The submission returned `WAITING_FOR_REVIEW` and read `APPROVED` moments later,
+  with the external state `IN_BETA_TESTING`. Why Apple approved it at once is not known; build 1 had
+  been approved before it. Build 4 joined the external group beside build 1. The group has one tester,
+  whose state reads `INVITED`, and its public link is off. Two to five testers are still to come, at
+  least one new to checkers, then at least a week for feedback.
 
 ## §7 Submission (US6)
 
