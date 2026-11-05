@@ -143,15 +143,16 @@ explains the game in seven illustrated sections.
    external group. Left: the owner's answer to the tester (RC-27), and both playtests on build 5 (RC-04,
    RC-05; whether Hard still challenges an experienced casual player is open).
 3. **Then: the external testers (T047, the owner), with the release checklist on the latest build
-   during their week.** **Build 4 is in external testing**: on the owner's go-ahead it was submitted
-   for Beta App Review on 2026-11-05 and approved at once (`validation.md` §6). The group has builds 1
-   and 4 and one tester, whose state read `INVITED`, with its public link off. Left of T047: two to
-   five external testers, at least one new to checkers (the rest of T044), and at least a week of
-   testing, the longest wait left. During that week, `checklists/release.md` on the TestFlight install
-   (T046; 25 of its 27 rows are open, RC-20 and RC-21 are passed), with the phone connected for
+   during their week.** **Build 5 is in external testing**: on the owner's go-ahead it was submitted
+   for Beta App Review on 2026-11-05 and approved at once, as build 4 was (`validation.md` §6). The
+   group has builds 1, 4 and 5 and one tester, who installed build 4 and sent the first feedback, with
+   its public link off. Left of T047: more external testers, two to five in all, at least one new to
+   checkers (the rest of T044), and at least a week of testing, the longest wait left. During that
+   week, `checklists/release.md` on build 5's TestFlight install (T046; 25 of its 27 rows are open;
+   RC-20 carries from build 1 and RC-21 passed on build 5), with the phone connected for
    `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check Xcode 26.3
-   still runs tests on it first). `release.sh submit-check 4` lists what is still open. Steps in
-   `HANDOFF.md`, Next steps 1 and 2.
+   still runs tests on it first). `release.sh submit-check 5` lists what is still open. Steps in
+   `HANDOFF.md`, Next steps 0 to 2.
 
    How build 4 got here: the owner's iPad checks found controls hidden until scrolling on the smallest
    window, three times. **#216** pinned `Start` (FR-SETUP-07, build 2); **#217** made Difficulty and
@@ -206,10 +207,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 
 - Every slice's board tasks are reconciled with its `tasks.md` (E8 on 2026-10-25, #175, adding
   #205); later changes to a slice's tasks need the board changed in the same step.
-- FR-AI-02 (noticeable strength gaps) is partly subjective. The matches (SC-003) pass by a wide
-  margin (Medium 90, Hard 99 of 100); the playtest by the user (SC-004, E4 quickstart §4) is
-  still open: a beginner must be able to beat Easy, which plays any turn within 40 points of its
-  best two turns ahead.
+- FR-AI-02 (noticeable strength gaps) is partly subjective. Since build 5 (`FRD.md` 1.3.4) Easy,
+  Medium and Hard look 1, 2 and 3 turns ahead, and the matches (SC-003) still pass by a wide margin
+  (Medium 84.5 against Easy, Hard 85.5 against Medium). Both playtests are open on build 5 (RC-04,
+  RC-05). Today's Hard scores 38 of 100 against build 4's Medium, so it may no longer challenge an
+  experienced casual player; if RC-05 fails, Hard's depth goes up again, `FRD.md` first.
 - E5 makes app data outlive each UI test: saved games stay between tests and the record cannot be
   reset, so UI tests answer "Abandon current game?" in the start helpers and `tapStart()`, compare
   counts before and after, and set known states with `UserDefaults` launch arguments (research
@@ -244,9 +246,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   test) can be hit the same way; E4's are measured alone, and the launch test only reports.
 - E5's saved-game format is version 1; any change to `GameState`'s coding needs a new version, or
   older saves become unreadable (shown once on Home). A test fixture guards it.
-- E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; the
-  Mac proxy is 419 ms), a VoiceOver game (§6), and pressing Home while the computer thinks (§3),
-  which UI tests cannot do inside the half-second thinking.
+- E4's checks by hand are open for the user: the playtest (§4), timing on an iPhone (§5; since
+  build 5 even Hard chooses in milliseconds, so the half-second minimum sets the pace), a VoiceOver
+  game (§6), and pressing Home while the computer thinks (§3), which UI tests cannot do inside the
+  half-second thinking.
 - Launch time on the iPhone: a first Release measurement gave a median of 231 ms over five cold
   launches (E8 research R4); #181 records ten. The local baseline (Intel simulator, Debug build)
   is 3.6 s and only guards against regressions.
@@ -266,11 +269,12 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - The pre-push hook that refuses a push while key material is tracked works only where it is
   switched on (`git config core.hooksPath scripts/hooks`, set in this clone on 2026-10-25); CI runs
   the same check after each push. A new clone must set it before the API key exists.
-- A new build can reach external testers at once: build 4's Beta App Review read `APPROVED` moments
-  after the submission, for a reason not known, so a build must be ready for testers when it is
-  submitted, and a tester may be on any build in the group.
-- The external testers are not yet named (2026-11-05: one, `INVITED`). The week of feedback starts
-  only once they are in, so it is what most delays the submission.
+- A new build can reach external testers at once: builds 4 and 5 each read `APPROVED` moments after
+  their Beta App Review submission, for a reason not known, so a build must be ready for testers when
+  it is submitted, and a tester may be on any build in the group.
+- Only one external tester so far (2026-11-05: installed build 4, sent two reports, answered by build
+  5's easier levels; the reply itself is the owner's, RC-27). Two to five are wanted, at least one new
+  to checkers; the week of feedback starts once they are in, so it is what most delays the submission.
 - E8 depends on the user and on Apple: the phone sitting, the external testers and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
   texts, screenshots, pages) does not wait.
@@ -328,12 +332,14 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   engine's rules, which the published counts and a 1,000-position cross-check enforce.
 - E4's strength matches need Release builds, so they run in the `engine-strength` CI job beside
   `build-and-test`, and `CI gate` requires both (US2). The job takes 4.5 minutes on CI (budget
-  15). Hard's slowest turn is 419 ms against a 0.5 s budget on this Mac, so a slower search would
-  need a lower node limit.
+  15). Since build 5 the app's Hard looks 3 turns ahead and takes milliseconds; the job's slow part
+  is the match against build 4's Hard (about 3 minutes on this Mac), which keeps the 1.5-million-node
+  search in the suite.
 - SC-005 (the computer's timing) is defined on a recent iPhone; E8 measures it on the owner's
   iPhone 16 from a log line per computer turn (E8 research R6), closing E4's open timing check.
-- Debug builds search slowly (the simulator app and the blocking tests): Hard relies on the 0.8 s
-  limit there, and engine tests in the blocking plan must use small search limits.
+- Debug builds search slowly (the simulator app and the blocking tests): engine tests in the blocking
+  plan must use small search limits. Since build 5 every level, Hard included, runs there quickly, and
+  the 0.8 s limit is only a guard.
 - The local `main` lags GitHub's (it moves by `git push origin <sha>:refs/heads/main`); run
   `git fetch origin main:main` before comparing branches. Merged slice branches are deleted
   once the next slice's branch exists (`001-…` to `007-…` so far); the auto-mode safety check
@@ -1395,3 +1401,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-05: Build 5 submitted for Beta App Review on the owner's go-ahead and approved at once; it is
   in the external group beside builds 1 and 4. #219 is left with the answer to the tester (RC-27) and
   the playtests (RC-04, RC-05). Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
+- 2026-11-05: Plan reviewed against the board, the repository and App Store Connect: Next up moves to
+  build 5 (external testing, `submit-check 5`); the risks now carry the new levels (Hard may no longer
+  challenge an experienced player, RC-05), builds 4 and 5's at-once approvals, the one tester's
+  feedback, and the strength job's slow part. Board unchanged: 39/42 features, 155/167 tasks, 9 In
+  Progress.
