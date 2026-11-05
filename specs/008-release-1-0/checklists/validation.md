@@ -245,7 +245,9 @@ Before any app code of the slice, on `008-release-1-0`:
   `US5AccessibilityAuditUITests`, `US6SetupUITests`, `US7NavigationUITests`) pass on both phones,
   including the SE's `testUS5_auditSetupComputer`. Screenshots on the SE show every choice and
   `Start` with room to spare at the default size, in light and dark; at the largest size the rows
-  keep their full text and scroll under the pinned `Start`.
+  keep their full text and scroll under the pinned `Start`. The owner confirmed it on 2026-11-04 on
+  the iPhone 16 (iOS 27.2) with build 3 from TestFlight: `Start` and every choice show without
+  scrolling. This Mac cannot simulate iOS 27, so that look is the proof for that phone.
 
 ## §3 Diagnostics on the phone (US3)
 

@@ -65,7 +65,8 @@ Last updated: 2026-11-04
   then found the Side choices hidden until scrolling, so the owner chose compact choices
   (FR-SETUP-08, #217), to ship in build 3. `b1de6e2` holds that change, and CI run 41415993172 passed on it (33 minutes). On 2026-11-04
   `main` took it (`718afe0`) and build 3 went up from that commit: processed, What to Test entered,
-  waiting for the owner's look at Game setup on the iPhone 16. Builds 2 and 3 are in the internal
+  and the owner confirmed Game setup on the iPhone 16 from TestFlight, so #217 is done. Builds 2
+  and 3 are in the internal
   groups only; the external group has build 1, with one tester invited and not installed, and its
   public link off; and "iPad (A16) E8" holds a Release simulator build of build 3's code.
   `main` follows
@@ -246,9 +247,9 @@ Last updated: 2026-11-04
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic of 1.0
   and is in progress: F8.0 (#170) and F8.1 (#176) are done; in F8.2 #206 (the engine's speed
   check on the development Mac) is done and #181 and #182 (US2) wait for the phone (T021); in
-  F8.3 #184, #185, #215 and #216 are done, #186, #187 and #217 (TestFlight, submission, build 3)
-  wait for the owner and Apple, and #205 (validation) is open. E9 Online play (#207) follows 1.0
-  (39/42 features, 153/165 tasks, 9 items In Progress).
+  F8.3 #184, #185 and #215 to #217 are done, #186 and #187 (TestFlight, submission) wait for the
+  owner and Apple, and #205 (validation) is open. E9 Online play (#207) follows 1.0 (39/42
+  features, 154/165 tasks, 8 items In Progress).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -1301,15 +1302,13 @@ Last updated: 2026-11-04
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: the owner's checks on build 3 (#217, T061).** `FRD.md` 1.3.2 adds
-   FR-SETUP-08, with Difficulty and Side as one-line segmented controls and full rows at
-   accessibility text sizes. Build 3 (`718afe0`) is uploaded and processed, What to Test is entered
-   and its notes are in `release/builds.md`. The owner installs it from TestFlight and looks at Game
-   setup on the iPhone 16 (`Start` and every choice without scrolling), which closes #217, and
-   repeats RC-21 on the "iPad (A16) E8" simulator, which holds a Release simulator build of the same
-   code. FR-027: every release checklist item the fix could affect runs on build 3. It needs its own
-   Beta App Review submission for external testers, on the owner's go-ahead; add it to the external
-   group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
+1. **Recommended next: RC-21 on build 3, then the go-ahead for its Beta App Review.** Build 3
+   (`718afe0`) is uploaded and processed, What to Test is entered, its notes are in
+   `release/builds.md`, and #217 is done: the owner confirmed Game setup on the iPhone 16 from
+   TestFlight. The owner repeats RC-21 on the "iPad (A16) E8" simulator, which holds a Release
+   simulator build of the same code. FR-027: every release checklist item the fix could affect runs
+   on build 3. It needs its own Beta App Review submission for external testers, on the owner's
+   go-ahead; add it to the external group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
    -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
    'platform=iOS Simulator,name=iPad (A16) E8' -derivedDataPath .build/ReleaseSimDerivedData
    -skipPackagePluginValidation CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).

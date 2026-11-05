@@ -42,9 +42,9 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 14/20 | In Progress |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 15/20 | In Progress |
 | 9 | E9 Online play | #207 | M6 Release 1.1 | P2 | 0/1 | 0/6 | Todo |
-| | **Total** | | | | **39/42** | **153/165** | |
+| | **Total** | | | | **39/42** | **154/165** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -58,7 +58,6 @@ Epics are listed in execution order.
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
-- #217 Fit Game setup's choices on screen without scrolling (FR-SETUP-08)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -134,15 +133,16 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: the owner's checks on build 3 (#217, T061).** The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
+2. **Recommended next: RC-21 on build 3, then the go-ahead for its Beta App Review.** **#217 is
+   done** (T061, 2026-11-04). The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
    hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
    what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
    controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
    were seen failing and pass on the iPhone 17 and the SE, and CI run 41415993172 passed on
    `b1de6e2` (33 minutes). **Build 3 is uploaded and processed** (2026-11-04, `718afe0`), with What
-   to Test entered, in the internal groups. Now the owner looks at Game setup on the iPhone 16,
-   repeats RC-21 on the iPad simulator, and gives the go-ahead to submit build 3 for Beta App
-   Review. Build 2 goes no further than the internal groups. Build
+   to Test entered, in the internal groups, and the owner confirmed Game setup on the iPhone 16
+   from TestFlight: `Start` and every choice without scrolling. Now the owner repeats RC-21 on the
+   iPad simulator and gives the go-ahead to submit build 3 for Beta App Review. Build 2 goes no further than the internal groups. Build
    1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
    `validation.md` §4), and build 3 reads `READY_FOR_BETA_SUBMISSION`, so it needs its own
    submission. The owner's beta description is in place and the external group's public link is
@@ -346,7 +346,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   and Difficulty and Side take one line each at normal text sizes. With stacked rows, `Start` was
   off screen on the iPhone SE and, by the owner's report, on their iPhone 16 on iOS 27.2, which
   differs from the iPhone 16e simulator and was not explained (Larger Text is off on that phone).
-  This Mac cannot simulate iOS 27, so the owner's look at build 3 is the proof for that phone. The
+  This Mac cannot simulate iOS 27, so the owner's look at build 3 (2026-11-04: `Start` and every
+  choice without scrolling) is the proof for that phone, and any change to this screen needs that
+  look again. The
   blocking plan runs only on the iPhone 17, so run `testUS6_choicesFitWithoutScrolling` on the SE
   after any change to this screen. Where the form still scrolls, as at the largest text sizes, the
   pinned area cuts a row at rest, and an audit at the default size would report contrast on that
@@ -634,7 +636,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 14/20 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 15/20 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -666,7 +668,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [~] #205 Validate the E8 slice and update project docs · S
 - [x] #215 Check that Game setup's Start is easy to find on iPhones · S
 - [x] #216 Keep Game setup's Start always visible (FR-SETUP-07) · S
-- [~] #217 Fit Game setup's choices on screen without scrolling (FR-SETUP-08) · S
+- [x] #217 Fit Game setup's choices on screen without scrolling (FR-SETUP-08) · S
 
 ### E9 Online play (#207) · M6 Release 1.1 · P2 · 0/6 tasks
 
@@ -1335,3 +1337,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   in the internal groups, its external state `READY_FOR_BETA_SUBMISSION`. #217 stays In Progress
   until the owner's look at Game setup on the iPhone 16. Board unchanged: 39/42 features, 153/165
   tasks, 9 In Progress.
+- 2026-11-04: #217 done (T061): the owner confirmed Game setup on the iPhone 16 with build 3 from
+  TestFlight, `Start` and every choice without scrolling. RC-21 on build 3 and the go-ahead for its
+  Beta App Review are next. Board: 39/42 features, 154/165 tasks, 8 In Progress.
