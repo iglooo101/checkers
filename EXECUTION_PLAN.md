@@ -133,32 +133,24 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: the external testers, with the release checklist on build 4 during their
-   week.** **Build 4 is in external testing**: submitted on 2026-11-05 on the owner's go-ahead and
-   approved at once. **#218 is done** (T062, 2026-11-05) and RC-21 passed on build 4. The owner's iPad check
-   on build 3 found Move hints below the edge in
-   Settings at 375 × 667, and the owner chose to fix it before the beta, with the themes side by side
-   (FR-SET-05, `FRD.md` 1.3.3). Its tests were seen failing, and all 18 tests around the screen pass
-   on the iPhone 17 and the SE, audits included (`validation.md` §2), and CI run 41978292013 passed
-   on `abfa729`. **Build 4 is uploaded and processed** (2026-11-05), with What to Test entered, in
-   the internal groups, and the owner confirmed Settings on the iPhone 16 and the iPad simulator.
-   **#217 is done** (T061, 2026-11-04). The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
-   hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
-   what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
-   controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
-   were seen failing and pass on the iPhone 17 and the SE, and CI run 41415993172 passed on
-   `b1de6e2` (33 minutes). **Build 3 is uploaded and processed** (2026-11-04, `718afe0`), with What
-   to Test entered, in the internal groups, and the owner confirmed Game setup on the iPhone 16
-   from TestFlight: `Start` and every choice without scrolling. Builds 2 and 3 go no further than the internal groups.
-   Build 1 was approved by Beta App Review (submitted 2026-10-29, recorded only on 2026-11-02;
-   `validation.md` §4), and build 3 read `READY_FOR_BETA_SUBMISSION`, so a new build needs its own
-   submission. The owner's beta description is in place and the external group's public link is
-   off; the group has one tester, still `INVITED`, and builds 1 and 4. Left of T047: two to five
-   external testers, at least one new to checkers (the rest of T044), and a week of testing, the
-   longest wait left. During that week, `checklists/release.md` on the TestFlight install (T046)
-   with the phone connected for `scripts/device.sh launch` and `session` (T021; the phone is now
-   on iOS 27.2, so check Xcode 26.3 still runs tests on it first). Steps in `HANDOFF.md`, Next
-   steps 1 to 3.
+2. **Recommended next: the external testers (T047, the owner), with the release checklist on build
+   4 during their week.** **Build 4 is in external testing**: on the owner's go-ahead it was submitted
+   for Beta App Review on 2026-11-05 and approved at once (`validation.md` §6). The group has builds 1
+   and 4 and one tester, whose state read `INVITED`, with its public link off. Left of T047: two to
+   five external testers, at least one new to checkers (the rest of T044), and at least a week of
+   testing, the longest wait left. During that week, `checklists/release.md` on the TestFlight install
+   (T046; 25 of its 27 rows are open, RC-20 and RC-21 are passed), with the phone connected for
+   `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check Xcode 26.3
+   still runs tests on it first). `release.sh submit-check 4` lists what is still open. Steps in
+   `HANDOFF.md`, Next steps 1 and 2.
+
+   How build 4 got here: the owner's iPad checks found controls hidden until scrolling on the smallest
+   window, three times. **#216** pinned `Start` (FR-SETUP-07, build 2); **#217** made Difficulty and
+   Side one line each (FR-SETUP-08, build 3, `b1de6e2`, CI run 41415993172); **#218** put the themes
+   side by side in Settings (FR-SET-05, `FRD.md` 1.3.3, build 4, `abfa729`, CI run 41978292013), which
+   the owner chose over a known limit for 1.0. All three are done, the owner confirmed Game setup on
+   the iPhone 16 with build 3 and Settings on it and on the iPad simulator with build 4, and builds 2
+   and 3 go no further than the internal groups (`validation.md` §2, §6).
 3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
@@ -265,6 +257,11 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - The pre-push hook that refuses a push while key material is tracked works only where it is
   switched on (`git config core.hooksPath scripts/hooks`, set in this clone on 2026-10-25); CI runs
   the same check after each push. A new clone must set it before the API key exists.
+- A new build can reach external testers at once: build 4's Beta App Review read `APPROVED` moments
+  after the submission, for a reason not known, so a build must be ready for testers when it is
+  submitted, and a tester may be on any build in the group.
+- The external testers are not yet named (2026-11-05: one, `INVITED`). The week of feedback starts
+  only once they are in, so it is what most delays the submission.
 - E8 depends on the user and on Apple: the phone sitting, the external testers and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
   texts, screenshots, pages) does not wait.
@@ -1372,3 +1369,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-05: Build 4 submitted for Beta App Review on the owner's go-ahead and approved at once
   (`validation.md` §6); it is in the external group beside build 1. T047 is left with the testers and
   their week. Board unchanged: 39/42 features, 155/166 tasks, 8 In Progress.
+- 2026-11-05: Session close-out. This plan reviewed against the board, the repository and App Store
+  Connect: 39/42 features, 155/166 tasks, 8 In Progress. Next up starts at the external testers, then
+  the release checklist and the phone measurements on build 4; the risks gain the at-once approval and
+  the testers not yet named. `HANDOFF.md` updated (current state, the session's lessons, next steps).

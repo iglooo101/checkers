@@ -63,19 +63,17 @@ Last updated: 2026-11-05
   the beta description, now entered, turned off the public link, and decided to keep `Start`
   always visible: `FRD.md` 1.3.1, FR-SETUP-07, #216, in build 2. The owner's iPad check on build 2
   then found the Side choices hidden until scrolling, so the owner chose compact choices
-  (FR-SETUP-08, #217), to ship in build 3. `b1de6e2` holds that change, and CI run 41415993172 passed on it (33 minutes). On 2026-11-04
-  `main` took it (`718afe0`) and build 3 went up from that commit: processed, What to Test entered,
-  and the owner confirmed Game setup on the iPhone 16 from TestFlight, so #217 is done. Builds 2
-  and 3 are in the internal
-  groups only. #218 (FR-SET-05, the themes side by side in Settings) landed on `main` (`abfa729`,
+  (FR-SETUP-08, #217), to ship in build 3. `b1de6e2` holds that change, and CI run 41415993172
+  passed on it (33 minutes). On 2026-11-04 `main` took it (`718afe0`) and build 3 went up from that
+  commit: processed, What to Test entered, and the owner confirmed Game setup on the iPhone 16 from
+  TestFlight, so #217 is done. Builds 2 and 3 are in the internal groups only. #218 (FR-SET-05, the themes side by side in Settings) landed on `main` (`abfa729`,
   CI run 41978292013) and went up as build 4 on 2026-11-05: processed, What to Test entered, in the
   internal groups. The owner confirmed Settings on the iPhone 16 and the iPad simulator and RC-21
   passed on it, so #218 is done. On the owner's go-ahead it went to Beta App Review the same day
   and was approved at once. The external group has builds 1 and 4, with one tester, still `INVITED`,
-  and its public link off; and "iPad (A16) E8" holds a Release simulator
-  build of build 4's code.
-  `main` follows
-  the branch head by fast-forward after each green `CI gate`.
+  and its public link off; and "iPad (A16) E8" holds a Release simulator build of build 4's code and
+  was left running. At the session's close `main` matches the branch, and Xcode is closed. `main`
+  follows the branch head by fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
   illustrated sections; 313 blocking tests. Along the way #204 raised `build-and-test`'s limit
@@ -1313,6 +1311,19 @@ Last updated: 2026-11-05
 
 ## Lessons learned (Settings side by side, 2026-11-05)
 
+- **The owner's bar for "fits" is the smallest window, whatever their own phone shows**: Settings fit
+  the iPhone 16, so the session recommended a known limit for 1.0 and recorded it; the owner chose to
+  fix it before the beta. Three screens' fixes came from the same finding. Offer the fix as the main
+  option when a control starts off screen at the default text size, and do not write a known limit
+  into the plan until the owner has answered.
+- **Restoring a file under an open Xcode brings up "The backing file has been modified"**: the session's
+  `git checkout` of `project.pbxproj` did. "Use Version on Disk" is safe when the file matches the
+  commit. Ask the owner to close Xcode first.
+- **Long commands can be refused here**: a heredoc for Python and another for the commit, chained, was
+  rejected ("this shell (bash 3.2.57) is too old"). A script file and `git commit -m` passed. A `&` in
+  a command also loses the end-of-task notification: use the tool's background option.
+- **Read a pasted confirmation as written**: the owner's message on build 4 was cut off partway through
+  the iPhone check, so the record names Settings and not Game setup, and the session said so.
 - **A follow-up build can pass Beta App Review at once**: build 4's submission returned
   `WAITING_FOR_REVIEW` and read `APPROVED` moments later, so testers in the group could get it right
   away. Be ready for that before submitting: the reason is not known, and it may not always happen.
@@ -1341,42 +1352,44 @@ Last updated: 2026-11-05
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: the external testers (T047).** Build 4 (`abfa729`) is approved by Beta App
-   Review and in the external group, with What to Test entered and its notes in `release/builds.md`.
-   #218 is done and RC-21 passed on build 4, on the "iPad (A16) E8" simulator with a Release simulator
-   build of the same code. Only the owner can name the testers. Before a later archive, restore `project.pbxproj` if an open Xcode rewrote it, with Xcode closed (restoring it
-   under an open Xcode brings up "The backing file has been modified"). FR-027: every release checklist item the fix could affect runs on
-   build 4, RC-18 (VoiceOver in Settings) among them. A later build needs its own Beta App Review
-   submission, on the owner's go-ahead, and adding to the external group too: `POST
-   /v1/betaAppReviewSubmissions` with the build, then `POST /v1/betaGroups/<id>/relationships/builds`. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
-   -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
-   'platform=iOS Simulator,name=iPad (A16) E8' -derivedDataPath .build/ReleaseSimDerivedData
-   -skipPackagePluginValidation CURRENT_PROJECT_VERSION=<n>`, then `simctl install`).
-2. **Then, with the phone: the release checklist on the latest build (T046) and US2's
-   measurements (T021)**. On the TestFlight install, work through `checklists/release.md` (RC-01 to RC-27;
-   each passed or accepted with a reason; T012 and T034 passed on build 1, and their rows, RC-19
-   and RC-25, are still open for the latest build). Last,
-   with the phone connected and Low Power Mode off: first `scripts/device.sh status` and one
-   short device run, since the phone is now on iOS 27.2 and Xcode 26.3 was proven only on
-   27.0.1; then `scripts/device.sh launch` and `session` (record every number in
-   `validation.md` §5, and whether the hitches came from the attached or a launched run; on a
-   miss, T022). `device.sh` installs a development-signed build over the TestFlight one, so do
-   it after the TestFlight items and reinstall from TestFlight afterwards. Then `release.sh
-   record <n> "TestFlight internal"`.
-3. **The external round (T047)**: Beta App Review already approved build 1 (submitted
-   2026-10-29), and the beta description, feedback email and review contact are filled. Build 4
-   needs its own submission (step 1). Left: two to five external testers, at least one new to checkers (the rest of
-   T044; the group has one invited, not yet installed); and a week of testing, the longest wait
-   left, which can run during step 2. Then `release.sh record <n> external`.
+1. **Recommended next: the external testers (T047; only the owner can name them).** Build 4
+   (`abfa729`) is approved by Beta App Review and in the external group, with What to Test entered and
+   its notes in `release/builds.md`. The owner adds testers in App Store Connect, for two to five in
+   all, at least one new to checkers (the rest of T044); the group has one, whose state read `INVITED`
+   on 2026-11-05. Keep their names and emails out of this public repository: record counts only. Once
+   they are invited, `release.sh record 4 external`. They get at least a week; record the playtest
+   result (RC-04, RC-05) and the feedback in `validation.md` §6, and answer every report (RC-27). A
+   problem they find goes through T048 and a new build.
+2. **During that week, with the phone: the release checklist on build 4 (T046), then US2's
+   measurements (T021).** On the TestFlight install, work through `checklists/release.md`: each row
+   passed or accepted with a reason. `scripts/release.sh submit-check 4` lists the 25 still open: RC-20
+   carries from build 1 and RC-21 passed on build 4. RC-19 and RC-25 passed on build 1 in substance
+   (T012, T034) but must run again. RC-18 checks VoiceOver on Settings' new layout. The owner's
+   confirmation of build 4 named Settings, so look at Game setup again in the walkthrough. Then
+   `release.sh record 4 "TestFlight internal"`. Last, with the phone connected and Low Power Mode off:
+   `scripts/device.sh status` (if it says not connected, see the build 3 lessons) and one short device
+   run, since the phone is on iOS 27.2 and Xcode 26.3 was proven only on 27.0.1; then `scripts/device.sh
+   launch` and `session` (record every number in `validation.md` §5, and whether the hitches came from
+   the attached or a launched run; on a miss, T022). `device.sh` installs a development-signed build
+   over the TestFlight one, so do it after the TestFlight items and reinstall from TestFlight
+   afterwards.
+3. **A later build, if one is needed**: FRD first for a behavior change, then failing tests, CI on the
+   code commit, fast-forward `main`, Xcode closed (restore `project.pbxproj` if it rewrote the file),
+   `scripts/release.sh archive <n>` and `upload`; if the export says "Cloud signing permission error",
+   run the local export once with the Xcode account (2026-10-29 lessons). Enter What to Test (the
+   listing's text; a new build starts empty) and write its notes in `release/builds.md`, naming what it
+   cannot affect ("cannot affect RC-20"), or `submit-check` asks for those rows again. Repeat RC-21 with
+   `xcodebuild build -project checkers/checkers.xcodeproj -scheme checkers -configuration Release
+   -destination 'platform=iOS Simulator,name=iPad (A16) E8' -derivedDataPath
+   .build/ReleaseSimDerivedData -skipPackagePluginValidation CURRENT_PROJECT_VERSION=<n>`, then `simctl
+   install`. It needs its own Beta App Review submission, on the owner's go-ahead: `POST
+   /v1/betaAppReviewSubmissions` with the build, then `POST /v1/betaGroups/<id>/relationships/builds`.
+   It may be approved at once.
 4. **Without the owner only the slice's polish is left** (T053, T055–T057), best done once the
-   owner's checks are in; T048 applies only if the beta finds a problem. T054 ran on `363f98e`
-   after build 1's upload (all pass) and runs again before submission. A later build:
-   `scripts/release.sh archive <n>` then `upload`; if the export again says "Cloud signing
-   permission error", run the local export once with the Xcode account (lessons above). With
-   #206 landed, a local `scripts/test.sh` failure on the speed check points to a real slowdown
-   (alone the count takes about 4 s; even at this Mac's lowest clock seen, `CPU_Speed_Limit`
-   54, that scales to about 8 s, an estimate); time other checks in a settled simulator (#206
-   lessons).
+   owner's checks are in. T054 ran on `363f98e` after build 1's upload (all pass) and runs again before
+   submission. With #206 landed, a local `scripts/test.sh` failure on the speed check points to a real
+   slowdown (alone the count takes about 4 s; even at this Mac's lowest clock seen, `CPU_Speed_Limit`
+   54, that scales to about 8 s, an estimate); time other checks in a settled simulator (#206 lessons).
 5. **The App Store Connect record is complete for submission except the build**: the listing,
    screenshots, privacy label, age rating, price, availability and review contact are in
    (`validation.md` §4); the build is chosen on the version page at submission (US6).
