@@ -513,6 +513,16 @@ Before any app code of the slice, on `008-release-1-0`:
   Beta App Review submission, which waits for the owner's go-ahead. The external group still has
   only build 1. A Release simulator build of the same commit (version 1.0 (3)) is installed over
   build 2's on "iPad (A16) E8" for RC-21, keeping that simulator's saved data.
+- **Build 4** (T062, 2026-11-05, `abfa729`, whose only code since build 3 is the Settings view and its
+  tests, with CI run 41978292013 green on it in 30 minutes): `release.sh archive 4` with its check
+  passing, `upload` at 01:39 local with the key (no signing error, and neither key value in the log),
+  `VALID` within about three minutes, with no export-compliance question. What to Test was empty on
+  the new build and now has the listing's text, the same as build 3's (read back equal). The internal
+  groups have access to all builds (`IN_BETA_TESTING`). External testing reads
+  `READY_FOR_BETA_SUBMISSION`, so build 4 needs its own Beta App Review submission, which waits for
+  the owner's go-ahead. The external group still has only build 1. A Release simulator build of the
+  same commit (version 1.0 (4)) is installed over build 3's on "iPad (A16) E8" for RC-21, keeping that
+  simulator's saved data.
 
 ## §7 Submission (US6)
 

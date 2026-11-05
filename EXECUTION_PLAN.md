@@ -134,12 +134,13 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: build 4 (#218, T062), then the owner's checks on it and the go-ahead for
-   its Beta App Review.** The owner's iPad check on build 3 found Move hints below the edge in
+2. **Recommended next: the owner's checks on build 4 (#218, T062), then the go-ahead for its Beta
+   App Review.** The owner's iPad check on build 3 found Move hints below the edge in
    Settings at 375 × 667, and the owner chose to fix it before the beta, with the themes side by side
    (FR-SET-05, `FRD.md` 1.3.3). Its tests were seen failing, and all 18 tests around the screen pass
-   on the iPhone 17 and the SE, audits included (`validation.md` §2). It ships as build 4 once `CI
-   gate` passes. **#217 is done** (T061, 2026-11-04). The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
+   on the iPhone 17 and the SE, audits included (`validation.md` §2), and CI run 41978292013 passed
+   on `abfa729`. **Build 4 is uploaded and processed** (2026-11-05), with What to Test entered, in
+   the internal groups. **#217 is done** (T061, 2026-11-04). The owner's iPad check on build 2 found that the pinned `Start` left the Side choices
    hidden until scrolling: the form is too tall for short screens, and pinning `Start` only moved
    what gets cut off. The owner chose compact choices: Difficulty and Side as one-line segmented
    controls, with full rows at accessibility text sizes (FR-SETUP-08, `FRD.md` 1.3.2). Its tests
@@ -1360,3 +1361,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   #218 added and started (T062, F8.3 #183), FR-SET-05 in `FRD.md` 1.3.3, the themes side by side in
   Settings, to ship in build 4. Builds 2 and 3 go no further than the internal groups. Board: 39/42
   features, 154/166 tasks, 9 In Progress.
+- 2026-11-05: Build 4 uploaded and processed (`abfa729`, CI run 41978292013; `validation.md` §6): What
+  to Test entered, in the internal groups, its external state `READY_FOR_BETA_SUBMISSION`. #218 stays
+  In Progress until the owner's look at Settings on the iPhone 16 and the iPad simulator. Board
+  unchanged: 39/42 features, 154/166 tasks, 9 In Progress.
