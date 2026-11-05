@@ -275,8 +275,11 @@ Before any app code of the slice, on `008-release-1-0`:
   `testUS5_auditSettingsLargestText`) pass on the iPhone 17 and the SE, and the two audits and the fit
   test pass on the SE in dark appearance. Measured at the default size, the explanation ends at 571
   of 667 on the SE (96 points to spare) and at 612 of 874 on the iPhone 17. Screenshots on the SE show
-  light, dark and XL side by side with no name cut, and XXL one below the other. Not measured: the
-  owner's iPhone 16 (the owner's check on build 4).
+  light, dark and XL side by side with no name cut, and XXL one below the other. The owner confirmed
+  on 2026-11-05: Settings on the iPhone 16 with build 4 from TestFlight, and on "iPad (A16) E8" with a
+  Release simulator build of the same commit, where RC-21 also passed (the iPhone-shaped window,
+  portrait when rotated, a game played through). The phone's layout was seen, not measured: this Mac
+  cannot simulate iOS 27.
 
 ## §3 Diagnostics on the phone (US3)
 

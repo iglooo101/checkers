@@ -69,7 +69,8 @@ Last updated: 2026-11-05
   and 3 are in the internal
   groups only. #218 (FR-SET-05, the themes side by side in Settings) landed on `main` (`abfa729`,
   CI run 41978292013) and went up as build 4 on 2026-11-05: processed, What to Test entered, in the
-  internal groups, waiting for the owner's checks. The external group has build 1, with one tester
+  internal groups. The owner confirmed Settings on the iPhone 16 and the iPad simulator and RC-21
+  passed on it, so #218 is done. The external group has build 1, with one tester
   invited and not installed, and its public link off; and "iPad (A16) E8" holds a Release simulator
   build of build 4's code.
   `main` follows
@@ -250,9 +251,9 @@ Last updated: 2026-11-05
   #132, final CI run 40130998987, 313 tests). **E8 Release 1.0 (#169)** is the last epic of 1.0
   and is in progress: F8.0 (#170) and F8.1 (#176) are done; in F8.2 #206 (the engine's speed
   check on the development Mac) is done and #181 and #182 (US2) wait for the phone (T021); in
-  F8.3 #184, #185 and #215 to #217 are done, #218 (build 4) is under way, #186 and #187
-  (TestFlight, submission) wait for the owner and Apple, and #205 (validation) is open. E9 Online
-  play (#207) follows 1.0 (39/42 features, 154/166 tasks, 9 items In Progress).
+  F8.3 #184, #185 and #215 to #218 are done, #186 and #187 (TestFlight, submission) wait for the
+  owner and Apple, and #205 (validation) is open. E9 Online play (#207) follows 1.0 (39/42 features,
+  155/166 tasks, 8 items In Progress).
   Progress and the full list are in `EXECUTION_PLAN.md`.
 - **Spec Kit**: E1's slice is `specs/001-project-foundation/` (validation log in
   `checklists/validation.md`), E2's `specs/002-rules-engine/` and E3's
@@ -1332,12 +1333,11 @@ Last updated: 2026-11-05
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: the owner's checks on build 4 (#218, T062).** `FRD.md` 1.3.3 adds FR-SET-05,
-   with the themes side by side in Settings. Build 4 (`abfa729`) is uploaded and processed, What to
-   Test is entered and its notes are in `release/builds.md`. The owner installs it from TestFlight and
-   looks at Settings and Game setup on the iPhone 16, which closes #218, and repeats RC-21 on the
-   "iPad (A16) E8" simulator, which holds a Release simulator build of the same code. Before a later
-   archive, restore `project.pbxproj` if an open Xcode rewrote it, with Xcode closed (restoring it
+1. **Recommended next: the go-ahead to submit build 4 for Beta App Review.** `FRD.md` 1.3.3 adds
+   FR-SET-05, with the themes side by side in Settings. Build 4 (`abfa729`) is uploaded and processed,
+   What to Test is entered and its notes are in `release/builds.md`. #218 is done and RC-21 passed on
+   build 4, on the "iPad (A16) E8" simulator with a Release simulator build of the same code. Before a
+   later archive, restore `project.pbxproj` if an open Xcode rewrote it, with Xcode closed (restoring it
    under an open Xcode brings up "The backing file has been modified"). FR-027: every release checklist item the fix could affect runs on
    build 4, RC-18 (VoiceOver in Settings) and RC-21 among them. It needs its own Beta App Review
    submission for external testers, on the owner's go-ahead; add it to the external group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
