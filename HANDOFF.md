@@ -161,7 +161,7 @@ Last updated: 2026-11-05
   5RH237UKVE (iOS Team Provisioning Profile, valid until 2027-10-15), installed and launched it.
   The debugger, UI tests (through `xcodebuild test`) and Instruments recording work there too;
   `xctrace export` does not (E8 research R1).
-- **Functional requirements**: `FRD.md` v1.3.3 (1.3.3: FR-SET-05; 1.3.2: FR-SETUP-08; 1.3.1: FR-SETUP-07; 1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
+- **Functional requirements**: `FRD.md` v1.3.4 (1.3.4: FR-AI-02, every level easier; 1.3.3: FR-SET-05; 1.3.2: FR-SETUP-08; 1.3.1: FR-SETUP-07; 1.1: iPhone only, portrait; 1.2: FR-STAT-06, an
   unreadable record is reported once; 1.3: FR-SND-05, sounds that cannot play are reported in
   Settings and retried with the next sound). Requirement IDs such as
   `FR-MOVE-03`; section 19 lists what is out of scope.
@@ -1346,13 +1346,38 @@ Last updated: 2026-11-05
 - **Look at a screenshot of each state a test claims to cover**, since a passing test cannot say the
   state was what its name says.
 
+## Lessons learned (first external feedback, 2026-11-05)
+
+- **TestFlight feedback is readable through the API**: `GET /v1/apps/<id>/betaFeedbackScreenshotSubmissions`
+  and `…/betaFeedbackCrashSubmissions` with the App Manager key (the screenshot list carries the
+  comment, device, OS and build; `include=tester` leads to the tester's group). Each record also holds
+  the tester's email: print only the comment and device fields, and keep identities out of the repo.
+- **The search follows captures past its depth** (`Search.swift`, "Captures at the horizon are searched
+  until the position is quiet"), so a level never misses a jump the player could make at once, however
+  shallow it looks. The session first told the owner a one-turn Easy would leave men to be jumped; the
+  test showed it never did, and the owner chose again on the corrected facts. Before describing how a
+  level plays, measure the behavior itself (here: turns that score a man below the level's own best),
+  not only match points.
+- **A man is worth more as pieces come off**: `Evaluation` adds `material * (24 - pieces) / 8`, so a man
+  is about 100 points with 24 pieces and 300 with 8. A test that a level gives a man away needs a full
+  board; small positions inflate every loss. A probe that plays random openings and filters positions
+  by the property found usable ones in seconds.
+- **Owner messages can arrive one fragment at a time** ("easy 1 step", "medium look ahead 2 steps",
+  "hard look ahead 3 steps"): read them together, and treat a later fragment as a correction of an
+  earlier typo ("easy look ahead 2 steps" meant Medium).
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: the external testers (T047; only the owner can name them).** Build 4
+0. **Under way: build 5 with easier levels (#219, T063).** Easy, Medium and Hard look 1, 2 and 3 turns
+   ahead (`FRD.md` 1.3.4); tests and the engine change are committed on the branch. Next: CI, fast-forward
+   `main`, `release.sh archive 5` and `upload`, What to Test, the notes in `release/builds.md` naming what
+   it cannot affect, RC-21 on the iPad simulator, Beta App Review on the owner's go-ahead, and the owner's
+   answer to the tester (RC-27). RC-04 and RC-05 (the playtests) run on build 5.
+1. **Then: the external testers (T047; only the owner can name them).** Build 4
    (`abfa729`) is approved by Beta App Review and in the external group, with What to Test entered and
    its notes in `release/builds.md`. The owner adds testers in App Store Connect, for two to five in
    all, at least one new to checkers (the rest of T044); the group has one, whose state read `INVITED`

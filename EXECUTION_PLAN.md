@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-11-05 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.3, constitution v1.2.0
+Last updated: 2026-11-05 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.4, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -42,9 +42,9 @@ Epics are listed in execution order.
 | 5 | E4 Computer opponent | #95 | M3 Computer opponent | P1 | 4/4 | 18/18 | Done |
 | 6 | E5 Saving and statistics | #114 | M4 Feature complete | P1 | 3/3 | 18/18 | Done |
 | 7 | E6 Settings, themes, sound and rules | #132 | M4 Feature complete | P1 | 5/5 | 17/17 | Done |
-| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 16/21 | In Progress |
+| 8 | E8 Release 1.0 | #169 | M5 Release 1.0 | P2 | 2/4 | 16/22 | In Progress |
 | 9 | E9 Online play | #207 | M6 Release 1.1 | P2 | 0/1 | 0/6 | Todo |
-| | **Total** | | | | **39/42** | **155/166** | |
+| | **Total** | | | | **39/42** | **155/167** | |
 <!-- END GENERATED: progress -->
 
 ## In progress
@@ -58,6 +58,7 @@ Epics are listed in execution order.
 - #186 TestFlight build and beta round
 - #187 Submit for App Store review
 - #205 Validate the E8 slice and update project docs
+- #219 Make every level easier: Easy, Medium and Hard look 1, 2 and 3 turns ahead (FR-AI-02)
 <!-- END GENERATED: in-progress -->
 
 ## Next up
@@ -133,8 +134,15 @@ explains the game in seven illustrated sections.
    archive's iPhone device build cannot run in a simulator), went well, and found that `Start`
    on Game setup can sit below the visible part of the form (#215, T059). T021 and T022 close
    #181 and #182.
-2. **Recommended next: the external testers (T047, the owner), with the release checklist on build
-   4 during their week.** **Build 4 is in external testing**: on the owner's go-ahead it was submitted
+2. **Now: easier levels in build 5 (#219, T063), from the first external feedback.** The external
+   group's one tester sent two reports on build 4 on 2026-11-05, "Hard game" and "Not an easy game to
+   play" (`validation.md` §6), and the owner decided to make every level easier: Easy, Medium and Hard
+   look 1, 2 and 3 turns ahead (`FRD.md` 1.3.4, FR-AI-02; each level still beats the one below by more
+   than 80 of 100, and loses clearly to build 4's same level). Then CI, build 5, Beta App Review on the
+   owner's go-ahead, the owner's answer to the tester (RC-27), and both playtests on build 5 (RC-04,
+   RC-05; whether Hard still challenges an experienced casual player is open).
+3. **Then: the external testers (T047, the owner), with the release checklist on the latest build
+   during their week.** **Build 4 is in external testing**: on the owner's go-ahead it was submitted
    for Beta App Review on 2026-11-05 and approved at once (`validation.md` §6). The group has builds 1
    and 4 and one tester, whose state read `INVITED`, with its public link off. Left of T047: two to
    five external testers, at least one new to checkers (the rest of T044), and at least a week of
@@ -151,13 +159,13 @@ explains the game in seven illustrated sections.
    the owner chose over a known limit for 1.0. All three are done, the owner confirmed Game setup on
    the iPhone 16 with build 3 and Settings on it and on the iPad simulator with build 4, and builds 2
    and 3 go no further than the internal groups (`validation.md` §2, §6).
-3. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
+4. The open hand checks of every epic (recorded in each slice's `checklists/validation.md`): E6's
    iPhone sound checks (a sound's delay, silent mode, the volume buttons, other apps' music, a
    sound over another) and VoiceOver through Rules and Settings; E4's playtest, iPhone timing and
    VoiceOver moves; E5's app-switcher and background checks; E7's VoiceOver game; E3's
    hand-played game and largest-text review. They are now items of E8's release checklist (spec
    FR-026), run on the TestFlight build before submission.
-4. **After 1.0 is submitted: E9 Online play (#207)** for version 1.1 (milestone M6). The owner
+5. **After 1.0 is submitted: E9 Online play (#207)** for version 1.1 (milestone M6). The owner
    approved its design on 2026-11-01 (written in #207): live games against an invited friend
    through Game Center, no own server; a lost connection ends the game with no result; no undo
    online; a separate Online record in Statistics; sides drawn at random. F9.0 (#208) starts by
@@ -646,7 +654,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #203 Validate the E6 slice and update project docs · S · after #142, #152
 - [x] #204 Give CI's build-and-test job a 45-minute time limit · S
 
-### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 16/21 tasks
+### E8 Release 1.0 (#169) · M5 Release 1.0 · P2 · 16/22 tasks
 
 **F8.0 Specification (Spec Kit)** (#170) · FRD §18
 
@@ -680,6 +688,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - [x] #216 Keep Game setup's Start always visible (FR-SETUP-07) · S
 - [x] #217 Fit Game setup's choices on screen without scrolling (FR-SETUP-08) · S
 - [x] #218 Fit Settings on screen without scrolling (FR-SET-05) · S
+- [~] #219 Make every level easier: Easy, Medium and Hard look 1, 2 and 3 turns ahead (FR-AI-02) · S
 
 ### E9 Online play (#207) · M6 Release 1.1 · P2 · 0/6 tasks
 
@@ -1373,3 +1382,8 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   Connect: 39/42 features, 155/166 tasks, 8 In Progress. Next up starts at the external testers, then
   the release checklist and the phone measurements on build 4; the risks gain the at-once approval and
   the testers not yet named. `HANDOFF.md` updated (current state, the session's lessons, next steps).
+- 2026-11-05: The first external feedback, read through the API: two reports on build 4 from the one
+  tester, "Hard game" and "Not an easy game to play", no screenshot and no crash (`validation.md` §6).
+  The owner decided to make every level easier: #219 added and started (T063, F8.3 #183), FR-AI-02
+  changed in `FRD.md` 1.3.4 (Easy, Medium and Hard look 1, 2 and 3 turns ahead), to ship in build 5.
+  Board: 39/42 features, 155/167 tasks, 9 In Progress.

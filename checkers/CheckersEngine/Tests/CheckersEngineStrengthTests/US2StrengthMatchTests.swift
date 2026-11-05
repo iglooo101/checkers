@@ -12,8 +12,10 @@ private let isOptimized: Bool = {
 }()
 
 /// The levels' strength, proven by matches between them (specs/005-computer-opponent/spec.md,
-/// US2; contracts/computer-player.md, "Strength matches"). Hard searches about a million
-/// positions a turn, which takes hours in Debug, so the suite runs only in an optimized build:
+/// US2; contracts/computer-player.md, "Strength matches"), and by matches against the Medium and
+/// Hard of builds 1 to 4, which each level must now lose (FRD 1.3.4). Build 4's Hard searches
+/// about a million positions a turn, which takes hours in Debug, so the suite runs only in an
+/// optimized build:
 /// `swift test -c release --filter CheckersEngineStrengthTests` (CI job engine-strength). Its
 /// tests run one at a time, so the timings they print are not slowed by each other.
 @Suite(.serialized, .enabled(if: isOptimized, "Run with swift test -c release"))
@@ -26,9 +28,11 @@ struct US2StrengthMatchTests {
     static let turnLimit = 20_000
 
     @Test(
-        "US2 FR-AI-01 FR-AI-02 SC-002 SC-003: in 100 games the stronger level scores at least 70 points; every step applies and every game ends",
+        "US2 FR-AI-01 FR-AI-02 SC-002 SC-003: in 100 games the stronger player scores at least 70 points; every step applies and every game ends",
         arguments: [
             Pairing(stronger: .medium, weaker: .easy), Pairing(stronger: .hard, weaker: .medium),
+            Pairing(stronger: .buildFourMedium, weaker: .medium),
+            Pairing(stronger: .buildFourHard, weaker: .hard),
         ])
     func match(_ pairing: Pairing) async throws {
         let clock = ContinuousClock()
@@ -47,7 +51,7 @@ struct US2StrengthMatchTests {
         // The games ran in parallel, so the slowest turns are timed again alone.
         let slowest = games.compactMap(\.slowestTurn).sorted { $0.duration > $1.duration }
         let replays = slowest.prefix(5).map { turn in
-            (turn, clock.measure { _ = turn.replay(at: pairing.stronger) })
+            (turn, clock.measure { _ = turn.replay(with: pairing.stronger.limits) })
         }
         var report =
             "\(pairing): \(points) of \(games.count) points (\(wins) wins, \(draws) draws) in"
@@ -85,26 +89,6 @@ struct US2StrengthMatchTests {
         }
     }
 
-    @Test("US2 FR-AI-02: Hard wins a man six turns ahead, which Medium does not see")
-    func hardLooksFurther() throws {
-        // Dark to move. After e5–f4, h2–g3 would lose that man to f4, and Light's other man
-        // runs out of safe squares (a3–b4, b4–c5, then d8–c7 covers b6 and d6), so on the
-        // sixth turn Light must give a man away. Four turns ahead e5–f4 scores below the other
-        // turns, so Medium never plays it.
-        let state = GameState(
-            [
-                "h2": .lightMan, "a3": .lightMan, "e3": .darkMan, "e5": .darkMan,
-                "d8": .darkMan,
-            ], toMove: .dark)
-        for seed in 0..<UInt64(5) {
-            let hard = try #require(ComputerPlayer.chooseTurn(in: state, level: .hard, seed: seed))
-            let medium = try #require(
-                ComputerPlayer.chooseTurn(in: state, level: .medium, seed: seed))
-            #expect(hard.steps == [Step("e5", "f4")], "seed \(seed)")
-            #expect(medium.steps != [Step("e5", "f4")], "seed \(seed)")
-        }
-    }
-
     /// Plays the pairing's 100 games in parallel, in game order.
     private static func play(_ pairing: Pairing) async throws -> [GameRecord] {
         try await withThrowingTaskGroup(of: (Int, GameRecord).self) { group in
@@ -137,7 +121,8 @@ struct US2StrengthMatchTests {
             var chosen: ComputerTurn?
             let duration = clock.measure {
                 chosen = ComputerPlayer.chooseTurn(
-                    in: state, level: isStronger ? pairing.stronger : pairing.weaker, seed: seed)
+                    in: state, limits: (isStronger ? pairing.stronger : pairing.weaker).limits,
+                    seed: seed)
             }
             guard let chosen else {
                 record.problems.append("game \(game), turn \(turn): no turn while in progress")
@@ -200,13 +185,32 @@ struct US2StrengthMatchTests {
     }
 }
 
-/// A stronger and a weaker level that play a match.
+/// A stronger and a weaker player that play a match.
 struct Pairing: Sendable, CustomStringConvertible, CustomTestStringConvertible {
-    let stronger: ComputerLevel
-    let weaker: ComputerLevel
+    let stronger: Contender
+    let weaker: Contender
 
     var description: String { "\(stronger) against \(weaker)" }
     var testDescription: String { description }
+}
+
+/// A player in a match: a level, or limits a level once had.
+struct Contender: Sendable, CustomStringConvertible {
+    let description: String
+    let limits: SearchLimits
+
+    static let easy = Contender(description: "easy", limits: ComputerLevel.easy.limits)
+    static let medium = Contender(description: "medium", limits: ComputerLevel.medium.limits)
+    static let hard = Contender(description: "hard", limits: ComputerLevel.hard.limits)
+    /// Medium and Hard as builds 1 to 4 had them, which the external beta found too strong
+    /// (research R4; FRD 1.3.4); today's levels must be clearly weaker. Build 4's Easy (two
+    /// turns, 40 points) is today's Medium, so the Medium-against-Easy match covers it.
+    static let buildFourMedium = Contender(
+        description: "build 4's medium",
+        limits: SearchLimits(maxDepth: 4, nodeLimit: nil, margin: 8))
+    static let buildFourHard = Contender(
+        description: "build 4's hard",
+        limits: SearchLimits(maxDepth: 16, nodeLimit: 1_500_000, margin: 0))
 }
 
 /// What one game of a match showed.
@@ -227,9 +231,9 @@ struct TimedTurn: Sendable {
     let nodes: Int
     let depth: Int
 
-    /// Chooses the same turn again: the same state, level and seed always give the same turn.
-    func replay(at level: ComputerLevel) -> ComputerTurn? {
-        ComputerPlayer.chooseTurn(in: state, level: level, seed: seed)
+    /// Chooses the same turn again: the same state, limits and seed always give the same turn.
+    func replay(with limits: SearchLimits) -> ComputerTurn? {
+        ComputerPlayer.chooseTurn(in: state, limits: limits, seed: seed)
     }
 }
 

@@ -4,14 +4,16 @@ public enum ComputerLevel: Sendable, CaseIterable {
     case medium
     case hard
 
-    /// How this level searches (research R4): Easy looks two turns ahead and often strays from
-    /// its best turn, Medium looks four turns ahead and strays a little, and Hard looks as far as
-    /// its node limit allows and plays only its best turns.
+    /// How this level searches (research R4; FRD 1.3.4): Easy looks 1 turn ahead, Medium 2 and
+    /// Hard 3, each also seeing the captures that follow. Easy may play a turn up to a man and a
+    /// half below its best, so now and then it gives a man away but never two; Medium strays less
+    /// than half a man; Hard plays only its best turns, and its node limit only guards against a
+    /// position whose captures run on.
     var limits: SearchLimits {
         switch self {
-        case .easy: SearchLimits(maxDepth: 2, nodeLimit: nil, margin: 40)
-        case .medium: SearchLimits(maxDepth: 4, nodeLimit: nil, margin: 8)
-        case .hard: SearchLimits(maxDepth: 16, nodeLimit: 1_500_000, margin: 0)
+        case .easy: SearchLimits(maxDepth: 1, nodeLimit: nil, margin: 150)
+        case .medium: SearchLimits(maxDepth: 2, nodeLimit: nil, margin: 40)
+        case .hard: SearchLimits(maxDepth: 3, nodeLimit: 1_500_000, margin: 0)
         }
     }
 }

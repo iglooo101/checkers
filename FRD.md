@@ -1,6 +1,9 @@
 # Functional Requirements Document: Checkers
 
-Version 1.3.3 · 2026-11-05
+Version 1.3.4 · 2026-11-05
+
+Changes in 1.3.4: FR-AI-02 changed: every level plays more weakly. Easy, Medium and Hard look
+1, 2 and 3 turns ahead, and Easy now and then gives a man away.
 
 Changes in 1.3.3: FR-SET-05 added: at the default text size, Settings fits on screen without
 scrolling.
@@ -194,7 +197,10 @@ Home
 
 - **FR-AI-01** The computer MUST play only legal moves under section 8.
 - **FR-AI-02** The three difficulty levels MUST differ noticeably in strength. Easy is beatable by a
-  beginner, and Hard is a challenge for an experienced casual player.
+  beginner, and Hard is a challenge for an experienced casual player. Easy MUST look 1 turn ahead
+  (its own turn), Medium 2 (its turn and the player's reply) and Hard 3; each level also sees the
+  captures that follow the last turn it looks at. Easy MUST now and then give a man away, and
+  never two men in one turn.
 - **FR-AI-03** The computer MUST show a "thinking" indicator during its turn and MUST make its move
   after a short pause of about 0.5–1 second, even if it chose sooner.
 - **FR-AI-04** The app MUST stay responsive while the computer thinks. The menu, Undo and Home MUST

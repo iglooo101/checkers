@@ -533,6 +533,52 @@ Before any app code of the slice, on `008-release-1-0`:
   been approved before it. Build 4 joined the external group beside build 1. The group has one tester,
   whose state reads `INVITED`, and its public link is off. Two to five testers are still to come, at
   least one new to checkers, then at least a week for feedback.
+- **First external feedback** (T047, T048, 2026-11-05, read through the API: `GET
+  /v1/apps/<id>/betaFeedbackScreenshotSubmissions` and `…/betaFeedbackCrashSubmissions`): two
+  screenshot-feedback reports on build 4, both from the external group's one tester, whose state now
+  reads `INSTALLED` (an iPhone 17 Pro Max on iOS 27.2), sent a minute apart: "Hard game" and "Not an
+  easy game to play". Neither has a screenshot attached, and there is no crash feedback. The app keeps no
+  analytics, so the level they played is not known. The owner decided to treat the reports as Easy being
+  too strong for a beginner (FR-AI-02): T048's first problem, fixed under T063 (#219) in build 5. The
+  tester's answer (RC-27) is the owner's. No tester's name or email is recorded here.
+- **Easy's options, measured** (T063, 2026-11-05, Release on the development Mac, in a scratch copy of
+  the engine with no change to it; 100 games each, 50 openings of two random turns played twice with the
+  sides swapped, a win 1 and a draw 0.5; the points are the candidate's). Opponents: build 4's Easy
+  (depth 2, margin 40); a one-turn player (depth 1, margin 0: its best-looking turn, without the reply);
+  random turns.
+
+  | Candidate | Against build 4's Easy | Against the one-turn player | Against random turns |
+  |---|---|---|---|
+  | Depth 2, margin 40 (build 4's Easy) | 55 | 75.5 | 100 |
+  | Depth 2, margin 100 | 47.5 | 73 | 100 |
+  | Depth 2, margin 150 | 42.5 | 70.5 | 100 |
+  | Depth 2, margin 250 | 19 | 39 | 99 |
+  | **Depth 1, margin 40** (chosen) | **16** | **57.5** | **100** |
+  | Depth 1, margin 100 | 16 | 52 | 100 |
+  | Depth 2, margin 40, one turn in five random | 15.5 | 19.5 | 99.5 |
+  | Depth 2, margin 40, 35% of turns random | 5 | 8.5 | 93 |
+
+  A wider margin at depth 2 barely weakens Easy until 250 points. The owner first chose depth 1 with
+  margin 40, on the session's description that it would leave men where they can be jumped.
+- **Correction and the owner's final choice** (T063, 2026-11-05): that description was wrong. The
+  search follows captures past its depth until the position is quiet (`Search.swift`), so at margin
+  40 even a one-turn Easy never gives a man away outright; it only misses the player's quiet set-ups.
+  Measured against the one-turn player over 100 games, the turns that score a man or more below the
+  level's own best: depth 1 with margin 40, none in 5,698 turns; margin 100, 62; margin 150, 82 (about
+  0.8 a game, never two men); depth 2 with margin 250, 336 (two men or more on 198). Told this, the
+  owner chose depth 1 with margin 150, then asked for every level to be easier: Easy, Medium and Hard
+  look 1, 2 and 3 turns ahead (`FRD.md` 1.3.4). Medium keeps build 4's Easy margin (40 points) and
+  Hard keeps 0, which beat margin 8 (84.5 against 78.5 points against Medium).
+- **The three levels, measured** (T063, 2026-11-05, Release, the same matches): Medium (2 turns, 40)
+  scores 82.5 against Easy (1 turn, 150) and Hard (3 turns, 0) 84.5 against Medium, so SC-003 still
+  holds. Build 4's Medium scores 87 against today's Medium and build 4's Hard 100 against today's
+  Hard; today's Hard scores 38 against build 4's Medium. Whether Hard still challenges an experienced
+  casual player (FR-AI-02, RC-05) is now open; RC-04 and RC-05 run again on build 5.
+- **Tests on the change** (T063, 2026-11-05): on build 4's values the depths test, the two-turn trap,
+  the three-turn win, the full-board give-away and the strength match against the earlier level all
+  failed (that match scored 52, below 70); with the new values the engine's 91 tests pass one at a time
+  (45 s), and the Release strength suite passes: Medium 84.5 against Easy, Hard 85.5 against Medium,
+  build 4's Medium 90 against Medium, build 4's Hard 98 against Hard (176 s), and the counts to 9 turns.
 
 ## §7 Submission (US6)
 

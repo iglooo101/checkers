@@ -92,16 +92,29 @@ programs outside the repository.
 ## R4. Difficulty levels
 
 - **Decision**: A public `ComputerLevel` (easy, medium, hard) in the engine, each with a maximum
-  depth, a node limit and a random margin. Final values (US2), the starting values, which met
-  SC-003 at the first run; SC-004 is the user's playtest:
+  depth, a node limit and a random margin. E4's final values (US2) were its starting values, which
+  met SC-003 at the first run; SC-004 is the user's playtest. Since build 5 (2026-11-05), with
+  E4's values in brackets:
 
   | Level | Maximum depth (turns) | Node limit | Random margin |
   |---|---|---|---|
-  | Easy | 2 | none | 40 points |
-  | Medium | 4 | none | 8 points |
-  | Hard | 16 | 1,500,000 | 0 (only exact ties) |
+  | Easy | 1 (2 until build 4) | none | 150 points (40 until build 4) |
+  | Medium | 2 (4 until build 4) | none | 40 points (8 until build 4) |
+  | Hard | 3 (16 until build 4) | 1,500,000 | 0 (only exact ties) |
 
-  Measured on the development Mac in Release (*measured*, 2026-10-22): Medium scores 90 of 100
+  **Changed 2026-11-05** (E8 T063, #219, `FRD.md` 1.3.4): the external tester's TestFlight feedback
+  on build 4 ("Hard game", "Not an easy game to play") led the owner to make every level weaker:
+  Easy, Medium and Hard look 1, 2 and 3 turns ahead. The search still follows captures past its
+  depth until the position is quiet, so even Easy sees a jump the player could make at once; its
+  150-point margin lets it give a man away now and then (about 0.8 times a game against a depth-1
+  player, never two men at once, measured), which 40 points never did. Measured in Release on the
+  development Mac, 100 games each: Medium scores 82.5 against Easy and Hard 84.5 against Medium
+  (SC-003 holds); build 4's Easy scores 84.5 against Easy, build 4's Medium 87 against Medium and
+  build 4's Hard 100 against Hard; the new Hard scores 38 against build 4's Medium. Hard's node
+  limit stays as a guard; at 3 turns it is not reached in the matches. The Easy options measured
+  first are in `specs/008-release-1-0/checklists/validation.md` §6.
+
+  With E4's values, measured on the development Mac in Release (*measured*, 2026-10-22): Medium scores 90 of 100
   against Easy (83 wins, 14 draws) and Hard 99 of 100 against Medium (98 wins, 2 draws). Every
   Hard turn of 12 match games, timed one at a time: 522 turns, mean 262 ms, slowest 419 ms; 492
   of them stopped at the node limit, after completing depth 9 to 12, at 3.6–7.4 million nodes per
@@ -117,7 +130,7 @@ programs outside the repository.
 - **Alternatives considered**: levels defined by thinking time (rejected: strength would depend on
   the device and the build, and matches would not repeat); random blunders at Easy (rejected as
   the first approach: a margin is simpler and tunable; revisit if the playtest finds Easy too
-  strong).
+  strong). Revisited on 2026-11-05 (above): measured, and not chosen.
 
 ## R5. Randomness that repeats in tests
 
