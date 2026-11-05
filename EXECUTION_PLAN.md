@@ -140,7 +140,7 @@ explains the game in seven illustrated sections.
    look 1, 2 and 3 turns ahead (`FRD.md` 1.3.4, FR-AI-02; each level still beats the one below by more
    than 80 of 100, and loses clearly to build 4's same level). Build 5 (`dbae342`) is uploaded, processed
    and in the internal groups, RC-21 passed on it, and it passed Beta App Review at once and is in the
-   external group. Left: the owner's answer to the tester (RC-27), and both playtests on build 5 (RC-04,
+   external group, and the owner answered the tester by email. Left: both playtests on build 5 (RC-04,
    RC-05; whether Hard still challenges an experienced casual player is open).
 3. **Then: the external testers (T047, the owner), with the release checklist on the latest build
    during their week.** **Build 5 is in external testing**: on the owner's go-ahead it was submitted
@@ -273,7 +273,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   their Beta App Review submission, for a reason not known, so a build must be ready for testers when
   it is submitted, and a tester may be on any build in the group.
 - Only one external tester so far (2026-11-05: installed build 4, sent two reports, answered by build
-  5's easier levels; the reply itself is the owner's, RC-27). Two to five are wanted, at least one new
+  5's easier levels and the owner's email). Two to five are wanted, at least one new
   to checkers; the week of feedback starts once they are in, so it is what most delays the submission.
 - E8 depends on the user and on Apple: the phone sitting, the external testers and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
@@ -1406,3 +1406,6 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   challenge an experienced player, RC-05), builds 4 and 5's at-once approvals, the one tester's
   feedback, and the strength job's slow part. Board unchanged: 39/42 features, 155/167 tasks, 9 In
   Progress.
+- 2026-11-05: The owner answered the tester's two reports by email (build 5's easier levels; RC-27 in
+  part, `validation.md` §6). #219 is left with the playtests. Board unchanged: 39/42 features, 155/167
+  tasks, 9 In Progress.

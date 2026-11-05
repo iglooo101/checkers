@@ -593,6 +593,9 @@ Before any app code of the slice, on `008-release-1-0`:
   the external group (now builds 1, 4 and 5), whose one tester can install it. The push of this record
   was refused four times by GitHub ("fatal error in commit_refs", no incident listed) and went through
   on a later retry.
+- **Reports answered** (RC-27 in part, 2026-11-05): the owner emailed the tester that build 5 has easier
+  levels, how to update in TestFlight, and asked for three games against Easy and a try of Hard. Both
+  reports so far are answered; RC-27 stays open until the testers are in and their week has closed.
 
 ## §7 Submission (US6)
 

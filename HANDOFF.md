@@ -1376,8 +1376,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    ahead (`FRD.md` 1.3.4). Landed on `main` (`dbae342`, CI run 42123712973); build 5 is uploaded,
    processed, in the internal groups with What to Test entered, and RC-21 passed on it (the owner played
    on the iPad simulator); on the owner's go-ahead it passed Beta App Review at once and is in the
-   external group. Left: the owner's answer to the tester (RC-27), and RC-04 and RC-05 (the playtests)
-   on build 5. A push can be refused by GitHub with "fatal error in commit_refs" and no incident: retry
+   external group, and the owner answered the tester by email the same day. Left: RC-04 and RC-05 (the
+   playtests) on build 5. A push can be refused by GitHub with "fatal error in commit_refs" and no incident: retry
    every minute in the background; it went through within a few minutes.
 1. **Then: the external testers (T047; only the owner can name them).** Build 4
    (`abfa729`) is approved by Beta App Review and in the external group, with What to Test entered and
