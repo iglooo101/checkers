@@ -248,6 +248,15 @@ Before any app code of the slice, on `008-release-1-0`:
   keep their full text and scroll under the pinned `Start`. The owner confirmed it on 2026-11-04 on
   the iPhone 16 (iOS 27.2) with build 3 from TestFlight: `Start` and every choice show without
   scrolling. This Mac cannot simulate iOS 27, so that look is the proof for that phone.
+- **Move hints in Settings** (2026-11-05, found by the owner on "iPad (A16) E8" with build 3's code):
+  the "Game" heading sits at the bottom edge and Move hints starts below it. A temporary UI test at
+  the default text size, removed afterwards, measured it. iPhone SE (375 × 667): the switch at y
+  664.5–716.5 at rest, outside the window; after one swipe the switch at 569–621 and its explanation
+  at 621–667, all inside. iPhone 17 (402 × 874): everything inside without scrolling, the
+  explanation ending at 803.7. The iPad's window has the SE's proportions and shows the same layout.
+  The iPhone 16e simulators could not run the test, and the swipe was not measured on the iPad. The
+  owner confirmed on the iPhone 16 (iOS 27.2) with build 3 that Move hints and its explanation show
+  without scrolling, so it stays as it is for 1.0 (`EXECUTION_PLAN.md`, Risks).
 
 ## §3 Diagnostics on the phone (US3)
 

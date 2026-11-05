@@ -1,6 +1,6 @@
 # Execution Plan
 
-Last updated: 2026-11-04 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.2, constitution v1.2.0
+Last updated: 2026-11-05 · Board: [Checkers project](https://github.com/users/iglooo101/projects/1/views/1) · Source: `FRD.md` v1.3.2, constitution v1.2.0
 
 This file tracks what is in progress and what is left to finish the project. It mirrors the
 GitHub project board; when they disagree, fix both in the same change.
@@ -342,6 +342,13 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   (XCTest's limit). If the last two come back, make `startComputerGame` wait for the difficulty
   buttons and retap, and retry an audit that times out; rerun the failed jobs only after reading
   the log.
+- Settings does not fit the smallest window: at 375 × 667 (the iPhone SE, and the iPhone
+  compatibility window on an iPad) Move hints starts just below the edge, with the "Game" heading
+  showing above it, and one swipe shows it and its explanation. The three theme rows take about 330
+  points. It fits on the iPhone 17 and on the owner's iPhone 16 (build 3, 2026-11-05). It stays as
+  it is for 1.0: the list scrolls normally, no requirement says Settings must fit, and a fix means
+  build 4 and a new Beta App Review. Compact theme rows are the fix if a later release wants it
+  (`validation.md` §2).
 - Game setup is compact (FR-SETUP-07, FR-SETUP-08, #216, #217): `Start` is pinned below the form,
   and Difficulty and Side take one line each at normal text sizes. With stacked rows, `Start` was
   off screen on the iPhone SE and, by the owner's report, on their iPhone 16 on iOS 27.2, which
@@ -1340,3 +1347,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-04: #217 done (T061): the owner confirmed Game setup on the iPhone 16 with build 3 from
   TestFlight, `Start` and every choice without scrolling. RC-21 on build 3 and the go-ahead for its
   Beta App Review are next. Board: 39/42 features, 154/165 tasks, 8 In Progress.
+- 2026-11-05: The owner's iPad check found Move hints starting below the edge in Settings. Measured
+  on the iPhone SE and the iPhone 17, and the owner confirmed it fits on the iPhone 16 with build 3,
+  so it stays as it is for 1.0 (Risks). RC-21 on build 3 is still open. Board unchanged: 39/42
+  features, 154/165 tasks, 8 In Progress.

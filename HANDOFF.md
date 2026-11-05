@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-11-04
+Last updated: 2026-11-05
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -1295,6 +1295,16 @@ Last updated: 2026-11-04
   not a failed upload.
 - **List `../secrets` by count, not with `ls`**: the key's file name holds the Key ID, which
   `release.sh upload` keeps out of its log on purpose.
+- **An iPhone app on the iPad simulator has the iPhone SE's window**: its proportions match 375 ×
+  667, and the layouts match, so the SE reproduces what an iPad check finds without disturbing the
+  owner's session on the iPad.
+- **Pick the `.xctestrun` by name**: `ls -t` chose `checkers_Screenshots_…`, which also ran the
+  temporary test; use `checkers_checkers_…`. Boot the simulator first: one run failed at launch
+  ("Failed to get launch progress") and passed once booted. "iPhone 16e cannot run
+  checkersUITests" (exit 70) comes from `xcodebuild` itself, so try another simulator.
+- **An open Xcode can rewrite `project.pbxproj`**: this time 164 lines moved and one blank line
+  appeared, with nothing else changed (compare the sorted files). `release.sh archive` refuses a
+  modified tree, so restore it before a build, and add files to a commit by name.
 
 ## Next steps
 
@@ -1306,7 +1316,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    (`718afe0`) is uploaded and processed, What to Test is entered, its notes are in
    `release/builds.md`, and #217 is done: the owner confirmed Game setup on the iPhone 16 from
    TestFlight. The owner repeats RC-21 on the "iPad (A16) E8" simulator, which holds a Release
-   simulator build of the same code. FR-027: every release checklist item the fix could affect runs
+   simulator build of the same code. Move hints starting below the edge there is a known limit, not
+   a failure of RC-21 (the plan's Risks). FR-027: every release checklist item the fix could affect runs
    on build 3. It needs its own Beta App Review submission for external testers, on the owner's
    go-ahead; add it to the external group too. A later build repeats RC-21 on that simulator (rebuild for it: `xcodebuild build
    -project checkers/checkers.xcodeproj -scheme checkers -configuration Release -destination
