@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-11-05
+Last updated: 2026-11-06
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -80,8 +80,9 @@ Last updated: 2026-11-05
   tester by email. #219 stays In Progress for the playtests (RC-04, RC-05). The external group has
   builds 1, 4 and 5, three testers (two more invited on 2026-11-06, both new to checkers, so
   T044 is done; build 5 recorded `external`) and its public link off; "iPad (A16) E8" holds a Release simulator
-  build of build 5's code. At the session's close `main` matches the branch (`4aa3920` before the
-  close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
+  build of build 5's code. At the 2026-11-06 session's close the first tester reads `INSTALLED` and
+  the two new ones `INVITED`; `main` matches the branch (`6adb7fc` before the close-out commit),
+  Xcode is closed and no simulator runs. `main` follows the branch head by
   fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -1392,6 +1393,27 @@ Last updated: 2026-11-05
 - **Take a commit's ID from its own output**: a mistyped one found no CI run (HTTP 404). Read it with
   `git rev-parse --short HEAD` in the same command.
 
+## Lessons learned (more external testers, 2026-11-06)
+
+- **Testers are added through the API in two calls**: `GET /v1/betaTesters?filter[email]=<email>&
+  filter[apps]=6828523739&include=betaGroups` first (neither address was a tester yet), then `POST
+  /v1/betaTesters` with `attributes.email` and `relationships.betaGroups` set to the external group:
+  201 each, and Apple sent the email invite at once (`inviteType` `EMAIL`, state `INVITED`), since the
+  group already had approved builds. A tester who already exists joins with `POST
+  /v1/betaGroups/<id>/relationships/betaTesters`. Names are optional. Print only states and counts.
+- **`main` refuses a push until the commit's own `CI gate` has passed**, docs-only included ("GH006 …
+  Required status check "CI gate" is expected"). The working rules say so, and the first push of the
+  session still went straight to `main`. Push the branch, then one background command that waits for
+  that commit's gate (a docs-only one passes in a minute or two) and fast-forwards and pushes `main`.
+- **Check a step's command against the tool before it goes into Next steps**: the last handoff said
+  `record 5 external` once testers were invited and `record 5 "TestFlight internal"` after the
+  checklist, but `release.sh` puts `TestFlight internal` before `external` and refuses a backward
+  move, so the second would have failed. A build that goes straight to external testing skips
+  `TestFlight internal`.
+- **When a requirement counts people, ask about each of them**: asked whether either new tester was
+  new to checkers, with "Yes, at least one" as an option, the owner chose it and then added that both
+  are, so the records were written twice. Offer the counts ("one of them", "both") instead.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
@@ -1401,11 +1423,14 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 1. **Recommended next: the testers' week on build 5 (T047).** Build 5 (`dbae342`, easier levels) is
    approved by Beta App Review and in the external group beside builds 1 and 4, with What to Test
    entered, and is recorded `external` in `release/builds.md`. The group has three testers since
-   2026-11-06 (T044 done): the first sent the first reports and was answered, the other two, both
-   new to checkers and so either one RC-04's beginner, were invited that day through the API (`POST /v1/betaTesters` with the
-   group; `validation.md` §6). Keep their names and emails out of this public repository: record
-   counts and states only. Check that the two install (`GET /v1/betaGroups/<id>/betaTesters`, the
-   state moves from `INVITED` to `INSTALLED`). They get at least a week, to 2026-11-13 or later; record the playtests on
+   2026-11-06 (T044 done): the first sent the first reports and was answered; the other two, both
+   new to checkers and so either one RC-04's beginner, were invited that day through the API (`POST
+   /v1/betaTesters` with the group; `validation.md` §6, and the 2026-11-06 lessons). Keep their names
+   and emails out of this public repository: record counts and states only. First check that the two
+   install: `GET /v1/betaGroups/0d5e8829-0289-4939-9820-06b86dc3fcf3/betaTesters` (the external
+   group), whose states read `INVITED` for both at the close, `INSTALLED` once they have; if one has
+   not installed after a few days, the owner reminds them. They get at least a week, to 2026-11-13 or
+   later; record the playtests on
    build 5 (RC-04: a beginner wins at least one of three against Easy; RC-05: Hard challenges an
    experienced casual player) and the feedback in `validation.md` §6, and answer every report (RC-27).
    The playtests close #219. If RC-05 fails, Hard's depth goes up again (`FRD.md` first, then a build);
@@ -1418,8 +1443,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    carries from build 1 and RC-21 passed on build 5. RC-19 and RC-25 passed on build 1 in substance
    (T012, T034) but must run again. RC-18 checks VoiceOver on Settings' layout; look at Game setup again
    too. Do not run `release.sh record 5 "TestFlight internal"`: build 5 is already `external`, and
-   `record` refuses a state that moves backward; the checklist's own rows hold the result. Last, with the phone connected and Low Power
-   Mode off: `scripts/device.sh status` (if it says not connected, see the build 3 lessons) and one
+   `record` refuses a state that moves backward; the checklist's own rows hold the result. Last,
+   with the phone connected and Low Power Mode off: `scripts/device.sh status` (if it says not connected, see the build 3 lessons) and one
    short device run, since the phone is on iOS 27.2 and Xcode 26.3 was proven only on 27.0.1; then
    `scripts/device.sh launch` and `session` (record every number in `validation.md` §5, and whether the
    hitches came from the attached or a launched run; on a miss, T022). The computer's first step should

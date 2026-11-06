@@ -146,13 +146,14 @@ explains the game in seven illustrated sections.
    during their week.** **Build 5 is in external testing**: on the owner's go-ahead it was submitted
    for Beta App Review on 2026-11-05 and approved at once, as build 4 was (`validation.md` §6). The
    group has builds 1, 4 and 5 and, since 2026-11-06, three testers, the two new ones both new to
-   checkers (T044 done; the first installed build 4 and sent the first feedback), with its public link off.
-   Left of T047: at least a week of testing (to 2026-11-13 or later), the longest wait left. During that
+   checkers (T044 done; the first installed build 4 and sent the first feedback; the two new ones read
+   `INVITED` at the 2026-11-06 close), with its public link off. Left of T047: the two installing,
+   and at least a week of testing (to 2026-11-13 or later), the longest wait left. During that
    week, `checklists/release.md` on build 5's TestFlight install (T046; 25 of its 27 rows are open;
    RC-20 carries from build 1 and RC-21 passed on build 5), with the phone connected for
    `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check Xcode 26.3
    still runs tests on it first). `release.sh submit-check 5` lists what is still open. Steps in
-   `HANDOFF.md`, Next steps 0 to 2.
+   `HANDOFF.md`, Next steps 1 and 2.
 
    How build 4 got here: the owner's iPad checks found controls hidden until scrolling on the smallest
    window, three times. **#216** pinned `Start` (FR-SETUP-07, build 2); **#217** made Difficulty and
@@ -1419,3 +1420,9 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   word, so it has three, the two new ones both new to checkers: T044 is done, build 5 is recorded `external`,
   and T047 is left with the week (to 2026-11-13 or later), the playtests and the feedback
   (`validation.md` §6). Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
+- 2026-11-06: Session close-out. This plan reviewed against the board, the repository and App Store
+  Connect: 39/42 features, 155/167 tasks, 9 In Progress. The external group has three testers (the
+  first `INSTALLED`, the two new ones `INVITED`) and builds 1, 4 and 5. Next up starts at the two
+  installing and the testers' week on build 5 (to 2026-11-13 or later) with both playtests, then the
+  release checklist and the phone measurements on build 5; E9 still waits for the 1.0 submission.
+  `HANDOFF.md` updated (current state, the session's lessons, next steps).
