@@ -596,6 +596,12 @@ Before any app code of the slice, on `008-release-1-0`:
 - **Reports answered** (RC-27 in part, 2026-11-05): the owner emailed the tester that build 5 has easier
   levels, how to update in TestFlight, and asked for three games against Easy and a try of Hard. Both
   reports so far are answered; RC-27 stays open until the testers are in and their week has closed.
+- **More external testers** (T044, T047, 2026-11-06): the owner named two more, added to the external
+  group through the API (`POST /v1/betaTesters` with the group, 201 each; neither was a tester of the
+  app before). Both read `INVITED` with an email invite, and the first tester reads `INSTALLED`, so the
+  group has three testers, at least one new to checkers (the owner's word), and builds 1, 4 and 5; its
+  public link stays off. `release.sh record 5 external`. Their week of feedback runs from 2026-11-06 to
+  at least 2026-11-13. No tester's name or email is recorded here.
 
 ## §7 Submission (US6)
 

@@ -78,7 +78,8 @@ Last updated: 2026-11-05
   internal and external groups after an at-once Beta App Review approval on the owner's go-ahead;
   RC-21 passed on it (the owner played on the iPad simulator, "enjoyable"), and the owner answered the
   tester by email. #219 stays In Progress for the playtests (RC-04, RC-05). The external group has
-  builds 1, 4 and 5, one tester and its public link off; "iPad (A16) E8" holds a Release simulator
+  builds 1, 4 and 5, three testers (two more invited on 2026-11-06, at least one new to checkers, so
+  T044 is done; build 5 recorded `external`) and its public link off; "iPad (A16) E8" holds a Release simulator
   build of build 5's code. At the session's close `main` matches the branch (`4aa3920` before the
   close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
   fast-forward after each green `CI gate`.
@@ -1397,13 +1398,14 @@ Last updated: 2026-11-05
 product behavior is made in `FRD.md` first. Move each board item to In Progress before starting it
 and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
-1. **Recommended next: more external testers (T047; only the owner can name them).** Build 5
-   (`dbae342`, easier levels) is approved by Beta App Review and in the external group beside builds 1
-   and 4, with What to Test entered and its notes in `release/builds.md`. The group has one tester, who
-   sent the first reports and was answered (`validation.md` §6). The owner adds more in App Store
-   Connect › TestFlight › the external group, for two to five in all, at least one new to checkers (the
-   rest of T044). Keep their names and emails out of this public repository: record counts only. Once
-   they are invited, `release.sh record 5 external`. They get at least a week; record the playtests on
+1. **Recommended next: the testers' week on build 5 (T047).** Build 5 (`dbae342`, easier levels) is
+   approved by Beta App Review and in the external group beside builds 1 and 4, with What to Test
+   entered, and is recorded `external` in `release/builds.md`. The group has three testers since
+   2026-11-06, at least one new to checkers (T044 done): the first sent the first reports and was
+   answered, the other two were invited that day through the API (`POST /v1/betaTesters` with the
+   group; `validation.md` §6). Keep their names and emails out of this public repository: record
+   counts and states only. Check that the two install (`GET /v1/betaGroups/<id>/betaTesters`, the
+   state moves from `INVITED` to `INSTALLED`). They get at least a week, to 2026-11-13 or later; record the playtests on
    build 5 (RC-04: a beginner wins at least one of three against Easy; RC-05: Hard challenges an
    experienced casual player) and the feedback in `validation.md` §6, and answer every report (RC-27).
    The playtests close #219. If RC-05 fails, Hard's depth goes up again (`FRD.md` first, then a build);
@@ -1415,7 +1417,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    passed or accepted with a reason. `scripts/release.sh submit-check 5` lists the 25 still open: RC-20
    carries from build 1 and RC-21 passed on build 5. RC-19 and RC-25 passed on build 1 in substance
    (T012, T034) but must run again. RC-18 checks VoiceOver on Settings' layout; look at Game setup again
-   too. Then `release.sh record 5 "TestFlight internal"`. Last, with the phone connected and Low Power
+   too. Do not run `release.sh record 5 "TestFlight internal"`: build 5 is already `external`, and
+   `record` refuses a state that moves backward; the checklist's own rows hold the result. Last, with the phone connected and Low Power
    Mode off: `scripts/device.sh status` (if it says not connected, see the build 3 lessons) and one
    short device run, since the phone is on iOS 27.2 and Xcode 26.3 was proven only on 27.0.1; then
    `scripts/device.sh launch` and `session` (record every number in `validation.md` §5, and whether the
