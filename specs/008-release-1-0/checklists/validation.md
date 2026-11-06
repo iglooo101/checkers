@@ -599,8 +599,8 @@ Before any app code of the slice, on `008-release-1-0`:
 - **More external testers** (T044, T047, 2026-11-06): the owner named two more, added to the external
   group through the API (`POST /v1/betaTesters` with the group, 201 each; neither was a tester of the
   app before). Both read `INVITED` with an email invite, and the first tester reads `INSTALLED`, so the
-  group has three testers, at least one new to checkers (the owner's word), and builds 1, 4 and 5; its
-  public link stays off. `release.sh record 5 external`. Their week of feedback runs from 2026-11-06 to
+  group has three testers, both new ones new to checkers (the owner's word, so either can play RC-04),
+  and builds 1, 4 and 5; its public link stays off. `release.sh record 5 external`. Their week of feedback runs from 2026-11-06 to
   at least 2026-11-13. No tester's name or email is recorded here.
 
 ## §7 Submission (US6)

@@ -78,7 +78,7 @@ Last updated: 2026-11-05
   internal and external groups after an at-once Beta App Review approval on the owner's go-ahead;
   RC-21 passed on it (the owner played on the iPad simulator, "enjoyable"), and the owner answered the
   tester by email. #219 stays In Progress for the playtests (RC-04, RC-05). The external group has
-  builds 1, 4 and 5, three testers (two more invited on 2026-11-06, at least one new to checkers, so
+  builds 1, 4 and 5, three testers (two more invited on 2026-11-06, both new to checkers, so
   T044 is done; build 5 recorded `external`) and its public link off; "iPad (A16) E8" holds a Release simulator
   build of build 5's code. At the session's close `main` matches the branch (`4aa3920` before the
   close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
@@ -1401,8 +1401,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 1. **Recommended next: the testers' week on build 5 (T047).** Build 5 (`dbae342`, easier levels) is
    approved by Beta App Review and in the external group beside builds 1 and 4, with What to Test
    entered, and is recorded `external` in `release/builds.md`. The group has three testers since
-   2026-11-06, at least one new to checkers (T044 done): the first sent the first reports and was
-   answered, the other two were invited that day through the API (`POST /v1/betaTesters` with the
+   2026-11-06 (T044 done): the first sent the first reports and was answered, the other two, both
+   new to checkers and so either one RC-04's beginner, were invited that day through the API (`POST /v1/betaTesters` with the
    group; `validation.md` §6). Keep their names and emails out of this public repository: record
    counts and states only. Check that the two install (`GET /v1/betaGroups/<id>/betaTesters`, the
    state moves from `INVITED` to `INSTALLED`). They get at least a week, to 2026-11-13 or later; record the playtests on
