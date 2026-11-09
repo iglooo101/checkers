@@ -278,8 +278,9 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - Four external testers (the first installed build 4 and sent two reports, answered by build 5's
   easier levels and the owner's email; two more, both new to checkers, added 2026-11-06 and
   installed; a fourth, also new to checkers, invited 2026-11-09).
-  Their week of feedback, to 2026-11-13 or later, is what most delays the submission, and testers who
-  never install would leave RC-04 and RC-05 unplayed.
+  Their week of feedback, to 2026-11-13 or later (2026-11-16 for the fourth), is what most delays the
+  submission. No report has come since 2026-11-05: testers who install but never play or report
+  would leave RC-04 and RC-05 unplayed, so the owner may need to ask them near the week's end.
 - E8 depends on the user and on Apple: the phone sitting, the external testers and App Review. Tasks that wait
   on them are marked in E8's `tasks.md`; the rest (verification, measurements, diagnostics, icon,
   texts, screenshots, pages) does not wait.
@@ -1434,3 +1435,10 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   later (`validation.md` §6). Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
 - 2026-11-09: The fourth tester is new to checkers too (the owner's word), so three of the four can
   play RC-04. Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
+- 2026-11-09: Session close-out. This plan reviewed against the board, the repository and App Store
+  Connect: 39/42 features, 155/167 tasks, 9 In Progress. The external group has four testers (three
+  `INSTALLED`, the fourth `INVITED`), builds 1, 4 and 5 and its public link off; no feedback or crash
+  report since the two of 2026-11-05. The risks now name testers who install but do not report. Next
+  up is unchanged: the testers' week on build 5 (to 2026-11-13, 2026-11-16 for the fourth) with both
+  playtests, then the release checklist and the phone measurements on build 5; E9 still waits for
+  the 1.0 submission. `HANDOFF.md` updated (current state, the session's lessons, next steps).

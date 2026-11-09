@@ -1,6 +1,6 @@
 # Handoff
 
-Last updated: 2026-11-06
+Last updated: 2026-11-09
 
 ## Working rules (set by the user, 2026-10-16)
 
@@ -82,8 +82,9 @@ Last updated: 2026-11-06
   T044 is done; build 5 recorded `external`; a fourth, also new to checkers, invited on 2026-11-09)
   and its public link off;
   "iPad (A16) E8" holds a Release simulator build of build 5's code. On 2026-11-09 the first three
-  testers read `INSTALLED` and the fourth `INVITED`. At the 2026-11-06 close `main` matched the
-  branch (`6adb7fc` before the close-out commit), Xcode was closed and no simulator ran. `main` follows the branch head by
+  testers read `INSTALLED` and the fourth `INVITED`. At the 2026-11-09 session's close no feedback
+  or crash report had come since the two of 2026-11-05; `main` matches the branch (`88070b3` before
+  the close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
   fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -1415,6 +1416,26 @@ Last updated: 2026-11-06
   new to checkers, with "Yes, at least one" as an option, the owner chose it and then added that both
   are, so the records were written twice. Offer the counts ("one of them", "both") instead.
 
+## Lessons learned (a fourth tester, 2026-11-09)
+
+- **`update_plan.py` has no `--help`**: any run without `--check` rewrites `EXECUTION_PLAN.md` from
+  the board, and `--help` did (only the date moved). Run `--check` to look, and read `git diff`
+  after any other run.
+- **Fast-forward `main` without switching branches**: the background command that waited for the
+  gate ran `git checkout main`, merge and push, so the next edits to the same files had to wait for
+  it, or the checkout would have refused. `git push origin <sha>:refs/heads/main`, as the working
+  rules say, leaves the working tree free.
+- **Ask what a requirement needs when the tester is named**: whether the new tester was new to
+  checkers came after the record, so it took two commits again. Ask it with the address, before
+  writing anything.
+- **"Your login expires in 3 days" was Claude Code's own sign-in**, renewed with `/login`. The
+  project's own credentials were checked first: the GitHub token in `../secrets/github.txt` expires
+  2027-10-16 (any API response's `github-authentication-token-expiration` header shows it), the `gh`
+  keychain login does not expire, and the App Store Connect key has no expiry date.
+- **The App Store Connect helper was written again**, as in each session with an App Store Connect
+  step since 2026-11-02 (JWT signed with `openssl`, then `urllib`; 2026-11-02 lessons). Every testers' step now needs it, so putting it under
+  `scripts/` would save that step (follow-up 8).
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
@@ -1427,11 +1448,14 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    done): the first sent the first reports and was answered; two more, both new to checkers and so
    either one RC-04's beginner, were invited on 2026-11-06 through the API (`POST /v1/betaTesters`
    with the group; `validation.md` §6, and the 2026-11-06 lessons), and a fourth on 2026-11-09 the
-   same way, also new to checkers, so three of the four can be RC-04's beginner. Keep their names and emails out of this public repository: record counts and states
-   only. The first three read `INSTALLED` on 2026-11-09; check that the fourth installs: `GET
+   same way, also new to checkers, so three of the four can be RC-04's beginner. Keep their names
+   and emails out of this public repository: record counts and states only. The first three read
+   `INSTALLED` on 2026-11-09; check that the fourth installs: `GET
    /v1/betaGroups/0d5e8829-0289-4939-9820-06b86dc3fcf3/betaTesters` (the external group), where it
-   reads `INVITED` until it has; if it has not after a few days, the owner reminds them. They get at
-   least a week, to 2026-11-13 or later (2026-11-16 for the fourth); record the playtests on
+   reads `INVITED` until it has; if it has not after a few days, the owner reminds them. No report
+   has come since the two of 2026-11-05, so near the week's end the owner may need to ask the
+   testers for the playtests. They get at least a week, to 2026-11-13 or later (2026-11-16 for the
+   fourth); record the playtests on
    build 5 (RC-04: a beginner wins at least one of three against Easy; RC-05: Hard challenges an
    experienced casual player) and the feedback in `validation.md` §6, and answer every report (RC-27).
    The playtests close #219. If RC-05 fails, Hard's depth goes up again (`FRD.md` first, then a build);
@@ -1483,7 +1507,8 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    from `main`, with #207's design as its input. Keep E9's code off `main` until 1.0 is
    submitted. On 2026-11-05 the owner asked where it stands; starting F9.0's documents on their own
    branch during the testers' week was offered as an option, and the default (wait) stands.
-8. Follow-ups: if the iPhone check of a sound's delay misses 0.1 s, move `SoundBank` to
-   `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
+8. Follow-ups: put the App Store Connect helper under `scripts/` (the 2026-11-09 lessons), reading
+   `../secrets` and printing states and counts only; if the iPhone check of a sound's delay misses
+   0.1 s, move `SoundBank` to `AVAudioEngine` (E6 research R7); keep the CI Xcode pin (26.3) in step with the development
    Mac; any update after Apple requires the iOS 27 SDK (expected around April 2027) needs an Apple
    silicon Mac and Xcode 27.
