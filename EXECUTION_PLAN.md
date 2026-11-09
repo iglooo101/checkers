@@ -147,7 +147,8 @@ explains the game in seven illustrated sections.
    for Beta App Review on 2026-11-05 and approved at once, as build 4 was (`validation.md` §6). The
    group has builds 1, 4 and 5 and four testers, with its public link off: three since 2026-11-06,
    the two added that day both new to checkers (T044 done; the first installed build 4 and sent the
-   first feedback; all three read `INSTALLED` on 2026-11-09), and a fourth invited on 2026-11-09.
+   first feedback; all three read `INSTALLED` on 2026-11-09), and a fourth, also new to checkers,
+   invited on 2026-11-09.
    Left of T047: the fourth installing, and at least a week of testing (to 2026-11-13 or later, and
    to 2026-11-16 for the fourth), the longest wait left. During that
    week, `checklists/release.md` on build 5's TestFlight install (T046; 25 of its 27 rows are open;
@@ -276,7 +277,7 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
   it is submitted, and a tester may be on any build in the group.
 - Four external testers (the first installed build 4 and sent two reports, answered by build 5's
   easier levels and the owner's email; two more, both new to checkers, added 2026-11-06 and
-  installed; a fourth invited 2026-11-09).
+  installed; a fourth, also new to checkers, invited 2026-11-09).
   Their week of feedback, to 2026-11-13 or later, is what most delays the submission, and testers who
   never install would leave RC-04 and RC-05 unplayed.
 - E8 depends on the user and on Apple: the phone sitting, the external testers and App Review. Tasks that wait
@@ -1431,3 +1432,5 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
 - 2026-11-09: A fourth external tester added to the external group through the API on the owner's
   word (`INVITED`); the first three now read `INSTALLED`. The fourth's week runs to 2026-11-16 or
   later (`validation.md` §6). Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
+- 2026-11-09: The fourth tester is new to checkers too (the owner's word), so three of the four can
+  play RC-04. Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.

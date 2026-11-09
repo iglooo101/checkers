@@ -79,7 +79,8 @@ Last updated: 2026-11-06
   RC-21 passed on it (the owner played on the iPad simulator, "enjoyable"), and the owner answered the
   tester by email. #219 stays In Progress for the playtests (RC-04, RC-05). The external group has
   builds 1, 4 and 5, four testers (two more invited on 2026-11-06, both new to checkers, so
-  T044 is done; build 5 recorded `external`; a fourth invited on 2026-11-09) and its public link off;
+  T044 is done; build 5 recorded `external`; a fourth, also new to checkers, invited on 2026-11-09)
+  and its public link off;
   "iPad (A16) E8" holds a Release simulator build of build 5's code. On 2026-11-09 the first three
   testers read `INSTALLED` and the fourth `INVITED`. At the 2026-11-06 close `main` matched the
   branch (`6adb7fc` before the close-out commit), Xcode was closed and no simulator ran. `main` follows the branch head by
@@ -1426,7 +1427,7 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    done): the first sent the first reports and was answered; two more, both new to checkers and so
    either one RC-04's beginner, were invited on 2026-11-06 through the API (`POST /v1/betaTesters`
    with the group; `validation.md` §6, and the 2026-11-06 lessons), and a fourth on 2026-11-09 the
-   same way. Keep their names and emails out of this public repository: record counts and states
+   same way, also new to checkers, so three of the four can be RC-04's beginner. Keep their names and emails out of this public repository: record counts and states
    only. The first three read `INSTALLED` on 2026-11-09; check that the fourth installs: `GET
    /v1/betaGroups/0d5e8829-0289-4939-9820-06b86dc3fcf3/betaTesters` (the external group), where it
    reads `INVITED` until it has; if it has not after a few days, the owner reminds them. They get at
