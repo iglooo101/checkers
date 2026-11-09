@@ -608,6 +608,11 @@ Before any app code of the slice, on `008-release-1-0`:
   other three read `INSTALLED`, so the group has four testers, within T047's two to five. The new
   one is new to checkers too (the owner's word), so three of the four can play RC-04. The new one's
   week runs to at least 2026-11-16. No tester's name or email is recorded here.
+- **A fifth external tester** (T047, 2026-11-09): the owner named one more, new to checkers (the
+  owner's word), added to the external group the same way (`GET /v1/betaTesters?filter[email]=` found
+  no tester of the app, then `POST /v1/betaTesters` with the group, 201, `inviteType` `EMAIL`). The
+  group has five testers, T047's most: three `INSTALLED` and two `INVITED`; four of the five can play
+  RC-04. The fifth's week runs to at least 2026-11-16. No tester's name or email is recorded here.
 
 ## §7 Submission (US6)
 

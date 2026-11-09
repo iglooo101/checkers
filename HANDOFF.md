@@ -78,11 +78,11 @@ Last updated: 2026-11-09
   internal and external groups after an at-once Beta App Review approval on the owner's go-ahead;
   RC-21 passed on it (the owner played on the iPad simulator, "enjoyable"), and the owner answered the
   tester by email. #219 stays In Progress for the playtests (RC-04, RC-05). The external group has
-  builds 1, 4 and 5, four testers (two more invited on 2026-11-06, both new to checkers, so
-  T044 is done; build 5 recorded `external`; a fourth, also new to checkers, invited on 2026-11-09)
-  and its public link off;
+  builds 1, 4 and 5, five testers, T047's most (two more invited on 2026-11-06, both new to checkers,
+  so T044 is done; build 5 recorded `external`; a fourth and a fifth, both new to checkers, invited
+  on 2026-11-09) and its public link off;
   "iPad (A16) E8" holds a Release simulator build of build 5's code. On 2026-11-09 the first three
-  testers read `INSTALLED` and the fourth `INVITED`. At the 2026-11-09 session's close no feedback
+  testers read `INSTALLED` and the last two `INVITED`. At the 2026-11-09 session's close no feedback
   or crash report had come since the two of 2026-11-05; `main` matches the branch (`88070b3` before
   the close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
   fast-forward after each green `CI gate`.
@@ -1444,18 +1444,18 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
 
 1. **Recommended next: the testers' week on build 5 (T047).** Build 5 (`dbae342`, easier levels) is
    approved by Beta App Review and in the external group beside builds 1 and 4, with What to Test
-   entered, and is recorded `external` in `release/builds.md`. The group has four testers (T044
-   done): the first sent the first reports and was answered; two more, both new to checkers and so
-   either one RC-04's beginner, were invited on 2026-11-06 through the API (`POST /v1/betaTesters`
-   with the group; `validation.md` §6, and the 2026-11-06 lessons), and a fourth on 2026-11-09 the
-   same way, also new to checkers, so three of the four can be RC-04's beginner. Keep their names
-   and emails out of this public repository: record counts and states only. The first three read
-   `INSTALLED` on 2026-11-09; check that the fourth installs: `GET
-   /v1/betaGroups/0d5e8829-0289-4939-9820-06b86dc3fcf3/betaTesters` (the external group), where it
-   reads `INVITED` until it has; if it has not after a few days, the owner reminds them. No report
+   entered, and is recorded `external` in `release/builds.md`. The group has five testers, T047's
+   most (T044 done): the first sent the first reports and was answered; two more, both new to
+   checkers and so either one RC-04's beginner, were invited on 2026-11-06 through the API (`POST
+   /v1/betaTesters` with the group; `validation.md` §6, and the 2026-11-06 lessons), and a fourth and
+   a fifth on 2026-11-09 the same way, both new to checkers, so four of the five can be RC-04's
+   beginner. Keep their names and emails out of this public repository: record counts and states
+   only. The first three read `INSTALLED` on 2026-11-09; check that the last two install: `GET
+   /v1/betaGroups/0d5e8829-0289-4939-9820-06b86dc3fcf3/betaTesters` (the external group), where they
+   read `INVITED` until they have; if one has not after a few days, the owner reminds them. No report
    has come since the two of 2026-11-05, so near the week's end the owner may need to ask the
    testers for the playtests. They get at least a week, to 2026-11-13 or later (2026-11-16 for the
-   fourth); record the playtests on
+   last two); record the playtests on
    build 5 (RC-04: a beginner wins at least one of three against Easy; RC-05: Hard challenges an
    experienced casual player) and the feedback in `validation.md` §6, and answer every report (RC-27).
    The playtests close #219. If RC-05 fails, Hard's depth goes up again (`FRD.md` first, then a build);

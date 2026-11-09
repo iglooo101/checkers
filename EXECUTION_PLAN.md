@@ -145,12 +145,12 @@ explains the game in seven illustrated sections.
 3. **Then: the external testers (T047, the owner), with the release checklist on the latest build
    during their week.** **Build 5 is in external testing**: on the owner's go-ahead it was submitted
    for Beta App Review on 2026-11-05 and approved at once, as build 4 was (`validation.md` §6). The
-   group has builds 1, 4 and 5 and four testers, with its public link off: three since 2026-11-06,
-   the two added that day both new to checkers (T044 done; the first installed build 4 and sent the
-   first feedback; all three read `INSTALLED` on 2026-11-09), and a fourth, also new to checkers,
-   invited on 2026-11-09.
-   Left of T047: the fourth installing, and at least a week of testing (to 2026-11-13 or later, and
-   to 2026-11-16 for the fourth), the longest wait left. During that
+   group has builds 1, 4 and 5 and five testers, T047's most, with its public link off: three since
+   2026-11-06, the two added that day both new to checkers (T044 done; the first installed build 4 and
+   sent the first feedback; all three read `INSTALLED` on 2026-11-09), and a fourth and a fifth, both
+   also new to checkers, invited on 2026-11-09.
+   Left of T047: the last two installing, and at least a week of testing (to 2026-11-13 or later, and
+   to 2026-11-16 for the last two), the longest wait left. During that
    week, `checklists/release.md` on build 5's TestFlight install (T046; 25 of its 27 rows are open;
    RC-20 carries from build 1 and RC-21 passed on build 5), with the phone connected for
    `scripts/device.sh launch` and `session` (T021; the phone is now on iOS 27.2, so check Xcode 26.3
@@ -275,10 +275,10 @@ E5 and E6 can swap places. Within an epic, the slice's `tasks.md` sets the final
 - A new build can reach external testers at once: builds 4 and 5 each read `APPROVED` moments after
   their Beta App Review submission, for a reason not known, so a build must be ready for testers when
   it is submitted, and a tester may be on any build in the group.
-- Four external testers (the first installed build 4 and sent two reports, answered by build 5's
+- Five external testers (the first installed build 4 and sent two reports, answered by build 5's
   easier levels and the owner's email; two more, both new to checkers, added 2026-11-06 and
-  installed; a fourth, also new to checkers, invited 2026-11-09).
-  Their week of feedback, to 2026-11-13 or later (2026-11-16 for the fourth), is what most delays the
+  installed; a fourth and a fifth, both new to checkers, invited 2026-11-09).
+  Their week of feedback, to 2026-11-13 or later (2026-11-16 for the last two), is what most delays the
   submission. No report has come since 2026-11-05: testers who install but never play or report
   would leave RC-04 and RC-05 unplayed, so the owner may need to ask them near the week's end.
 - E8 depends on the user and on Apple: the phone sitting, the external testers and App Review. Tasks that wait
@@ -1442,3 +1442,7 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   up is unchanged: the testers' week on build 5 (to 2026-11-13, 2026-11-16 for the fourth) with both
   playtests, then the release checklist and the phone measurements on build 5; E9 still waits for
   the 1.0 submission. `HANDOFF.md` updated (current state, the session's lessons, next steps).
+- 2026-11-09: A fifth external tester, new to checkers (the owner's word), added to the external
+  group through the API (`INVITED`); the group now has five testers, T047's most (three `INSTALLED`,
+  two `INVITED`), and four of them can play RC-04. The fifth's week runs to 2026-11-16 or later
+  (`validation.md` §6). Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
