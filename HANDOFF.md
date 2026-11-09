@@ -82,9 +82,9 @@ Last updated: 2026-11-09
   so T044 is done; build 5 recorded `external`; a fourth and a fifth, both new to checkers, invited
   on 2026-11-09) and its public link off;
   "iPad (A16) E8" holds a Release simulator build of build 5's code. On 2026-11-09 the first three
-  testers read `INSTALLED` and the last two `INVITED`. At the 2026-11-09 session's close no feedback
-  or crash report had come since the two of 2026-11-05; `main` matches the branch (`88070b3` before
-  the close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
+  testers read `INSTALLED` and the last two `INVITED`. At the close of the second 2026-11-09 session
+  no feedback or crash report had come since the two of 2026-11-05; `main` matches the branch
+  (`76963ba` before the close-out commit), Xcode is closed and no simulator runs. `main` follows the branch head by
   fast-forward after each green `CI gate`.
   E6 in short: Settings with board themes (Classic, Modern, Playful; the user approved the
   colors), sound effects (four original sounds; approved) and move hints; Rules in seven
@@ -1436,6 +1436,25 @@ Last updated: 2026-11-09
   step since 2026-11-02 (JWT signed with `openssl`, then `urllib`; 2026-11-02 lessons). Every testers' step now needs it, so putting it under
   `scripts/` would save that step (follow-up 8).
 
+## Lessons learned (a fifth tester, 2026-11-09)
+
+- **The owner gave the address and "new to checkers" together**, so one lookup, one invite and one
+  record commit were enough, unlike the two sessions before (the 2026-11-06 and first 2026-11-09
+  lessons). When an address comes without that answer, ask it before writing anything.
+- **The external group is now at T047's most, five testers**: a sixth goes beyond the task's "two to
+  five". If the owner names another, say so first and let the owner choose: change T047 (and the
+  records that say "T047's most") or leave the group at five.
+- **`git rev-parse --short` takes one revision**: `git rev-parse --short origin/main HEAD` failed
+  with "fatal: Needed a single revision", since `--short` implies `--verify`. Use one call per
+  revision, or read `main` on GitHub with `gh api repos/iglooo101/checkers/branches/main --jq
+  '.commit.sha[0:7]'`, which needs no fetch.
+- **Fast-forwarding with `git push origin <sha>:refs/heads/main` from the background wait worked**
+  (the first 2026-11-09 lesson): the docs-only gate passed within minutes and the working tree stayed
+  free for the close-out.
+- **The App Store Connect helper was written again**, in the scratchpad (follow-up 8 stands): the
+  same ES256 JWT with `openssl` and `urllib`, with `call(method, path, body)` returning the status
+  and the JSON.
+
 ## Next steps
 
 `EXECUTION_PLAN.md` holds the ordered work, what is in progress and what is left. A change in
@@ -1449,8 +1468,9 @@ and to Done when complete, and mirror it in `EXECUTION_PLAN.md`.
    checkers and so either one RC-04's beginner, were invited on 2026-11-06 through the API (`POST
    /v1/betaTesters` with the group; `validation.md` §6, and the 2026-11-06 lessons), and a fourth and
    a fifth on 2026-11-09 the same way, both new to checkers, so four of the five can be RC-04's
-   beginner. Keep their names and emails out of this public repository: record counts and states
-   only. The first three read `INSTALLED` on 2026-11-09; check that the last two install: `GET
+   beginner. The group is at T047's most, so ask the owner before adding a sixth (the lessons of the
+   fifth tester). Keep their names and emails out of this public repository: record counts and
+   states only. The first three read `INSTALLED` on 2026-11-09; check that the last two install: `GET
    /v1/betaGroups/0d5e8829-0289-4939-9820-06b86dc3fcf3/betaTesters` (the external group), where they
    read `INVITED` until they have; if one has not after a few days, the owner reminds them. No report
    has come since the two of 2026-11-05, so near the week's end the owner may need to ask the

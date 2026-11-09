@@ -1446,3 +1446,11 @@ Sizes: S, M, L. "after #n" marks a blocked-by link between tasks.
   group through the API (`INVITED`); the group now has five testers, T047's most (three `INSTALLED`,
   two `INVITED`), and four of them can play RC-04. The fifth's week runs to 2026-11-16 or later
   (`validation.md` §6). Board unchanged: 39/42 features, 155/167 tasks, 9 In Progress.
+- 2026-11-09: Session close-out. This plan reviewed against the board, the repository and App Store
+  Connect: 39/42 features, 155/167 tasks, 9 In Progress. The external group has five testers, T047's
+  most (three `INSTALLED`, the last two `INVITED`), builds 1, 4 and 5 and its public link off; no
+  feedback or crash report since the two of 2026-11-05. Next up and the risks already name five
+  testers; next up is unchanged: the testers' week on build 5 (to 2026-11-13, 2026-11-16 for the last
+  two) with both playtests, then the release checklist and the phone measurements on build 5; E9
+  still waits for the 1.0 submission. `HANDOFF.md` updated (current state, the session's lessons,
+  next steps).
